@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Michael (192.168.3.144) at 03.03.2015_17-04-43-->
+<macros>
+  <macro name="enginebooster_size_l_inv_01_macro" class="enginebooster">
+    <component ref="generic_enginebooster" />
+    <properties>
+      <boost charge="0" minshieldpercent="0" recharge="1">
+        <speed forward="25" rotation="0.5" />
+        <acceleration forward="10" reverse="10" strafe="10" rotation="0.5" />
+      </boost>
+      <hull integrated="1" />
+    </properties>
+  </macro>
+</macros>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<aiscript name="escort.default" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
+
+  <params>
+    <param name="commander" default="this.ship.commander"/>
+    <param name="formation" default="formationshape.invpointguard"/>
+    <param name="debugchance" default="0"/>
+  </params>
+  <interrupts>
+    <handler ref="TargetInvalidHandler"/>
+    <handler ref="AttackHandler"/>
+    <handler>
+      <conditions>
+        <check_any>
+          <event_object_signalled object="this.ship" param="'switch.mode'" />
+          <event_object_signalled object="this.ship" param="'switch.gohome'" />
+          <event_object_destroyed object="$commander" />
+          <check_all>
+            <event_object_docked object="$commander"/>
+            <check_value value="$gohome?" />
+          </check_all>
+        </check_any>
+      </conditions>
+      <actions>
+        <cease_fire object="this.ship" weapontype="mining" />
+        <cease_fire object="this.ship" weapontype="combat" />
+        <do_if value="event.name" exact="'event_object_destroyed'">
+          <set_value name="$commander" exact="$base"/>
+        </do_if>
+        <do_elseif value="event.param == 'switch.mode'">
+          <do_if value="this.$escort == 'escort'">
+            <set_value name="this.$escort" exact="'patrol'"/>
+          </do_if>
+          <do_else>
+            <set_value name="this.$escort" exact="'escort'"/>
+          </do_else>
+        </do_elseif>
+        <do_elseif value="event.param == 'switch.gohome'">
+          <set_value name="this.$escort" exact="'escort'"/>
+          <set_value name="$gohome" exact="if event.param2 and event.param2.exists then event.param2 else if $base and $base.exists then $base else null"/>
+        </do_elseif>
+        <do_else>
+          <set_value name="this.$escort" exact="'dock'"/>
+        </do_else>
+        <!-- recall drones -->
+        <run_interrupt_script name="'lib.recall.drones'" abortscripts="true"  resume="loop"/>
+      </actions>
+    </handler>
+  </interrupts>
+  <init>
+    <set_value name="this.$escort" exact="'escort'"/>
+  </init>
+  <attention min="unknown">
+    <actions>
+
+      <leave_formation object="this.ship" />
+
+      <label name="init" />
+      <set_value name="$base" exact="if $commander.commander then $commander.commander else null"/>
+      <do_if value="this.$shiptrader_docking?">
+        <do_if value="this.$shiptrader_docking.component.isoperational">
+          <do_if value="not this.ship.dockslot">
+            <wait_for_prev_script action="$action" />
+            <do_if value="$action == 'move_docking'">
+              <dock ship="this.ship" />
+            </do_if>
+            <do_else>
+              <run_script name="'move.dockat'" >
+                <param name="dockingslot" value="this.$shiptrader_docking" />
+              </run_script>
+              <return />
+            </do_else>
+          </do_if>
+          <return />
+        </do_if>
+        <do_else>
+          <remove_value name="this.$shiptrader_docking" />
+        </do_else>
+      </do_if>
+
+      <detach_from_masstraffic object="this.ship" />
+
+      <run_script name="'move.undock'" />
+
+
+      <label name="loop" />
+      <!-- move.escort / patrol End if is not in squad -->
+      <do_if value="$commander.exists and this.$escort == 'escort'">
+        <run_script name="'move.escort'">
+          <param name="target" value="$commander" />
+          <param name="formation" value="$formation" />
+        </run_script>
+      </do_if>
+
+      <do_elseif value="$commander.exists and this.$escort == 'patrol'">
+        <run_script name="'move.patrol'">
+          <param name="patrolobject" value="$commander" />
+          <param name="range_min" value="1km" />
+          <param name="range_max" value="5km" />
+          <param name="allowstations" value="false" />
+        </run_script>
+      </do_elseif>
+
+      <do_elseif value="this.$escort == 'dock' and $gohome and $gohome.exists">
+        <run_script name="'move.dockat'">
+          <param name="destination" value="$gohome" />
+        </run_script>
+        <resume label="end" />
+      </do_elseif>
+
+      <do_elseif value="not $commander.exists and $base and $base.exists and $base.isclass.station">
+        <run_script name="'move.patrol'">
+          <param name="patrolobject" value="$base" />
+          <param name="allowstations" value="false" />
+        </run_script>
+      </do_elseif>
+
+      <do_else>
+        <do_if value="this.$escort?" negate="true">
+          <set_value name="this.$escort" exact="'escort'"/>
+          <resume label="loop" />
+        </do_if>
+        <set_command_action commandaction="commandaction.standingby" />
+        <stop_moving object="this.ship" />
+        <wait/>
+      </do_else>
+
+      <wait min="100ms" max="500ms" />
+
+      <resume label="loop" />
+
+
+      <label name="end" />
+      <debug_text text="' End script'" chance="$debugchance" />
+
+      <remove_value name="this.$escort" />
+    </actions>
+  </attention>
+  <on_abort>
+    <remove_value name="this.$escort" />
+  </on_abort>
+</aiscript>

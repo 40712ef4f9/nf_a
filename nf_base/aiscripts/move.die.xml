@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<diff>
+	<add sel="//init">
+	  <do_if value="(not (this.ship.job) or this.ship.job == '')">
+		<set_value name="$dockslot" exact="this.ship.dockslot"/>
+		<do_if value="$dockslot and $dockslot.component.container.canproduceships">
+		  <signal_objects object="player.galaxy" param="'MMP_INIT_SMALL'" param2="[this.ship, $dockslot.component.container]" delay="30s" chance="(global.$factionCEOs.{'$' + this.defensible.owner.id}? or this.defensible.isplayerowned)*100"/>
+		</do_if>
+	  </do_if>
+	</add>
+
+	<add sel="/aiscript/attention[@min='visible']/actions/do_if/do_if/do_if/destroy_object" pos="before">
+		<wait exact="2min"/>
+	</add>
+
+	<add sel="/aiscript/attention[@min='unknown']/actions/destroy_object" pos="before">
+		<wait exact="2min"/>
+	</add>
+</diff>

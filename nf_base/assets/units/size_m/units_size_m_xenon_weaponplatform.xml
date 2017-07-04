@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<components>
+	<component name="units_size_m_xenon_weaponplatform" class="drone">
+		<source geometry="assets\structures\alien_technology\xenon\\xenon_weaponplatform_data"/>
+		<layers>
+			<layer>
+				<waypoints/>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="ship">
+				<offset/>
+			</connection>
+			<connection name="Connection001" tags="part  ">
+				<offset>
+					<position x="0" y="0" z="3.248497E-06"/>
+					<quaternion qx="0.7071068" qy="-0" qz="-0" qw="-0.7071068"/>
+				</offset>
+				<parts>
+					<part name="part_dummy" wreck="part_dummy">
+						<lods>
+							<lod index="0"/>
+						</lods>
+						<size>
+							<max x="0.5" y="0.5" z="0.5"/>
+							<center x="0" y="-2.980232E-08" z="-0.5"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="connection_cockpit01" tags="cockpit ">
+				<offset>
+					<position x="-2.425313E-02" y="-3.034517" z="54.83447"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_wps_xen_weaponplatform_01_macro" group="stationGroup" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="connection_radar01" tags="radar">
+				<offset/>
+			</connection>
+			<connection name="connection_shieldgen01x" tags="shieldgenerator ">
+				<offset/>
+			</connection>
+
+			<connection name="connection_shieldgen01" tags="shieldgenerator ">
+				<offset>
+					<position x="0" y="0" z="-119.9439"/>
+					<quaternion qx="-0.5000001" qy="-0.4999999" qz="-0.5000001" qw="-0.4999999"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen02" tags="shieldgenerator ">
+				<offset>
+					<position x="-104.133" y="0" z="59.66453"/>
+					<quaternion qx="-0.6830127" qy="-0.6830127" qz="0.1830126" qw="0.1830128"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen03" tags="shieldgenerator ">
+				<offset>
+					<position x="103.9918" y="0" z="59.81694"/>
+					<quaternion qx="0.1830126" qy="0.1830128" qz="-0.6830127" qw="-0.6830127"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen04" tags="shieldgenerator ">
+				<offset>
+					<position x="-0.1062927" y="1.106014" z="113.2157"/>
+					<quaternion qx="-5.338509E-08" qy="0.7071066" qz="-0.7071069" qw="-5.338507E-08"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen05" tags="shieldgenerator ">
+				<offset>
+					<position x="98.43266" y="1.106014" z="-56.70186"/>
+					<quaternion qx="-0.6123726" qy="0.3535533" qz="-0.3535534" qw="-0.6123723"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen06" tags="shieldgenerator ">
+				<offset>
+					<position x="-98.26042" y="1.106014" z="-56.67344"/>
+					<quaternion qx="-0.6123725" qy="-0.3535534" qz="0.3535535" qw="-0.6123723"/>
+				</offset>
+			</connection>
+		</connections>
+	</component>
+</components>

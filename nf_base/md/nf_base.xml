@@ -1,0 +1,953 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<mdscript name="NF_BASE" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../libraries/md.xsd">
+	<cues>
+		<cue name="NF_BASE_patch" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_cue_signalled cue="md.Setup.GameStart"/>
+					<event_game_loaded />
+				</check_any>
+			</conditions>
+			<delay min="200ms" />
+			<actions>
+				<do_if value="md.$NFMMprocessesdSectors?" negate="true">
+					<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
+					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_BASE'"/>
+				</do_if>
+				<do_elseif value="md.$NFMMprocessesdSectors? and player.age lt 3min and md.$NFMMprocessesdSectors.indexof.{'NF_BASE'} == 0">
+					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_BASE'"/>
+				</do_elseif>
+				<do_elseif value="md.$NFMMprocessesdSectors? and player.age ge 3min and md.$NFMMprocessesdSectors.indexof.{'NF_BASE'} == 0">
+					<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
+					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_BASE'"/>
+				</do_elseif>
+
+				<do_if value="global.$MICT_LR_Ships?" negate="true">
+					<create_list name="global.$MICT_LR_Ships"/>
+				</do_if>
+				<do_if value="md.$boardingvessel_small?" negate="true">
+					<create_list name="md.$boardingvessel_small"/>
+				</do_if>
+				<do_if value="global.$boardingvessel_cap?" negate="true">
+					<create_list name="global.$boardingvessel_cap"/>
+				</do_if>
+				<do_if value="global.$randumbuild_blacklist?" negate="true">
+					<create_list name="global.$randumbuild_blacklist"/>
+				</do_if>
+				<do_if value="global.$mmpiratesy_pfactions?" negate="true">
+					<set_value name="global.$mmpiratesy_pfactions" exact="[faction.reivers,faction.sovereignsyndicate,faction.hereticvanguards]"/>
+				</do_if>
+				<!--
+					NF Config
+				-->
+				<do_if value="global.$nfconfig?" negate="true">
+					<set_value name="global.$nfconfig" exact="table[]" comment="end $nfconfig"/>
+				</do_if>
+				<!-- check for basics -->
+				<do_if value="global.$nfconfig?">
+					<set_value name="$todo" exact="
+						table[
+							$Check = 1,
+							$doBuildSt = 1,
+							$doInv = 1,
+							$EWS_Delay = 120s,
+							$EWS_Level = 2,
+							$EWS_Level_cutoff = 0,
+							$EWS_MapSector = 0,
+							$taxStationsPL = 1,
+							$npcExpensesPL = 1,
+							$AdvJump = 0,
+							$autoRefuel = 1,
+							$ignoreFuel = 0,
+							$HyperDrive = 1,
+							$buildOwnerNotice = 0
+						]
+					"/>
+					<set_value name="$todoKeys" exact="$todo.keys.list.clone"/>
+					<do_all exact="$todoKeys.count" counter="$j" >
+						<do_if value="global.$nfconfig.{$todoKeys.{$j}}?" negate="true">
+							<set_value name="global.$nfconfig.{$todoKeys.{$j}}" exact="$todo.{$todoKeys.{$j}}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+					<remove_value name="$todoKeys"/>
+				</do_if>
+
+				<!--
+					Basics
+				-->
+				<do_if value="md.$EquipmentLists.{1}.indexof.{[ware.inv_probe, 2, 5, 85]}" negate="true">
+					<append_to_list name="md.$EquipmentLists.{1}" exact="[ware.inv_probe, 2, 5, 85]" />
+				</do_if>
+				<do_if value="md.$EquipmentLists.{1}.indexof.{[ware.inv_hyperdrivecrystal, 8, 15, 85]}" negate="true">
+					<append_to_list name="md.$EquipmentLists.{1}" exact="[ware.inv_hyperdrivecrystal, 8, 15, 85]" />
+				</do_if>
+
+				<set_value name="global.$MICT_mmcarrier_is_active" exact="true"/>
+				
+				<set_value name="global.$WWX_mmcarrier_is_active" exact="true"/>
+				<set_value name="global.$WWX_mmboarding_is_active" exact="true"/>
+				<!--
+					Carriers
+				-->
+				<do_if value="global.$mmcarriers?">
+					<set_value name="$todo" exact="
+						[
+								macro.units_size_l_kit_carrier_01_macro,
+								macro.units_size_l_kit_carrier_02_macro,
+								macro.units_size_l_kit_repairship_macro,
+								macro.units_size_xl_kit_destroyer_01_macro,
+								macro.units_size_xl_capital_destroyer_1_mk2_macro,
+								macro.units_size_xl_cs_omicron_ship_02_mk2_macro,
+								macro.units_size_xl_cs_omicron_ship_02_xc_macro,
+								macro.units_size_xl_cs_omicron_ship_02_y_macro,
+								macro.units_size_xl_cs_omicron_ship_02_pir_macro,
+								macro.units_size_xl_cs_omicron_ship_02_mk5_macro,
+								macro.units_size_xl_cs_omicron_repairship_02_macro,
+								macro.units_size_xl_cs_omicron_ship_04_mk2_macro,
+								macro.units_size_xl_split_m1_macro,
+								macro.units_size_xl_split_m1s_macro,
+								macro.units_size_xl_xenon_01_c_macro
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="global.$mmcarriers.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="global.$mmcarriers" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+				<do_if value="global.$mmcarriers_xl?">
+					<set_value name="$todo" exact="
+						[
+								macro.units_size_l_kit_repairship_macro,
+								macro.units_size_xl_cs_omicron_repairship_02_macro
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="global.$mmcarriers_xl.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="global.$mmcarriers_xl" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+				<do_if value="md.$mmc_explorers?">
+					<set_value name="$todo" exact="
+						[
+								macro.units_size_s_pmc_xen_sat_macro,
+								macro.units_size_s_ship_04_p_macro
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="md.$mmc_explorers.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="md.$mmc_explorers" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+
+				<!--
+					(Mict) LR
+				-->
+				<do_if value="global.$MICT_LR_Ships?">
+					<set_value name="$todo" exact="
+						[
+								macro.units_size_xl_red_destroyer_macro,
+								macro.units_size_l_single_attack_ship_macro,
+								macro.units_size_xl_van_destroyer_macro,
+								macro.units_size_xl_cs_omicron_ship_02_5_macro,
+								macro.units_size_xl_cs_omicron_ship_02_mk2_macro,
+								macro.units_size_l_cs_omicron_ship_03_sa_macro
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="global.$MICT_LR_Ships.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="global.$MICT_LR_Ships" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+
+				<!--
+					Blacklist randombuild
+				-->
+				<do_if value="global.$randumbuild_blacklist?">
+					<set_value name="$todo" exact="
+						[
+								macro.units_size_xl_builder_ship_plot_01_macro,
+								macro.units_size_xl_builder_ship_macro,
+								macro.units_size_xl_builder_ship_dv_macro,
+								macro.units_size_xl_builder_ship_ol_macro,
+								macro.units_size_xl_capital_destroyer_1_mk2_macro,
+								macro.units_size_xl_cs_omicron_ship_02_mk5_macro,
+								macro.units_size_xl_cs_omicron_repairship_02_macro,
+								macro.units_size_xl_kit_cargo_01_macro,
+								macro.units_size_l_kit_fuel_03_macro,
+								macro.units_size_l_kit_repairship_macro
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="global.$randumbuild_blacklist.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="global.$randumbuild_blacklist" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+
+				<!--
+					capital / s + m boardingvessels
+				-->
+				<do_if value="md.$boardingvessel_small?">
+					<set_value name="$todo" exact="
+						[
+								macro.units_size_m_boarding_macro
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="md.$boardingvessel_small.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="md.$boardingvessel_small" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+				<do_if value="global.$boardingvessel_cap?">
+					<set_value name="$todo" exact="
+						[
+								macro.units_size_l_troop_transporter1_macro,
+								macro.units_size_l_troop_transporter5_macro
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="global.$boardingvessel_cap.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="global.$boardingvessel_cap" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+
+				<!--
+					PimpMyRide support
+				-->
+				<do_if value="md.$mmpimpmyride?">
+					<!--
+							[macro.units_size_m_universal_transport_macro, macro.units_size_m_crystal_collector_macro],
+							[macro.units_size_m_boarding_macro, macro.units_size_m_ice_collector_macro],
+					-->
+					<set_value name="$todo" exact="
+						[
+							[macro.units_size_m_crystal_collector_macro, macro.units_size_m_universal_transport_macro],
+							[macro.units_size_m_nividium_collector_macro, macro.units_size_m_universal_transport_macro],
+							[macro.units_size_m_ore_collector_macro, macro.units_size_m_universal_transport_macro],
+							[macro.units_size_m_silicon_collector_macro, macro.units_size_m_universal_transport_macro],
+							[macro.units_size_s_ship_pmc_03_macro, macro.units_size_s_pmc_xen_sat_macro],
+							[macro.units_size_s_ship_pmc_02_macro, macro.units_size_s_pmc_xen_sat_macro],
+							[macro.units_size_s_ship_pmc_01_macro, macro.units_size_s_pmc_xen_sat_macro],
+							[macro.units_size_s_ship_ar_military_03_macro, macro.units_size_s_ship_ar_military_03_bomber_macro],
+							[macro.units_size_s_ship_ar_military_03_macro, macro.units_size_s_ship_ar_military_03_cargo_macro],
+							[macro.units_size_m_ice_collector_macro, macro.units_size_m_boarding_macro]
+						]
+					"/>
+					<!-- Golem -->
+					<append_to_list name="$todo" exact="[macro.units_size_s_ship_pmc_03_macro, macro.units_size_m_pmc_xen_02_macro]" chance="(player.age gt 24h)*100"/>
+					<append_to_list name="$todo" exact="[macro.units_size_s_ship_pmc_02_macro, macro.units_size_m_pmc_xen_02_macro]" chance="(player.age gt 24h)*100"/>
+					<append_to_list name="$todo" exact="[macro.units_size_s_ship_pmc_01_macro, macro.units_size_m_pmc_xen_02_macro]" chance="(player.age gt 24h)*100"/>
+					<!-- Golem mk2 -->
+					<append_to_list name="$todo" exact="[macro.units_size_m_pmc_xen_02_macro, macro.units_size_m_pmc_xen_02s_macro]" chance="(player.age gt 48h)*100"/>
+
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="md.$mmpimpmyride.{'$%1'.[$todo.{$j}.{1}.id]}? and md.$mmpimpmyride.{'$%1'.[$todo.{$j}.{1}.id]}.indexof.{$todo.{$j}.{2}}" negate="true">
+							<do_if value="md.$mmpimpmyride.$basemacros.indexof.{$todo.{$j}.{1}}" negate="true">
+								<append_to_list name="md.$mmpimpmyride.$basemacros" exact="$todo.{$j}.{1}"/>
+							</do_if>
+							<do_if value="md.$mmpimpmyride.{'$%1'.[$todo.{$j}.{1}.id]}?" negate="true">
+								<set_value name="md.$mmpimpmyride.{'$%1'.[$todo.{$j}.{1}.id]}" exact="[]"/>
+							</do_if>
+							<do_if value="md.$mmpimpmyride.{'$%1'.[$todo.{$j}.{1}.id]}.indexof.{$todo.{$j}.{2}}" negate="true">
+								<append_to_list name="md.$mmpimpmyride.{'$%1'.[$todo.{$j}.{1}.id]}" exact="$todo.{$j}.{2}"/>
+							</do_if>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+				<!-- cap ships -->
+				<do_if value="md.$todo_ships_capital_mod?">
+						<set_value name="$todo" exact="
+							[
+								macro.units_size_xl_cs_omicron_repairship_02_macro,
+								macro.units_size_l_cs_omicron_ship_03_sa_macro,
+								macro.units_size_xl_cs_omicron_ship_02_5_macro,
+								macro.units_size_xl_cs_omicron_ship_02_y_macro,
+								macro.units_size_xl_cs_omicron_ship_02_dc_macro,
+								macro.units_size_xl_cs_omicron_ship_02_x_macro,
+								macro.units_size_xl_cs_omicron_ship_02_xc_macro,
+								macro.units_size_xl_cs_omicron_ship_02_mk5_macro,
+								macro.units_size_xl_cs_omicron_ship_02_yz_macro,
+								macro.units_size_xl_cs_omicron_ship_02_mk2_macro,
+								macro.units_size_xl_cs_omicron_ship_03_mk2_macro,
+								macro.units_size_xl_cs_omicron_ship_04_mk2_macro,
+								macro.units_size_xl_capital_destroyer_1_mk2_macro,
+								macro.units_size_xl_capital_destroyer_2_mk2_macro,
+								macro.units_size_xl_capital_destroyer_2_cargo_macro,
+								macro.units_size_xl_kit_cargo_01_macro,
+								macro.units_size_l_kit_cargo_03_macro,
+								macro.units_size_l_kit_cargo_03s_macro,
+								macro.units_size_l_kit_cargo_03e_macro,
+								macro.units_size_l_kit_miner_03s_macro,
+								macro.units_size_l_kit_minerl_03s_macro,
+								macro.units_size_l_kit_fuel_03_macro,
+								macro.units_size_l_kit_repairship_macro,
+								macro.units_size_xl_kit_destroyer_01_macro,
+								macro.units_size_xl_cs_omicron_ship_02_pir_macro,
+								macro.units_size_l_dv_kit_new_defence_plus_macro,
+								macro.units_size_l_kit_hybrid_q_macro,
+								macro.units_size_xl_kit_pirate_10_macro,
+								macro.units_size_xl_split_m1s_macro,
+								macro.units_size_xl_split_m2r_macro,
+								macro.units_size_xl_split_m2s_macro,
+								macro.units_size_xl_split_tls_macro,
+								macro.units_size_xl_split_tls_gas_macro,
+								macro.units_size_xl_split_tls_ore_macro,
+								macro.units_size_l_xenon_01_cargo_macro,
+								macro.units_size_l_xenon_01_miner_macro,
+								macro.units_size_l_xenon_01_collector_macro,
+								macro.units_size_l_xenon_01_dc_macro,
+								macro.units_size_xl_xenon_01_c_macro
+							]
+						"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<append_to_list name="md.$todo_ships_capital_mod" exact="$todo.{$j}"/>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+				<!-- s + m ships FIGHT -->
+				<do_if value="md.$todo_ships_small_others_fight?">
+						<set_value name="$todo" exact="
+							[
+								macro.units_size_s_pmc_xen_sat_macro,
+								macro.units_size_m_pmc_xen_02s_macro,
+								macro.units_size_m_xenon_bomber_01_macro,
+								macro.units_size_s_ship_ar_military_03_bomber_macro
+							]
+						"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<append_to_list name="md.$todo_ships_small_others_fight" exact="$todo.{$j}"/>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+				<!-- s + m ships TRADE -->
+				<do_if value="md.$todo_ships_small_others_trade?">
+						<set_value name="$todo" exact="
+							[
+								macro.units_size_s_ship_04_p_macro,
+								macro.units_size_m_universal_transport_macro,
+								macro.units_size_m_boarding_macro,
+								macro.units_size_s_ship_ar_military_03_cargo_macro
+							]
+						"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<append_to_list name="md.$todo_ships_small_others_trade" exact="$todo.{$j}"/>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+				<!-- Factions -->
+				<do_if value="md.$todo_factions?">
+					<append_to_list name="md.$todo_factions" exact="[
+						faction.acmecorp
+						]"/>
+				</do_if>
+
+				<do_if value="md.$FieldsOfOpportunity? and md.$FieldsOfOpportunity">
+					<include_actions ref="NF_BASE_TO" />
+				</do_if>
+				<do_if value="md.$DLC2_Clusters? and md.$DLC2_Clusters.count">
+					<include_actions ref="NF_BASE_HoL" />
+				</do_if>
+				<!-- set ON -->
+				<do_if value="global.$nfconfig.$Check" negate="true">
+					<set_value name="global.$nfconfig.$Check" exact="1"/>
+				</do_if>
+			</actions>
+		</cue>
+		<library name="NF_BASE_TO">
+			<actions>
+				<append_to_list name="global.$mmpiratesy_pfactions" exact="faction.{'%1'.['teladigunrunner']}"/> 
+				<append_to_list name="global.$mmpiratesy_pfactions" exact="faction.{'%1'.['teladidrugrunner']}"/> 
+			</actions>
+		</library>
+		<library name="NF_BASE_HoL">
+			<actions>
+				<append_to_list name="global.$mmpiratesy_pfactions" exact="faction.{'%1'.['atlas']}"/> 
+			</actions>
+		</library>
+
+		<!--  Config  -->
+		<cue name="NF_BASE_config_com" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="default" />
+					<event_conversation_returned_to_section section="default" />
+				</check_any>
+				<check_value value="[faction.player, faction.enemy, faction.criminal, faction.smuggler, faction.neutral, faction.friend, faction.ownerless].indexof.{event.object.owner}" negate="true"/>
+				<check_value value="event.object.container.isclass.station" />
+				<check_value value="event.object.owner.relationto.{faction.player} gt faction.player.relation.neutral.min"/>
+				<check_value value="event.object.container.zone.policefaction and event.object == event.object.container.sector.representative.{event.object.container.zone.policefaction}.{entitytype.lawenforcement}" />
+			</conditions>
+			<actions>
+				<add_player_choice_sub text="{40002,300}" position="bottom_left" section="nfconf_do" />
+			</actions>
+		</cue>
+		<cue name="NF_BASE_config" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_conversation_next_section sectionprefix="nfconf_do"/>
+					<event_conversation_returned_to_section sectionprefix="nfconf_do" />
+				</check_any>
+			</conditions>
+			<actions>
+				<set_value name="$backlink" exact="100" />
+				<set_value name="$on" exact="{1001,2648}" />
+				<set_value name="$off" exact="{1001,2649}" />
+
+				<!-- Modify -->
+				<do_if value="event.param2? and typeof event.param2 == datatype.list and (typeof event.param2.{1}).isstring and (typeof event.param2.{2}).isstring">
+					<set_value name="$conf_min" exact="if event.param2.{3}? and event.param2.{3} then event.param2.{3} else 0" />
+					<set_value name="$conf_max" exact="if event.param2.{4}? and event.param2.{4} then event.param2.{4} else 1" />
+					<set_value name="$conf_step" exact="if event.param2.{5}? and event.param2.{5} then event.param2.{5} else 1" />
+					<do_if value="event.param2.{5}? and $conf_step and $conf_max gt 1">
+						<set_value name="$tmp" exact="$conf_max - $conf_min" />
+						<do_if value="$conf_step ge 1">
+							<set_value name="$conf_step" exact="$tmp / $conf_step" />
+						</do_if>
+					</do_if>
+					<remove_value name="$tmp"/>
+
+					<do_if value="global.$nfconfig.{'$%1'.[event.param2.{1}]}?" negate="true">
+						<set_value name="global.$nfconfig.{'$%1'.[event.param2.{1}]}" exact="0" />
+					</do_if>
+
+					<!-- do -->
+					<do_if value="event.param2.{2} == 'do' and global.$nfconfig.{'$%1'.[event.param2.{1}]}">
+						<set_value name="global.$nfconfig.{'$%1'.[event.param2.{1}]}" exact="0" />
+					</do_if>
+					<do_elseif value="event.param2.{2} == 'do' and not global.$nfconfig.{'$%1'.[event.param2.{1}]}">
+						<set_value name="global.$nfconfig.{'$%1'.[event.param2.{1}]}" exact="1" />
+					</do_elseif>
+					<!-- add/sub -->
+					<do_if value="event.param2.{2} == 'add' and global.$nfconfig.{'$%1'.[event.param2.{1}]} == $conf_max">
+						<set_value name="global.$nfconfig.{'$%1'.[event.param2.{1}]}" exact="$conf_min" />
+					</do_if>
+					<do_elseif value="event.param2.{2} == 'add' and (global.$nfconfig.{'$%1'.[event.param2.{1}]} + $conf_step) le $conf_max">
+						<set_value name="global.$nfconfig.{'$%1'.[event.param2.{1}]}" exact="$conf_step" operation="add"/>
+					</do_elseif>
+					<do_elseif value="event.param2.{2} == 'add' and (global.$nfconfig.{'$%1'.[event.param2.{1}]} + $conf_step) gt $conf_max">
+						<set_value name="global.$nfconfig.{'$%1'.[event.param2.{1}]}" exact="$conf_max" />
+					</do_elseif>
+					<do_if value="event.param2.{2} == 'sub' and (global.$nfconfig.{'$%1'.[event.param2.{1}]} - $conf_step) ge $conf_min">
+						<set_value name="global.$nfconfig.{'$%1'.[event.param2.{1}]}" exact="$conf_step" operation="subtract"/>
+					</do_if>
+					<do_elseif value="event.param2.{2} == 'sub' and (global.$nfconfig.{'$%1'.[event.param2.{1}]} - $conf_step) lt $conf_min">
+						<set_value name="global.$nfconfig.{'$%1'.[event.param2.{1}]}" exact="$conf_min" />
+					</do_elseif>
+
+					<remove_value name="$tmp"/>
+					<remove_value name="$conf_step"/>
+					<remove_value name="$conf_max"/>
+					<remove_value name="$conf_min"/>
+				</do_if>
+
+				<!-- Menu -->
+				<do_if value="event.param" exact="'nfconf_do_global'">
+					<add_player_choice section="nfconf_do_global" text="{40002,312}.[if global.$nfconfig.$doBuildSt then $on else $off]"		position="top_left"		choiceparam="['doBuildSt', 'do']" tooltip="{40002,313}" />
+					<add_player_choice section="nfconf_do_global" text="{40002,314}.[if global.$nfconfig.$doInv then $on else $off]"			position="left"			choiceparam="['doInv', 'do']" />
+
+					<add_player_choice section="nfconf_do_global" text="{40002,316}.[if global.$nfconfig.$AdvJump then if global.$nfconfig.$AdvJump == 2 then {40002,318} else {40002,320} else $off]"	position="top_right"	choiceparam="['AdvJump', 'add', 0, 2]" />
+					<add_player_choice section="nfconf_do_global" text="{40002,330}.[if global.$nfconfig.$HyperDrive then $on else $off]"		position="right"		choiceparam="['HyperDrive', 'do']" tooltip="{40002,331}"/>
+
+				</do_if>
+				<do_elseif value="event.param" exact="'nfconf_do_ews'">
+					<add_player_choice		section="nfconf_do_ews" text="{40002,322}.[global.$nfconfig.$EWS_Level]"																position="top_left"		choiceparam="['EWS_Level', 'add', 1, 4]" tooltip="{40002,323}"/>
+					<add_player_choice_sub	section="nfconf_do_detail" text="{40002,324}.[if global.$nfconfig.$EWS_Level_cutoff then global.$nfconfig.$EWS_Level_cutoff else $off]"	position="left"			choiceparam="['EWS_Level_cutoff', 'open', 0, 50, 10]" tooltip="{40002,325}"/>
+					<add_player_choice_sub	section="nfconf_do_detail" text="{40002,326}.[global.$nfconfig.$EWS_Delay]"																position="bottom_left"	choiceparam="['EWS_Delay', 'open', 0s, 240s, 3]"  />
+					<add_player_choice		section="nfconf_do_ews" text="{40002,328}.[if global.$nfconfig.$EWS_MapSector then $on else $off]"										position="top_right"	choiceparam="['EWS_MapSector', 'do']" tooltip="{40002,329}" />
+				</do_elseif>
+				<do_elseif value="event.param" exact="'nfconf_do_player'">
+					<add_player_choice section="nfconf_do_player" text="{40002,340}.[if global.$nfconfig.$buildOwnerNotice then $on else $off]"	position="top_left"		choiceparam="['buildOwnerNotice', 'do']" tooltip="{40002,341}"/>
+					<add_player_choice section="nfconf_do_player" text="{40002,332}.[if global.$nfconfig.$taxStationsPL then $on else $off]"	position="left"			choiceparam="['taxStationsPL', 'do']" tooltip="{40002,333}" />
+					<add_player_choice section="nfconf_do_player" text="{40002,334}.[if global.$nfconfig.$npcExpensesPL then $on else $off]"	position="bottom_left"	choiceparam="['npcExpensesPL', 'do']" tooltip="{40002,335}" />
+					<!--add_player_choice section="nfconf_do_player" text="{40002,336}.[if global.$nfconfig.$limitCluster then $on else $off]"	position="top_right"	choiceparam="['limitCluster', 'do']"  /-->
+					<add_player_choice section="nfconf_do_player" text="{40002,338}.[if global.$nfconfig.$autoRefuel then $on else $off]"		position="right"		choiceparam="['autoRefuel', 'do']" />
+				</do_elseif>
+				<do_elseif value="event.param" exact="'nfconf_do_player_cheat'">
+					<add_player_choice section="nfconf_do_player_cheat" text="{40002,342}.[if global.$nfconfig.$ignoreFuel then $on else $off]"	position="top_left"		choiceparam="['ignoreFuel', 'do']" tooltip="{40002,343}"/>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'nfconf_do_detail'" chance="(event.param2? and typeof event.param2 == datatype.list and (typeof event.param2.{1}).isstring)*100">
+					<create_list name="$add" />
+					<create_list name="$sub" />
+					<append_to_list name="$add" exact="event.param2.{1}" />
+					<append_to_list name="$add" exact="'add'" />
+					<append_to_list name="$add" exact="event.param2.{3}" />
+					<append_to_list name="$add" exact="event.param2.{4}" />
+					<append_to_list name="$add" exact="event.param2.{5}" chance="(event.param2.{5}?)*100"/>
+					<append_to_list name="$sub" exact="event.param2.{1}" />
+					<append_to_list name="$sub" exact="'sub'" />
+					<append_to_list name="$sub" exact="event.param2.{3}" />
+					<append_to_list name="$sub" exact="event.param2.{4}" />
+					<append_to_list name="$sub" exact="event.param2.{5}" chance="(event.param2.{5}?)*100"/>
+
+					<add_player_choice			text="{2802,2216}"														position="top_left"		section="nfconf_do_detail" choiceparam="$add" />
+					<add_player_choice_return	text="'value [%1]'.[global.$nfconfig.{'$%1'.[event.param2.{1}]}]"	position="left" comment="Back" />
+					<add_player_choice			text="{2802,2217}"														position="bottom_left"	section="nfconf_do_detail" choiceparam="$sub" />
+
+					<remove_value name="$sub"/>
+					<remove_value name="$add"/>
+				</do_elseif>
+				<do_else>
+					<add_player_choice_sub text="{40002,304}" position="top_left"	section="nfconf_do_ews" />
+					<add_player_choice_sub text="{40002,302}" position="left"		section="nfconf_do_global" />
+
+					<add_player_choice_sub text="{40002,306}" position="top_right"	section="nfconf_do_player" />
+					<add_player_choice_sub text="{40002,308}" position="right"		section="nfconf_do_player_cheat" />
+				</do_else>
+
+				<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" chance="$backlink"/>
+				<!-- clean -->
+				<remove_value name="$backlink"/>
+				<remove_value name="$on"/>
+				<remove_value name="$off"/>
+			</actions>
+		</cue>	
+
+		<cue name="NF_BASE_patchhelper" instantiate="true">
+			<conditions>
+				<event_object_signalled object="player.galaxy" param="'do.patch.station'" />
+			</conditions>
+			<delay min="10s" max="20s"/>
+			<actions>
+				<do_if value="event.param2? and typeof event.param2 == datatype.list">
+					<set_value name="$todo" exact="event.param2"/>
+				</do_if>
+				<do_else>
+					<set_value name="$todo" exact="[ event.param2 ]"/>
+				</do_else>
+
+				<do_all exact="$todo.count" counter="$count"> 
+					<do_if value="$todo.{$count} and $todo.{$count}.exists">
+						<patch_macro object="$todo.{$count}"/>
+					</do_if>
+				</do_all> 
+			</actions>
+		</cue>
+
+		<cue name="NF_BASE_SY" instantiate="true" namespace="this">
+			<conditions>
+				<event_object_signalled object="player.galaxy" param="'do.start.syscript'" />
+			</conditions>
+			<delay min="3s" max="5s"/>
+			<actions>
+				<set_value name="$text" exact="event.param2" />
+				<do_if value="event.param2? and event.param2.isclass.station and event.param2.canbuildships">
+					<set_value name="$text" exact="' ' + event.param2.knownname" operation="add"/>
+					<do_if value="event.param2.tradenpc and not event.param2.tradenpc.$orders?">
+						<set_value name="$text" exact="' RESTART'" operation="add"/>
+						<start_script object="event.param2.tradenpc" name="'trade.shipyard'"/>
+					</do_if>
+				</do_if>
+				<debug_text text="$text" filter="error" chance="100"/>
+				<remove_value name="$text"/>
+				<find_dock_location container="event.param2" name="$ShiptraderDocks" dockpopulationtype="dockpopulationtype.ships" multiple="true" />
+				<do_if value="$ShiptraderDocks.count and event.param2.tradenpc">
+					<do_all exact="$ShiptraderDocks.count" counter="$j" >
+						<set_value name="$DockHasShipTrader" exact="false" />
+						<do_all exact="$ShiptraderDocks.{$j}.actors.count" counter="$k" >
+							<do_if value="$ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.shiptrader or $ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.smallshiptrader">
+								<set_remote_commable actor="$ShiptraderDocks.{$j}.actors.{$k}" remote="true" />
+								<set_value name="$DockHasShipTrader" exact="true" />
+							</do_if>
+						</do_all>
+						<do_if value="$DockHasShipTrader" negate="true">
+							<!-- shiptrader / smallshiptrader -->
+							<find_object_component name="$buildmodule" object="event.param2" class="class.buildmodule" checkoperational="false">
+							  <match_buildsource sequence="$ShiptraderDocks.{$j}.component.sequence" stage="$ShiptraderDocks.{$j}.component.stage" />
+							</find_object_component>
+							<do_if value="$buildmodule">
+								<create_platform_actor name="$Shiptrader" dockingbay="$ShiptraderDocks.{$j}.component" type="entitytype.shiptrader">
+									<select race="race.argon" tags="tag.shiptrader"/>
+									<owner exact="event.param2.trueowner"/>
+								</create_platform_actor>
+							</do_if>
+							<do_else>
+								<create_platform_actor name="$Shiptrader" dockingbay="$ShiptraderDocks.{$j}.component" type="entitytype.smallshiptrader">
+									<select race="race.argon" tags="tag.smallshiptrader"/>
+									<owner exact="event.param2.trueowner"/>
+								</create_platform_actor>
+							</do_else>
+							<set_remote_commable actor="$Shiptrader" remote="true" />
+							<share_actor_account actor="$Shiptrader" otherobject="event.param2.tradenpc" />
+							<set_comm_handler actor="$Shiptrader" customhandler="true" />
+							<remove_value name="$Shiptrader"/>
+						</do_if>
+						<remove_value name="$buildmodule"/>
+						<remove_value name="$DockHasShipTrader"/>
+					</do_all>
+				</do_if>
+				<remove_value name="$DockHasShipTrader"/>
+			</actions>
+		</cue>
+
+
+		<!--
+			<signal_objects object="player.galaxy" param="'learned.something'" param2="[this, ware.inv_virtualseminarnavigation]" />
+		-->
+		<cue name="NF_BASE_SkillNPC" instantiate="true" namespace="this">
+			<conditions>
+				<event_object_signalled object="player.galaxy" param="'learned.something'" />
+				<check_value value="event.param2? and event.param2.{2}? and event.param2.{1}.exists and typeof event.param2.{2} == datatype.ware" />
+				<check_value value="event.param2.{1}.combinedskill le 75" />
+			</conditions>
+			<actions>
+			  <do_if value="event.param2.{1}.inventory.{event.param2.{2}}.count == (event.param2.{1}.combinedskill)i">
+				  <remove_inventory entity="event.param2.{1}" ware="event.param2.{2}" exact="event.param2.{1}.inventory.{event.param2.{2}}.count" />
+				  <do_if value="event.param2.{1}.combinedskill" max="74">
+					<set_value name="$Skill" exact="[skilltype.leadership, skilltype.navigation, skilltype.combat, skilltype.engineering, skilltype.management, skilltype.morale, skilltype.science]" />
+					<do_all exact="$Skill.count" counter="$k">
+						<do_if value="event.param2.{1}.skill.{$Skill.{$k}} lt 4">
+							<add_skill entity="event.param2.{1}" type="$Skill.{$k}" exact="1" />
+							<break chance="if event.param2.{1}.skill.{$Skill.{$k}} == 4 then 100 else 0" />
+						</do_if>
+					</do_all>
+					<remove_value name="$Skill"/>
+				  </do_if>
+			  </do_if>
+			  <do_elseif value="(event.param2.{1}.combinedskill)i" max="74">
+				<add_inventory entity="event.param2.{1}" ware="event.param2.{2}" exact="1" />
+			  </do_elseif>
+			  <debug_text text="'%4 %5 %1 skilled inv:%2 cs:%3 :: %6'.[event.param2.{1}.knownname, event.param2.{1}.inventory.{event.param2.{2}}.count, event.param2.{1}.combinedskill, event.param2.{1}, event.param2.{1}.typename, @event.param2.{3}]" chance="0"/>
+			</actions>
+		</cue>
+
+		<cue name="EWS_cue">
+			<conditions>
+				<check_any>
+					<event_object_signalled object="player.computer" param="'CM_EWS'" />
+					<event_object_signalled object="player.computer" param="'CM_EWS_SCOUT'" />
+				</check_any>
+				<check_value value="global.$nfconfig.$Check == 1" />
+			</conditions>
+			<delay exact="global.$nfconfig.$EWS_Delay"/>
+			<!--<delay exact="120s" />-->
+			<actions>
+				<do_if value="event.param2?" negate="true">
+					<debug_text text="'ERROR event.param2 missing'" filter="error" chance="0" />
+				</do_if>
+				<do_else>
+					<do_if value="event.param" exact="'CM_EWS_SCOUT'">
+						<write_to_logbook category="general" text="{40002,118}.[event.param2.{1}.name, event.param2.{2}.name]"/>
+						<show_notification caption="{40002,17}" details="{40002,119}.[event.param2.{1}.name, event.param2.{2}.name]" timeout="5s" queued="true" priority="8" sound="ews"/>
+						<!--<write_to_logbook category="general" text="{40002,19}.[event.param2.{1}, event.param2.{2}]"/>-->
+						<signal_cue_instantly cue="md.Guidance.NewTarget" param="[event.param2.{1}, false, false]" chance="if player.primaryship.zone == event.param2.{1}.zone then 100 else 0" />
+					</do_if>
+					<do_else>
+						<create_list name="$Zones"/>
+						<find_ship name="$EnemyShip" class="[class.ship_l, class.ship_xl]" functional="true" space="event.param2.zone" multiple="true">
+							<match_relation faction="faction.player" relation="enemy"/>
+							<match_distance object="event.param2" max="30km"/>
+							<match_any>
+								<match primarypurpose="objectpurpose.fight"/>
+							</match_any>
+						</find_ship>
+						<!-- check zero-->
+						<do_if value="@$EnemyShip.count gt 0" >
+							<do_if value="not $Zones.indexof.{event.param2.zone}">
+								<append_to_list name="$Zones" exact="event.param2.zone" />
+								<do_if value="global.$nfconfig.$EWS_Level lt 1">
+									<set_value name="global.$nfconfig.$EWS_Level" exact="1" />
+								</do_if>
+								<do_if value="(@$EnemyShip.count gt global.$nfconfig.$EWS_Level_cutoff) and (event.param2.zone != player.primaryship.zone)" chance="((@$EnemyShip.count / (global.$nfconfig.$EWS_Level * 1.0f)) * 100)i" >		 
+									<set_value name="$Loc" exact="event.param2.zone.name + ', ' + event.param2.zone.sector.knownname + ', ' + event.param2.zone.cluster.knownname"/>
+
+									<show_notification caption="{40002,17}" details="{40002,18}.[$Loc]" timeout="3s" queued="true" priority="8" sound="ews">
+										<interaction text="''" param="event.param2.zone" param2="'GiveMeTheMap'" />
+									</show_notification>
+
+									<write_to_logbook category="general" text="{40002,19}.[$Loc, $EnemyShip.count, $EnemyShip.{1}.name]"/>
+								</do_if>
+							</do_if>
+						</do_if>
+						<clear_list list="$Zones"/>
+					</do_else>
+				</do_else>
+
+				<reset_cue cue="EWS_cue"/>
+			</actions>
+		</cue>
+		<cue name="EWS_MapInteract_cue" instantiate="true">
+			<conditions>
+				<event_player_interaction param2="'GiveMeTheMap'"/>
+				<check_value value="event.param.isclass.zone" />
+			</conditions>
+			<!--<delay exact="10ms"/>-->
+			<actions>      
+				<set_value name="$ZoneMap" exact="event.param" />
+				<start_conversation actor="player.copilot" conversation="OpenMap"/>
+			</actions>
+			<cues>
+				<cue name="OpenMap_cue">
+					<conditions>
+						<event_conversation_started conversation="OpenMap" />
+					</conditions>
+					<actions>
+						<add_npc_line speaker="player.entity" line="1300" comment="give me the map"  />
+						<do_if value="global.$nfconfig.$EWS_MapSector" >
+							<open_conversation_menu menu="MapMenu" param="[0, 0, 'sector', $ZoneMap.sector, null, $ZoneMap]" />
+						</do_if>
+						<do_elseif value="not global.$nfconfig.$EWS_MapSector">
+							<open_conversation_menu menu="MapMenu" param="[0, 0, 'zone', $ZoneMap]" />
+						</do_elseif>
+						<add_conversation_view view="closeupdetailmonitor" />
+					</actions>
+				</cue>
+			</cues>
+		</cue>
+
+		<cue name="MM_defenceplatform_conv_outposts" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_conversation_next_section section="MMDP_conv_more"/>
+					<event_conversation_returned_to_section section="MMDP_conv_more" />
+				</check_any>
+			</conditions>
+			<actions>
+				<add_player_choice text="'%1 %2'.[{1004,15}, macro.struct_bt_alb_outpost_macro.name]" selectable="player.entity.money ge 10000000Cr" tooltip="'%1: %2%3'.[{1001,2964}, [10000000Cr].{1}.formatted.default, {1001,101}]" section="mmdp_platform_do" choiceparam="['place', event.param2.{2}, macro.struct_bt_alb_outpost_macro, player.primaryship.owner, 10000000Cr, [[class.gate,class.highwayexitgate,class.jumpbeacon], 0,-1000m,3000m, 10km]]" chance="(player.primaryship.owner.hasrelation.enemy.{faction.xenon})*100"/>
+				<add_player_choice text="'%1 %2'.[{1004,15}, macro.struct_at_xen_xenon_outpost_macro.name]" selectable="player.entity.money ge 10000000Cr" tooltip="'%1: %2%3'.[{1001,2964}, [10000000Cr].{1}.formatted.default, {1001,101}]" section="mmdp_platform_do" choiceparam="['place', event.param2.{2}, macro.struct_at_xen_xenon_outpost_macro, player.primaryship.owner, 10000000Cr, [[class.gate,class.highwayexitgate,class.jumpbeacon], 0,-1000m,3000m, 10km]]" chance="(not player.primaryship.owner.hasrelation.enemy.{faction.xenon})*100"/>
+			</actions>
+		</cue>
+
+
+		<cue name="NF_LostTradeUpdates" instantiate="true">
+			<conditions>
+				<event_player_relation_changed/>
+				<check_value value="event.param2 le faction.player.relation.neutral.min" />
+			</conditions>
+			<actions>
+				<find_station known="true" owner="event.param" multiple="true" space="player.galaxy" name="$todoStations" />
+				<do_all exact="$todoStations.count" counter="$Count">
+					<do_if value="$todoStations.{$Count}.hastradesubscription and $todoStations.{$Count}.trueowner.relationto.{faction.player} le faction.player.relation.neutral.min">
+						<remove_trade_subscription object="$todoStations.{$Count}" />
+					</do_if>
+				</do_all>
+				<remove_value name="$todoStations"/>
+			</actions>
+		</cue>
+
+		<cue name="NF_kill_NPC" instantiate="true" namespace="this">
+			<conditions>
+				<event_cue_signalled/>
+			</conditions>
+			<actions>
+				<do_if value="event.param.exists">
+					<set_owner object="event.param" faction="faction.neutral"/>
+					<destroy_object object="event.param"  explosion="false"/>
+				</do_if>
+			</actions>
+		</cue>
+
+		<!--
+		<set_value name="$temp_select" exact="['group', race., tag., 'ref']" />
+		<set_value name="$temp_object" exact="$Object" />
+		<set_value name="$temp_faction" exact="$temp_object.trueowner" comment="optional"/>
+		<set_value name="$temp_entitytype" exact="entitytype.marine" />
+		<set_value name="$temp_dock" exact="$ObjectDock" comment="optional"/>
+		<set_value name="$temp_Skill" exact="
+			[	
+				[skilltype.leadership,	'random', 3, 5],
+				[skilltype.navigation,	'random', 3, 5],
+				[skilltype.combat,		'random', 3, 5],
+				[skilltype.engineering,	'random', 3, 5],
+				[skilltype.management,	'random', 3, 5],
+				[skilltype.morale,		'random', 3, 5],
+				[skilltype.science,		'random', 3, 5]
+			]" comment="optional / true or false"/>
+		<set_value name="$temp_assign" exact="'pilot'" comment="optional / pilot, defence, engineer, marine, architect, manager, control"/>
+		<set_value name="$temp_script" exact="'default'" comment="optional"/>
+		<include_actions ref="md.NF_BASE.NF_create_actor" />
+		<remove_value name="$newActor"/>
+		-->
+		<library name="NF_create_actor">
+			<actions>
+				<set_value name="$newActor" exact="null"/>
+				<do_if value="$temp_faction?" negate="true">
+					<set_value name="$temp_faction" exact="$temp_object.trueowner" />
+				</do_if>
+
+				<do_if value="@$temp_select.{1}">
+					<create_cue_actor name="$tempActor" cue="this">
+						<select group="$temp_select.{1}"/>
+						<owner exact="$temp_faction"/>
+					</create_cue_actor>
+				</do_if>
+				<do_elseif value="@$temp_select.{2} and @$temp_select.{3}">
+					<create_cue_actor name="$tempActor" cue="this">
+						<select race="$temp_select.{2}" tags="$temp_select.{3}"/>
+						<owner exact="$temp_faction"/>
+					</create_cue_actor>
+				</do_elseif>
+				<do_elseif value="@$temp_select.{4}">
+					<create_cue_actor name="$tempActor" cue="this">
+						<select ref="$temp_select.{4}"/>
+						<owner exact="$temp_faction"/>
+					</create_cue_actor>
+				</do_elseif>
+				<do_else>
+					<create_cue_actor name="$tempActor" cue="this">
+						<select race="if @$temp_select.{2} then $temp_select.{2} else race.{$temp_faction.id}" tags="if @$temp_select.{3} then $temp_select.{3} else tag.{$temp_entitytype}"/>
+						<owner exact="$temp_faction"/>
+					</create_cue_actor>
+				</do_else>
+
+				<do_if value="$tempActor" negate="true" comment="fallback">
+					<create_cue_actor name="$tempActor" cue="this">
+						<select race="race.argon" tags="if @$temp_select.{3} then $temp_select.{3} else tag.{$temp_entitytype}"/>
+						<owner exact="$temp_faction"/>
+					</create_cue_actor>
+				</do_if>
+				
+				<do_if value="$tempActor">
+					<do_if value="$temp_Skill? and typeof $temp_Skill == datatype.list">
+						<!-- fine -->
+					</do_if>
+					<do_elseif value="$temp_Skill? and $temp_Skill == 'max'">
+						<set_value name="$temp_Skill" exact="
+							[	
+								[skilltype.leadership,	'exact'],
+								[skilltype.navigation,	'exact'],
+								[skilltype.combat,		'exact'],
+								[skilltype.engineering,	'exact'],
+								[skilltype.management,	'exact'],
+								[skilltype.morale,		'exact'],
+								[skilltype.science,		'exact']
+							]" />
+					</do_elseif>
+					<do_elseif value="$temp_Skill? and $temp_Skill">
+						<set_value name="$temp_Skill" exact="
+							[	
+								[skilltype.leadership,	'random', 3, 5],
+								[skilltype.navigation,	'random', 3, 5],
+								[skilltype.combat,		'random', 3, 5],
+								[skilltype.engineering,	'random', 3, 5],
+								[skilltype.management,	'random', 3, 5],
+								[skilltype.morale,		'random', 3, 5],
+								[skilltype.science,		'random', 3, 5]
+							]" />
+					</do_elseif>
+					<do_elseif value="$temp_Skill? and not $temp_Skill">
+						<remove_value name="$temp_Skill"/>
+						<create_list name="$temp_Skill"/>
+					</do_elseif>
+					<do_else>
+						<set_value name="$temp_Skill" exact="
+							[	
+								[skilltype.leadership,	'random', 1, 3],
+								[skilltype.navigation,	'random', 1, 3],
+								[skilltype.combat,		'random', 1, 3],
+								[skilltype.engineering,	'random', 1, 3],
+								[skilltype.management,	'random', 1, 3],
+								[skilltype.morale,		'random', 1, 3],
+								[skilltype.science,		'random', 1, 3]
+							]" />
+					</do_else>
+	
+					<do_all exact="$temp_Skill.count" counter="$k">
+						<do_if value="$temp_Skill.{$k}.{2}" exact="'random'">
+							<set_value name="$skillvalue" min="if $temp_Skill.{$k}.{3}? then $temp_Skill.{$k}.{3} else 1" max="if $temp_Skill.{$k}.{4}? then $temp_Skill.{$k}.{4} else 5" />
+						</do_if>
+						<do_elseif value="$temp_Skill.{$k}.{2}" exact="'exact'">
+							<set_value name="$skillvalue" exact="if $temp_Skill.{$k}.{3}? then $temp_Skill.{$k}.{3} else 5" />
+						</do_elseif>
+						<do_else>
+							<set_value name="$skillvalue" min="if $temp_Skill.{$k}.{3}? then $temp_Skill.{$k}.{3} else 1" max="if $temp_Skill.{$k}.{4}? then $temp_Skill.{$k}.{4} else 3" />
+						</do_else>
+	
+						<do_if value="typeof $temp_Skill.{$k}.{1} == datatype.skilltype and $skillvalue ge 0 and $skillvalue le 5">
+							<set_skill entity="$tempActor" type="$temp_Skill.{$k}.{1}" exact="$skillvalue"/>
+						</do_if>
+					</do_all>
+	
+					<set_entity_type entity="$tempActor" type="$temp_entitytype"/>
+	
+					<do_if value="$temp_dock? and $temp_dock">
+						<add_actor_to_platform actor="$tempActor" dockingbay="$temp_dock.component"/>
+					</do_if>
+					<do_else>
+						<add_actor_to_room actor="$tempActor" object="$temp_object" />
+					</do_else>
+	
+					<do_if value="$temp_assign" exact="'pilot'">
+						<assign_pilot actor="$tempActor" object="$temp_object" />
+					</do_if>
+					<do_elseif value="$temp_assign" exact="'defence'">
+						<assign_defence_manager actor="$tempActor" object="$temp_object" />
+					</do_elseif>
+					<do_elseif value="$temp_assign" exact="'engineer'">
+						<assign_engineer actor="$tempActor" object="$temp_object" />
+					</do_elseif>
+					<do_elseif value="$temp_assign" exact="'architect'">
+						<assign_architect actor="$tempActor" object="$temp_object" />
+						<signal_cue_instantly cue="md.NPC_Architect.Base" param="[$tempActor, false, true]"/>
+						<signal_cue_instantly cue="md.NPC_Architect_nP.Base" param="[$tempActor, false, true]"/>
+					</do_elseif>
+					<do_elseif value="$temp_assign" exact="'marine'">
+						<assign_boarding_commander actor="$tempActor" object="$temp_object" />
+					</do_elseif>
+					<do_elseif value="$temp_assign" exact="'manager'">
+						<assign_trade_manager actor="$tempActor" object="$temp_object" />
+					</do_elseif>
+					<do_elseif value="$temp_assign" exact="'control'">
+						<assign_control_entity actor="$tempActor" object="$temp_object" />
+					</do_elseif>
+
+					<do_if value="global.$factionCEOs.{'$' + $temp_faction.id}? and ['manager','architect','pilot'].indexof.{$temp_assign} ">
+						<share_actor_account actor="$tempActor" otherobject="global.$factionCEOs.{'$' + $temp_faction.id}"/>
+					</do_if>
+
+					<do_if value="$temp_script? and $temp_script == 'default'">
+						<do_if value="$temp_assign" exact="'pilot'">
+							<start_script object="$tempActor" name="'player.default'" chance="$temp_object.isplayerowned*100"/>
+						</do_if>
+						<do_elseif value="$temp_assign" exact="'defence'">
+							<start_script object="$tempActor" name="if $temp_object.isclass.ship then 'fight.defend.capital' else if $temp_faction == faction.player then 'fight.station.player' else 'fight.attack.object'"/>
+						</do_elseif>
+						<do_elseif value="$temp_assign" exact="'engineer'">
+							<start_script object="$tempActor" name="'engineer.ai'"/>
+						</do_elseif>
+						<do_elseif value="$temp_assign" exact="'manager'">
+							<do_if value="$temp_object.canbuildships">
+								<start_script object="$tempActor" name="'trade.shipyard'"/>
+							</do_if>
+							<do_elseif value="$temp_object.canproduceships">
+								<start_script object="$tempActor" name="'trade.shipyard.small'"/>
+							</do_elseif>
+							<do_elseif value="$temp_object.isplayerowned">
+								<start_script object="$tempActor" name="'trade.station.player'"/>
+							</do_elseif>
+							<do_else>
+								<start_script object="$tempActor" name="'trade.station'"/>
+							</do_else>
+						</do_elseif>
+					</do_if>
+	
+					<set_value name="$newActor" exact="$tempActor"/>
+					<remove_cue_actor actor="$tempActor" cue="this"/>
+				</do_if>
+
+				<remove_value name="$temp_script"/>
+				<remove_value name="$temp_assign"/>
+				<remove_value name="$temp_select"/>
+				<remove_value name="$temp_object"/>
+				<remove_value name="$temp_faction"/>
+				<remove_value name="$temp_entitytype"/>
+				<remove_value name="$temp_dock"/>
+				<remove_value name="$temp_Skill"/>
+			</actions>
+		</library>
+	</cues>
+</mdscript>

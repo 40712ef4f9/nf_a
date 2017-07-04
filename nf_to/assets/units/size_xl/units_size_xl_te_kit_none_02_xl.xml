@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+<components>
+	<component name="units_size_xl_te_kit_none_02_xl" class="ship_xl">
+		<source geometry="assets\units\size_xl\\units_size_xl_te_kit_container_02_data"/>
+		<layers>
+			<layer>
+				<waypoints>
+					<waypoint name="XU_Waypoint06" tags="sizeLevel1 typedock end dynamicmasstraffic " x="-20.6652" y="3.279703" z="795.1301">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint05" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-20.66521" y="3.279706" z="1026.633">
+						<links>
+							<link ref="XU_Waypoint06"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint10" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-17.04016" y="20.40471" z="1225.692">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint09" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-17.04016" y="20.40471" z="1076.633">
+						<links>
+							<link ref="XU_Waypoint10"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint08" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="9.959717" y="20.40471" z="1225.692">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint07" tags="typenormal sizeLevel1 dynamicmasstraffic " x="9.959717" y="20.40471" z="1076.633">
+						<links>
+							<link ref="XU_Waypoint08"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint04" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-17.04022" y="-13.84529" z="1076.634">
+						<links>
+							<link ref="XU_Waypoint05"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint03" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-17.04021" y="-13.84529" z="1225.692">
+						<links>
+							<link ref="XU_Waypoint04"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint02" tags="typenormal sizeLevel1 dynamicmasstraffic " x="9.959798" y="-13.84529" z="1076.634">
+						<links>
+							<link ref="XU_Waypoint05"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint01" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="9.959813" y="-13.84529" z="1225.693">
+						<links>
+							<link ref="XU_Waypoint02"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint12" tags="typenormal sizeLevel1 dynamicmasstraffic " x="13.58481" y="3.279705" z="1026.634">
+						<links>
+							<link ref="XU_Waypoint07"/>
+							<link ref="XU_Waypoint09"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint11" tags="sizeLevel1 typedock start dynamicmasstraffic " x="13.58481" y="3.279702" z="795.1301">
+						<links>
+							<link ref="XU_Waypoint12"/>
+						</links>
+					</waypoint>
+				</waypoints>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="ship">
+				<offset/>
+			</connection>
+			<connection name="Connection01" tags="part nocollision  ">
+				<offset>
+					<position x="0" y="0" z="783.2668"/>
+				</offset>
+				<parts>
+					<part name="part_dummy" wreck="part_dummy_wreck">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="lensflares.vertexcolor_basis"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="10" y="0" z="10"/>
+							<center x="0" y="0" z="0"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection02" tags="part  ">
+				<offset>
+					<position x="0" y="0" z="783.2668"/>
+				</offset>
+				<parts/>
+			</connection>
+			<connection name="connection_cockpit01" tags="cockpit  cockpit_visible">
+				<offset>
+					<position x="0" y="-50.04341" z="851"/>
+				</offset>
+			</connection>
+			<connection name="connection_radar_fallback01" tags="radar ">
+				<offset>
+					<position x="0" y="0" z="783.2668"/>
+				</offset>
+			</connection>
+			<connection name="connection_jumpdrive01" group="group01 " tags="jumpdrive_small ">
+				<offset>
+					<position x="-176.3155" y="6.844878E-02" z="759.89905"/>
+					<quaternion qx="-0.7071074" qy="-0.7071061" qz="-8.431971E-09" qw="-8.432358E-09"/>
+				</offset>
+			</connection>
+			<connection name="connection_storage01" tags="storage ">
+				<offset>
+					<position x="0" y="0" z="783.2668"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_s01" group="group01" tags="dock_s ">
+				<offset>
+					<position x="38.65629" y="-7.415915E-02" z="817"/>
+					<quaternion qx="0.5000001" qy="0.4999999" qz="-0.4999999" qw="-0.5"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen_external01" tags="shieldgenerator external ">
+				<offset>
+					<position x="-176.3155" y="6.844878E-02" z="740"/>
+					<quaternion qx="-0.7071074" qy="-0.7071061" qz="-8.431971E-09" qw="-8.432358E-09"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen_01" group="group01 " tags="shieldgenerator ">
+				<offset>
+					<position x="0" y="69.24698" z="760.3529"/><!-- 920 -->
+					<quaternion qx="-0.5" qy="-0.5000001" qz="0.5" qw="0.5"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen_external02" tags="shieldgenerator external ">
+				<offset>
+					<position x="176.0791" y="6.844878E-02" z="740"/>
+					<quaternion qx="4.216078E-09" qy="-2.177564E-07" qz="-0.7071068" qw="-0.7071068"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_te_kit_defence_a" tags="destructible">
+				<offset>
+					<position x="-0.1829491" y="0" z="376.3885"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_te_kit_container_a" tags="destructible">
+				<offset>
+					<position x="-0.1829262" y="0" z="544.2493"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_te_kit_container_a1" tags="destructible">
+				<offset>
+					<position x="-0.1829739" y="0" z="208.2737"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_te_kit_livingsection_a" tags="destructible">
+				<offset>
+					<position x="-0.1830162" y="0" z="-105.6671"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_te_kit_container_a2" tags="destructible">
+				<offset>
+					<position x="-0.1830597" y="0" z="-419.6196"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_te_kit_defence_a1" tags="destructible">
+				<offset>
+					<position x="-0.1830845" y="0" z="-587.6288"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_te_kit_container_a3" tags="destructible">
+				<offset>
+					<position x="-0.1831017" y="0" z="-755.8027"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_te_kit_end_a" tags="destructible">
+				<offset>
+					<position x="0" y="0" z="-866.6664"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_te_kit_front_b" tags="destructible">
+				<offset>
+					<position x="0" y="0" z="755"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_m01" tags="dock_m ">
+				<offset>
+					<position x="0" y="0" z="755"/>
+				</offset>
+			</connection>
+		</connections>
+	</component>
+</components>

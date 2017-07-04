@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<replace sel="/groups/group[@name='xen_heavy_fighter']"> 	
+	  <group name="xen_heavy_fighter">
+		<select macro="units_size_s_xenon_swarm_attack_drone_01_macro" weight="10"/>
+		<select macro="units_size_s_xenon_swarm_attack_drone_02_macro" weight="30"/>
+		<select macro="units_size_m_xenon_fighter_01_macro"            weight="40"/>
+		<select macro="units_size_m_xenon_bomber_01_macro"             weight="20"/>
+	  </group>
+	</replace>   
+	<add sel="/groups/group[@name='sos_xl_plunderer']/select[@macro='units_size_xl_cargo_hauler_2_macro']" type="@weight" >75</add>
+	<add sel="/groups/group[@name='sos_xl_plunderer']">
+		<select macro="units_size_xl_kit_destroyer_01_macro"             weight="25"/>
+	</add>
+	<replace sel="/groups/group[@name='hev_xl_plunderer']/select[@macro='units_size_xl_cargo_hauler_2_macro']/@macro">units_size_xl_cs_omicron_ship_02_pir_macro</replace>
+	<add sel="/groups"> 	
+		<group name="arg_destroyer_sp">
+			<select macro="units_size_xl_cs_omicron_ship_02_5_macro" weight="30"/>
+			<select macro="units_size_xl_cs_omicron_ship_03_mk2_macro" weight="15"/>
+			<select macro="units_size_xl_cs_omicron_ship_02_macro" weight="20"/>
+			<select macro="units_size_xl_cs_omicron_ship_03_macro" weight="35"/>
+		</group>          
+		<group name="omicron_miner_minerals_large">
+			<select macro="units_size_l_crystal_collector_macro" weight="15"/>
+			<select macro="units_size_l_nividium_collector_macro" weight="15"/>
+			<select macro="units_size_l_ore_collector_macro" weight="15"/>
+			<select macro="units_size_l_silicon_collector_macro" weight="15"/>
+			<select macro="units_size_xl_cs_omicron_ship_04_mk2_macro" weight="40"/>
+		</group>
+
+		<group name="nf_omicron_xl">
+			<select macro="units_size_xl_cs_omicron_ship_02_macro" weight="40"/>
+			<select macro="units_size_xl_cs_omicron_ship_03_macro" weight="15"/>
+			<select macro="units_size_xl_cs_omicron_ship_02_5_macro" weight="15"/>
+			<select macro="units_size_xl_cs_omicron_ship_02_mk2_macro" weight="30"/>
+		</group>
+		<group name="nf_omicron_l">
+			<select macro="units_size_l_cs_omicron_ship_03_sa_macro" weight="20"/>
+			<select macro="units_size_xl_cs_omicron_ship_03_macro" weight="30"/>
+			<select macro="units_size_xl_cs_omicron_ship_02_yz_macro" weight="50"/>
+		</group>
+		<group name="nf_albion_xl">
+			<select macro="units_size_xl_capital_destroyer_2_macro" weight="40"/>
+			<select macro="units_size_xl_red_destroyer_macro" weight="20"/>
+			<select macro="units_size_xl_capital_destroyer_1_macro" weight="30"/>
+		</group>
+		<group name="nf_albion_l">
+			<select macro="units_size_l_dv_fury_new_defence_macro" weight="20"/>
+			<select macro="units_size_l_dv_arb_new_defence_macro" weight="30"/>
+			<select macro="units_size_l_single_attack_ship_macro" weight="50"/>
+		</group>
+		<group name="mmrya_destroyer">
+			<select macro="units_size_xl_split_m1_macro" weight="15"/>
+			<select macro="units_size_xl_split_m1s_macro" weight="35"/>
+			<select macro="units_size_xl_split_m2s_macro" weight="40"/>
+			<select macro="units_size_xl_split_tls_macro" weight="10"/>
+		</group>          
+	</add>   
+	<add sel="/groups"> 	
+		<group name="technical_care_med">
+			<select macro="units_size_m_crystal_collector_macro" weight="25"/>
+			<select macro="units_size_m_hydrogen_collector_macro" weight="25"/>
+			<select macro="units_size_m_ice_collector_macro" weight="25"/>
+			<select macro="units_size_m_nividium_collector_macro" weight="25"/>
+		</group>          
+	</add>   
+</diff>

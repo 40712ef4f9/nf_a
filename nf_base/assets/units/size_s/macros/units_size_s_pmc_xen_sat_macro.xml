@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Michael (192.168.3.145) at 18.07.2014_10-54-22-->
+<macros>
+  <macro name="units_size_s_pmc_xen_sat_macro" class="ship_s">
+    <component ref="units_size_s_pmc_xen_01" />
+    <properties>
+      <identification name="{20101,8811}" description="{20101,8812}" mapicon="shipicon_fighter_s" />
+      <weapons>
+        <slot ref="connection_weapon_prim01" />
+        <slot ref="connection_weapon_prim02" />
+        <slot ref="connection_weapon_prim03" />
+        <slot ref="connection_weapon_prim04" />
+      </weapons>
+      <hull max="66000" />
+      <secrecy level="1" />
+      <!--purpose primary="fight" /-->
+    </properties>
+    <connections>
+      <connection ref="connection_cockpit01">
+        <macro ref="unit_combat_ar_cockpit_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_engine01">
+        <macro ref="engine_ship_s_pmc_xen_01_macro" connection="conn_component01" />
+      </connection>
+      <connection ref="connection_radar01">
+        <macro ref="radar_ship_xl_xenon_01_macro" connection="ship" />
+      </connection>
+      <connection ref="connection_shieldgen01">
+        <macro ref="shieldgenerator_ship_s_09_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_weapon_prim01">
+        <macro ref="weapon_invisible_plasma_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_weapon_prim02">
+        <macro ref="weapon_invisible_plasma_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_weapon_prim03">
+        <macro ref="weapon_invisible_plasma_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_weapon_prim04">
+        <macro ref="weapon_invisible_plasma_mk1_macro" connection="connection_component01" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

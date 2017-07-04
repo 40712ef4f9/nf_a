@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="/ships">
+		<ship id="nf_dummy_hol_xl" group="nf_albion_xl">
+			<category tags="[homeoflight, military]" faction="[atlas, terracorp, terran]" size="ship_xl"/>
+			<pilot ref="fighter_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<units>
+				<unit category="defence" mk="1" min="50" max="70"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+				<unit category="transport" mk="1" min="10" max="20"/>
+			</units>
+			<drop ref="ship_large_military"/>
+		</ship>
+
+		<ship id="nf_dummy_hol_l" group="nf_albion_l">
+			<category tags="[homeoflight, military]" faction="[atlas, terracorp, terran]" size="ship_l"/>
+			<pilot ref="fighter_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<units>
+				<unit category="defence" mk="1" min="50" max="70"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+				<unit category="transport" mk="1" min="10" max="20"/>
+			</units>
+			<drop ref="ship_large_military"/>
+		</ship>
+		<ship id="nf_dummy_hol_m" macro="units_size_m_pmc_xen_02_macro">
+			<category tags="[homeoflight, fighter, military]" faction="[atlas, terracorp, terran]" size="ship_m"/>
+			<pilot ref="fighter_albion_random"/>
+			<drop ref="ship_small_military"/>
+		</ship>
+		<ship id="nf_dummy_hol_s" macro="units_size_s_pmc_xen_01_macro">
+			<category tags="[homeoflight, fighter, military]" faction="[atlas, terracorp, terran]" size="ship_s"/>
+			<pilot ref="fighter_albion_random"/>
+			<drop ref="ship_small_military"/>
+		</ship>
+
+		<!-- HoL DLC -->
+		<ship id="mmhol_miner_hydrogen_large" macro="units_size_l_kit_minerl_03s_macro">
+			<category tags="[homeoflight, miner, hydrogen, mission]" faction="[terran, terracorp]" size="ship_l"/>
+			<pilot ref="trader_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<cargo>
+				<wares list="[hydrogen]" chance="80">
+					<fillpercent min="10" max="60"/>
+				</wares>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="30" max="80"/>
+				</wares>
+			</cargo>
+			<units>
+				<unit category="defence" mk="1" min="20" max="30"/>
+				<unit category="gascollector" mk="1" min="20" max="40"/>
+				<unit category="gascollector" mk="2" min="20" max="30"/>
+				<unit category="transport" mk="1" min="60" max="90"/>
+				<unit category="welder" mk="1" min="5" max="10"/>
+			</units>
+			<drop ref="ship_large_civilian"/>
+		</ship>
+		<ship id="mmhol_miner_ions_large" macro="units_size_l_kit_minerl_03s_macro">
+			<category tags="[homeoflight, miner, ions, mission]" faction="[terran, terracorp]" size="ship_l"/>
+			<pilot ref="trader_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<cargo>
+				<wares list="[ions]" chance="80">
+					<fillpercent min="10" max="60"/>
+				</wares>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="30" max="80"/>
+				</wares>
+			</cargo>
+			<units>
+				<unit category="defence" mk="1" min="20" max="30"/>
+				<unit category="gascollector" mk="1" min="20" max="40"/>
+				<unit category="gascollector" mk="2" min="20" max="30"/>
+				<unit category="transport" mk="1" min="60" max="90"/>
+				<unit category="welder" mk="1" min="5" max="10"/>
+			</units>
+			<drop ref="ship_large_civilian"/>
+		</ship>
+		<ship id="mmhol_miner_plasma_large" macro="units_size_l_kit_minerl_03s_macro">
+			<category tags="[homeoflight, miner, plasma, mission]" faction="[terran, terracorp]" size="ship_l"/>
+			<pilot ref="trader_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<cargo>
+				<wares list="[plasma]" chance="80">
+					<fillpercent min="10" max="60"/>
+				</wares>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="30" max="80"/>
+				</wares>
+			</cargo>
+			<units>
+				<unit category="defence" mk="1" min="20" max="30"/>
+				<unit category="gascollector" mk="1" min="20" max="40"/>
+				<unit category="gascollector" mk="2" min="20" max="30"/>
+				<unit category="transport" mk="1" min="60" max="90"/>
+				<unit category="welder" mk="1" min="5" max="10"/>
+			</units>
+			<drop ref="ship_large_civilian"/>
+		</ship>
+		<ship id="mmhol_miner_ice_large" macro="units_size_l_kit_miner_03s_macro">
+			<category tags="[homeoflight, miner, ice, mission]" faction="[terran, terracorp]" size="ship_l"/>
+			<pilot ref="trader_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<cargo>
+				<wares list="[ice]" chance="80">
+					<fillpercent min="10" max="60"/>
+				</wares>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="30" max="80"/>
+				</wares>
+			</cargo>
+			<units>
+				<unit category="defence" mk="1" min="20" max="30"/>
+				<unit category="orecollector" mk="1" min="10" max="30"/>
+				<unit category="orecollector" mk="2" min="10" max="20"/>
+				<unit category="welder" mk="1" min="5" max="10"/>
+				<unit category="transport" mk="1" min="60" max="90"/>
+			</units>
+			<drop ref="ship_large_civilian"/>
+		</ship>
+		<ship id="mmhol_miner_mineral_large" macro="units_size_l_kit_miner_03s_macro">
+			<category tags="[homeoflight, miner, crystals, nividium, ore, silicon, mission]" faction="[terran, terracorp]" size="ship_l"/>
+			<pilot ref="trader_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<cargo>
+				<wares list="[crystals, nividium, ore, silicon]" multiple="true" chance="80">
+					<fillpercent min="10" max="60"/>
+
+				</wares>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="30" max="80"/>
+				</wares>
+			</cargo>
+			<units>
+				<unit category="defence" mk="1" min="20" max="30"/>
+				<unit category="orecollector" mk="1" min="10" max="30"/>
+				<unit category="orecollector" mk="2" min="10" max="20"/>
+				<unit category="welder" mk="1" min="5" max="10"/>
+				<unit category="transport" mk="1" min="60" max="90"/>
+			</units>
+			<drop ref="ship_large_civilian"/>
+		</ship>
+		<ship id="mmhol_trader_bulk_large" macro="units_size_l_kit_cargo_03_macro">
+			<category tags="[homeoflight, freighter, bulk, mission]" faction="[terran, terracorp]" size="ship_l"/>
+			<pilot ref="trader_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<basket basket="albion_bulk"/>
+			<cargo>
+				<wares multiple="false" chance="70">
+					<fillpercent min="40" max="90"/>
+				</wares>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="30" max="80"/>
+				</wares>
+			</cargo>
+			<drop ref="ship_large_civilian"/>
+			<units>
+				<unit category="defence" mk="1" min="20" max="30"/>
+				<unit category="transport" mk="1" min="60" max="80"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+			</units>
+		</ship>
+		<ship id="mmhol_trader_liquid_large" macro="units_size_l_kit_cargo_03s_macro">
+			<category tags="[homeoflight, freighter, liquid, mission]" faction="[terran, terracorp]" size="ship_l"/>
+			<pilot ref="trader_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<basket basket="liquid"/>
+			<cargo>
+				<wares multiple="false" chance="70">
+					<fillpercent min="40" max="90"/>
+				</wares>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="30" max="80"/>
+				</wares>
+			</cargo>
+			<drop ref="ship_large_civilian"/>
+			<units>
+				<unit category="defence" mk="1" min="20" max="30"/>
+				<unit category="transport" mk="1" min="60" max="80"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+			</units>
+		</ship>
+		<ship id="mmhol_trader_container_large" macro="units_size_l_kit_cargo_03_macro">
+			<category tags="[homeoflight, freighter, container, mission]" faction="[terran, terracorp]" size="ship_l"/>
+			<pilot ref="trader_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<basket basket="albion_container"/>
+			<cargo>
+				<wares multiple="false" chance="70">
+					<fillpercent min="40" max="90"/>
+				</wares>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="30" max="80"/>
+				</wares>
+			</cargo>
+			<drop ref="ship_large_civilian"/>
+			<units>
+				<unit category="defence" mk="1" min="20" max="30"/>
+				<unit category="transport" mk="1" min="60" max="80"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+			</units>
+		</ship>
+		<ship id="mmhol_trader_container_large_l" macro="units_size_l_kit_container_03_macro">
+			<category tags="[homeoflight, freighter, container, mission]" faction="[terran, terracorp]" size="ship_l"/>
+			<pilot ref="trader_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<basket basket="albion_container"/>
+			<cargo>
+				<wares multiple="false" chance="70">
+					<fillpercent min="40" max="90"/>
+				</wares>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="30" max="80"/>
+				</wares>
+			</cargo>
+			<drop ref="ship_large_civilian"/>
+			<units>
+				<unit category="defence" mk="1" min="20" max="30"/>
+				<unit category="transport" mk="1" min="60" max="80"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+			</units>
+		</ship>
+		<ship id="mmhol_trader_energy_large" macro="units_size_l_kit_cargo_03e_macro">
+			<category tags="[homeoflight, freighter, energy, mission]" faction="[terran, terracorp]" size="ship_l"/>
+			<pilot ref="trader_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<basket basket="energy"/>
+			<cargo>
+				<wares multiple="false" chance="70">
+					<fillpercent min="40" max="90"/>
+				</wares>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="30" max="80"/>
+				</wares>
+			</cargo>
+			<drop ref="ship_large_civilian"/>
+			<units>
+				<unit category="defence" mk="1" min="20" max="30"/>
+				<unit category="transport" mk="1" min="60" max="80"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+			</units>
+		</ship>
+		<!-- Advertisment ships -->
+		<ship id="cruises"  macro="units_size_l_cruise2_macro">
+			<category tags="[homeoflight]" faction="[terracorp]" size="ship_l"/>
+			<owner exact="civilian" overridenpc="true"/>
+			<pilot>
+				<select faction="terracorp" tags="commander"/>
+			</pilot>
+			<defence>
+				<select faction="terracorp" tags="defencecontrol"/>
+			</defence>
+			<engineer>
+				<select faction="terracorp" tags="engineer"/>
+			</engineer>
+			<cargo>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="30" max="80"/>
+				</wares>
+			</cargo>
+			<units>
+				<unit category="marine" mk="3" min="10" max="20"/>
+				<unit category="marine" mk="2" min="20" max="30"/>
+				<unit category="marine" mk="1" min="50" max="70"/>
+				<unit category="defence" mk="3" min="20" max="30"/>
+				<unit category="defence" mk="1" min="20" max="30"/>
+				<unit category="transport" mk="1" min="3" max="10"/>
+				<unit category="welder" mk="1" min="2" max="4"/>
+			</units>
+		</ship>
+	</add> 
+</diff>

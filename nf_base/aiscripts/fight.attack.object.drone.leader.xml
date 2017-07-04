@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="/aiscript/interrupts">
+		<handler>
+			<conditions>
+				<check_any>
+					<event_object_signalled object="this.ship" param="'intercept missile'" />
+					<event_object_signalled object="this.ship" param="'update targets'" />
+				</check_any>
+				<check_value value="this.attention ge attention.visible" />
+				<check_value value="not $defenceaction? or $defenceaction lt player.age" />
+			</conditions>
+			<delay min="50ms" max="500ms"/>
+			<actions>
+				<do_if value="$additionaltargets? or typeof $additionaltargets == datatype.group" negate="true">
+					<remove_value name="$additionaltargets" />
+					<create_group groupname="$additionaltargets" />
+				</do_if>
+				<do_if value="event.param == 'intercept missile'">
+					<set_value name="$defenceaction" exact="player.age+10s" />
+				</do_if>
+				<do_else>
+					<do_if value="event.param2? and typeof event.param2 == datatype.list and event.param2.count">
+						<clear_group group="$additionaltargets"/>
+						<set_value name="$defenceaction" exact="player.age+10s" />
+						<add_to_group groupname="$additionaltargets" list="event.param2" />
+					</do_if>
+					<do_else>
+						<resume label="gohome" />
+					</do_else>
+				</do_else>
+				<abort_called_scripts resume="fireandmaneuver" />
+			</actions>
+		</handler>
+	</add>
+	<add sel="//attention[@min='visible']/actions/label[@name='fireandmaneuver']" pos="after">
+		<remove_value name="$additionalmissiles" />
+		<do_if value="this.ship.commander.defencenpc.$missiles? and this.ship.commander.defencenpc.$missiles.count">
+			<do_if value="$target.isoperational and $additionaltargets and $additionaltargets.list.indexof.{$target} == 0">
+			  <add_to_group groupname="$additionaltargets" object="$target" />
+			</do_if>
+			<set_value name="$maxcombatrange" exact="this.ship.maxcombatrange.all"/>
+			<set_value name="$targetdist" exact="if $target.isoperational then this.ship.distanceto.{$target} else 20km"/>
+			<do_all exact="this.ship.commander.defencenpc.$missiles.count" counter="$f" >
+				<set_value name="$missile" exact="this.ship.commander.defencenpc.$missiles.{$f}" />
+				<do_if value="$missile.exists" negate="true">
+					<continue />
+				</do_if>
+				<set_value name="$missiledist" exact="this.ship.distanceto.{$missile}" />
+				<set_value name="$missiledist_c" exact="this.ship.commander.distanceto.{$missile}" />
+				<do_if value="$missiledist lt 15km and $missiledist_c gt $missiledist and $missiledist_c gt 4km">
+					<check_line_of_sight name="$result" object="this.ship" target="$missile" />
+					<do_if value="$result">
+						<do_if value="$missiledist lt $targetdist">
+							<set_value name="$target" exact="$missile" />
+							<set_value name="$targetdist" exact="$missiledist"/>
+							<set_value name="$additionalmissiles"/>
+							<do_if value="$missiledist le $maxcombatrange">
+								<break />
+							</do_if>
+						</do_if>
+					</do_if>
+				</do_if>
+			</do_all>
+			<remove_value name="$maxcombatrange" />
+			<remove_value name="$missiledist_c" />
+			<remove_value name="$missiledist" />
+			<remove_value name="$targetdist" />
+			<remove_value name="$missile" />
+			<remove_value name="$result" />
+			<remove_from_group group="this.ship.commander.defencenpc.$missiles" object="$target" />
+		</do_if>
+	</add>
+	<replace sel="//shoot_at[@slot='tag.primary_slot']/@additional_targets">if $additionalmissiles? and this.ship.commander.defencenpc.$missiles? then this.ship.commander.defencenpc.$missiles.list else @$additionaltargets.list</replace>
+	<add sel="//attention[@min='visible']/actions/label[@name='gohome']"  pos="before" >
+      <do_if value="$additionalmissiles? and @this.ship.commander.defencenpc.$missiles.list.count">
+        <resume label="fireandmaneuver" />
+      </do_if>
+      <do_elseif value="this.ship.commander.exists and @this.ship.commander.defencenpc.$dronetargetsShare">
+        <signal_objects object="this.ship.commander" param="'update targets'" param2="this.ship"/>
+		<move_to object="this.ship" destination="this.ship.zone" flightbehaviour="flightbehaviour.halfloop" forcesteering="true" >
+		  <interrupt_after_time time="6s" />
+		</move_to>
+      </do_elseif>
+	</add>
+</diff>

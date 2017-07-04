@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="trade.shipyard.shipjobs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+	<params>
+		<param name="run_script_name" default="'move.die'" comment="run_script"/>
+
+		<param name="range" default="'sector'" comment="'zone','station','sector'"/>
+		<param name="range_min" default="5km" comment="currently only supported when range=station, or patrolobject"/>
+		<param name="range_max" default="this.ship.maxradarrange" comment="currently only supported when range=station, or patrolobject. Default: max radar range"/>
+
+		<param name="patrolobject" default="null" comment="Object to patrol around (ignore range, but use range_min and range_max)" />
+		<param name="engageenemies" default="true" comment="When moving, scan for and engage enemies"/>
+		<param name="onlyinrange" default="true" comment="Stay in the range of 'range' or 'patrolobject' within 'range_max'" />
+		<param name="allowstations" default="true" comment="Acquire stations as targets? Passed to move.seekenemies." />
+
+		<param name="returntobase" default="true" comment="After filling cargobay, return wares to base? Base can be any trade station of this faction within this cluster."/>
+		<param name="checkrelation" default="false" comment="Check the maybeattackedby status of potential targets. Otherwise, find any which are not of your faction"/>
+		<param name="basebasket" default="this.ship.warebasket.list" comment="Base warebasket. Default to that setup in jobs"/>
+
+		<param name="basketoverride" default="null" comment="list of wares that takes precedence over any defined warebasket" />
+
+		<param name="warelist" default="null" />
+		<param name="minbuy" default="-1"/>
+		<param name="maxbuy" default="-1"/>
+		<param name="minsell" default="-1"/>
+		<param name="maxsell" default="-1"/>
+
+		<param name="simple" default="null" />
+		<param name="additionalparams" default="null" comment="if $range == 'ranged' then $additionalparams defines min and max jumps for the buy and sell ranges [$minbuy, $maxbuy, $minsell, $maxsell]"/>
+
+		<param name="destination" default="null" comment="can be a space or an object in a zone. Providing Sector and Cluster will attempt to find the nearest zone"/>
+		<param name="position" default="null" comment="position is treated as an offset to destination. Default: safe position on [0,0,0] of destination"/>
+		<param name="rotation" default="null" comment="rotation the ship should have - overrides lookat"/>
+		<param name="lookat" default="null" comment="position the ship should point to - overridden by rotation"/>
+		<param name="nojump" default="false" comment="set true to prevent Big ships from using their jumpdrive (only use for insector movement - for review when we have capship in-sector boosters)"/>
+		<param name="skipcharge" default="false" comment="skip the jump drive charge time (only to be used in special cases e.g. plot missions)"/>
+		<param name="ignorefuel" default="false" comment="ignore jump fuel requirements (only to be used in special cases e.g. plot missions)"/>
+		<param name="autorefuel" default="true" comment="automatically take steps to re-fuel if necessary"/>
+		<param name="disablecollisionavoidance" default="false" comment="HACK - disable collisionavoidance for this ship"/>
+		<param name="abortpath" default="true" comment="disable aborting existing path"/>
+		<param name="forcesteering" default="false" comment="force steering flight control model"/>
+		<param name="endintargetzone" default="false" comment="complete this script if we are in the correct zone, no matter where"/>
+
+		<param name="debugchance" default="0"/>
+		<param name="debugchance2" default="0" />
+		<param name="debugoutputchance" default="0" />
+	</params>
+	<attention min="unknown">
+		<actions>
+			<do_if value="this.ship.pilot.$end_of_work?" negate="true">
+				<set_value name="this.ship.pilot.$end_of_work" exact="player.age + 24h" /><!-- 48h -->
+			</do_if>
+
+			<label name="start" />
+			<debug_text text="'start: %1 [%2] %3'.[this.ship.knownname, $run_script_name, $destination.name]" filter="error" chance="0" />
+
+			<do_if value="$destination and $destination.isclass.sector" chance="if $run_script_name == 'move.plunder' then 0 else 100">
+				<find_station name="$station" space="$destination">
+					<match_relation faction="this.ship.owner" relation="neutral" comparison="ge" />
+				</find_station>
+				<do_if value="$station" negate="true">
+					<find_object name="$station" space="$destination" class="class.jumpbeacon" />
+				</do_if>
+				<set_value name="$destination" exact="$station.zone" chance="if $station then 100 else 0"/>
+				<remove_value name="$station"/>
+			</do_if>
+			<do_elseif value="$destination and $destination.isclass.sector" chance="if $run_script_name == 'move.plunder' then 100 else 0">
+				<find_station name="$station" space="$destination">
+					<match_relation faction="this.ship.owner" relation="neutral" comparison="le" />
+				</find_station>
+				<do_if value="$station" negate="true">
+					<find_object name="$station" space="$destination" class="class.jumpbeacon" />
+				</do_if>
+				<set_value name="$destination" exact="$station.zone" chance="if $station then 100 else 0"/>
+				<remove_value name="$station"/>
+			</do_elseif>
+
+			<!-- move to targetarea first -->
+			<debug_text text="'move: %1 [%2] %3'.[this.ship.knownname, $run_script_name, this.ship.zone.name]" filter="error" chance="0" />
+			<do_if value="$destination.exists">
+				<run_script name="'move.generic'" >
+					<param name="destination" value="$destination" />
+					<param name="position" value="$position" />
+					<param name="rotation" value="$rotation" />
+					<param name="lookat" value="$lookat" />
+					<param name="nojump" value="$nojump" />
+					<param name="skipcharge" value="$skipcharge" />
+					<param name="ignorefuel" value="$ignorefuel" />
+					<param name="autorefuel" value="$autorefuel" />
+					<param name="disablecollisionavoidance" value="$disablecollisionavoidance" />
+					<param name="abortpath" value="$abortpath" />
+					<param name="forcesteering" value="$forcesteering" />
+					<param name="endintargetzone" value="$endintargetzone" />
+					<param name="debugchance" value="$debugchance"/>
+				</run_script>
+			</do_if>
+
+			<debug_text text="'post Move: %1 [%2] %3'.[this.ship.knownname, $run_script_name, this.ship.zone.name]" filter="error" chance="0" />
+
+			<!-- do your job -->
+			<do_if value="$run_script_name" exact="'move.plunder'">
+				<run_script name="'move.plunder'" >
+					<param name="range" value="$range" />
+					<param name="range_min" value="$range_min" />
+					<param name="range_max" value="$range_max" />
+					<param name="returntobase" value="$returntobase" />
+					<param name="checkrelation" value="$checkrelation" />
+					<param name="basebasket" value="$basebasket" />
+					<param name="debugoutputchance" value="$debugoutputchance" />
+				</run_script>
+				<debug_text text="'run_script: %1 [%2] abort'.[this.ship.knownname, $run_script_name]" filter="error" chance="0" />
+			</do_if>
+			<do_elseif value="$run_script_name" exact="'move.patrol'">
+				<run_script name="'move.patrol'" >
+					<param name="range" value="$range" />
+					<param name="range_min" value="$range_min" />
+					<param name="range_max" value="$range_max" />
+					<param name="patrolobject" value="$patrolobject" />
+					<param name="engageenemies" value="$engageenemies" />
+					<param name="onlyinrange" value="$onlyinrange" />
+					<param name="allowstations" value="$allowstations" />
+					<param name="debugoutputchance" value="$debugoutputchance" />
+				</run_script>
+				<debug_text text="'run_script: %1 [%2] abort'.[this.ship.knownname, $run_script_name]" filter="error" chance="0" />
+			</do_elseif>
+			<do_elseif value="$run_script_name" exact="'BR.move.patrol'">
+				<run_script name="'BR.move.patrol'" >
+					<param name="range" value="$range" />
+					<param name="range_min" value="$range_min" />
+					<param name="range_max" value="$range_max" />
+					<param name="patrolobject" value="$patrolobject" />
+					<param name="engageenemies" value="$engageenemies" />
+					<param name="onlyinrange" value="$onlyinrange" />
+					<param name="debugoutputchance" value="$debugoutputchance" />
+				</run_script>
+				<debug_text text="'run_script: %1 [%2] abort'.[this.ship.knownname, $run_script_name]" filter="error" chance="0" />
+			</do_elseif>
+			<do_elseif value="$run_script_name" exact="'mining.ship.free'">
+
+				<do_if value="$basketoverride and $basketoverride.count">
+					<do_all exact="$basketoverride.count" counter="$i" reverse="true">
+						<do_if value="this.ship.cargo.{$basketoverride.{$i}}.max gt 0" negate="true">
+							<remove_value name="$basketoverride.{$i}"/>
+						</do_if>
+					</do_all>
+				</do_if>
+
+				<run_script name="'mining.ship.free'" >
+					<param name="basketoverride" value="$basketoverride" />
+				</run_script>
+				<debug_text text="'run_script: %1 [%2] abort'.[this.ship.knownname, $run_script_name]" filter="error" chance="0" />
+			</do_elseif>
+			<do_elseif value="$run_script_name" exact="'trade.ship.ranged'">
+				<run_script name="'trade.ship.ranged'" >
+					<param name="warelist" value="$warelist" />
+					<param name="minbuy" value="$minbuy" />
+					<param name="maxbuy" value="$maxbuy" />
+					<param name="minsell" value="$minsell" />
+					<param name="maxsell" value="$maxsell" />
+					<param name="debugchance" value="$debugchance" />
+				</run_script>
+				<debug_text text="'run_script: %1 [%2] abort'.[this.ship.knownname, $run_script_name]" filter="error" chance="0" />
+			</do_elseif>
+			<do_elseif value="$run_script_name" exact="'trade.ship'">
+				<run_script name="'trade.ship'" >
+					<param name="warelist" value="$warelist" />
+					<param name="range" value="$range" />
+					<param name="simple" value="$simple" />
+					<param name="additionalparams" value="$additionalparams" />
+					<param name="debugchance" value="$debugchance" />
+					<param name="debugchance2" value="$debugchance2" />
+				</run_script>
+				<debug_text text="'run_script: %1 [%2] abort'.[this.ship.knownname, $run_script_name]" filter="error" chance="0" />
+			</do_elseif>
+<!--
+			<do_elseif value="$run_script_name" exact="'move.generic'">
+				<run_script name="'move.generic'" >
+					<param name="destination" value="$destination" />
+					<param name="position" value="$position" />
+					<param name="rotation" value="$rotation" />
+					<param name="lookat" value="$lookat" />
+					<param name="nojump" value="$nojump" />
+					<param name="skipcharge" value="$skipcharge" />
+					<param name="ignorefuel" value="$ignorefuel" />
+					<param name="autorefuel" value="$autorefuel" />
+					<param name="disablecollisionavoidance" value="$disablecollisionavoidance" />
+					<param name="abortpath" value="$abortpath" />
+					<param name="forcesteering" value="$forcesteering" />
+					<param name="endintargetzone" value="$endintargetzone" />
+					<param name="debugchance" value="$debugchance"/>
+				</run_script>
+			</do_elseif>
+-->
+			<write_to_logbook category="general" text="'EOL SY: %1 [%2]'.[this.ship.knownname, $run_script_name]" chance="100"/>
+
+			<!-- don't get lost in space -->
+			<run_script name="'move.die'">
+				<param name="byjump" value="this.ship.isclass.[class.ship_l, class.ship_xl]" />
+				<param name="byhostile" value="true" />
+			</run_script>
+
+		</actions>
+	</attention>
+</aiscript>

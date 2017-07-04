@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Michael (192.168.3.146) at 09.11.2015_11-40-09-->
+<macros>
+  <macro name="storage_station_ef_01_macro" class="storage">
+    <component ref="generic_storage" />
+    <properties>
+      <identification name="{20109,901}" unique="0" />
+    </properties>
+    <connections>
+      <connection ref="cargo">
+        <macro ref="cargobay_station_unique_02_macro" connection="StorageConnection" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

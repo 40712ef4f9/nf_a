@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="//baskets">
+	  <basket id="shippart">
+		<wares>
+		  <ware ware="shippart"/>
+		  <ware ware="shippartcomp"/>
+		</wares>
+	  </basket>
+	</add>
+	<add sel="//baskets/basket[@id='all']/wares">
+	  <ware ware="shippart"/>
+	  <ware ware="shippartcomp"/>
+	</add>
+	<add sel="//baskets/basket[@id='albion_all']/wares">
+	  <ware ware="shippart"/>
+	  <ware ware="shippartcomp"/>
+	</add>
+	<add sel="//baskets/basket[@id='omicron_all']/wares">
+	  <ware ware="shippart"/>
+	  <ware ware="shippartcomp"/>
+	</add>
+	<add sel="//baskets/basket[@id='container']/wares">
+	  <ware ware="shippart"/>
+	  <ware ware="shippartcomp"/>
+	</add>
+	<add sel="//baskets/basket[@id='albion_container']/wares">
+	  <ware ware="shippart"/>
+	  <ware ware="shippartcomp"/>
+	</add>
+	<add sel="//baskets/basket[@id='omicron_container']/wares">
+	  <ware ware="shippart"/>
+	  <ware ware="shippartcomp"/>
+	</add>
+	<add sel="//baskets/basket[@id='container_energy']/wares">
+	  <ware ware="shippart"/>
+	  <ware ware="shippartcomp"/>
+	</add>
+	<add sel="//baskets/basket[@id='albion_container_energy']/wares">
+	  <ware ware="shippart"/>
+	  <ware ware="shippartcomp"/>
+	</add>
+	<add sel="//baskets/basket[@id='omicron_container_energy']/wares">
+	  <ware ware="shippart"/>
+	  <ware ware="shippartcomp"/>
+	</add>
+	<add sel="//baskets/basket[@id='shiptech']/wares">
+	  <ware ware="shippart"/>
+	  <ware ware="shippartcomp"/>
+	</add>
+	<add sel="//baskets/basket[@id='albion_shiptech_extended']/wares">
+	  <ware ware="shippart"/>
+	  <ware ware="shippartcomp"/>
+	</add>
+	<add sel="//baskets/basket[@id='omicron_shiptech_extended']/wares">
+	  <ware ware="shippart"/>
+	  <ware ware="shippartcomp"/>
+	</add>
+</diff>

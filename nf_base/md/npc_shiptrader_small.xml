@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff>
+  <add sel="/mdscript[@name='NPC_Shiptrader_Small']/cues/cue[@name='Base']/conditions">
+    <check_value value="event.param.isplayerowned" negate="true"/>
+  </add>
+
+  <replace sel="/mdscript[@name='NPC_Shiptrader_Small']/cues/cue/cues/cue[@name='ActorDestructed']/actions/do_if[@value='$ship']/@value">$ship? and $ship</replace>
+
+  <replace sel="/mdscript[@name='NPC_Shiptrader_Small']/cues/cue/cues/library[@name='SellShipActions']/actions/do_if/start_script">
+    <include_actions ref="md.NPC_Shiptrader_Pl.SellShipActions_Jobs" />
+  </replace>
+  <replace sel="/mdscript[@name='NPC_Shiptrader_Small']/cues/cue/cues/library[@name='SellShipActions']/actions/do_else/do_if/do_if/start_script">
+    <include_actions ref="md.NPC_Shiptrader_Pl.SellShipActions_Jobs" />
+  </replace>
+
+  <add sel="/mdscript[@name='NPC_Shiptrader_Small']/cues/cue/cues/cue[@name='SectionHandler']/actions/do_elseif/do_if/add_player_choice[@section='cSmallshiptrader_sellshipconfirmed']" type="@selectable">$actor.money gt 50000000Cr and $actor.money gt $soldshipprice</add>
+  <add sel="/mdscript[@name='NPC_Shiptrader_Small']/cues/cue/cues/cue[@name='SectionHandler']/actions/do_elseif/do_else/add_player_choice[@section='cSmallshiptrader_sellshipconfirmed']" type="@selectable">$actor.money gt 50000000Cr and $actor.money gt $soldshipprice</add>
+</diff>

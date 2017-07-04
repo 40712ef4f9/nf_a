@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<components>
+	<component name="big_ship_production_dummy_xl" class="buildmodule">
+		<source geometry="assets\structures\build_trees\\big_ship_production_dummy_data"></source>
+		<layers>
+			<layer>
+				<waypoints />
+				<lights />
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"></connection>
+			<connection name="position" tags="position" value="1" optional="1"></connection>
+			<connection name="space" tags="buildmodule">
+				<offset/>
+			</connection>
+			<connection name="connection_component01" tags="buildmodule component ">
+				<offset/>
+			</connection>
+			<connection name="connection_launchpos01" tags="launchpos">
+				<offset/>
+			</connection>
+			<connection name="connection_todock01" tags="todock">
+				<offset>
+					<position x="0" y="0" z="2500"/>
+				</offset>
+			</connection>
+			<connection name="connection_dockingbay01" tags="dock_xl dockingbay ">
+				<offset>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+			</connection>
+		</connections>
+	</component>
+</components>

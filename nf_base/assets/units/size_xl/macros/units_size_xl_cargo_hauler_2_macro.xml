@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	
+	<replace sel="//purpose[@primary='trade']">
+		
+      <purpose primary="fight" />
+    
+	</replace>	
+	<replace sel="//identification[@mapicon='shipicon_freighter_l']">
+		
+      <identification name="{20101,4301}" description="{20101,4302}" mapicon="shipicon_destroyer_l" />
+    
+	</replace>	
+	
+</diff>
+
+

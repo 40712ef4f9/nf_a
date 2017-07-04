@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Michael (192.168.3.145) at 18.07.2014_10-54-12-->
+<macros>
+  <macro name="units_size_s_ship_04_p_macro" class="ship_s">
+    <component ref="units_size_s_ship_04" />
+    <properties>
+      <identification name="{20101,6011}" description="{20101,6012}" mapicon="shipicon_freighter_m" />
+      <hull max="33000" />
+      <secrecy level="1" />
+    </properties>
+    <connections>
+      <connection ref="connection_cockpit01">
+        <macro ref="unit_combat_ar_cockpit_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_engine01">
+        <macro ref="engine_ship_s_ship_04_back_macro" connection="connection_engine01" />
+      </connection>
+      <connection ref="connection_engine02">
+        <macro ref="engine_ship_s_ship_04_back_macro" connection="connection_engine01" />
+      </connection>
+      <connection ref="connection_engine_main01">
+        <macro ref="engine_ship_s_ship_04_main_macro" connection="conn_engine01" />
+      </connection>
+      <connection ref="connection_engine_main02">
+        <macro ref="engine_ship_s_ship_04_main_macro" connection="conn_engine01" />
+      </connection>
+      <connection ref="connection_radar01">
+        <macro ref="radar_ship_s_fighter_02_macro" connection="ship" />
+      </connection>
+      <connection ref="connection_shieldgen01">
+        <macro ref="shieldgenerator_ship_m_09_macro" connection="Connection01" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

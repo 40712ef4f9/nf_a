@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="//library[@name='MMCData_config']/actions/do_if[@value=&quot;'xen'&quot;]/do_if[@value=&quot;'outpost'&quot;]">
+						<append_to_list name="$temp_build" exact="macro.{['struct_at_xen_xenon_portal_macro'].{1}}" />
+	</add>
+	<add sel="//library[@name='MMCData_config']/actions/do_if[@value=&quot;'xen'&quot;]/do_if[@value=&quot;'massenergy'&quot;]">
+						<append_to_list name="$temp_build" exact="macro.{['struct_at_xen_xenon_portal_macro'].{1}}" />
+	</add>
+	<add sel="//library[@name='MMCData_config']/actions/do_if[@value=&quot;'xen'&quot;]/do_if[@value=&quot;'ship'&quot;]">
+						<append_to_list name="$temp_build" exact="macro.{['xenon_asteroid_01_base_01b_macro'].{1}}" />
+	</add>
+
+	<add sel="//library[@name='MMCData_config']/actions/do_if/do_if[@value=&quot;'xen'&quot;]">
+						<append_to_list name="$temp_ships.$mine_sm" exact="macro.units_size_s_xenon_swarm_attack_drone_01_macro"/>
+						<append_to_list name="$temp_ships.$mine_sm" exact="macro.units_size_m_xenon_collector_01_macro"/>
+	</add>
+
+
+	<add sel="//library[@name='MMCData_disable_jobs']/actions/set_value[@name='$temp_jobIDs']" pos="after">
+			<do_if value="not $faction?">
+				<!-- vanilla Jobs Xen Related -->
+				<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_cluster'"/>
+				<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_sector03'"/>
+				<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_sector03_hq'"/>
+				<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_xl_sector03'"/>
+				<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_xl_sector03_hq'"/>
+				<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_albion'"/>
+				<!-- TO Jobs Xen Related -->
+				<append_to_list name="$temp_jobIDs" exact="'xen_bigdestroyer_foo'"/>
+				<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_foo'"/>
+				<!-- Hol Jobs Xen Related -->
+				<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_route_CM_sector01'"/>
+				<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_CN_sector01'"/>
+				<!-- Hol Jobs -->
+				<append_to_list name="$temp_jobIDs" exact="'hol_collector_hydrogen_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'tor_collector_hydrogen_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'cs_collector_hydrogen_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_collector_ions_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'tor_collector_ions_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'cs_collector_ions_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_collector_plasma_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'tor_collector_plasma_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'cs_collector_plasma_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_miner_ice_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'tor_miner_ice_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'cs_miner_ice_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_miner_mineral_large_01'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_miner_mineral_large_02'"/>
+				<append_to_list name="$temp_jobIDs" exact="'tor_miner_mineral_large_01'"/>
+				<append_to_list name="$temp_jobIDs" exact="'cs_miner_mineral_large_01'"/>
+				<append_to_list name="$temp_jobIDs" exact="'cs_miner_mineral_large_02'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_trader_agricultural_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_trader_energy_large_01'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_trader_energy_large_02'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_trader_food_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_trader_hightech_large_01'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_trader_water_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'tor_trader_water_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'cs_trader_water_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_trader_pharmaceutical_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_trader_refined_large_01'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_trader_shiptech_large_01'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_trader_weapontech_large_01'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_ranged_special_refined_trader'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_ranged_special_water_trader'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_ranged_special_construction_trader'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_ranged_special_universal_trader'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_ranged_special_energy_trader'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_ranged_special_energy_trader_02'"/>
+				<append_to_list name="$temp_jobIDs" exact="'tor_ranged_special_universal_trader'"/>
+				<append_to_list name="$temp_jobIDs" exact="'tor_ranged_special_energy_trader'"/>
+				<append_to_list name="$temp_jobIDs" exact="'cs_ranged_special_universal_trader'"/>
+				<append_to_list name="$temp_jobIDs" exact="'cs_ranged_special_energy_trader'"/>
+				<append_to_list name="$temp_jobIDs" exact="'led_special_construction_trader_3'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_trader_guest_omicron_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_trader_guest_albion_large'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_trader_guest_canteran_large_01'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_trader_guest_canteran_large_02'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_light_fighter_patrol_CM'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_heavy_fighter_patrol_CM'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_carrier_patrol_CM'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_frigate_patrol_CM'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_destroyer_patrol_CM'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_fighter_patrol_CN_sector01'"/>
+				<append_to_list name="$temp_jobIDs" exact="'hol_destroyer_expedition_CN'"/>
+				<append_to_list name="$temp_jobIDs" exact="'trn_destroyer_patrol_CN'"/>
+				<append_to_list name="$temp_jobIDs" exact="'atl_light_fighter_patrol_CM'"/>
+				<append_to_list name="$temp_jobIDs" exact="'atl_xl_destroyer_hq'"/>
+				<append_to_list name="$temp_jobIDs" exact="'atl_trade_l_CL'"/>
+				<append_to_list name="$temp_jobIDs" exact="'atl_trade_l_CN'"/>
+				<append_to_list name="$temp_jobIDs" exact="'atl_plunder_large_CM'"/>
+				<append_to_list name="$temp_jobIDs" exact="'atl_plunder_CM'"/>
+				<append_to_list name="$temp_jobIDs" exact="'atl_heavy_fighter_patrol_CN'"/>
+				<append_to_list name="$temp_jobIDs" exact="'atl_light_fighter_patrol_CN_atlas'"/>
+				<append_to_list name="$temp_jobIDs" exact="'atl_light_fighter_patrol_CN_sector01'"/>
+				<append_to_list name="$temp_jobIDs" exact="'atl_heavy_fighter_patrol_CN_sector01'"/>
+			</do_if>
+	</add>
+</diff>
+<!--
+<append_to_list name="$temp_jobIDs" exact="'atl_trade_m_CL'"/>
+<append_to_list name="$temp_jobIDs" exact="'atl_trade_m_CN'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_food_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_energy_medium_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_energy_medium_02'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_hightech_medium_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_medium_escort'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_water_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_missile_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_missile_medium_02'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_turret_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_turret_medium_02'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_pharmaceutical_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_shiptech_extended_medium_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_refined_medium_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_shiptech_medium_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_weapontech_medium_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_collector_hydrogen_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'tor_collector_hydrogen_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'cs_collector_hydrogen_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_collector_ions_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'tor_collector_ions_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'cs_collector_ions_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_collector_plasma_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'tor_collector_plasma_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'cs_collector_plasma_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_miner_ice_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'tor_miner_ice_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'cs_miner_ice_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_miner_mineral_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'tor_miner_mineral_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'cs_miner_mineral_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_gas_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_mineral_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_agricultural_medium'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_drones_medium_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_miner_mineral_medium_CN'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_miner_mineral_medium_CL'"/>
+-->
+<!--
+<append_to_list name="$temp_jobIDs" exact="'hol_tcp_trader_medium_escort'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_light_fighter_escort_CM'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_heavy_fighter_escort_CM'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_carrier_escort_CM'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_destroyer_escort_CM'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_destroyer_escort_CN2'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_light_escort_CN'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_patrol_l_escort'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_trader_l_escort'"/>
+<append_to_list name="$temp_jobIDs" exact="'atl_fighter_plunder_escort'"/>
+<append_to_list name="$temp_jobIDs" exact="'atl_xl_plunder_escort_diff_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'atl_xl_plunder_escort_escort_diff_02'"/>
+<append_to_list name="$temp_jobIDs" exact="'atl_light_fighter_escort'"/>
+<append_to_list name="$temp_jobIDs" exact="'atl_heavy_fighter_escort'"/>
+<append_to_list name="$temp_jobIDs" exact="'atl_light_fighter_escort_diff_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'atl_light_fighter_escort_diff_02'"/>
+<append_to_list name="$temp_jobIDs" exact="'atl_heavy_fighter_escort_diff_02_in'"/>
+<append_to_list name="$temp_jobIDs" exact="'atl_light_fighter_escort_diff_02_in'"/>
+-->
+<!--
+<append_to_list name="$temp_jobIDs" exact="'xen_light_fighter_escort_CNM'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_light_fighter_escort_CNM_diff_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_light_fighter_escort_CNM_diff_02'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_light_fighter_escort_CNM_diff_02_in'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_light_fighter_escort_CNM_reduced'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_m_fighter_escort_CNM'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_escort_CNM'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_escort_CNM_reduced'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_light_fighter_CM_sector01'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_light_fighter_CM_sector01_diff_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_light_fighter_CM_sector01_diff_02'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_light_fighter_CM'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_light_fighter_CM_diff_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_light_fighter_CM_diff_02'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_route1_CM_sector01'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_route2_CM_sector01'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_route3_CM_sector01'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_heavy_fighter_CN_terracorp'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_light_fighter_CN_xenon'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_heavy_fighter_CN'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_route1_CN_sector01'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_route2_CN_sector01'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_route3_CN_sector01'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_route4_CN_sector01'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_special_escort'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_special_escort_01_CNM'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_special_escort_02_CNM'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_recon_route_1_tormiss01_st1'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_recon_route_2_tormiss01_st1'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_recon_route_3_tormiss01_st1'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_recon_route_4_tormiss01_st1'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_recon_route_5_tormiss01_st1'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_harass_route_1_tormiss01_st2'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_harass_route_2_tormiss01_st2'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_harass_route_3_tormiss01_st2'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_suppression_tormiss01_st2'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_l_escort_tormiss01_st2'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_harass_route_1_cresc_tormiss01_st3'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_harass_route_2_cresc_tormiss01_st3'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_harass_route_3_cresc_tormiss01_st3'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_suppression_tormiss01_st3'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_xl_invasion_tormiss01_st4'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_l_escort_tormiss01_st4'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_suppression_tormiss01_st4'"/>
+<append_to_list name="$temp_jobIDs" exact="'hol_destroyer_patrol_rrf_tormiss01_st4'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_harass_route_1_cresc_tormiss01_st4'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_harass_route_2_cresc_tormiss01_st4'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_harass_route_3_cresc_tormiss01_st4'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_harass_route_4_cresc_tormiss01_st4'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_harass_route_5_cresc_tormiss01_st4'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_harass_route_6_cresc_tormiss01_st4'"/>
+<append_to_list name="$temp_jobIDs" exact="'xen_fighter_harass_route_7_cresc_tormiss01_st4'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_fighter_patrol_CN_sector01_Z01'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_fighter_patrol_CN_sector01_Z12b'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_fighter_patrol_CN_sector01_Z12c'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_fighter_patrol_CN_sector01_Z12'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_fighter_patrol_CN_sector01_Z14'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_fighter_patrol_CN_sector01_Z01_diff_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_fighter_patrol_CN_sector01_Z12b_diff_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_fighter_patrol_CN_sector01_Z12c_diff_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_fighter_patrol_CN_sector01_Z12_diff_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_fighter_patrol_CN_sector01_Z14_diff_01'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_fighter_patrol_CN_sector01_Z01_diff_02'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_fighter_patrol_CN_sector01_Z12b_diff_02'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_fighter_patrol_CN_sector01_Z12c_diff_02'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_fighter_patrol_CN_sector01_Z12_diff_02'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_fighter_patrol_CN_sector01_Z14_diff_02'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_light_fighter_escort'"/>
+<append_to_list name="$temp_jobIDs" exact="'khaak_light_fighter_escort_small'"/>
+<append_to_list name="$temp_jobIDs" exact="'adzeppelin_sector01_route1'"/>
+<append_to_list name="$temp_jobIDs" exact="'adzeppelin_sector01_route2'"/>
+<append_to_list name="$temp_jobIDs" exact="'adzeppelin_sector01_route3'"/>
+<append_to_list name="$temp_jobIDs" exact="'adzeppelin_sector01_route4'"/>
+<append_to_list name="$temp_jobIDs" exact="'adzeppelin_sector02_route1'"/>
+<append_to_list name="$temp_jobIDs" exact="'adzeppelin_sector02_route2'"/>
+<append_to_list name="$temp_jobIDs" exact="'adzeppelin_sector02_route3'"/>
+<append_to_list name="$temp_jobIDs" exact="'adzeppelin_sector02_route4'"/>
+<append_to_list name="$temp_jobIDs" exact="'adzeppelin_sector03_route1'"/>
+<append_to_list name="$temp_jobIDs" exact="'adzeppelin_sector03_route2'"/>
+<append_to_list name="$temp_jobIDs" exact="'adzeppelin_sector03_route3'"/>
+<append_to_list name="$temp_jobIDs" exact="'adzeppelin_sector03_route4'"/>
+<append_to_list name="$temp_jobIDs" exact="'adzeppelin_sector04_route1'"/>
+<append_to_list name="$temp_jobIDs" exact="'adzeppelin_sector04_route2'"/>
+<append_to_list name="$temp_jobIDs" exact="'adzeppelin_sector04_route3'"/>
+<append_to_list name="$temp_jobIDs" exact="'adzeppelin_sector04_route4'"/>
+-->
+<!--
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_cluster_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone001_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone001_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone001_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone001_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone002_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone002_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone002_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone002_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone003_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone003_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone003_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone003_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone004_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone004_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone004_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone004_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone005_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone005_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone005_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone005_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone006_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone006_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone006_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone006_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone007_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone007_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone007_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector04_zone007_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone001_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone001_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone001_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone001_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone002_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone002_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone002_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone002_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone003_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone003_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone003_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone003_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone004_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone004_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone004_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone004_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone005_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone005_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone005_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone005_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone006_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone006_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone006_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone006_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone007_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone007_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone007_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector05_zone007_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone001_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone001_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone001_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone001_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone002_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone002_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone002_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone002_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone003_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone003_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone003_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone003_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone004_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone004_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone004_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone004_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone005_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone005_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone005_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone005_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone006_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone006_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone006_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone006_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone007_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone007_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone007_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector06_zone007_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone001_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone001_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone001_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone001_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone002_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone002_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone002_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone002_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone003_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone003_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone003_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone003_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone004_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone004_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone004_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone004_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone005_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone005_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone005_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone005_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone006_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone006_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone006_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone006_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone007_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone007_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone007_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone007_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone008_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone008_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone008_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone008_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone009_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone009_smuggler'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone009_criminal'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone009_police'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone010_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone011_civilian'"/>
+<append_to_list name="$temp_jobIDs" exact="'tcp_masstraffic_hol_sector07_zone012_civilian'"/>
+-->

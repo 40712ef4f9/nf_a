@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <add sel="//cue[@name='OnFired']/actions/do_if/start_actor_transport" pos="before">
+    <set_owner object="$actor" faction="faction.neutral" />
+    <signal_cue_instantly cue="md.NF_BASE.NF_kill_NPC" param="$actor" delay="20s"/>
+  </add>
+  <add sel="//cue[@name='OnDroneArrival']/actions/do_elseif[@value=&quot;$hiretype == 'hireandreplace'&quot;]" pos="after" >
+    <do_elseif value="$hiretype == 'worksomewhere'">
+      <assign_boarding_commander actor="$actor" object="$actor.container" />
+    </do_elseif>
+  </add>
+  <add sel="//cue[@name='SectionHandler']/actions/do_elseif[@value=&quot;event.param == 'cMarine_move'&quot;]" pos="after" >
+    <do_elseif value="event.param == 'cMarine_fsb_workhere'">
+      <add_npc_line line="3167" view="facenormal" comment="OK, sir. I'll move into my new quarters now." />
+      <set_value name="$container" exact="player.platform.container" />
+      <signal_cue_instantly cue="md.NPC_Staff.LogAssignedToObject" param="[$actor, $container]" />
+      <add_actor_to_platform actor="$actor" dockingbay="player.platform" />
+      <do_if value="player.primaryship.boardingnpc == $actor">
+        <abort_scripts entity="$actor" />
+        <dismiss_control_entity object="player.primaryship" actor="$actor" />
+      </do_if>
+      <do_if value="@$container.boardingnpc">
+        <set_value name="$oldboardingnpc" exact="$container.boardingnpc" />
+        <do_if value="$oldboardingnpc.customhandler">
+          <add_actor_to_playership actor="$oldboardingnpc" />
+          <play_cutscene key="'ReplaceNPConPlayerShip'">
+            <param name="npcref" object="$oldboardingnpc" />
+            <param name="npcref2" object="$actor" />
+          </play_cutscene>
+          <abort_scripts entity="$oldboardingnpc" />
+          <dismiss_control_entity object="$container" actor="$oldboardingnpc" />
+          <do_if value="not player.primaryship.boardingnpc">
+            <signal_cue_instantly cue="md.NPC_Staff.LogAssignedToObject" param="[$oldboardingnpc, player.primaryship]" />
+            <assign_boarding_commander object="player.primaryship" actor="$oldboardingnpc" />
+            <!--start_script object="$oldboardingnpc" name="'engineer.player'"/-->
+          </do_if>
+          <do_else>
+            <signal_cue_instantly cue="md.NPC_Staff.LogTransferredToPlayerShip" param="$oldboardingnpc" />
+          </do_else>
+        </do_if>
+        <do_else>
+          <destroy_object object="$oldboardingnpc" />
+          <play_cutscene key="'LeavePlayerShip'">
+            <param name="npcref" object="$actor" />
+          </play_cutscene>
+        </do_else>
+        <remove_value name="$oldboardingnpc" />
+      </do_if>
+      <do_else>
+        <play_cutscene key="'LeavePlayerShip'">
+          <param name="npcref" object="$actor" />
+        </play_cutscene>
+      </do_else>
+      <assign_boarding_commander object="$container" actor="$actor" />
+      <!--start_script object="$actor" name="'engineer.ai'"/-->
+      <remove_value name="$container" />
+    </do_elseif>
+    <do_elseif value="event.param == 'cMarine_fsb_worksomewhere'">
+      <open_conversation_menu menu="MapMenu" param="event.param2" param2="event.param3" />
+      <add_conversation_view view="closeupdetailmonitor" />
+    </do_elseif>
+    <do_elseif value="event.param == 'cMarine_fsb_worksomewhere_objectselected'">
+      <add_npc_line line="3167" view="facenormal" comment="OK, sir. I'll move into my new quarters now." />
+      <set_value name="$selectedobject" exact="event.param2.{3}" />
+    </do_elseif>
+    <do_elseif value="event.param == 'cMarine_fsb_hasengineerplatform'">
+      <add_player_choice text="{1002,3010}" section="cMarine_fsb_workhere" position="top_left" comment="Replace the other employee" />
+      <add_player_choice text="{1002,3009}" section="cMarine_goodbye" position="bottom_left" comment="Nevermind."/>
+    </do_elseif>
+  </add>
+  <add sel="//cue[@name='SectionHandler']" pos="after" >
+    <cue name="OnSendAway" instantiate="true">
+      <conditions>
+        <event_conversation_finished actor="$actor" outcome="cMarine_fsb_worksomewhere_objectselected" />
+      </conditions>
+      <delay exact="1s" />
+      <actions>
+        <set_value name="$hiretype" exact="'worksomewhere'" />
+        <signal_cue_instantly cue="md.NPC_Staff.LogAssignedToObject" param="[$actor, $selectedobject]" />
+        <play_cutscene key="'LeavePlayerShipWithDrone'">
+          <param name="npcref" object="$actor" />
+        </play_cutscene>
+        <start_actor_transport actor="$actor" target="$selectedobject" />
+        <do_if value="@$selectedobject.boardingnpc">
+          <set_value name="$oldboardingnpc" exact="$selectedobject.boardingnpc" />
+          <do_if value="$oldboardingnpc.customhandler">
+            <do_if value="not player.primaryship.boardingnpc">
+              <signal_cue_instantly cue="md.NPC_Staff.LogAssignedToObject" param="[$oldboardingnpc, player.primaryship]" />
+            </do_if>
+            <do_else>
+              <signal_cue_instantly cue="md.NPC_Staff.LogTransferredToPlayerShip" param="$oldboardingnpc" />
+            </do_else>
+            <start_actor_transport actor="$oldboardingnpc" target="player.primaryship" />
+          </do_if>
+          <do_else>
+            <destroy_object object="$oldboardingnpc" />
+          </do_else>
+          <remove_value name="$oldboardingnpc" />
+        </do_if>
+
+        <remove_value name="$selectedobject" />
+      </actions>
+    </cue>
+  </add>
+</diff>

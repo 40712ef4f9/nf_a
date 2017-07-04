@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mdscript name="MM_AdvCom" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+
+		<cue name="MM_AdvCom_work" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_conversation_next_section sectionprefix="mmadvcom_"/>
+					<event_conversation_returned_to_section sectionprefix="mmadvcom_" />
+				</check_any>
+				<check_value value="md.$mm_advcom" exact="'advcom'" />
+			</conditions>
+			<actions>
+
+				<do_if value="event.param == 'mmadvcom_main'">
+					<add_player_choice 		text="{1002,12025}" 	position="bottom_right" section="mmadvcom_next" />
+				</do_if>
+				<do_elseif value="event.param == 'mmadvcom_next'">
+					<!--add_player_choice 		text="{1002,12025}" 	position="bottom_right" section="mmadvcom_last" />
+				</do_elseif>
+				<do_elseif value="event.param == 'mmadvcom_last'"-->
+					<add_player_choice_sub text="{1002,1051}" tooltip="{1026, 20006}" section="gMain_object" position="right" choiceparam="[0, 0, event.object.ship]" comment="Show Ship Details" />
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+				</do_elseif>
+
+			</actions>
+		</cue>	
+		<cue name="MM_AdvCom_init" instantiate="true">
+			<conditions>
+			  <check_any>
+				  <event_cue_signalled cue="md.Setup.GameStart"/>
+				  <event_game_loaded/>
+			  </check_any>
+			</conditions>
+			<delay max="500ms"/>
+			<actions>
+				<set_value name="md.$mm_advcom" exact="'advcom'"/>
+			</actions>
+		</cue>
+	</cues>
+</mdscript>

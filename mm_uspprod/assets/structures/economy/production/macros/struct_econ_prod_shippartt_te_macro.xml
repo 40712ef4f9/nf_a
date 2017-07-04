@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Benedikt (192.168.3.105) at 20.08.2013_11-45-52-->
+<macros>
+  <macro name="struct_econ_prod_shippartt_te_macro" class="production">
+    <component ref="struct_econ_prod_turrets" />
+    <properties>
+      <identification name="{20102,2301}" description="{20102,2302}" unique="0" />
+      <explosiondamage value="100000" />
+      <hull max="15900000" />
+      <effects>
+        <explosion ref="explosion_station_01" />
+        <sefx_hack_disabled ref="hack_deactivated_l" />
+      </effects>
+      <secrecy level="5" />
+      <production wares="shippart shippartcomp">
+        <queue ware="shippart" method="fieldsofop" />
+        <queue ware="shippartcomp" method="fieldsofop" />
+      </production>
+    </properties>
+    <connections>
+      <connection ref="connection_shieldgenerator01">
+        <macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgenerator02">
+        <macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgenerator03">
+        <macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgenerator04">
+        <macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgenerator05">
+        <macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgenerator06">
+        <macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_turret_medium_lb01">
+        <macro ref="turret_medium_lb_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_lb02">
+        <macro ref="turret_medium_lb_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_lb03">
+        <macro ref="turret_medium_lb_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe01">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe02">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe03">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe04">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe05">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe06">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe07">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe08">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg01">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg02">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg03">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg04">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg05">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg06">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

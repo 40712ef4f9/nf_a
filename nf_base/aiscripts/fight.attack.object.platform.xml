@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<aiscript name="fight.attack.object.platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="3">
+  <!--
+
+  Capital ship (defense officer NPC) vs Object (any class)
+  by Adrian
+  
+  Attack of a capital ship (made by defense noc), to enemys in weapon range
+  Set turrets and launch drones 
+  Not movement: see 'move.attack.object.capital'
+  
+  Optional target (object) as a parameter.
+  Optional endwheninactive, to finish when there are no enemies.
+
+  -->
+  <params>
+    <param name="target" default="null"/>
+    <param name="allowothertargets" default="true" comment="Whether the script shall keep running when primary target have been destroyed (ignore if not target provided)" />
+    <param name="checkrelation" default="true" />
+    <param name="config_attackenemies" default="true" />
+    <param name="debugoutputchance" default="0"/>
+  </params>
+  <interrupts>
+    <handler ref="DestroyStation" />
+    <handler>
+      <conditions>
+        <event_object_attacked object="this.ship"/>
+        <check_any>
+          <check_all>
+            <check_value value="this.ship.attention ge attention.visible"/>
+            <check_value value="event.param.isclass.object or event.param.object.exists"/>
+            <check_value value="not $attackers.indexof.{event.param}"/>
+            <check_value value="not $targets.indexof.{event.param}"/>
+          </check_all>
+          <check_all>
+            <check_value value="this.ship.attention lt attention.visible"/>
+            <check_any>
+              <check_value value="event.param.isclass.object and (not $attackers.indexof.{event.param})"/>
+              <check_value value="not event.param.isclass.object and event.param.object and (not $attackers.indexof.{event.param.object})"/>
+            </check_any>
+          </check_all>
+        </check_any>
+        <check_value value="this.ship.mayattack.{event.param}" />
+      </conditions>
+      <actions>
+		<set_value name="$config_attackenemies" exact="true" />
+		<set_value name="$allowothertargets" exact="true" />
+		<remove_value name="this.$config_attackenemies" />
+        <!--If attacker is not the object itself, get the object-->
+        <do_if value="event.param.isclass.object">
+          <set_value name="$attacker" exact="event.param"/>
+        </do_if>
+        <do_else>
+          <set_value name="$attacker" exact="event.param.object"/>
+        </do_else>
+        
+        <do_if value="this.ship.attention ge attention.visible">
+          <set_value name="$previouscount" exact="$targets.count"/>
+          <debug_text text="'add attacker ' + $attacker.knownname + ' to $attackers'" chance="$debugoutputchance" />
+          <add_to_group groupname="$attackers" object="$attacker"/>
+          <do_if value="$attacker.isclass.station">
+            <find_object_component object="$attacker" multiple="true" functional="true" groupname="$targets">
+              <match_size min="100m"/>
+            </find_object_component>
+          </do_if>
+          <do_else>
+            <add_to_group groupname="$targets" object="$attacker"/>
+          </do_else>
+          <do_if value="$targets.count != $previouscount">
+            <debug_text text="this.ship.attention + ' attetion. updating turret targets with ' + ($targets.count - $previouscount) + ' new targets'" chance="$debugoutputchance" />
+            <do_if value="$target.isoperational">
+              <set_turret_targets object="this.ship" target="$targets.list" preferredtarget="$target"/>
+            </do_if>
+            <do_else>
+              <set_turret_targets object="this.ship" target="$targets.list"/>
+            </do_else>
+          </do_if>
+          <remove_value name="$previouscount"/>
+        </do_if>
+        <do_else>
+          <debug_text text="this.ship.attention + ' attention. add attacker ' + $attacker.knownname + ' to $attackers.'" chance="$debugoutputchance" />
+          <add_to_group groupname="$attackers" object="$attacker"/>
+        </do_else>
+      </actions>
+    </handler>
+  </interrupts>
+  <init>
+    <!-- Command on defense officer-->
+    <set_command command="command.attackenemies" />
+    <create_group groupname="$attackers"/>
+  </init>
+  <patch sinceversion="3">
+    <create_group groupname="$attackers"/>
+  </patch>
+  <attention min="visible">
+    <actions>
+
+      <set_value name="$lastdronelaunch" exact="player.age - 500s" />
+      <set_value name="$nextammocheck" exact="player.age + 100s" />
+      <set_value name="$nextrepaircheck" exact="player.age + 600s" />
+
+      <set_value name="$FiringRange" exact="this.ship.maxcombatrange.turrets"/>
+      <debug_text text="'Firing range for: ' + this.ship.knownname + ' is: ' + $FiringRange" chance="$debugoutputchance"/>
+
+      <label name="FindEnemies" />
+
+      <!-- Create/clean list of enemies -->
+      <create_list name="$enemies" />
+
+      <!-- Find (more) enemies if no target or other targets are allowed -->
+      <do_if value="not $target or @$allowothertargets">
+        <find_gravidar_contact name="$enemies" object="this.ship" functional="true" maybeattackedby="this.ship" multiple="true">
+          <match_distance object="this.ship" max="$FiringRange"/>
+        </find_gravidar_contact>
+      </do_if>
+
+      <do_all exact="$attackers.count" counter="$i">
+        <do_if value="not $enemies.indexof.{$attackers.{$i}} and this.ship.mayattack.{$attackers.{$i}}">
+          <append_to_list name="$enemies" exact="$attackers.{$i}" />
+        </do_if>
+      </do_all>
+      <clear_group group="$attackers"/>
+
+      <!-- Main target (parameter) -->
+      <do_if value="$target.isoperational">
+        <do_if value="(this.ship.mayattack.{$target} or not $checkrelation) and not @$target.dockslot" comment="check relation of ship (not defense NPC)" >
+          <debug_text text="'Prefered target of: ' + this.ship.knownname + ' is: ' + $target.knownname" chance="$debugoutputchance"/>
+          <!--check if target is already in list of enemies-->
+          <do_if value="not $enemies.indexof.{$target}">
+            <append_to_list name="$enemies" exact="$target" />
+          </do_if>
+        </do_if>
+        <do_else>
+          <!-- Target is not an enemy anymore -->
+          <set_value name="$target" exact="null" />
+        </do_else>
+      </do_if>
+
+      <create_group groupname="$targets" />
+      <create_group groupname="$dronetargets" />
+
+
+      <!-- ok, we have found enemies, let's do something about them -->
+      <do_if value="$enemies.count" min="1">
+
+        <!-- Simulate the attack -->
+        <set_command_action commandaction="commandaction.attacking" />
+
+        <activate_battlestate object="this.ship" state="battlestate_red" />
+
+        <do_all counter="$i" exact="$enemies.count" reverse="true">
+		  <do_if value="$enemies.{$i}.isoperational and $enemies.{$i}.zone == this.ship.zone and this.ship.mayattack.{$enemies.{$i}}" negate="true">
+			<remove_value name="$enemies.{$i}" />
+			<continue />
+		  </do_if>
+          <!--This section can be unperformant-->
+          <do_if value="$enemies.{$i}.isclass.station">
+              <!--Should make sure the parent is the enemy?-->
+              <find_object_component object="$enemies.{$i}" multiple="true" functional="true" groupname="$targets">
+                <match_size min="100m"/>
+				<match_distance object="this.ship" max="$FiringRange"/>
+              </find_object_component>
+              <do_if value="$targets.count" exact="0">
+                <!--No subtargets found, just attack the main object-->
+                <add_to_group groupname="$targets" object="$enemies.{$i}"/>
+              </do_if>
+              <do_elseif value="$targets.count and not $target.isoperational">
+				<set_value name="$target" exact="$targets.random" />
+              </do_elseif>
+          </do_if>
+          <do_else>
+            <add_to_group groupname="$targets" object="$enemies.{$i}" />
+            <do_if value="$enemies.{$i}.isclass.[class.ship_xs, class.ship_s, class.ship_m]">
+              <add_to_group groupname="$dronetargets" object="$enemies.{$i}" />
+            </do_if>
+          </do_else>
+        </do_all>
+
+        <do_all exact="$targets.count" counter="$Count" chance="$debugoutputchance">
+          <debug_text text="'target for: ' + this.ship.knownname + ' is: ' + $targets.{$Count}.knownname + ' of class: ' + $targets.{$Count}.class + ' size: ' + $targets.{$Count}.size"/>
+        </do_all>
+
+        <do_if value="$target.isoperational">
+          <set_turret_targets object="this.ship" target="$targets.list" preferredtarget="$target"/>
+          <!-- If has, set primary and secondary weapons -->
+          <shoot_at object="this.ship" target="$target" slot="tag.primary_slot" tolerance="10.0deg" locktarget="true" weapontype="combat" />
+          <shoot_at object="this.ship" target="$target" slot="tag.secondary_slot" tolerance="360.0deg" locktarget="true" weapontype="combat" />
+        </do_if>
+        <do_else>
+          <set_turret_targets object="this.ship" target="$targets.list"/>
+        </do_else>
+
+        <!-- Launch drones (every 60s) -->
+        <!-- Improve with NPC skills and not only defense drones -->
+        <do_if value="this.ship.availableunits.{unitcategory.defence}.count and $dronetargets.count">
+          <do_if value="player.age" min="$lastdronelaunch + 60s">
+            <set_value name="$lastdronelaunch" exact="player.age"/>
+            <launch_drone name="$drone" object="this.ship" exact="5" group="unitcategory.defence"/>
+            <do_if value="$drone">
+              <start_script object="$drone.pilot" name="'fight.attack.object.drone.leader'">
+                <param name="target" value="$dronetargets.random" />
+                <param name="additionaltargets" value="$dronetargets" />
+                <param name="checkrelation" value="$checkrelation" />
+              </start_script>
+            </do_if>
+          </do_if>
+        </do_if>
+
+        <wait min="10s" max="20s" chance="0" />
+      </do_if>
+      <do_else>
+        <cease_fire object="this.ship" weapontype="combat"/>
+
+        <!-- Simulate the stand by -->
+        <set_command_action commandaction="commandaction.standingby" />
+
+        <!-- Check-Repair -->
+		<do_if value="player.age gt @$nextrepaircheck">
+		  <do_if value="(this.defensible.hullpercentage)i lt 99">
+			<do_if value="this.defensible.isclass.[class.ship_l, class.ship_xl, class.station]">
+			  <find_object_component groupname="$PossibleElements" object="this.defensible" class="class.destructible" checkoperational="false" multiple="true">
+				<match class="class.ship" checkoperational="false" negate="true"/>
+				<match_any>
+				  <match restorable="true" comment="wrecked"/>
+				  <match repairable="true" invulnerable="false">
+					<match_hull min="99" negate="true" />
+				  </match>
+				</match_any>
+			  </find_object_component>
+			  <set_value name="$do_all" exact="$PossibleElements.count" />
+			</do_if>
+			<do_else>
+				<create_group groupname="$PossibleElements" />
+				<set_value name="$do_all" exact="100 - (this.defensible.hullpercentage)i" />
+			</do_else>
+  
+			<do_all exact="$do_all" counter="$Count">
+				<set_command_action commandaction="commandaction.repairingto" param="if $PossibleElements.count then $PossibleElements.{$Count} else this.defensible" />
+				<wait min="20s" max="60s">
+				  <interrupt>
+					<conditions>
+					  <event_object_attacked object="this.ship" />
+					  <check_value value="this.ship.mayattack.{event.param}" />
+					</conditions>
+					<actions>
+					  <debug_text text="'activate multiple targets'" chance="$debugoutputchance" />
+					  <!-- Activate other targets -->
+					  <set_value name="$allowothertargets" exact="true" />
+					  <resume label="FindEnemies"/>
+					</actions>
+				  </interrupt>
+				</wait>
+				<restore_object object="$PossibleElements.{$Count}" hull="100" recursive="true" chance="if $PossibleElements.count then 100 else 0"/>
+				<set_object_hull object="this.defensible" exact="1 + (this.defensible.hullpercentage)i" chance="if $PossibleElements.count then 0 else 100"/>
+				<do_if value="(this.defensible.hullpercentage)i ge 100" chance="if $PossibleElements.count then 0 else 100">
+					<break />
+				</do_if>
+			</do_all>
+			<clear_group group="$PossibleElements"/>
+			<remove_value name="$do_all" />
+		  </do_if>
+		  <!-- get better -->
+		  <do_if value="this.combinedskill lt 100">
+			  <set_value name="$Skill" exact="[skilltype.combat, skilltype.navigation, skilltype.morale, skilltype.engineering, skilltype.leadership, skilltype.management, skilltype.science]" />
+			  <do_all exact="$Skill.count" counter="$k">
+				  <do_if value="this.skill.{$Skill.{$k}} le 4">
+					  <add_skill entity="this" type="$Skill.{$k}" exact="[1, 5 - this.skill.{$Skill.{$k}}].min" />
+					  <break />
+				  </do_if>
+			  </do_all>
+			  <remove_value name="$Skill" />
+		  </do_if>
+		  <!-- Simulate the stand by -->
+		  <set_command_action commandaction="commandaction.standingby" />
+		  <set_value name="$nextrepaircheck" exact="player.age + 600s" />
+		</do_if>
+
+      </do_else>
+
+      <wait min="10s" max="20s" />
+
+      <!-- Continue if the Config is Attack, or if there is still a PROVIDED target -->
+      <do_if value="$config_attackenemies or $target.isoperational">
+        <set_command command="command.attackenemies" />
+		<resume label="FindEnemies"/>
+      </do_if>
+
+      <cease_fire object="this.ship" weapontype="combat"/>
+
+      <label name="pause" />
+
+	  <set_command command="command.wait" />
+	  <wait min="20s" max="40s" sinceversion="2">
+		<interrupt>
+		  <conditions>
+			<event_object_attacked object="this.ship" />
+			<check_value value="this.ship.mayattack.{event.param}" comment="check relation of ship (not defense NPC)" />
+			<check_value value="event.param != $target" />
+			<check_value value="not $enemies.indexof.{event.param}" />
+		  </conditions>
+		  <actions>
+			<do_if value="$target != null and not $enemies.indexof.{event.param}" >
+				<append_to_list name="$enemies" exact="event.param" />
+			</do_if>
+			<do_else>
+			  <set_value name="$target" exact="event.param" />
+			</do_else>
+			<set_value name="$allowothertargets" exact="true" />
+			<set_value name="$checkrelation" exact="true" comment="check relation by default" />
+			<set_value name="$config_attackenemies" exact="true" comment="check relation by default" />
+			<remove_value name="this.$config_attackenemies" />
+			<set_command command="command.attackenemies" />
+			<!--resume label="FindEnemies"/-->
+		  </actions>
+		</interrupt>
+	  </wait>
+	  <do_if value="not $config_attackenemies">
+		<resume label="pause"/>
+	  </do_if>
+	  <resume label="FindEnemies"/>
+
+    </actions>
+  </attention>
+  <attention min="unknown">
+    <actions>
+
+      <set_value name="$lastdronelaunch" exact="player.age - 500s" />
+      <set_value name="$nextammocheck" exact="player.age + 100s" />
+      <set_value name="$nextrepaircheck" exact="player.age + 600s" />
+
+      <set_value name="$FiringRange" exact="this.ship.maxcombatrange.turrets"/>
+      <debug_text text="'Firing range for: ' + this.ship.knownname + ' is: ' + $FiringRange" chance="$debugoutputchance"/>
+
+      <label name="FindEnemies" />
+
+      <!-- ammo check -->
+      <do_if value="player.age gt @$nextammocheck">
+        <set_value name="$ammodelay" min="8min" max="12min" />
+        <set_value name="$nextammocheck" exact="player.age + $ammodelay" />
+
+        <run_script name="'lib.ammo.missiles'" result="$needammo" sinceversion="1">
+          <save_retval name="macros" variable="$order_macrolist" />
+          <save_retval name="amounts" variable="$order_amountlist" />
+        </run_script>
+
+        <do_if value="$needammo">
+          <do_all exact="$order_macrolist.count" counter="$i">
+            <add_ammo object="this.ship" macro="$order_macrolist.{$i}" amount="$order_amountlist.{$i}" />
+          </do_all>
+        </do_if>
+
+        <remove_value name="$order_macrolist" />
+        <remove_value name="$order_amountlist" />
+      </do_if>
+
+      <do_if value="this.$config_attackenemies? and this.$config_attackenemies == false and $config_attackenemies == true">
+        <set_value name="$config_attackenemies" exact="false" />
+        <set_value name="$allowothertargets" exact="false" />
+      </do_if>
+      <do_elseif value="this.$config_attackenemies? and this.$config_attackenemies == true and $config_attackenemies == false">
+		<set_value name="$config_attackenemies" exact="true" />
+		<set_value name="$allowothertargets" exact="true" />
+      </do_elseif>
+      <!-- Create/clean list of enemies -->
+      <create_list name="$enemies" />
+
+      <!-- Find (more) enemies if no target or other targets are allowed -->
+      <do_if value="not $target or @$allowothertargets">
+        <find_gravidar_contact name="$enemies" object="this.ship" functional="true" maybeattackedby="this.ship" multiple="true">
+          <match_distance object="this.ship" max="$FiringRange"/>
+        </find_gravidar_contact>
+      </do_if>
+
+      <do_all exact="$attackers.count" counter="$i">
+        <do_if value="not $enemies.indexof.{$attackers.{$i}} and this.ship.mayattack.{$attackers.{$i}}">
+          <append_to_list name="$enemies" exact="$attackers.{$i}" />
+        </do_if>
+      </do_all>
+      <clear_group group="$attackers"/>
+
+      <do_if value="$target.isoperational">
+        <!--check if target is already in list of enemies-->
+        <do_if value="not $enemies.indexof.{$target}">
+          <do_if value="this.ship.mayattack.{$target} or not $checkrelation" comment="check relation of ship (not defense NPC)" >
+            <debug_text text="'Prefered target of: ' + this.ship.knownname + ' is: ' + $target.knownname" chance="$debugoutputchance"/>
+            <append_to_list name="$enemies" exact="$target" />
+          </do_if>
+        </do_if>
+      </do_if>
+
+      <!-- ok, we have found enemies, let's do something about them -->
+      <set_value name="$attacktime" min="player.age + 30s" max="player.age + 40s" />
+      <!-- Fight -->
+      <do_if value="$enemies.count" min="1">
+        <!-- Simulate the attack -->
+        <set_command_action commandaction="commandaction.attacking" />
+
+        <activate_battlestate object="this.ship" state="battlestate_red" />
+      </do_if>
+      <do_else>
+        <!-- Simulate the stand by -->
+        <set_command_action commandaction="commandaction.standingby" />
+
+        <!-- Check-Repair -->
+		<do_if value="player.age gt @$nextrepaircheck">
+		  <do_if value="(this.defensible.hullpercentage)i lt 99">
+			<do_if value="this.defensible.isclass.[class.ship_l, class.ship_xl, class.station]">
+			  <find_object_component groupname="$PossibleElements" object="this.defensible" class="class.destructible" checkoperational="false" multiple="true">
+				<match class="class.ship" checkoperational="false" negate="true"/>
+				<match_any>
+				  <match restorable="true" comment="wrecked"/>
+				  <match repairable="true" invulnerable="false">
+					<match_hull min="99" negate="true" />
+				  </match>
+				</match_any>
+			  </find_object_component>
+			  <set_value name="$do_all" exact="$PossibleElements.count" />
+			</do_if>
+			<do_else>
+				<create_group groupname="$PossibleElements" />
+				<set_value name="$do_all" exact="100 - (this.defensible.hullpercentage)i" />
+			</do_else>
+  
+			<do_all exact="$do_all" counter="$Count">
+				<set_command_action commandaction="commandaction.repairingto" param="if $PossibleElements.count then $PossibleElements.{$Count} else this.defensible" />
+				<wait min="20s" max="60s">
+				  <interrupt>
+					<conditions>
+					  <event_object_attacked object="this.ship" />
+					  <check_value value="this.ship.mayattack.{event.param}" />
+					</conditions>
+					<actions>
+					  <debug_text text="'activate multiple targets'" chance="$debugoutputchance" />
+					  <!-- Activate other targets -->
+					  <set_value name="$allowothertargets" exact="true" />
+					  <resume label="FindEnemies"/>
+					</actions>
+				  </interrupt>
+				</wait>
+				<restore_object object="$PossibleElements.{$Count}" hull="100" recursive="true" chance="if $PossibleElements.count then 100 else 0"/>
+				<set_object_hull object="this.defensible" exact="1 + (this.defensible.hullpercentage)i" chance="if $PossibleElements.count then 0 else 100"/>
+				<do_if value="(this.defensible.hullpercentage)i ge 100" chance="if $PossibleElements.count then 0 else 100">
+					<break />
+				</do_if>
+			</do_all>
+			<clear_group group="$PossibleElements"/>
+			<remove_value name="$do_all" />
+		  </do_if>
+		  <!-- get better -->
+		  <do_if value="this.combinedskill lt 100">
+			  <set_value name="$Skill" exact="[skilltype.combat, skilltype.navigation, skilltype.morale, skilltype.engineering, skilltype.leadership, skilltype.management, skilltype.science]" />
+			  <do_all exact="$Skill.count" counter="$k">
+				  <do_if value="this.skill.{$Skill.{$k}} le 4">
+					  <add_skill entity="this" type="$Skill.{$k}" exact="[1, 5 - this.skill.{$Skill.{$k}}].min" />
+					  <break />
+				  </do_if>
+			  </do_all>
+			  <remove_value name="$Skill" />
+		  </do_if>
+		  <!-- Simulate the stand by -->
+		  <set_command_action commandaction="commandaction.standingby" />
+		  <set_value name="$nextrepaircheck" exact="player.age + 600s" />
+		</do_if>
+      </do_else>
+
+      <set_value name="$waittime" exact="1s" />
+      <!-- For each enemy, apply strength-->
+      <do_while value="$enemies.count" min="1">
+        <debug_text text=" ' unknown. ' + this.ship + ' fight. enemies: ' + $enemies " chance="$debugoutputchance" />
+
+        <do_all exact="$enemies.count" counter="$i" reverse="true">
+          <do_if value="not @$MaxEnemies">
+            <!-- Search/Attacking waiting time -->
+            <set_value name="$waittime" min="1s" max="4s" profile="increasing" />
+            <wait exact="$waittime"/>
+
+            <!--The maximum amount of enemies to be hit in this volley, based on the number of operational turrets-->
+            <set_value name="$MaxEnemies" exact="[this.ship.summary.numturrets.operational / 5, 3, $enemies.count].min"/>
+            <set_value name="$MaxEnemies" min="1" max="$MaxEnemies" profile="increasing"/>
+          </do_if>
+          
+          <do_if value="@$enemies.{$i}.isoperational">
+			<do_if value="$enemies.{$i}.zone == this.ship.zone and this.ship.mayattack.{$enemies.{$i}}" negate="true">
+			  <remove_value name="$enemies.{$i}" />
+			  <continue />
+			</do_if>
+            <set_value name="$target" exact="$enemies.{$i}" />
+            <!-- exclude the player ship in OOS case, this scenario wouldn't make any sense anyway -->
+            <do_if value="$target != player.primaryship">
+              <!-- Get and apply strengths-->
+              <do_if value="$target.isoperational" chance="[this.combinedskill, 90].max" comment="chance of succeed">
+                <!-- do not attack objects that are too far away, gravidar range can be 50km+ !! -->
+                <do_if value="this.ship.distanceto.{$target} lt ($FiringRange + $target.size/2.0)">
+                  <!-- Get the strength in 'result'-->
+                  <get_attackstrength object="this.ship" target="$target" usedrones="$target.isclass.[class.ship_xs, class.ship_s, class.ship_m]" result="$result" />
+                  <!-- Apply the strength to target -->
+                  <apply_attackstrength object="$target" attacker="this.ship" strength="$result * ($waittime)f" result="$isdead" />
+                  <debug_text text="'%1 OOS. Apply strength of %2 against %3 is: %4(%5|%6). Is killed: %7'.[player.age,this.ship.knownname,$target.knownname,$result * ($waittime)f,$target.hull,$target.shield,$isdead]" chance="$debugoutputchance" />
+                  <!--Wait so that attack/killed events are processed-->
+                  <wait exact="1ms" sinceversion="3"/>
+                </do_if>
+                <do_else>
+                  <debug_text text="'%1 OOS. Apply out of range of %2 against %3. Distance %4, fire range %5'.[player.age,this.ship.knownname,$target.knownname,this.ship.distanceto.{$target},$FiringRange]" chance="$debugoutputchance" />
+                </do_else>
+              </do_if>
+              <do_else>
+                <debug_text text="'%1 OOS. Apply attack fail of %2 against %3'.[player.age,this.ship.knownname,$target.knownname]" chance="$debugoutputchance" />
+              </do_else>
+            </do_if>
+          </do_if>
+          <do_else>
+            <remove_value name="$enemies.{$i}" />
+          </do_else>
+
+          <do_if value="$MaxEnemies gt 0">
+            <set_value name="$MaxEnemies" operation="subtract"/>
+          </do_if>
+        </do_all>
+        <!-- Avoid an infite loop-->
+        <do_if value="player.age" min="$attacktime">
+          <break/>
+        </do_if>
+        <!-- Let me think about it -->
+        <wait min="100ms" max="400ms" sinceversion="3" />
+      </do_while>
+
+      <!-- Continue if the Config is Attack  or if there is still a target -->
+      <do_if value="$config_attackenemies or $target.isoperational">
+        <wait min="15s" max="30s" />
+		<set_command command="command.attackenemies" />
+        <resume label="FindEnemies"/>
+      </do_if>
+
+      <cease_fire object="this.ship" weapontype="combat"/>
+
+      <label name="pause" />
+
+	  <set_command command="command.wait" />
+	  <wait min="30s" max="60s" sinceversion="2">
+		<interrupt>
+		  <conditions>
+			<event_object_attacked object="this.ship" />
+			<check_value value="this.ship.mayattack.{event.param}" comment="check relation of ship (not defense NPC)" />
+			<check_value value="event.param != $target" />
+			<check_value value="not $enemies.indexof.{event.param}" />
+		  </conditions>
+		  <actions>
+			<do_if value="$target != null and not $enemies.indexof.{event.param}" >
+				<append_to_list name="$enemies" exact="event.param" />
+			</do_if>
+			<do_else>
+			  <set_value name="$target" exact="event.param" />
+			</do_else>
+			<set_value name="$allowothertargets" exact="true" />
+			<set_value name="$checkrelation" exact="true" comment="check relation by default" />
+			<set_value name="$config_attackenemies" exact="true" comment="check relation by default" />
+			<remove_value name="this.$config_attackenemies" />
+			<set_command command="command.attackenemies" />
+			<!--resume label="FindEnemies"/-->
+		  </actions>
+		</interrupt>
+	  </wait>
+	  <do_if value="not $config_attackenemies">
+		<resume label="pause"/>
+	  </do_if>
+	  <resume label="FindEnemies"/>
+
+    </actions>
+  </attention>
+  <on_abort>
+    <!-- Stop shooting targets if interrupted (change the npc)-->
+    <cease_fire object="this.ship" weapontype="combat" />
+  </on_abort>
+</aiscript>

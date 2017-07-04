@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="/mdscript/cues/cue[@name='Needs_Subordinate_Trade_Ship']/actions/do_if/do_if/do_all" pos="after">
+          <do_if value="event.param.{2}.tradewares.list.count and event.param.{2}.resources.list.count" negate="true">
+            <set_value name="static.$Result" exact="true"/>
+          </do_if>
+          <do_elseif value="$Resources.count" exact="0">
+            <set_value name="$Resources" exact="event.param.{2}.tradewares.list"/>
+            <do_all exact="$Resources.count" counter="$i">
+              <do_if value="$Ship.cargo.{$Resources.{$i}}.max">
+                <set_value name="static.$Result" exact="true"/>
+                <break/>
+              </do_if>
+            </do_all>
+          </do_elseif>
+	</add>
+	<add sel="//library[@name='Acquire_Control_Entity_Description']/actions/substitute_text" type="@chance" >if $DescriptionID then 100 else 0</add>
+	<add sel="//library[@name='Acquire_Control_Entity_Description']/actions/update_mission" type="@chance" >if $Description? then 100 else 0</add>
+</diff>

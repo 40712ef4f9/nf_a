@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="//library[@name='MMCData_disable_jobs']/actions/set_value[@name='$temp_jobIDs']" pos="after">
+			<do_if value="not $faction?" chance="0">
+				<append_to_list name="$temp_jobIDs" exact="'te_carrier_sector01_zonepatrol'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_carrier_sector01_sectorpatrol'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_carrier_sector02_sectorpatrol'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_miner_hydrogen_large_free'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_miner_ice_large_free'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_miner_ore_large_free'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_energy_large_s01z001'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_energy_large_s01z002'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_energy_large_s02z004'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_water_large_s01z001'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_water_large_s02z002'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_bulk_large_s02'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_bulk_large_s01z002'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_food_large_s01z001'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_food_large_s02'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_teladianium_large_s01z002'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_teladianium_large_s02z004'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_special_shiptech_trader_large_fieldsofop'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_special_shiptech_trader_large_albion'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_special_shiptech_trader_large_omicron'"/>
+				<append_to_list name="$temp_jobIDs" exact="'led_special_construction_trader_2'"/>
+				<append_to_list name="$temp_jobIDs" exact="'jss_special_construction_trader_2'"/>
+				<append_to_list name="$temp_jobIDs" exact="'pirate_plunder_gunrunner'"/>
+				<append_to_list name="$temp_jobIDs" exact="'pirate_plunder_drugrunner'"/>
+			</do_if>
+	</add>
+	<add sel="//library[@name='MMCData_config']/actions/do_if/do_if[@value=&quot;'tel'&quot;]">
+						<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_te_kit_none_02_xl_macro"/>
+						<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_te_kit_none_x1s_macro"/>
+						<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_te_kit_none_01_macro"/>
+						<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_te_kit_none_02_macro"/>
+
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_te_kit_none_x1_macro"/>
+
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_te_kit_bulk_01_macro"/>
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_te_kit_bulk_02_macro"/>
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_te_kit_bulk_03_macro"/>
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_te_kit_container_01_macro"/>
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_te_kit_container_02_macro"/>
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_te_kit_container_03_macro"/>
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_te_kit_energy_01_macro"/>
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_te_kit_energy_02_macro"/>
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_te_kit_energy_03_macro"/>
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_te_kit_liquid_01_macro"/>
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_te_kit_liquid_02_macro"/>
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_te_kit_liquid_03_macro"/>
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_l_te_kit_bulk_03_macro"/>
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_l_te_kit_container_03_macro"/>
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_l_te_kit_energy_03_macro"/>
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_l_te_kit_liquid_03_macro"/>
+
+						<append_to_list name="$temp_ships.$fight_sm" exact="macro.units_size_s_te_02_macro"/>
+						<append_to_list name="$temp_ships.$fight_sm" exact="macro.units_size_s_te_03_macro"/>
+
+						<append_to_list name="$temp_ships.$trade_sm" exact="macro.units_size_m_te_bulk_01_macro"/>
+						<append_to_list name="$temp_ships.$trade_sm" exact="macro.units_size_m_te_container_01_macro"/>
+						<append_to_list name="$temp_ships.$trade_sm" exact="macro.units_size_m_te_energy_01_macro"/>
+						<append_to_list name="$temp_ships.$trade_sm" exact="macro.units_size_m_te_liquid_01_macro"/>
+
+						<append_to_list name="$temp_ships.$mine_sm" exact="macro.units_size_m_te_hydrogen_collector_01_macro"/>
+						<append_to_list name="$temp_ships.$mine_sm" exact="macro.units_size_m_te_mineral_collector_01_macro"/>
+	</add>
+	<add sel="//library[@name='MMCData_config']/actions/do_if/do_if[@value=&quot;'pir'&quot;]/do_if[@value=&quot;'tel'&quot;]">
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_te_kit_none_03_macro"/>
+
+	</add>
+</diff>
+<!--
+				<append_to_list name="$temp_jobIDs" exact="'te_miner_hydrogen_medium_free'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_miner_ice_medium_free'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_miner_ore_medium_free'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_energy_medium_s01z004'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_energy_medium_s01z001'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_energy_medium_s02z002'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_water_medium_s01z001'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_water_medium_s02'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_bulk_medium_s01z001'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_bulk_medium_s01z002'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_bulk_medium_s02z004'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_food_medium_s01z001'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_food_medium_s02'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_teladianium_medium_s01z001'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_teladianium_medium_s01z002'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_teladianium_medium_s02z004'"/>
+-->
+<!--
+				<append_to_list name="$temp_jobIDs" exact="'te_fighter_zonepatrol_sector1_z1'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_fighter_zonepatrol_sector1_z2'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_fighter_zonepatrol_sector2_z2'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_fighter_zonepatrol_sector2_z5'"/>
+				<append_to_list name="$temp_jobIDs" exact="'xen_fighter_sectorpatrol_sector1'"/>
+				<append_to_list name="$temp_jobIDs" exact="'xen_fighter_zonepatrol_sector1'"/>
+				<append_to_list name="$temp_jobIDs" exact="'xen_fighter_sectorpatrol_sector2'"/>
+				<append_to_list name="$temp_jobIDs" exact="'xen_fighter_zonepatrol_sector2'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_gunrunner_fighter_patrol_escort'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_drugrunner_fighter_patrol_escort'"/>
+				<append_to_list name="$temp_jobIDs" exact="'pirate_fighter_stationpatrol_sector1_Z4'"/>
+				<append_to_list name="$temp_jobIDs" exact="'pirate_fighter_sectorpatrol_sector1_z4'"/>
+				<append_to_list name="$temp_jobIDs" exact="'gunrunner_fighter_stationpatrol_sector1_Z5'"/>
+				<append_to_list name="$temp_jobIDs" exact="'pirate_fighter_stationpatrol_sector1_Z7'"/>
+				<append_to_list name="$temp_jobIDs" exact="'pirate_fighter_stationpatrol_sector2_Z6'"/>
+				<append_to_list name="$temp_jobIDs" exact="'drugrunner_fighter_stationpatrol_sector1_Z3'"/>
+				<append_to_list name="$temp_jobIDs" exact="'drugrunner_fighter_stationpatrol_sector1_Z4'"/>
+				<append_to_list name="$temp_jobIDs" exact="'gunrunner_fighter_stationpatrol_sector2_Z3'"/>
+-->
+<!--
+				<append_to_list name="$temp_jobIDs" exact="'te_carrier_escort'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_fighter_escort'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_patrol_l_escort'"/>
+				<append_to_list name="$temp_jobIDs" exact="'te_trader_l_escort'"/>
+				<append_to_list name="$temp_jobIDs" exact="'pirate_plunder_diff_gunrunner_01'"/>
+				<append_to_list name="$temp_jobIDs" exact="'pirate_plunder_diff_drugrunner_01'"/>
+-->
+<!--
+				<append_to_list name="$temp_jobIDs" exact="'masstraffic_teladi_tradestation'"/>
+				<append_to_list name="$temp_jobIDs" exact="'masstraffic_piratestation'"/>
+				<append_to_list name="$temp_jobIDs" exact="'masstraffic_teladi_watercollector'"/>
+				<append_to_list name="$temp_jobIDs" exact="'masstraffic_teladi_mine'"/>
+				<append_to_list name="$temp_jobIDs" exact="'masstraffic_xenon_hive'"/>
+-->

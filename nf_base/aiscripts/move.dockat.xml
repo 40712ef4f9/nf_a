@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<diff>
+	<add sel="/aiscript/attention/actions/do_if[@value='$dockingslot == null']" pos="after">
+		<do_if value="$dockingslot.component.container.macro.ismacro.{global.$mmcarriers} and this.ship.isclass.[class.ship_s, class.ship_m]">
+			<run_script name="'move.dockat.carrier'" result="$result">
+				<param name="destination" value="$destination"/>
+				<param name="dockingslot" value="$dockingslot"/>
+				<param name="precisiondocking" value="$precisiondocking"/>
+			</run_script>
+			<return value="$result"/>
+		</do_if>
+	</add>
+	<add sel="/aiscript/attention/actions/label[@name='movetodockingbay']" pos="before">
+<!--debug_text text="'%1, ext %2, docked %3, docking %4 [%5]'.[this.ship.name, $dockingslot.component.external, $dockingslot.component.docked.count, $dockingslot.component.docking.count, @$dockingslot.component.docking.{1} == this.ship]" filter="error" chance="100" /-->
+      <do_if value="$dockingslot.component.external and ($dockingslot.component.docked.count gt 0 or ($dockingslot.component.docking.count gt 0 and $dockingslot.component.docking.{1} != this.ship))">
+        <find_dock_location name="$docks" container="$destination" size="this.ship.docksize" multiple="true" />
+		<do_all exact="$docks.count" counter="$d" >
+			<do_if value="$docks.{$d}.component.external" negate="true">
+			  <set_value name="$dockingslot" exact="$docks.{$d}" />
+			  <break />
+			</do_if>
+			<do_if value="$docks.{$d}.component.external and $docks.{$d}.component.docked.count == 0 and $docks.{$d}.component.docking.count == 0">
+			  <set_value name="$dockingslot" exact="$docks.{$d}" />
+			  <break />
+			</do_if>
+		</do_all>
+		<remove_value name="$docks"/>
+      </do_if>
+	</add>
+	<add sel="/aiscript/attention/actions/set_command_action[@commandaction='commandaction.waitingtodock']" pos="after">
+		<set_value name="$timeout" exact="player.age + 3min" />
+	</add>
+	<add sel="/aiscript/attention/actions/do_while[@value='$success'][1]">
+      <do_if value="player.age gt @$timeout">
+		<resume label="movetodestination" />
+      </do_if>
+	</add>
+	<add sel="/aiscript/attention/actions/do_while[@value='$success'][2]">
+      <do_if value="player.age gt @$timeout">
+		<resume label="movetodestination" />
+      </do_if>
+	</add>
+	<add sel="/aiscript">
+		<interrupts>
+			<handler>
+				<conditions>
+					<check_any>
+						<event_object_destroyed group="$oberserve"/>
+						<event_object_changed_owner group="$oberserve"/>
+					</check_any>
+				</conditions>
+				<actions>
+					<abort_called_scripts resume="finish" />
+				</actions>
+			</handler>
+		</interrupts>	
+	</add>
+	<add sel="/aiscript">
+		<init>
+			<create_group groupname="$oberserve" />
+			<do_if value="$destination or $dockingslot">		
+				<add_to_group groupname="$oberserve" object="$dockingslot.component.container" chance="if $dockingslot and $dockingslot.component.container.isclass.[class.station, class.ship] then 100 else 0"/>
+				<add_to_group groupname="$oberserve" object="$destination" chance="if $destination and $destination.isclass.[class.station, class.ship] then 100 else 0"/>
+			</do_if>
+		</init>
+	</add>
+
+	<add sel="/aiscript/attention/actions/label[@name='start']" pos="after">
+		<do_if value="@$destination.exist and (@this.ship.owner.relationto.{$destination.owner} le this.ship.owner.relation.enemy.min or @$destination.boarder)">
+			<resume label="finish" />
+		</do_if>
+	</add>
+
+
+	<add sel="/aiscript/attention/actions">
+		<label name="finish" />
+
+		<do_if value="@$destination.exist and (@this.ship.owner.relationto.{$destination.owner} le this.ship.owner.relation.enemy.min or @$destination.boarder)">
+			<do_if value="this.ship.docklink">
+				<!--Ship may have been interrupted from docking and so has a docking connection but is not docked-->
+				<!--<debug_text text="'docking at %1(%2) was aborted by faction relation or by being boarded, disconnecting docking connection!'.[this.ship.docklink.container.knownname, this.ship.docklink.container]" chance="$debugoutputchance" />-->
+				<undock ship="this.ship" />
+			</do_if>
+			<clear_collision_filter object="this.ship" />
+			<run_script name="'move.undock'" />
+
+			<do_if value="this.ship.isjobship">
+				<set_value name="$bigship" exact="if this.ship.isclass.ship_l or this.ship.isclass.ship_xl then 1 else 0" />
+				<run_script  name="'move.die'">
+					<param name="byjump" value="$bigship" />
+					<param name="byhighway" value="not $bigship" />
+					<param name="bydock" value="not $bigship" />
+					<param name="byidle" value="true" />
+				</run_script>
+			</do_if>
+
+			<do_elseif value="this.ship.isplayerowned">
+				<!-- Flee -->
+				<set_value name="$flee" exact="'random'"/>
+				<do_if value="this.ship.isclass.[class.ship_m, class.ship_s]">
+					<do_any>
+						<set_value name="$flee" exact="'boost'"     weight="35" />
+						<set_value name="$flee" exact="'highway'"   weight="35" />
+						<set_value name="$flee" exact="'dock'"      weight="30" />
+					</do_any>
+				</do_if>
+				<do_elseif value="this.ship.isclass.[class.ship_l, class.ship_xl]">
+					<do_any>
+						<set_value name="$flee" exact="'jump'"      weight="20" />
+						<set_value name="$flee" exact="'boost'"     weight="80" />
+					</do_any>
+				</do_elseif>
+
+				<run_script name="'move.flee'" sinceversion="1" result="$success" >
+					<param name="method" value="$flee" />
+				</run_script>
+			</do_elseif>	
+			<do_else>
+				<!-- Flee -->
+				<set_value name="$flee" exact="'random'"/>
+				<do_if value="this.ship.isclass.[class.ship_m, class.ship_s]">
+					<do_any>
+						<set_value name="$flee" exact="'boost'"     weight="35" />
+						<set_value name="$flee" exact="'highway'"   weight="35" />
+						<set_value name="$flee" exact="'dock'"      weight="30" />
+					</do_any>
+				</do_if>
+				<do_elseif value="this.ship.isclass.[class.ship_l, class.ship_xl]">
+					<do_any>
+						<set_value name="$flee" exact="'jump'"      weight="20" />
+						<set_value name="$flee" exact="'boost'"     weight="80" />
+					</do_any>
+				</do_elseif>
+
+				<!--<debug_text text="'%4: flee with %1. Hull %2/Shield %3'.[$flee, this.ship.hullpercentage, this.ship.shieldpercentage, player.age]" chance="$debugoutputchance"/>-->
+
+				<run_script name="'move.flee'" sinceversion="1" result="$success" >
+					<param name="method" value="$flee" />
+				</run_script>
+
+				<!--<debug_text text="'%1: flee %2 succesful %3. Hull %4/Shield %5'.[player.age, $flee, $success, this.ship.hullpercentage, this.ship.shieldpercentage]" chance="$debugoutputchance"/>	-->		
+			</do_else>	
+		</do_if>	
+		<return value="false" />
+	</add>
+</diff>

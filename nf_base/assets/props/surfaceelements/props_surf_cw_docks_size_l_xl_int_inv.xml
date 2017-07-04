@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<components>
+	<component name="props_surf_cw_docks_size_l_xl_int_inv" class="dockingbay">
+		<source geometry="assets\props\SurfaceElements\props_surf_ar_docks_size_l_inv_data"/>
+		<layers>
+			<layer>
+				<waypoints/>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="dockingbay">
+				<offset/>
+			</connection>
+			<connection name="Connection01" tags="part nocollision  ">
+				<offset/>
+				<parts>
+					<part name="part_dummy">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="lensflares.vertexcolor_basis"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="1000" y="1500" z="1000"/>
+							<center x="0" y="0" z="0"/>
+						</size>
+					</part>
+				</parts>
+				<waypoints/>
+			</connection>
+			<connection name="connection_todock01" tags="todock " parent="part_dummy">
+				<offset>
+					<position x="0" y="0" z="3000"/>
+				</offset>
+			</connection>
+			<connection name="connection_launchpos01" tags="launchpos " parent="part_dummy">
+				<offset>
+					<position x="0" y="0" z="-200"/>
+				</offset>
+			</connection>
+			<connection name="connection_component01" tags="dock_l dock_xl component">
+				<offset/>
+			</connection>
+		</connections>
+	</component>
+</components>

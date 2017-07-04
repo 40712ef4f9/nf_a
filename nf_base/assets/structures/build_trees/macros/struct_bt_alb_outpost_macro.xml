@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Benedikt (192.168.3.150) at 29.11.2013_10-47-35-->
+<macros>
+  <macro name="struct_bt_alb_outpost_macro" class="station">
+    <component ref="struct_bt_alb_outpost" />
+    <properties>
+      <identification name="{40000,49}" description="{40000,50}" unique="0" />
+    </properties>
+    <connections> 
+	<connection ref="ConnectionFor_struct_econ_ref_ar_pmc_basis_macro1">
+        <macro ref="struct_econ_ref_ar_pmc_basis1_macro" connection="space" />
+      </connection>	
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_p_small">
+        <!--<build mode="optional" group="defense" sequence="A" stage="1" />-->
+        <macro>
+          <component ref="struct_econ_ref_ar_pmc_p_small1" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_u_macro">
+       <!-- <build mode="optional" group="defense" sequence="A" stage="1" tags="primary" />-->
+        <macro ref="struct_econ_ref_ar_pmc_u1_macro" connection="space" />
+      </connection>      
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro1">
+       <!-- <build mode="optional" group="defense" sequence="F" stage="3" tags="primary" />-->
+        <macro ref="struct_econ_science_weaponplatform1_macro" connection="space" />
+      </connection> 
+		<connection ref="connection_controlroom01">
+        <macro ref="control_room_macro" connection="Connection01" />
+      </connection>
+	  <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro">
+        <!--<build mode="optional" group="defense" sequence="F" stage="1" tags="primary" />-->
+        <macro ref="struct_econ_science_weaponplatform1_macro" connection="space" />
+      </connection>
+      
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro2">
+        <!--<build mode="optional" group="defense" sequence="F" stage="2" tags="primary" />-->
+        <macro ref="struct_econ_science_weaponplatform1_macro" connection="space" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

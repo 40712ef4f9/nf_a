@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mdscript name="MMUniparts" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+		<cue name="MMUniparts_ini" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_cue_signalled cue="md.Setup.GameStart"/>
+					<event_game_loaded />
+				</check_any>
+			</conditions>
+			<delay min="200ms" />
+			<actions>
+				<!--
+					Cheatpage
+				
+					Stations
+				-->
+				<do_if value="md.$todo_stations_moddlc?">
+						<set_value name="$todo" exact="
+							[
+								macro.xenon_asteroid_01_base_01_macro,
+								macro.struct_bt_alb_shippart_production_macro,
+								macro.struct_bt_te_shippartproduction_macro,
+								macro.struct_bt_ol_shippartproduction_macro
+							]
+						"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<append_to_list name="md.$todo_stations_moddlc" exact="$todo.{$j}"/>
+					</do_all> 
+					<debug_text text="'ADD Station to the Cheatpackage'" filter="error" chance="0" />
+					<remove_value name="$todo"/>
+				</do_if>
+				<do_if value="md.$todo_warelist?">
+						<set_value name="$todo" exact="
+							[
+								ware.shippart,
+								ware.shippartcomp
+							]
+						"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<append_to_list name="md.$todo_warelist" exact="$todo.{$j}"/>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+				<set_value name="md.$shipparts" />
+		  </actions>
+		</cue>
+	</cues>
+</mdscript>

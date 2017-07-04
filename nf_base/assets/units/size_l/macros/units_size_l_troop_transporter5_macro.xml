@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Conquer_mod v020 -->
+<macros>
+  <macro name="units_size_l_troop_transporter5_macro" class="ship_l">
+    <component ref="units_size_l_troop_transporter5" />
+    <properties>
+     <identification name="Troop Ship" description="This is a generic troop transport used by almost all factions. It's short adaptation of the Rahanas class, with a better engine, more turrets, better hull, huge hack devices and more space for troops. These ships besides the troop transport itself are also essential to hack big structures like stations far from 10km away. " mapicon="shipicon_freighter_l" />
+
+      <explosiondamage value="80000" />
+      <hull max="900000" />
+      <effects>
+        <explosion ref="explosion_l_01" />
+        <jumpin ref="jump_jumpin_l" />
+        <jumpout ref="jump_jumpout_l" />
+      </effects>
+      <purpose primary="fight" />
+    </properties>
+    <connections>
+      <connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_g">
+        <macro>
+          <component ref="units_size_l_carrier_kit_extender2_g" connection="space" />
+		   <connections>
+            <connection ref="connection_shieldgen01">
+              <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+            </connection>
+            <connection ref="connection_turret_small_mg01">
+              <!--<macro ref="turret_small_mg_macro" connection="connection_component01" />-->
+			  <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg02">
+              <macro ref="turret_small_mg_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg03">
+              <!--<macro ref="turret_small_mg_macro" connection="connection_component01" />-->
+			  <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg04">
+              <macro ref="turret_small_mg_macro" connection="connection_component01" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <!--<connection ref="ConnectionFor_units_size_l_carrier_kit_front_b">-->
+	  <connection ref="ConnectionFor_units_size_l_carrier_kit_extender1_b">
+        <macro>
+          <component ref="units_size_l_carrier_kit_front_b" connection="space" />
+          <connections>
+            <connection ref="connection_dock_p01">
+              <macro ref="playerdock_capship01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_radar_external01">
+              <macro ref="radar_ship_l_freighter_01_macro" connection="connection_component01" />
+            </connection>.
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_units_size_l_carrier_kit_main_b">
+        <macro>
+          <component ref="units_size_l_carrier_kit_main_b" connection="space" />
+          <connections>
+            <connection ref="connection_engine01">
+             <!--<macro ref="engine_size_l_kit_freighter_01_macro" connection="Connection01" />-->
+			  <macro ref="engine_size_l_kit_freighter_02_macro" connection="Connection01" />
+            </connection>
+            <connection ref="connection_engine02">
+              <!--<macro ref="engine_size_l_kit_freighter_01_macro" connection="Connection01" />-->
+			  <macro ref="engine_size_l_kit_freighter_02_macro" connection="Connection01" />
+            </connection>
+            <connection ref="connection_jumpdrive01">
+              <macro ref="props_surf_ar_jumpdrive_l_macro" connection="Connection01" />
+            </connection>
+            <connection ref="connection_shieldgen01">
+              <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+            </connection>
+            <connection ref="connection_turret_small_mg01">
+              <macro ref="turret_small_mg_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg02">
+              <macro ref="turret_small_mg_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg03">
+              <macro ref="turret_small_mg_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg04">
+              <macro ref="turret_small_mg_macro" connection="connection_component01" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="connection_cockpit01">
+        <macro ref="cockpit_bridge_size_l_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_s01">
+        <!--<macro ref="props_surf_ar_docks_size_s_floor_macro" connection="Connection_component" />-->
+		<macro ref="dronelaunchpad_invisible_troopship_l_01_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_radar_fallback01">
+        <macro ref="radar_ship_l_fallback_01_macro" connection="ship" />
+      </connection>
+      <connection ref="connection_shieldgen_external01">
+        <macro ref="shieldgenerator_size_l_mk2_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_storage01">
+        <macro ref="storage_ship_l_fuel_01_macro" connection="ShipConnection" />
+      </connection>
+      <connection ref="connection_storage02">
+        <macro ref="storage_ship_l_bulk_04_macro" connection="ShipConnection" />
+      </connection>
+      <connection ref="connection_storage03">
+        <macro ref="storage_ship_l_liquid_03_macro" connection="ShipConnection" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

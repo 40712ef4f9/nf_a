@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<add sel="//production/@wares"> shp_m_xenon_miner_01_br_xen</add>   
+		<add sel="//queue"> 	
+			<item ware="shp_m_xenon_miner_01_br_xen" method="br_xenon" />
+		</add>   
+		<add sel="//production/@wares"> shp_m_xenon_miner_01_br_xen</add>   
+		<add sel="//queue"> 	
+			<item ware="shp_m_xenon_collector_01_br_xen" method="br_xenon" />
+		</add>   
+</diff>

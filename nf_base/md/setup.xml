@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="//cue[@name='Start']/actions">
+		<do_if value="true">
+			<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
+			<include_actions ref="md.MM_Corps__Data.MMCData_disable_jobs" chance="if player.module == 'ep1' then 0 else 100"/>
+		</do_if>
+	</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions">
+		<do_if value="global.$nfconfig.$plotSafe?" comment="disable jobs now">
+			<include_actions ref="md.MM_Corps__Data.MMCData_disable_jobs" />
+			<remove_value name="global.$nfconfig.$plotSafe"/>
+		</do_if>
+	</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions">
+		<do_if value="global.$nfconfig.$doBuildSt?">
+			<set_value name="global.$nfconfig.$doBuildSt" exact="1" />
+			<set_value name="global.$nfconfig.$doInv" exact="1" />
+		</do_if>
+	</add>
+
+	<!--Chapter 1 Jobs-->
+	<!--
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'sos_fighter_patrol_cluster'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'sos_fighter_heavy_raid_leader'&quot;]" type="@chance" >0</add> -->
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'sov_xl_destroyer_hq'&quot;]" type="@chance" >0</add>
+
+	<!--Chapter 2 Jobs-->
+	<!--
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'can_chapter2_light_patrol_sector18'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'can_chapter2_light_frigate_sector18'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'can_chapter2_light_destroyer_sector18'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'can_chapter2_medium_trader_agricultural_medium_sector18'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'can_chapter2_medium_trader_energy_medium_sector18'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'can_chapter2_medium_trader_water_medium_sector18'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'can_chapter2_medium_trader_energy_large_sector18'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'can_chapter2_medium_trader_water_large_sector18'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'can_chapter2_medium_trader_agricultural_large_sector18'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'can_chapter2_medium_trader_food_large_sector18'&quot;]" type="@chance" >0</add>
+
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'hoa_chapter2_medium_patrol_sector18'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'hoa_chapter2_medium_frigate_sector18'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'hoa_chapter2_medium_carrier_sector18'&quot;]" type="@chance" >0</add>
+
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'pmc_chapter2_medium_carrier_sector17'&quot;]" type="@chance" >0</add>
+
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'rei_chapter2_light_patrol_sector17'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'rei_chapter2_light_patrol_sector20'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'rei_chapter2_medium_patrol_sector19'&quot;]" type="@chance" >0</add> -->
+
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'led_special_construction_trader'&quot;]" type="@chance" >0</add>
+	<!--
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'masstraffic_devries_cluster_civilian'&quot;]" type="@chance" >0</add> -->
+
+	<!--Chapter 3 Jobs-->
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'jss_special_construction_trader'&quot;]" type="@chance" >0</add>
+
+	<!--
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'rya_fighter_patrol_cluster'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'rya_fighter_patrol_sector02'&quot;]" type="@chance" >0</add> -->
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'rya_destroyer_sector02'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'rya_destroyer_sector02_hq'&quot;]" type="@chance" >0</add>
+        
+	<!--Post Chapter 3 Jobs -->
+	
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'xen_destroyer_albion'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='PostChapter3Jobs']/actions/set_job_active[@job=&quot;'xen_fighter_patrol_albion'&quot;]" type="@chance" >0</add>
+
+
+</diff>

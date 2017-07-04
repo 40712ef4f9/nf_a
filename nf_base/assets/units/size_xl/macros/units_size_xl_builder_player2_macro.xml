@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Michael (192.168.3.145) at 18.07.2014_10-54-08-->
+<macros>
+  <macro name="units_size_xl_builder_player2_macro" class="ship_xl">
+    <component ref="units_size_xl_builder_ship" />
+    <properties>
+      <identification name="{20101,4001}" description="{20101,4002}" mapicon="shipicon_builder_l" />
+      <explosiondamage value="100000" />
+      <hull max="1400000" />
+      <effects>
+        <explosion ref="capital_explosion" />
+        <jumpin ref="jump_jumpin_l" />
+        <jumpout ref="jump_jumpout_l" />
+      </effects>
+      <purpose primary="build" />
+    </properties>
+    <connections>
+      <connection ref="ConnectionFor_props_tradeoffer_buy_buildership">
+        <macro>
+          <component ref="props_tradeoffer_buy_buildership" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="connection_buildmodule01">
+        <macro ref="buildmodule_stations_player2_macro" connection="buildmodule" />
+      </connection>
+      <connection ref="connection_cockpit01">
+        <macro ref="cockpit_bridge_size_xl_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m01">
+        <macro ref="props_surf_ar_docks_size_m_inv_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_m02">
+        <macro ref="props_surf_ar_docks_size_m_inv_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_p01">
+        <macro ref="playerdock_capship01_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_s01">
+        <macro ref="props_surf_ar_docks_size_s_floor_macro" connection="Connection_component" />
+      </connection>
+      <connection ref="connection_engine01">
+        <macro ref="engine_size_l_builder_ship_01_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_engine02">
+        <macro ref="engine_size_l_builder_ship_01_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_engine03">
+        <macro ref="engine_size_l_builder_ship_01_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_engine04">
+        <macro ref="engine_size_l_builder_ship_01_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_jumpdrive01">
+        <macro ref="props_surf_ar_jumpdrive_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_radar_fallback01">
+        <macro ref="radar_ship_xl_fallback_01_macro" connection="ship" />
+      </connection>
+      <connection ref="connection_shieldgen01">
+        <macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen02">
+        <macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external01">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external02">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_storage01">
+        <macro ref="storage_ship_xl_universal_01_macro" connection="ShipConnection" />
+      </connection>
+      <connection ref="connection_storage02">
+        <macro ref="storage_ship_xl_fuel_01_macro" connection="ShipConnection" />
+      </connection>
+      <connection ref="connection_turret_small_mg01">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg02">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg03">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg04">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

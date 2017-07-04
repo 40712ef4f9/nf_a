@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Conquer_mod v020 -->
+<diff>
+	<!--replace sel="/aiscript/interrupts/library/handler/conditions/check_any/check_all/set_value[@name='$fleerespond']/@exact">global.$Disable_MoveFlee</replace-->
+	<add sel="/aiscript/interrupts/library/handler[@name='AttackHandler']/conditions/event_object_attacked" pos="after">
+          <check_value value="this.defensible.isclass.ship and not this.ship.pilot.$brattackhandler?" />
+	</add>
+</diff>

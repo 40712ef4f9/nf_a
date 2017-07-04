@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Lino (192.168.3.139) at 30.10.2013_12-46-13-->
+<macros>
+  <macro name="struct_at_xen_xenon_outpost_macro" class="station">
+    <component ref="struct_at_xen_xenon_outpost" />
+    <properties>
+      <identification name="{40000,49}" description="{40000,50}" unique="0" />
+    </properties>
+    <connections>
+	
+      <connection ref="ConnectionFor_struct_at_xen_xenon_outpost_main_macro">
+        <macro ref="struct_at_xen_xenon_outpost_main_macro" connection="space" />
+      </connection>
+	  
+      <connection ref="ConnectionFor_struct_econ_cw_ar_water_a_macro">
+        <macro ref="struct_econ_cw_ar_water_a1_macro" connection="position" />
+      </connection>
+	  
+      <connection ref="ConnectionFor_struct_econ_cw_ar_water_f_macro">
+        <macro ref="struct_econ_cw_ar_water_f1_macro" connection="position" />
+      </connection>
+	  
+      <connection ref="ConnectionFor_struct_econ_cw_ar_water_g_macro">
+        <macro ref="struct_econ_cw_ar_water_g1_macro" connection="position" />
+      </connection>
+	  
+      <connection ref="ConnectionFor_struct_econ_cw_ar_water_h_macro">
+        <macro ref="struct_econ_cw_ar_water_h1_macro" connection="position" />
+      </connection>
+	  
+      <connection ref="ConnectionFor_struct_econ_cw_ar_water_h2_macro">
+        <macro ref="struct_econ_cw_ar_water_h1_macro" connection="position" />
+      </connection>
+	  
+      <connection ref="connection_controlroom01">
+        <macro ref="control_room_macro" connection="Connection01" />
+      </connection>
+	  
+	  <connection ref="ConnectionFor_struct_at_xen_radar_macro">
+        <macro ref="struct_at_xen_radar_macro" connection="space" />
+      </connection>
+	  
+	  <!-- weapon platforms -->
+	  
+	  <connection ref="ConnectionFor_props_wps_xen_weaponplatform_01_macro1">
+		<macro ref="props_wps_xen_weaponplatform_01_macro" connection="space" />
+	  </connection>
+	  
+	  <connection ref="ConnectionFor_props_wps_xen_weaponplatform_01_macro2">
+		<macro ref="props_wps_xen_weaponplatform_01_macro" connection="space" />
+	  </connection>
+	  
+	  <connection ref="ConnectionFor_props_wps_xen_weaponplatform_01_macro3">
+		<macro ref="props_wps_xen_weaponplatform_01_macro" connection="space" />
+	  </connection>
+	  
+    </connections>
+  </macro>
+</macros>

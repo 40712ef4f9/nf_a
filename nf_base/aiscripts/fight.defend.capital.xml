@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="/aiscript/interrupts">
+		<handler ref="DestroyStation" />
+	</add>
+	<replace sel="/aiscript/attention/actions/do_while/do_elseif/run_script/@name">'BR.fight.attack.object.capital'</replace>
+</diff>

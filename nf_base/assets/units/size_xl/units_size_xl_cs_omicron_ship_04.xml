@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="//connections">		
+			<connection name="connection_storage03" tags="storage ">
+				<offset/>
+			</connection>		
+
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_front_a" tags="destructible">
+				<offset>
+					<position x="-139.65" y="-276" z="430"/>
+					<rotation yaw="180" pitch="0" roll="-90"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_front_a1" tags="destructible">
+				<offset>
+					<position x="139.65" y="-276" z="430"/>
+					<rotation yaw="180" pitch="0" roll="-90"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_front_b2" tags="destructible">
+				<offset>
+					<position x="0" y="-130" z="-1586.711"/>
+					<rotation yaw="180" pitch="0" roll="-90"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_s01_p2" group="group02 " tags="dock_s ">
+				<offset>
+					<position x="40" y="62.55921" z="-1072.798"/>
+					<quaternion qx="6.058623E-08" qy="-0.7071067" qz="-0.7071068" qw="4.372191E-08"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_s02_p2" group="group02 " tags="dock_s ">
+				<offset>
+					<position x="-40" y="62.55921" z="-1072.798"/>
+					<quaternion qx="6.058623E-08" qy="-0.7071067" qz="-0.7071068" qw="4.372191E-08"/>
+				</offset>
+			</connection>
+			<connection name="connection_turret_medium_ml_macro01" group="group02 " tags="turret_mining ">
+				<offset>
+					<position x="0" y="70" z="-896"/>
+					<rotation yaw="180" pitch="0" roll="-180"/>
+				</offset>
+			</connection>
+
+		</add>  
+</diff> 

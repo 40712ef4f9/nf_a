@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<components>
+	<component name="xenon_asteroid_shipyard" class="station">
+		<source geometry="extensions\ego_dlc_2\assets\structures\landmarks\\xenon_asteroid_02_base_02_data"/>
+		<layers>
+			<layer>
+				<waypoints/>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="station">
+				<offset/>
+			</connection>
+			<connection name="connection_controlroom01" tags="room  defence">
+				<offset/>
+			</connection>
+			<connection name="connection_radar01" tags="radar ">
+				<offset>
+					<position x="0" y="214.5449" z="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_xenon_asteroid_02_macro" group="stationGroup" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="ConnectionFor_struct_at_xen_shell_macro" group="stationGroup" tags="production">
+				<offset>
+					<position x="-1885.942" y="761.1739" z="-837.9364"/>
+					<quaternion qx="-0" qy="-0.6259384" qz="-0" qw="-0.7798726"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_at_xen_shell_macro1" group="stationGroup" tags="production">
+				<offset>
+					<position x="594.238" y="899.5848" z="1903.481"/>
+					<quaternion qx="-0" qy="-0.9939783" qz="-0" qw="0.109577"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_at_xen_shell_macro2" group="stationGroup" tags="production">
+				<offset>
+					<position x="1654.757" y="822.5999" z="-1860.867"/>
+					<quaternion qx="-0" qy="0.4785585" qz="-0" qw="-0.8780557"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_xenon_asteroid_02_part_01_macro" group="stationGroup" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="ConnectionFor_xenon_asteroid_02_part_02_macro" group="stationGroup" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="ConnectionFor_xenon_asteroid_02_part_03_macro" group="stationGroup" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="connectionfor_struct_econ_prod_stor_container_macro" group="stationGroup" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="ConnectionFor_props_surf_playerdock_admin_macro" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="900" y="1500" z="150"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_surf_playerdock_ships_macro" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="-1560" y="1855" z="-540"/>
+					<rotation yaw="-45" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_surf_playerdock_ships_macro1" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="310" y="1975" z="1570"/>
+					<rotation yaw="135" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_surf_playerdock_ships_macro2" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="1250" y="1905" z="-1850"/>
+					<rotation yaw="0" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_buildmodule_stations_cw_xen_macro" group="stationGroup" tags="buildmodule">
+				<offset>
+					<position x="-1885.942" y="3200" z="-837.9364"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_buildmodule_stations_cw_xen_macro1" group="stationGroup" tags="buildmodule">
+				<offset>
+					<position x="594.238" y="3200" z="1903.481"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_buildmodule_stations_cw_xen_macro2" group="stationGroup" tags="buildmodule">
+				<offset>
+					<position x="1654.757" y="3200" z="-1860.867"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_xl01" tags="dock_xl ">
+				<offset>
+					<position x="-1885" y="3000" z="-837"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_xl02" tags="dock_xl ">
+				<offset>
+					<position x="594" y="3000" z="1903"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_xl03" tags="dock_xl ">
+				<offset>
+					<position x="1654" y="3000" z="-1860"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_xl04" tags="dock_xl ">
+				<offset>
+					<position x="-1885" y="-2000" z="-837"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_xl05" tags="dock_l ">
+				<offset>
+					<position x="594" y="-2000" z="1903"/>
+					<rotation yaw="90" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_xl06" tags="dock_l ">
+				<offset>
+					<position x="1900" y="-2000" z="-1860"/>
+					<rotation yaw="-45" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_prod_shipsm_xen_macro" group="stationGroup" tags="production">
+				<offset>
+					<position x="0" y="2000" z="-823"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_surf_playerdock_ships_macro_sm" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="0" y="2040" z="-738.667"/>
+					<quaternion qx="-1.685873E-07" qy="0.7071071" qz="-1.685875E-07" qw="-0.7071065"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro" group="stationGroup" tags="dronelaunchpad">
+				<offset>
+					<!--position x="-50" y="-2500" z="-300"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="3.139165E-07"/-->
+					<position x="-300" y="-2500" z="-600"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro1" group="stationGroup" tags="dronelaunchpad">
+				<offset>
+					<position x="-50" y="-2500" z="-600"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro2" group="stationGroup" tags="dronelaunchpad">
+				<offset>
+					<!--position x="-50" y="-2600" z="-300"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="3.139165E-07"/-->
+					<position x="-300" y="-2600" z="-600"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro3" group="stationGroup" tags="dronelaunchpad">
+				<offset>
+					<position x="-50" y="-2600" z="-600"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_tradeoffer_buy_drones_standard" group="stationGroup" tags="tradeofferdock">
+				<offset>
+					<position x="100" y="900" z="1903.481"/>
+					<quaternion qx="-0" qy="0.7071066" qz="-0" qw="-0.7071069"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_tradeoffer_buy_shieldgenerators" group="stationGroup" tags="tradeofferdock">
+				<offset>
+					<position x="1080" y="900" z="1800"/>
+					<quaternion qx="-0" qy="-0.7071068" qz="-0" qw="-0.7071067"/>
+				</offset>
+			</connection>
+		</connections>
+	</component>
+</components>

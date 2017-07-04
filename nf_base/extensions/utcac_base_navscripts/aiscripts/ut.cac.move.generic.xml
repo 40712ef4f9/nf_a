@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="/aiscript/interrupts">
+      <handler>
+        <conditions>
+          <event_object_signalled object="this.defensible" param="'carriers command'"/>
+        </conditions>
+        <actions>
+          <do_if value="event.param2 == 'dock'">
+            <run_interrupt_script name="'lib.recall.fighters'" />
+            <activate_battlestate object="this.ship" state="battlestate_jumpprep" />
+          </do_if>
+          <do_elseif value="event.param2 == 'undock'">
+            <run_interrupt_script name="'lib.undock.fighters'" />
+          </do_elseif>
+        </actions>
+      </handler>
+	</add>
+	<add sel="//set_value[@name='$bigship']" pos="after">
+		<set_value name="$dockships" exact="(global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad)"/>
+	</add>
+	<add sel="/aiscript/interrupts/handler/actions/do_if[@value='$destination.zone == this.zone']/return" pos="before">
+          <do_if value="this.$carrier_restart_fighters?">
+            <resume label="carrierundock"/>
+          </do_if>
+	</add>
+	<add sel="/aiscript/attention/actions/do_if/do_if[@value='$destination == $targetspace and $endintargetspace']/return" pos="before">
+          <do_if value="this.$carrier_restart_fighters?">
+            <resume label="carrierundock"/>
+          </do_if>
+	</add>
+	<add sel="/aiscript/attention/actions/do_if/do_elseif[@value='$endintargetspace']/return" pos="before">
+          <do_if value="this.$carrier_restart_fighters?">
+            <resume label="carrierundock"/>
+          </do_if>
+	</add>
+	<add sel="/aiscript/attention/actions/do_if/do_while/do_if[@value='this.ship.hascontext.{$targetspace}']/return" pos="before">
+          <do_if value="this.$carrier_restart_fighters?">
+            <resume label="carrierundock"/>
+          </do_if>
+	</add>
+	<add sel="/aiscript/attention/actions">
+		<label name="carrierundock" />
+		<do_if value="this.$carrier_restart_fighters?">
+			<run_script name="'lib.undock.fighters'"/>
+		</do_if>
+	</add>
+
+	<add sel="/aiscript/attention/actions/do_if/do_if[@value='this.sector == $targetspace or this.sector == $targetspace.sector']" pos="after">
+          <!-- Carrier - grab your followers -->
+          <do_if value="@this.$carrier_fighters_docked == 3 or not @$dockships" negate="true" chance="if this.ship.subordinates.count then 100 else 0">
+            <signal_objects object="this.ship" param="'carriers command'" param2="'dock'" chance="if this.ship.macro.ismacro.{global.$mmcarriers} and (($targetspace.isclass.zone and $targetspace != this.zone) or ($targetspace.zone.exists and $targetspace.zone != this.zone)) then 100 else 0"/>
+          </do_if>
+	</add>
+
+	<add sel="/aiscript/on_abort">
+		<!-- Carrier - restart on abort -->
+		<do_if value="this.$carrier_restart_fighters?">
+			<create_group groupname="$theShipfollowers" />
+			<create_list name="$docks"/>
+			<do_all exact="2" counter="$j">
+				<find_dock_location container="this.ship" size="[tag.dock_m, tag.dock_s].{$j}" name="$dock" multiple="true"/>
+				<do_all exact="$dock.count" counter="$i">
+					<do_if value="$dock.{$i}" list="$docks" negate="true">
+						<append_to_list name="$docks" exact="$dock.{$i}"/>
+					</do_if>
+				</do_all>
+				<remove_value name="$dock"/>
+			</do_all>
+			<do_all exact="$docks.count" counter="$i">
+				<add_to_group groupname="$theShipfollowers" list="$docks.{$i}.component.docked" chance="if $docks.{$i}.component.docked.count then 100 else 0"/>
+			</do_all>
+			<remove_value name="$docks"/>
+			<do_all exact="$theShipfollowers.count" counter="$i">
+				<do_if value="$theShipfollowers.{$i}.engineer.exists and $theShipfollowers.{$i}.engineer.isclass.npc">
+					<destroy_object object="$theShipfollowers.{$i}.engineer"/>
+				</do_if>
+				<signal_objects object="$theShipfollowers.{$i}" param="'modeoff'" />
+			</do_all>
+			<remove_value name="$theShipfollowers"/>
+		</do_if>
+	</add>
+</diff>

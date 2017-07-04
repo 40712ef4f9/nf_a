@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Markus (192.168.3.142) at 01.02.2016_11-02-51-->
+<macros>
+  <macro name="units_size_m_khaak_weaponplatform_macro" class="drone">
+    <component ref="units_size_m_khaak_weaponplatform" />
+    <properties>
+      <identification name="{20107,8101} {20106,1201}" description="{20107,8102}" unique="0" mapicon="shipicon_drone_combat" />
+      <drop ref="ship_medium_xenon" />
+      <explosiondamage value="100000" />
+      <hull max="500000" />
+      <effects>
+        <explosion ref="explosion_l_01" />
+        <sefx_hack_disabled ref="hack_deactivated_l" />
+      </effects>
+      <secrecy level="1" />
+      <purpose primary="fight" />
+    </properties>
+    <connections>
+      <connection ref="ConnectionFor_props_wps_khaak_weaponplatform_01_macro">
+        <macro>
+          <component ref="props_wps_khaak_weaponplatform_01" connection="space" />
+          <connections>
+	      <connection ref="connection_turret_medium_xe_down004">
+	        <macro ref="turret_medium_khaak_lb_macro" connection="connection_component01" />
+	      </connection>
+	      <connection ref="connection_turret_medium_xe_down005">
+	        <macro ref="turret_medium_khaak_lb_macro" connection="connection_component01" />
+	      </connection>
+	      <connection ref="connection_turret_medium_xe_down006">
+	        <macro ref="turret_medium_khaak_lb_macro" connection="connection_component01" />
+	      </connection>
+	      <connection ref="connection_turret_medium_xe_up001">
+	        <macro ref="turret_medium_khaak_lb_macro" connection="connection_component01" />
+	      </connection>
+	      <connection ref="connection_turret_medium_xe_up002">
+	        <macro ref="turret_medium_khaak_lb_macro" connection="connection_component01" />
+	      </connection>
+	      <connection ref="connection_turret_medium_xe_up003">
+	        <macro ref="turret_medium_khaak_lb_macro" connection="connection_component01" />
+	      </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="connection_cockpit01">
+        <macro ref="cockpit_bridge_main_invisible_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_radar01">
+        <macro ref="radar_ship_xl_xenon_01_macro" connection="ship" />
+      </connection>
+      <connection ref="connection_shieldgen01x">
+        <macro ref="shieldgenerator_ship_m_09_macro" connection="Connection01" />
+      </connection>
+	  <connection ref="connection_shieldgen002">
+		<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+	  </connection>
+	  <connection ref="connection_shieldgen01">
+		<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+	  </connection>
+    </connections>
+  </macro>
+</macros>

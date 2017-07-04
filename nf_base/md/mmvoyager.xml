@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mdscript name="MM_Voyager" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+		<cue name="MMVoy_aiconnect" instantiate="true">
+			<conditions>
+				<event_object_signalled object="player.galaxy" param="'CM_SCOUTREPORT'" />
+			</conditions>
+			<actions>
+				<do_if value="event.param2?" negate="true"> 
+					<debug_text text="'ERROR event.param2 missing'" filter="error" chance="0" />
+				</do_if>
+				<do_else>
+					<set_value name="$faction" exact="event.param2.{1}"/>
+					<set_value name="$do" exact="false"/>
+					<set_value name="$match" exact="if [datatype.list, datatype.group].indexof.{typeof event.param2.{2}} then event.param2.{2} else [event.param2.{2}]"/>
+					<!--set_value name="$datapool" exact="event.param2.{3}"/-->
+					<do_if value="global.$factionCEOs.{'$' + $faction.id}?">
+						<set_value name="$do" exact="true"/>
+					</do_if>
+					<do_elseif value="md.Conquer_Mod.Start.$Main_Factions? and md.Conquer_Mod.Start.$Main_Factions.indexof.{$faction}">
+						<set_value name="$do" exact="true"/>
+					</do_elseif>
+					
+					<do_if value="$do">
+						<do_if value="md.$scoutmatches?" negate="true">
+							<do_if value="md.Conquer_Mod.Start.$scoutmatches?">
+								<set_value name="md.$scoutmatches" exact="md.Conquer_Mod.Start.$scoutmatches"/>
+								<remove_value name="md.Conquer_Mod.Start.$scoutmatches"/>
+							</do_if>
+							<do_else>
+								<set_value name="md.$scoutmatches" exact="table[]"/>
+							</do_else>
+						</do_if>
+		
+						<do_all exact="$match.count" counter="$i">
+							<do_if value="md.$scoutmatches.{'$%1'.[$faction.id]}?">
+								<do_if value="md.$scoutmatches.{'$%1'.[$faction.id]}.indexof.{$match.{$i}}" negate="true">
+									<append_to_list name="md.$scoutmatches.{'$%1'.[$faction.id]}.{2}" exact="$match.{$i}"/>
+								</do_if>
+							</do_if>
+							<do_else>
+								<set_value name="md.$scoutmatches.{'$%1'.[$faction.id]}" exact="[$faction,[$match.{$i}]]"/>
+							</do_else>
+						</do_all>
+					</do_if>
+				</do_else>
+				<remove_value name="$do"/>
+				<remove_value name="$faction"/>
+				<remove_value name="$match"/>
+				<remove_value name="$datapool"/>
+			</actions>
+		</cue>
+
+		<cue name="MMVoy_dosomething" instantiate="true" namespace="this" checktime="player.age + 300s" checkinterval="1800s" version="1">
+			<conditions>
+				<cue_is_complete cue="md.Setup.Start"/>
+				<check_value value="global.$nfconfig.$Check? and global.$nfconfig.$Check == 1" />
+				<check_value value="md.$scoutmatches?" />
+				<check_value value="false" comment="deprecated"/>
+			</conditions>
+			<delay min="44s" max="588s"/>
+			<actions>
+				<do_if value="md.$scoutmatches? and md.$scoutmatches.keys.list.count">
+
+					<set_value name="$tmp_priorities" exact="table[]" />
+					<set_value name="$tmp_priorities.$xenon" exact="[faction.xenon, macro.{['struct_at_xen_xenon_portal_macro'].{1}}, 100, 0, 0]" chance="if global.$nfconfig.$Check? then 100 else 0"/>
+
+					<set_value name="$keys" exact="md.$scoutmatches.keys.list" />
+					<do_all exact="$keys.count" counter="$k">
+						<do_if value="md.$scoutmatches.{$keys.{$k}}.{2}.count">
+
+							<set_value name="$faction" exact="md.$scoutmatches.{$keys.{$k}}.{1}" />
+							<!-- CEOs control itself -->
+							<do_if value="global.$factionCEOs.{'$' + $faction.id}?">
+								<continue />
+							</do_if>
+
+							<do_if value="$tmp_priorities.{$keys.{$k}}?">
+								<create_list name="$prio_area"/>
+								<find_station name="$prio_stations" space="player.galaxy" functional="true" multiple="true">
+									<match_any>
+										<match macro="$tmp_priorities.{$keys.{$k}}.{2}"/>
+										<match_content class="class.buildmodule" />
+									</match_any>
+									<match owner="$tmp_priorities.{$keys.{$k}}.{1}"/>		
+								</find_station>
+								<do_if value="$prio_stations.count">
+									<do_all exact="$prio_stations.count" counter="$ps" >
+										<do_if value="$prio_area.indexof.{$prio_stations.{$ps}.cluster}" negate="true">
+											<find_zone name="$tmp_check" space="$prio_stations.{$ps}.cluster" multiple="false" tempzone="false">
+												<match_relation faction="$tmp_priorities.{$keys.{$k}}.{1}" relation="enemy" comparison="le"/>
+											</find_zone>
+											<do_if value="$tmp_check">
+												<append_to_list name="$prio_area" exact="$prio_stations.{$ps}.cluster"/>
+											</do_if>
+										</do_if>
+									</do_all>
+									<remove_value name="$tmp_check"/>
+								</do_if>
+								<remove_value name="$prio_stations"/>
+							</do_if>
+
+							<do_all exact="md.$scoutmatches.{$keys.{$k}}.{2}.count" counter="$i" reverse="true">
+								<do_if value="@md.$scoutmatches.{$keys.{$k}}.{2}.{$i}.owner.hasrelation.enemy.{$faction}" negate="true">
+									<remove_value name="md.$scoutmatches.{$keys.{$k}}.{2}.{$i}"/>
+								</do_if>
+							</do_all>
+
+							<do_if value="md.$scoutmatches.{$keys.{$k}}.{2}.count">
+								<!-- validation -->
+								<do_if value="true">
+									<create_list name="$tmp_sectarget"/>
+									<create_list name="$tmp_lowtarget"/>
+									<create_list name="$tmp_priotarget"/>
+									<create_list name="$tmp_priotarget_2nd"/>
+									<set_value name="$tmp_list" exact="md.$scoutmatches.{$keys.{$k}}.{2}.clone" />
+									<set_value name="$faction_tmp" exact="md.$scoutmatches.{$keys.{$k}}.{1}" />
+	
+									<include_actions ref="MMVoy_validaion" />
+
+									<do_all exact="$tmp_list.count" counter="$i" reverse="true">
+										<do_if value="$prio_area? and $prio_area.indexof.{$tmp_list.{$i}.cluster} and $validZones.indexof.{$tmp_list.{$i}.zone}">
+											<do_if value="$tmp_priotarget.indexof.{$tmp_list.{$i}.zone}" negate="true">
+												<append_to_list name="$tmp_priotarget" exact="$tmp_list.{$i}"/>
+											</do_if>
+										</do_if>
+										<do_if value="$validZones.indexof.{$tmp_list.{$i}.zone}" negate="true">
+											<do_if value="$prio_area? and $prio_area.indexof.{$tmp_list.{$i}.cluster}" chance="if $tmp_priorities.{$keys.{$k}}.{3}? then $tmp_priorities.{$keys.{$k}}.{3} else 100">
+												<append_to_list name="$tmp_priotarget_2nd" exact="$tmp_list.{$i}"/>
+											</do_if>
+											<do_elseif value="$validSectors.indexof.{$tmp_list.{$i}.sector}" chance="if $tmp_priorities.{$keys.{$k}}.{4}? then $tmp_priorities.{$keys.{$k}}.{4} else 100">
+												<append_to_list name="$tmp_sectarget" exact="$tmp_list.{$i}"/>
+											</do_elseif>
+											<do_elseif value="$validCluster.indexof.{$tmp_list.{$i}.cluster}" chance="if $tmp_priorities.{$keys.{$k}}.{5}? then $tmp_priorities.{$keys.{$k}}.{5} else 100">
+												<append_to_list name="$tmp_lowtarget" exact="$tmp_list.{$i}"/>
+											</do_elseif>
+											<remove_value name="$tmp_list.{$i}"/>
+										</do_if>
+									</do_all>
+									<remove_value name="$validCluster"/>		
+									<remove_value name="$validSectors"/>		
+									<remove_value name="$validZones"/>
+									<remove_value name="$prio_area"/>
+									
+									<do_if value="$tmp_priotarget.count or $tmp_priotarget_2nd.count">
+										<set_value name="$target" exact="if $tmp_priotarget.count then $tmp_priotarget.random else $tmp_priotarget_2nd.random " />
+									</do_if>
+									<do_elseif value="$tmp_list.count or $tmp_sectarget.count">
+										<set_value name="$target" exact="if $tmp_list.count then $tmp_list.random else if $tmp_sectarget.count then $tmp_sectarget.random else null" />
+									</do_elseif>
+									<do_else>
+										<set_value name="$target" exact="if $tmp_lowtarget.count then $tmp_lowtarget.random else null" chance="30"/>
+									</do_else>
+
+									<remove_value name="$tmp_list"/>		
+									<remove_value name="$tmp_sectarget"/>
+									<remove_value name="$tmp_lowtarget"/>
+									<remove_value name="$tmp_priotarget"/>
+									<remove_value name="$tmp_priotarget_2nd"/>
+	
+									<do_if value="$target" negate="true">
+										<remove_value name="$target"/>
+										<continue />
+									</do_if>
+								</do_if>
+								<do_else>
+									<set_value name="$target" exact="md.$scoutmatches.{$keys.{$k}}.{2}.random" />
+								</do_else>
+								<!-- / validation -->
+
+								<do_if value="not $target.zone.owner or ($target.zone.owner and $target.zone.owner.hasrelation.enemy.{$faction})">
+									<do_if value="false" chance="if $faction == faction.xenon then 0 else 10" comment="boarding fleet">
+										<write_to_logbook category="general" text="{40002,92}.[$faction.name, $target.zone.name]" chance="if $target.isplayerowned then 100 else 0"/>
+										<signal_objects object="player.galaxy" param="'TS_invade_now'" param2="$target.zone" param3="$faction" />
+									</do_if>
+									<do_else>
+										<write_to_logbook category="general" text="{40002,92}.[$faction.name, $target.zone.name]" chance="if $target.isplayerowned then 100 else 0"/>
+										<signal_objects object="player.galaxy" param="'CW_invade_now'" param2="$target.zone" param3="[$faction, $target.owner]" />
+									</do_else>
+								</do_if>
+								<do_elseif value="$target.owner.hasrelation.enemy.{$faction}">
+									<do_if value="false" chance="if $faction == faction.xenon then 0 else 33" comment="boarding fleet">
+										<write_to_logbook category="general" text="{40002,92}.[$faction.name, $target.zone.name]" chance="if $target.isplayerowned then 100 else 0"/>
+										<signal_objects object="player.galaxy" param="'TS_invade_now'" param2="$target" param3="$faction" />
+									</do_if>
+									<do_else>
+										<write_to_logbook category="general" text="{40002,92}.[$faction.name, $target.zone.name]" chance="if $target.isplayerowned then 100 else 0"/>
+										<signal_objects object="player.galaxy" param="'CW_invade_now'" param2="$target" param3="[$faction, $target.owner]" />
+									</do_else>
+								</do_elseif>
+							</do_if>
+							<do_else>
+								<remove_value name="md.$scoutmatches.{$keys.{$k}}"/>
+							</do_else>
+
+							<remove_value name="$target"/>
+							<remove_value name="$faction"/>
+						</do_if>
+					</do_all>
+					<remove_value name="$tmp_priorities"/>
+					<remove_value name="$keys"/>
+				</do_if>
+			</actions>
+		</cue>
+
+		<cue name="MMVoy_advcom" instantiate="true" >
+			<conditions>
+				<check_any>
+				  <event_conversation_next_section section="mmadvcom_main" />
+				  <event_conversation_returned_to_section section="mmadvcom_main" />
+				</check_any>
+				<check_value value="event.object.trueowner" exact="faction.player" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_value value="event.object.container.isclass.[class.ship_s,class.ship_m,class.ship_l,class.ship_xl]" />
+				<check_any>
+				  <check_value value="event.object.type" exact="entitytype.commander" />
+				  <check_value value="event.object.type" exact="entitytype.pilot" />
+				</check_any>
+			</conditions>
+			<actions>
+				<do_if value="event.param" exact="'mmadvcom_main'">
+					<add_player_choice text="{2802,3000}" section="mmvoy_do" chance="if event.object.container.isclass.[class.ship_s,class.ship_m,class.ship_l,class.ship_xl] then 100 else 0 "/>
+				</do_if>
+			</actions>
+		</cue>
+
+		<cue name="MMVoy_do_pl" instantiate="true" >
+			<conditions>
+				<event_conversation_next_section sectionprefix="mmvoy_do" />
+				<check_value value="event.object.trueowner" exact="faction.player" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_any>
+				  <check_value value="event.object.type" exact="entitytype.commander" />
+				  <check_value value="event.object.type" exact="entitytype.pilot" />
+				</check_any>
+			</conditions>
+			<actions>
+				<do_if value="event.param" exact="'mmvoy_do'">
+					<add_player_choice text="{2802,3002}" section="mmvoy_do_cl"/>
+					<add_player_choice text="{2802,3004}" section="mmvoy_do_se"/>
+					<add_player_choice text="{2802,3006}" section="gOrders_advancedflytopos" choiceparam="[0, 0, 'sector', player.primaryship.sector, null, null, 'selectzone', ['mmvoy_do_selected_obs']]"/>
+					<add_player_choice text="{2802,3008}" section="gOrders_advancedflytopos" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectposition', ['mmvoy_do_selected']]"/>
+					<add_player_choice text="{2802,3010}" section="mmvoy_do_explore" chance="if event.object.container.isclass.[class.ship_l,class.ship_xl] then 100 else 0 "/>
+					
+					<set_value name="$tool_text" exact="{2802,3013}"/>
+					<do_if value="event.object.container.commander and event.object.container.commander != player.primaryship and (event.object.container.commander.resources.list.count or event.object.container.commander.tradewares.list.count)">
+						<set_value name="$homebase" exact="event.object.container.commander"/>
+					</do_if>	
+					<do_if value="not $homebase? and player.platform and (player.platform.container.resources.list.count or player.platform.container.tradewares.list.count)">
+						<set_value name="$homebase" exact="player.platform.container"/>
+					</do_if>
+					<do_if value="$homebase?">
+						<set_value name="$tool_text" exact="''"/>
+						<create_list name="$basket" />
+						<do_all exact="$homebase.resources.list.count" counter="$i">
+							<do_if value="$basket.indexof.{$homebase.resources.list.{$i}} == 0 and event.object.container.cargo.{$homebase.resources.list.{$i}}.max">
+								<append_to_list name="$basket" exact="$homebase.resources.list.{$i}" />
+							</do_if>
+						</do_all>
+						<do_all exact="$homebase.tradewares.list.count" counter="$i">
+							<do_if value="$basket.indexof.{$homebase.tradewares.list.{$i}} == 0 and event.object.container.cargo.{$homebase.tradewares.list.{$i}}.max">
+								<append_to_list name="$basket" exact="$homebase.tradewares.list.{$i}" />
+							</do_if>
+						</do_all>
+
+						<do_if value="$basket.count gt 10">
+							<set_value name="$tool_text" exact="if $homebase.isplayerowned then {2802,3018}.[$basket.count, $homebase.name] else {2802,3020}.[$basket.count]"/>
+						</do_if>	
+						<do_else>
+							<set_value name="$tool_text" exact="if $homebase.isplayerowned then {2802,3022}.[$homebase.name] else {2802,3024}"/>
+							<do_all exact="$basket.count" counter="$i">
+								<set_value name="$tool_text" exact="'\n* %1'.[$basket.{$i}.name]" operation="add"/>
+							</do_all>
+							<set_value name="$tool_text" exact="if $homebase.isplayerowned then {2802,3026}.[$basket.count, $homebase.name] else {2802,3028}.[$basket.count]"/>
+						</do_else>
+					</do_if>	
+					<add_player_choice text="{2802,3012}" section="gOrders_advancedflytopos" selectable="$homebase? and (event.object.container.units.{unitcategory.transport}.count or event.object.container.isclass.[class.ship_s, class.ship_m])" tooltip="$tool_text" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectposition', ['mmvyplund_do_selected']]"/>
+					<remove_value name="$basket"/>
+					<remove_value name="$tool_text"/>
+					<remove_value name="$homebase"/>
+				</do_if>
+				<do_elseif value="event.param" exact="'mmvoy_do_explore'">
+					<remove_object_commander object="event.object.container" />
+					<start_script name="'move.voyager'" object="event.object">
+						<param name="workspace" value="[player.galaxy]" />
+						<param name="ignoreknown" value="true" />
+					</start_script>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmvoy_do_cl'">
+					<remove_object_commander object="event.object.container" />
+					<start_script name="'move.voyager'" object="event.object">
+						<param name="dispatchatfirstmatch" value="false" />
+					</start_script>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmvoy_do_se'">
+					<remove_object_commander object="event.object.container" />
+					<start_script name="'move.voyager'" object="event.object">
+						<param name="workspace" value="[event.object.container.sector]" />
+					</start_script>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmvoy_do_selected'">
+					<do_if value="event.param2.{3}.isclass.[class.sector, class.cluster, class.zone, class.galaxy]">
+						<remove_object_commander object="event.object.container" />
+						<start_script name="'move.voyager'" object="event.object">
+							<param name="workspace" value="[event.param2.{3}]" />
+						</start_script>
+					</do_if>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmvoy_do_selected_obs'">
+					<do_if value="event.param2.{3}.isclass.[class.sector, class.cluster, class.zone, class.galaxy]">
+						<remove_object_commander object="event.object.container" />
+						<start_script name="'move.voyager'" object="event.object">
+							<param name="workspace" value="[event.param2.{3}]" />
+							<param name="returnzone" value="false" />
+						</start_script>
+					</do_if>
+				</do_elseif>
+			</actions>
+		</cue>
+		<cue name="MMVoy_do_plunder" instantiate="true" >
+			<conditions>
+				<event_conversation_next_section section="mmvyplund_do_selected" />
+				<check_value value="event.object.trueowner" exact="faction.player" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_any>
+				  <check_value value="event.object.type" exact="entitytype.commander" />
+				  <check_value value="event.object.type" exact="entitytype.pilot" />
+				</check_any>
+			</conditions>
+			<actions>
+				<do_if value="event.param2.{3}.isclass.[class.sector, class.cluster, class.zone]">
+					<set_value name="$homebase" exact="null"/>
+					<do_if value="event.object.container.commander == player.primaryship">
+						<remove_object_commander object="event.object.container" />
+					</do_if>	
+					<do_elseif value="event.object.container.commander and (event.object.container.commander.resources.list.count or event.object.container.commander.tradewares.list.count)">
+						<set_value name="$homebase" exact="event.object.container.commander"/>
+					</do_elseif>	
+					<do_if value="not $homebase and (player.platform.container.resources.list.count or player.platform.container.tradewares.list.count)">
+						<set_value name="$homebase" exact="player.platform.container"/>
+					</do_if>
+					<create_list name="$basket" />
+					<do_all exact="$homebase.resources.list.count" counter="$i">
+						<do_if value="$basket.indexof.{$homebase.resources.list.{$i}} == 0 and event.object.container.cargo.{$homebase.resources.list.{$i}}.max">
+							<append_to_list name="$basket" exact="$homebase.resources.list.{$i}" />
+						</do_if>
+					</do_all>
+					<do_all exact="$homebase.tradewares.list.count" counter="$i">
+						<do_if value="$basket.indexof.{$homebase.tradewares.list.{$i}} == 0 and event.object.container.cargo.{$homebase.tradewares.list.{$i}}.max">
+							<append_to_list name="$basket" exact="$homebase.tradewares.list.{$i}" />
+						</do_if>
+					</do_all>
+					
+					<debug_text text="'Plunder: Target: %1 [%3] Ship: %2'.[$homebase.name, $basket, $basket.count]" filter="error" chance="0" />
+						
+					<start_script name="'move.plunder.plus'" object="event.object">
+						<param name="range" value="if event.object.container.isclass.[class.ship_l, class.ship_xl] and event.param2.{3}.isclass.cluster then 'cluster' else if event.param2.{3}.isclass.zone then 'zone' else 'sector'" />
+						<param name="space" value="event.param2.{3}" />
+						<param name="basebasket" value="$basket" />
+						<param name="checkrelation" value="true" /> <!-- why this doesn't work well at true? -->
+						<param name="allowstations" value="true" />
+						<param name="waitforcommand" value="true" />
+						<param name="returntobase" value="true" />
+						<param name="homebase" value="if $homebase.isplayerowned then $homebase else null" />
+					</start_script>
+					
+					<remove_value name="$basket"/>
+					<remove_value name="$homebase"/>
+					
+					<do_if value="event.object.container.defencenpc">
+						<set_value name="event.object.container.defencenpc.$config_attackenemies" exact="1"/>
+					</do_if>	
+				</do_if>
+			</actions>
+		</cue>
+		<cue name="SectionHandler_MM_plunderer" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_next_section section="mmvyplund_do_relation" />
+					<event_conversation_started conversation="default" />
+					<event_conversation_returned_to_section section="default" />
+				</check_any>
+				<check_value value="event.object.trueowner" exact="faction.player" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_any>
+				  <check_value value="event.object.type" exact="entitytype.commander" />
+				  <check_value value="event.object.type" exact="entitytype.pilot" />
+				</check_any>
+				<check_value value="event.object.$checkrelation?" />
+			</conditions>
+			<actions>
+				<do_if value="event.param == 'mmvyplund_do_relation' and event.param2? and event.object.$checkrelation != event.param2">
+					<set_value name="event.object.$checkrelation" exact="event.param2"/>
+				</do_if>	
+
+				<add_player_choice text="if event.object.$checkrelation then {2802,3014} else {2802,3016}" position="left" section="mmvyplund_do_relation" choiceparam="(not event.object.$checkrelation)" />
+				<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" chance="if event.param == 'mmvyplund_do_relation' then 100 else 0"/>
+			</actions>
+		</cue>
+
+
+		<!--
+		<set_value name="$faction_tmp" exact="faction.player" />
+		<include_actions ref="MMVoy_validaion" />
+		<remove_value name="$validCluster"/>
+		<remove_value name="$validSectors"/>		
+		<remove_value name="$validZones"/>
+		-->
+		<library name="MMVoy_validaion">
+			<actions>
+				<create_list name="$validZones"/>
+				<create_list name="$validSectors"/>
+				<create_list name="$validCluster"/>
+
+				<find_zone name="$tmp_zones" space="player.galaxy" multiple="true" owner="$faction_tmp" tempzone="false"/>
+
+				<find_station name="$tmp_stations" space="player.galaxy" functional="true" multiple="true">
+					<match owner="$faction_tmp"/>		
+				</find_station>
+
+				<do_all exact="$tmp_stations.count" counter="$x">
+					<do_if value="$tmp_stations.{$x}.exists" negate="true">
+						<continue />
+					</do_if>
+					<do_if value="$tmp_zones.indexof.{$tmp_stations.{$x}.zone} == 0">
+						<append_to_list name="$tmp_zones" exact="$tmp_stations.{$x}.zone"/>
+					</do_if>
+					<do_if value="$validZones.indexof.{$tmp_stations.{$x}.zone} == 0">
+						<append_to_list name="$validZones" exact="$tmp_stations.{$x}.zone"/>
+					</do_if>
+				</do_all>
+				<remove_value name="$tmp_stations"/>
+
+				<do_all exact="$tmp_zones.count" counter="$x">
+					<do_if value="$validCluster.indexof.{$tmp_zones.{$x}.cluster} == 0">
+						<append_to_list name="$validCluster" exact="$tmp_zones.{$x}.cluster"/>
+					</do_if>
+
+					<find_object name="$object" space="$tmp_zones.{$x}" class="[class.gate, class.highwayentrygate]" multiple="true"/>
+					<do_all exact="$object.count" counter="$y">
+						<do_if value="$object.{$y}.exists and $object.{$y}.destination" negate="true">
+							<continue />
+						</do_if>
+						<do_if value="$validZones.indexof.{$object.{$y}.destination} == 0">
+							<append_to_list name="$validZones" exact="$object.{$y}.destination"/>
+						</do_if>
+						<do_if value="$validSectors.indexof.{$object.{$y}.destination.sector} == 0">
+							<append_to_list name="$validSectors" exact="$object.{$y}.destination.sector"/>
+						</do_if>
+						<do_if value="$validCluster.indexof.{$object.{$y}.destination.cluster} == 0">
+							<append_to_list name="$validCluster" exact="$object.{$y}.destination.cluster"/>
+						</do_if>
+					</do_all>
+					<remove_value name="$object"/>
+					<find_object name="$object" space="$tmp_zones.{$x}" class="[class.highwayexitgate]" multiple="true"/>
+					<do_all exact="$object.count" counter="$y">
+						<do_if value="$object.{$y}.exists" negate="true">
+							<continue />
+						</do_if>
+						<do_if value="$validSectors.indexof.{$object.{$y}.entry.sector} == 0">
+							<append_to_list name="$validSectors" exact="$object.{$y}.entry.sector"/>
+						</do_if>
+					</do_all>
+					<remove_value name="$object"/>
+
+					<do_all exact="$tmp_zones.{$x}.adjacentzones.count" counter="$y">
+						<do_if value="$tmp_zones.{$x}.adjacentzones.{$y}.istemporaryzone or $tmp_zones.{$x}.adjacentzones.{$y}.isclass.highway or not $tmp_zones.{$x}.adjacentzones.{$y}.ismapzone">
+							<continue />
+						</do_if>
+						<do_if value="$validZones.indexof.{$tmp_zones.{$x}.adjacentzones.{$y}} == 0">
+							<append_to_list name="$validZones" exact="$tmp_zones.{$x}.adjacentzones.{$y}"/>
+						</do_if>
+					</do_all>
+
+					<do_if value="$validZones.indexof.{$tmp_zones.{$x}} == 0">
+						<append_to_list name="$validZones" exact="$tmp_zones.{$x}"/>
+					</do_if>
+				</do_all>
+				<remove_value name="$tmp_zones"/>
+				<remove_value name="$faction_tmp"/>
+			</actions>
+		</library>
+	</cues>
+</mdscript>

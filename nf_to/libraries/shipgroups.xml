@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="/groups"> 	
+	  <group name="mmte_destroyer_light_grp">
+		<select macro="units_size_xl_te_kit_none_x1s_macro" weight="30"/>
+		<select macro="units_size_xl_te_kit_none_x1_macro" weight="10"/>
+		<select macro="units_size_xl_te_kit_none_02_macro" weight="60"/>
+	  </group>
+	
+	  <group name="mmte_carrier">
+		<select macro="units_size_xl_te_kit_none_01_macro" weight="40"/>
+		<select macro="units_size_xl_te_kit_none_02_macro" weight="40"/>
+		<select macro="units_size_xl_te_kit_none_02_xl_macro" weight="20"/>
+	  </group>
+	</add>   
+</diff>

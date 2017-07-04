@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff>
+    <replace sel="//do_if[@value='$tradeorder.iswareexchange and $targetobject.isclass.ship and not $targetobject.buildanchor.exists']/@value">$tradeorder.iswareexchange and $targetobject.isclass.ship and not $targetobject.buildanchor.exists and not $targetobject.macro.ismacro.{global.$mmcarriers}</replace>
+</diff>

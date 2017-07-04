@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<add sel="/targetpoints">
+  <pointlist macro="struct_econ_weapon_ar_defence_2_macro" stage="0" tags="ship_xs dockpath">
+    <point x="-2700" y="0" z="0" r="100"/>
+    <point x="-2145" y="0" z="180" r="100"/>
+  </pointlist>
+  <pointlist macro="struct_econ_weapon_ar_defence_2_macro" stage="0" tags="ship_xs launchpath">
+    <point x="-2145" y="0" z="180" r="100"/>
+    <point x="-2800" y="0" z="0" r="100"/>
+  </pointlist>
+  <pointlist macro="units_size_l_cruise2_macro" stage="0" tags="ship_xs dockpath">
+    <point x="66.455" y="-150" z="-1500" r="50"/>
+    <point x="60" y="-150" z="-950" r="50"/>
+  </pointlist>
+  <pointlist macro="units_size_l_cruise2_macro" stage="0" tags="ship_xs launchpath">
+    <point x="-60" y="-150" z="-950" r="50"/>
+    <point x="-66.455" y="-150" z="-1500" r="50"/>
+  </pointlist>
+</add>
+</diff>

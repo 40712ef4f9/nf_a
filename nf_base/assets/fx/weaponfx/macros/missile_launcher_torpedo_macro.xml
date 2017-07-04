@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+<!-- Conquer_mod v018s -->
+	<replace sel="//missile/@lifetime">200</replace>
+	<replace sel="//missile/@range">15000</replace>
+	<add sel="//missile" type="@retarget">1</add>	
+</diff>

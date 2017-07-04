@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="//connections">		
+			<connection name="connection_turret_mining01" group="group01 " tags="turret_mining ">
+				<offset>
+					<position x="-66.55563" y="-65.0497" z="390"/>
+					<quaternion qx="-2.922219E-07" qy="2.922218E-07" qz="0.7071067" qw="-0.7071068"/>
+				</offset>
+			</connection>
+			<connection name="connection_turret_mining02" group="group02 " tags="turret_mining ">
+				<offset>
+					<position x="66.37125" y="-65.0497" z="390"/>
+					<quaternion qx="-9.131585E-08" qy="2.542911E-07" qz="-0.7071068" qw="-0.7071068"/>
+				</offset>
+			</connection>
+		</add>  
+</diff> 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff>
+	<add sel="//attach_object_to_target" type="@chance" >if $target.isclass.ship then 100 else 0</add>
+	<add sel="//attach_object_to_target" pos="after">
+		<set_object_radar_visible object="this.ship" visible="false" chance="if $target.isclass.ship then 0 else 100" /> 
+	</add>
+	<add sel="//actions">
+		<set_owner object="this.ship" faction="faction.ownerless" chance="if $target.isclass.ship then 0 else 100" comment="prevent log book spam" /> 
+	</add>
+	<add sel="//move_to[2]" pos="before">
+        <disable_collisions_between object="this.ship" target="$target" chance="if $target.isclass.ship then 0 else 100"/>
+	</add>
+</diff>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Conquer_mod v018s -->
+<macros>
+  <macro name="unit_size_xs_probe_macro" class="ship_xs">
+    <component ref="unit_size_xs_escapepod" />
+    <properties>
+	  <identification name="{40000,51}" description="{40000,52}" unique="0" mapicon="shipicon_drone_combat" />
+	  	  
+      <hull max="10000" />
+      <effects>
+        <explosion ref="generic_explosion_03" />
+      </effects>
+    </properties>
+    <connections>
+      <connection ref="cockpit_connection">
+        <macro ref="unit_combat_ar_cockpit_macro" connection="Connection01" />
+      </connection>
+      <connection ref="engine_connection">
+        <macro ref="engine_ship_xs_04_macro" connection="ship" />
+      </connection>
+	  <connection ref="Connection01">
+        <macro ref="radar_ship_s_fighter_02_macro" connection="ship" />
+		<!--<macro ref="radar_ship_xl_xenon_01_macro" connection="ship" />-->
+      </connection>
+    </connections>
+  </macro>
+</macros>

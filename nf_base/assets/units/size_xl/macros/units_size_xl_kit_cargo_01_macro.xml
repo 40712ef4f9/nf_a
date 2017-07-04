@@ -1,0 +1,708 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--Exported by: Benedikt (192.168.3.146) at 12.11.2013_14-02-42-->
+<macros>
+	<macro name="units_size_xl_kit_cargo_01_macro" class="ship_xl">
+		<component ref="units_size_xl_kit_cargo_01"/>
+		<properties>
+			<identification name="{20101,11759}" description="{20101,11760}" unique="0" mapicon="shipicon_freighter_xl" />
+			<explosiondamage value="200000" />
+			<hull max="5200000"/>
+			<effects>
+				<explosion ref="capital_explosion"/>
+				<jumpin ref="jump_jumpin_xl" />
+				<jumpout ref="jump_jumpout_xl" />
+			</effects>
+			<purpose primary="trade" />
+		</properties>
+		<connections>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender1_b">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender1_b" connection="space"/>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_d" connection="space" />
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg03">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg04">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a2">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_d" connection="space" />
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg03">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg04">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender1_b_2">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender1_b" connection="space"/>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a3">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_g" connection="space" />
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg03">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg04">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a4">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_g" connection="space" />
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg03">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg04">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_front_b">
+				<macro>
+					<component ref="units_size_l_carrier_kit_front_b" connection="space"/>
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component"/>
+						</connection>
+						<connection ref="connection_turret_medium_pe01">
+							<macro ref="turret_medium_pe_macro" connection="connection_component01"/>
+						</connection>
+						<connection ref="connection_turret_medium_pe02">
+							<macro ref="turret_medium_pe_macro" connection="connection_component01"/>
+						</connection>
+						<connection ref="connection_dock_p01">
+							<macro ref="playerdock_capship01_macro" connection="connection_component01"/>
+						</connection>
+						<connection ref="connection_radar_external01">
+							<macro ref="radar_ship_l_freighter_01_macro" connection="connection_component01"/>
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_front_b_2">
+				<macro>
+					<component ref="units_size_l_carrier_kit_front_b" connection="space"/>
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component"/>
+						</connection>
+						<connection ref="connection_turret_medium_pe01">
+							<macro ref="turret_medium_pe_macro" connection="connection_component01"/>
+						</connection>
+						<connection ref="connection_turret_medium_pe02">
+							<macro ref="turret_medium_pe_macro" connection="connection_component01"/>
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_main_b">
+				<macro>
+					<component ref="units_size_l_carrier_kit_main_b" connection="space"/>
+					<connections>
+						<connection ref="connection_engine01">
+							<macro ref="engine_size_l_kit_freighter_01_macro" connection="Connection01"/>
+						</connection>
+						<connection ref="connection_engine02">
+							<macro ref="engine_size_l_kit_freighter_01_macro" connection="Connection01"/>
+						</connection>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component"/>
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01"/>
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01"/>
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_main_b_2">
+				<macro>
+					<component ref="units_size_l_carrier_kit_main_b" connection="space"/>
+					<connections>
+						<connection ref="connection_engine01">
+							<macro ref="engine_size_l_kit_freighter_01_macro" connection="Connection01"/>
+						</connection>
+						<connection ref="connection_engine02">
+							<macro ref="engine_size_l_kit_freighter_01_macro" connection="Connection01"/>
+						</connection>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component"/>
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01"/>
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01"/>
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender1_b_left">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender1_b" connection="space"/>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a_left">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_d" connection="space" />
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg03">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg04">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a2_left">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_d" connection="space" />
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg03">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg04">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender1_b_2_left">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender1_b" connection="space"/>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a3_left">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_g" connection="space" />
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg03">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg04">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a4_left">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_g" connection="space" />
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg03">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg04">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_front_b_left">
+				<macro>
+					<component ref="units_size_l_carrier_kit_front_b" connection="space"/>
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component"/>
+						</connection>
+						<connection ref="connection_turret_medium_pe01">
+							<macro ref="turret_medium_pe_macro" connection="connection_component01"/>
+						</connection>
+						<connection ref="connection_turret_medium_pe02">
+							<macro ref="turret_medium_pe_macro" connection="connection_component01"/>
+						</connection>
+						<connection ref="connection_radar_external01">
+							<macro ref="radar_ship_l_freighter_01_macro" connection="connection_component01"/>
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_front_b_2_left">
+				<macro>
+					<component ref="units_size_l_carrier_kit_front_b" connection="space"/>
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component"/>
+						</connection>
+						<connection ref="connection_turret_medium_pe01">
+							<macro ref="turret_medium_pe_macro" connection="connection_component01"/>
+						</connection>
+						<connection ref="connection_turret_medium_pe02">
+							<macro ref="turret_medium_pe_macro" connection="connection_component01"/>
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_main_b_left">
+				<macro>
+					<component ref="units_size_l_carrier_kit_main_b" connection="space"/>
+					<connections>
+						<connection ref="connection_engine01">
+							<macro ref="engine_size_l_kit_freighter_01_macro" connection="Connection01"/>
+						</connection>
+						<connection ref="connection_engine02">
+							<macro ref="engine_size_l_kit_freighter_01_macro" connection="Connection01"/>
+						</connection>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component"/>
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01"/>
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01"/>
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_main_b_2_left">
+				<macro>
+					<component ref="units_size_l_carrier_kit_main_b" connection="space"/>
+					<connections>
+						<connection ref="connection_engine01">
+							<macro ref="engine_size_l_kit_freighter_01_macro" connection="Connection01"/>
+						</connection>
+						<connection ref="connection_engine02">
+							<macro ref="engine_size_l_kit_freighter_01_macro" connection="Connection01"/>
+						</connection>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component"/>
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01"/>
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01"/>
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender1_b_right">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender1_b" connection="space"/>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a_right">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_d" connection="space" />
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg03">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg04">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a2_right">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_d" connection="space" />
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg03">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg04">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender1_b_2_right">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender1_b" connection="space"/>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a3_right">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_g" connection="space" />
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg03">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg04">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a4_right">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_g" connection="space" />
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg03">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+						<connection ref="connection_turret_small_mg04">
+							<macro ref="turret_small_mg_macro" connection="connection_component01" />
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_front_b_right">
+				<macro>
+					<component ref="units_size_l_carrier_kit_front_b" connection="space"/>
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component"/>
+						</connection>
+						<connection ref="connection_turret_medium_pe01">
+							<macro ref="turret_medium_pe_macro" connection="connection_component01"/>
+						</connection>
+						<connection ref="connection_turret_medium_pe02">
+							<macro ref="turret_medium_pe_macro" connection="connection_component01"/>
+						</connection>
+						<connection ref="connection_radar_external01">
+							<macro ref="radar_ship_l_freighter_01_macro" connection="connection_component01"/>
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_front_b_2_right">
+				<macro>
+					<component ref="units_size_l_carrier_kit_front_b" connection="space"/>
+					<connections>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component"/>
+						</connection>
+						<connection ref="connection_turret_medium_pe01">
+							<macro ref="turret_medium_pe_macro" connection="connection_component01"/>
+						</connection>
+						<connection ref="connection_turret_medium_pe02">
+							<macro ref="turret_medium_pe_macro" connection="connection_component01"/>
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_main_b_right">
+				<macro>
+					<component ref="units_size_l_carrier_kit_main_b" connection="space"/>
+					<connections>
+						<connection ref="connection_engine01">
+							<macro ref="engine_size_l_kit_freighter_01_macro" connection="Connection01"/>
+						</connection>
+						<connection ref="connection_engine02">
+							<macro ref="engine_size_l_kit_freighter_01_macro" connection="Connection01"/>
+						</connection>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component"/>
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01"/>
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01"/>
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_main_b_2_right">
+				<macro>
+					<component ref="units_size_l_carrier_kit_main_b" connection="space"/>
+					<connections>
+						<connection ref="connection_engine01">
+							<macro ref="engine_size_l_kit_freighter_01_macro" connection="Connection01"/>
+						</connection>
+						<connection ref="connection_engine02">
+							<macro ref="engine_size_l_kit_freighter_01_macro" connection="Connection01"/>
+						</connection>
+						<connection ref="connection_shieldgen01">
+							<macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component"/>
+						</connection>
+						<connection ref="connection_turret_small_mg01">
+							<macro ref="turret_small_mg_macro" connection="connection_component01"/>
+						</connection>
+						<connection ref="connection_turret_small_mg02">
+							<macro ref="turret_small_mg_macro" connection="connection_component01"/>
+						</connection>
+					</connections>
+				</macro>
+			</connection>
+
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a_left_con">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_c" connection="space" />
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a2_left_con">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_c" connection="space" />
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a3_left_con">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_c" connection="space" />
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a4_left_con">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_c" connection="space" />
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_front_b_left_con">
+				<macro>
+					<component ref="units_size_l_carrier_kit_front_b" connection="space"/>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_front_b_2_left_con">
+				<macro>
+					<component ref="units_size_l_carrier_kit_front_b" connection="space"/>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_front_b_3_left_con">
+				<macro>
+					<component ref="units_size_l_carrier_kit_front_b" connection="space"/>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_front_b_4_left_con">
+				<macro>
+					<component ref="units_size_l_carrier_kit_front_b" connection="space"/>
+				</macro>
+			</connection>
+
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a_right_con">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_c" connection="space" />
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a2_right_con">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_c" connection="space" />
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a3_right_con">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_c" connection="space" />
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_extender2_a4_right_con">
+				<macro>
+					<component ref="units_size_l_carrier_kit_extender2_c" connection="space" />
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_front_b_right_con">
+				<macro>
+					<component ref="units_size_l_carrier_kit_front_b" connection="space"/>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_front_b_2_right_con">
+				<macro>
+					<component ref="units_size_l_carrier_kit_front_b" connection="space"/>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_front_b_3_right_con">
+				<macro>
+					<component ref="units_size_l_carrier_kit_front_b" connection="space"/>
+				</macro>
+			</connection>
+			<connection ref="ConnectionFor_units_size_l_carrier_kit_front_b_4_right_con">
+				<macro>
+					<component ref="units_size_l_carrier_kit_front_b" connection="space"/>
+				</macro>
+			</connection>
+
+			<connection ref="connection_cockpit01">
+				<macro ref="cockpit_bridge_size_l_macro" connection="connection_component01"/>
+			</connection>
+			<connection ref="connection_dock_s01">
+				<macro ref="props_surf_ar_docks_size_s_floor_macro" connection="Connection_component"/>
+			</connection>
+			<connection ref="connection_radar_fallback01">
+				<macro ref="radar_ship_l_fallback_01_macro" connection="ship"/>
+			</connection>
+			<connection ref="connection_shieldgen_external01">
+				<macro ref="shieldgenerator_size_l_mk2_macro" connection="connection_component" />
+			</connection>
+			<connection ref="connection_shieldgen_external02">
+				<macro ref="shieldgenerator_size_l_mk2_macro" connection="connection_component" />
+			</connection>
+			<connection ref="connection_shieldgen_external03">
+				<macro ref="shieldgenerator_size_l_mk2_macro" connection="connection_component" />
+			</connection>
+			<connection ref="connection_shieldgen_external04">
+				<macro ref="shieldgenerator_size_l_mk2_macro" connection="connection_component" />
+			</connection>
+			<connection ref="connection_shieldgen_external05">
+				<macro ref="shieldgenerator_size_l_mk2_macro" connection="connection_component" />
+			</connection>
+			<connection ref="connection_shieldgen_external06">
+				<macro ref="shieldgenerator_size_l_mk2_macro" connection="connection_component" />
+			</connection>
+			<connection ref="connection_storage01">
+				<macro ref="storage_ship_l_fuel_01_macro" connection="ShipConnection"/>
+			</connection>
+			<connection ref="connection_storage02">
+				<macro ref="storage_ship_xl_universal_03_macro" connection="ShipConnection"/>
+			</connection>
+			<connection ref="connection_storage03">
+				<macro ref="storage_ship_xl_universal_03_macro" connection="ShipConnection"/>
+			</connection>
+			<connection ref="connection_storage04">
+				<macro ref="storage_ship_xl_universal_03_macro" connection="ShipConnection"/>
+			</connection>
+			<connection ref="connection_storage05">
+				<macro ref="storage_ship_xl_universal_03_macro" connection="ShipConnection"/>
+			</connection>
+			<connection ref="connection_storage06">
+				<macro ref="storage_ship_xl_universal_03_macro" connection="ShipConnection"/>
+			</connection>
+			<connection ref="connection_storage07">
+				<macro ref="storage_ship_xl_universal_03_macro" connection="ShipConnection"/>
+			</connection>
+			<connection ref="connection_storage08">
+				<macro ref="storage_ship_xl_universal_03_macro" connection="ShipConnection"/>
+			</connection>
+			<connection ref="connection_storage09">
+				<macro ref="storage_ship_xl_universal_03_macro" connection="ShipConnection"/>
+			</connection>
+			<connection ref="connection_storage10">
+				<macro ref="storage_ship_xl_universal_03_macro" connection="ShipConnection"/>
+			</connection>
+			<connection ref="connection_jumpdrive01">
+				<macro ref="props_surf_ar_jumpdrive_macro" connection="Connection01" />
+			</connection>
+			<connection ref="connection_shieldgen01">
+				<macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component"/>
+			</connection>
+            <connection ref="connection_jumpdrive02">
+              <macro ref="props_surf_ar_jumpdrive_l_macro" connection="Connection01" />
+            </connection>
+			<connection ref="connection_shieldgen02">
+				<macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component"/>
+			</connection>
+		</connections>
+	</macro>
+</macros>

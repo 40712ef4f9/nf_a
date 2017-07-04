@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<!--
+	<remove sel="//dataset[@class='station']/properties/hull/@invulnerable"/>
+	<replace sel="//dataset[@class='station']/properties/hull"><hull invulnerable="true" threshold="0.05" /></replace>
+	<add sel="//dataset[@class='station']/properties"><wreck deceleration="60" /></add>
+	-->
+	<remove sel="//dataset[@class='station']/properties/hull/@max"/>
+</diff>

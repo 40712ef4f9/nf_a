@@ -1,0 +1,409 @@
+<?xml version="1.0"?>
+<components>
+	<component name="units_size_xl_cs_omicron_ship_02_body" class="destructible">
+		<properties>
+			<hull max="0" integrated="1"/>
+		</properties>
+		<source geometry="assets\units\size_xl\\units_size_xl_cs_omicron_ship_02_data"/>
+		<layers>
+			<layer>
+				<waypoints />
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="Connection01" tags="part nocollision  ">
+				<offset/>
+				<parts>
+					<part name="part_dummy" wreck="part_dummy_wreck">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="lensflares.vertexcolor_basis"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="10" y="0" z="10"/>
+							<center x="0" y="0" z="0"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection02" tags="part  ">
+				<offset/>
+				<parts/>
+			</connection>
+			<connection name="connection_cockpit01" tags="cockpit cockpit_visible">
+					<offset>
+						<position x="0" y="104.7337" z="-225.0677"/>
+					</offset>
+			</connection>
+			<connection name="connection_dock_s01" group="group05 " tags="dock_s ">
+				<offset>
+					<position x="0" y="-72.88013" z="-138.8838"/>
+					<quaternion qx="0" qy="0.7071" qz="-0.7071" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_s02" group="group05 " tags="dock_s ">
+				<offset>
+					<position x="0" y="-72.88013" z="-400.8838"/>
+					<quaternion qx="0" qy="0.7071" qz="-0.7071" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_engine_xl_01" group="group03 " tags="engine ">
+				<offset>
+					<position x="-459.9276" y="9.987312" z="-1350.615"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen01" group="group01 " tags="shieldgenerator ">
+				<offset>
+					<position x="-0.2948849" y="-155.9617" z="-1452.532"/>
+					<quaternion qx="0.5000001" qy="-0.5" qz="-0.4999999" qw="0.4999999"/>
+				</offset>
+			</connection>
+			<connection name="connection_radar_external01" group="group06 " tags="radar external ">
+					<offset>
+						<position x="-348" y="78.4171" z="-740.5064"/>
+					</offset>
+			</connection>
+			<connection name="connection_radar_external01b" group="group04 " tags="radar external ">
+					<offset>
+						<position x="0" y="-65" z="-400.8838"/>
+						<quaternion qx="-1" qy="0" qz="0" qw="0"/>
+					</offset>
+			</connection>
+			<connection name="connection_dock_p01" tags="dock_p ">
+					<offset>
+						<position x="0" y="69.0671" z="-710.5064"/>
+					</offset>
+			</connection>
+			<connection name="connection_engine_xl_02" group="group02 " tags="engine ">
+				<offset>
+					<position x="459.928" y="9.987312" z="-1350.615"/>
+				</offset>
+			</connection>
+			<connection name="connection_jumpdrive01" group="group04 " tags="jumpdrive ">
+				<offset>
+					<position x="-0.4819994" y="-72.88013" z="-270.3253"/>
+					<quaternion qx="-1.509958E-07" qy="2.384186E-07" qz="-1" qw="-4.371142E-08"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen02" group="group02 " tags="shieldgenerator ">
+				<offset>
+					<position x="328.8343" y="9.221779" z="-1502.258"/>
+					<quaternion qx="-0.4999998" qy="-0.4999999" qz="-0.5000002" qw="-0.5000001"/>
+				</offset>
+			</connection>
+			<connection name="connection_engine_xl_03" group="group01 " tags="engine ">
+				<offset>
+					<position x="0.0166626" y="-263.0982" z="-1303.341"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen03" group="group03 " tags="shieldgenerator ">
+				<offset>
+					<position x="-328.508" y="9.221779" z="-1502.258"/>
+					<quaternion qx="-0.4999998" qy="-0.4999999" qz="-0.5000002" qw="-0.5000001"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen04" group="group04 " tags="shieldgenerator ">
+				<offset>
+					<position x="-0.2385664" y="-71.26756" z="-135.8565"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen05" group="group05 " tags="shieldgenerator ">
+				<offset>
+					<position x="0" y="89.7337" z="-310.0677"/>
+					<quaternion qx="-1" qy="0" qz="0" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_antenna_b" tags="destructible">
+				<offset>
+					<position x="-117" y="1.723282" z="237.7361"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_antenna_c" tags="destructible">
+				<offset>
+					<position x="117" y="1.633118" z="237.7839"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_center_a" tags="destructible">
+				<offset>
+					<position x="0" y="9.861526" z="-215.9802"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_center_b2" tags="destructible">
+				<offset>
+					<position x="0" y="9.861526" z="300.6517"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_center_b3" tags="destructible">
+				<offset>
+					<position x="0" y="9.861526" z="635.6517"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_center_a2" tags="destructible">
+				<offset>
+					<position x="0" y="9.861526" z="1150.9802"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_antenna_a_2" tags="destructible">
+				<offset>
+					<position x="57" y="18.68808" z="1721.2068"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_antenna_a1_2" tags="destructible">
+				<offset>
+					<position x="-57" y="18.68808" z="1721.2068"/>
+					<quaternion qx="-0" qy="-0" qz="-1" qw="4.371139E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_antenna_b1_2" tags="destructible">
+				<offset>
+					<position x="-44" y="-38.82753" z="1602.7361"/>
+					<quaternion qx="-0" qy="-0" qz="-0.7071068" qw="-0.7071067"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_antenna_c1_2" tags="destructible">
+				<offset>
+					<position x="44" y="-39.39194" z="1602.7839"/>
+					<quaternion qx="-0" qy="-0" qz="0.7071066" qw="-0.7071069"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_antenna_b_2" tags="destructible">
+				<offset>
+					<position x="-117" y="1.723282" z="1602.7361"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_antenna_c_2" tags="destructible">
+				<offset>
+					<position x="117" y="1.633118" z="1602.7839"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_science_fuelstation_a" tags="destructible">
+				<offset>
+					<position x="110" y="60" z="-245"/>
+					<rotation yaw="-90" pitch="0" roll="180"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_science_fuelstation_a1" tags="destructible">
+				<offset>
+					<position x="-110" y="60" z="-245"/>
+					<rotation yaw="90" pitch="0" roll="180"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_science_fuelstation_a2" tags="destructible">
+				<offset>
+					<position x="80" y="60" z="1110"/>
+					<rotation yaw="-90" pitch="0" roll="180"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_science_fuelstation_a3" tags="destructible">
+				<offset>
+					<position x="-80" y="60" z="1110"/>
+					<rotation yaw="90" pitch="0" roll="180"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_connector_a" tags="destructible">
+				<offset>
+					<position x="-216.5" y="9.861526" z="-738.7954"/>
+					<quaternion qx="-0" qy="0.7071068" qz="-0" qw="-0.7071067"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_side_a" tags="destructible">
+				<offset>
+					<position x="-347.2611" y="9.861526" z="-1034.28"/>
+					<quaternion qx="-1" qy="7.549789E-08" qz="-4.37114E-08" qw="1.629207E-07"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_center_b" tags="destructible">
+				<offset>
+					<position x="0" y="9.861526" z="-730.6517"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_connector_a1" tags="destructible">
+				<offset>
+					<position x="216.5" y="9.861526" z="-738.7954"/>
+					<quaternion qx="-0.7071068" qy="-5.338508E-08" qz="-0.7071068" qw="5.338508E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_side_a1" tags="destructible">
+				<offset>
+					<position x="347.2611" y="9.861526" z="-1034.28"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_antenna_a" tags="destructible">
+				<offset>
+					<position x="57" y="18.68808" z="356.2068"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_antenna_a1" tags="destructible">
+				<offset>
+					<position x="-57" y="18.68808" z="356.2068"/>
+					<quaternion qx="-0" qy="-0" qz="-1" qw="4.371139E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_antenna_b1" tags="destructible">
+				<offset>
+					<position x="-44" y="-38.82753" z="237.7361"/>
+					<quaternion qx="-0" qy="-0" qz="-0.7071068" qw="-0.7071067"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_antenna_c1" tags="destructible">
+				<offset>
+					<position x="44" y="-39.39194" z="237.7839"/>
+					<quaternion qx="-0" qy="-0" qz="0.7071066" qw="-0.7071069"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_side_b" tags="destructible">
+				<offset>
+					<position x="0" y="-150.7611" z="-984.5259"/>
+					<quaternion qx="-1" qy="4.371139E-08" qz="-4.371139E-08" qw="7.549791E-08"/>
+				</offset>
+			</connection>
+
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_engine_a1" tags="destructible">
+				<offset>
+					<position x="565" y="105" z="-1270"/>
+					<rotation yaw="0" pitch="0" roll="135"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_engine_a2" tags="destructible">
+				<offset>
+					<position x="-565" y="105" z="-1270"/>
+					<rotation yaw="0" pitch="0" roll="45"/>
+				</offset>
+			</connection>
+
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_front_a" tags="destructible">
+				<offset>
+					<position x="-309" y="-2.214935" z="862.7791"/>
+					<rotation yaw="0" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_front_a1" tags="destructible">
+				<offset>
+					<position x="309" y="-2.214935" z="862.7791"/>
+					<rotation yaw="0" pitch="0" roll="180"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_front_b" tags="destructible">
+				<offset>
+					<position x="-250" y="2.214935" z="50"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_front_b1" tags="destructible">
+				<offset>
+					<position x="250" y="2.214935" z="50"/>
+					<quaternion qx="-0" qy="-0" qz="-1" qw="4.371139E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_front_a2" tags="destructible">
+				<offset>
+					<position x="0" y="-320" z="210"/>
+          			<quaternion qx="0" qy="0" qz="0.7071067811865475" qw="0.7071067811865476"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen06" group="group06 " tags="shieldgenerator ">
+				<offset>
+					<position x="-348" y="80.9171" z="-785.5064"/>
+					<quaternion qx="-1" qy="0" qz="0" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_radar_external03" group="group05 " tags="radar external ">
+				<offset>
+					<position x="0" y="76.59512" z="-400.8838"/>
+					<quaternion qx="0" qy="-1" qz="0" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_radar_external03b" group="group05 " tags="radar external ">
+				<offset>
+					<position x="0" y="84" z="-242.0677"/>
+					<quaternion qx="0" qy="-1" qz="0" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_radar_external02" group="group07 " tags="radar external ">
+				<offset>
+					<position x="348" y="78.4171" z="-740.5064"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen07" group="group07 " tags="shieldgenerator ">
+				<offset>
+					<position x="348" y="80.9171" z="-785.5064"/>
+					<quaternion qx="-1" qy="0" qz="0" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_turret_small_mg01" group="group06 " tags="turret_small_mg ">
+				<offset>
+					<position x="-308" y="80.9171" z="-700.5064"/>
+					<quaternion qx="-1" qy="0" qz="0" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_turret_small_mg02" group="group06 " tags="turret_small_mg ">
+				<offset>
+					<position x="-308" y="80.9171" z="-780.5064"/>
+					<quaternion qx="0" qy="0" qz="-1" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_turret_small_mg03" group="group06 " tags="turret_small_mg ">
+				<offset>
+					<position x="-388" y="80.9171" z="-700.5064"/>
+					<quaternion qx="-1" qy="0" qz="0" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_turret_small_mg04" group="group06 " tags="turret_small_mg ">
+				<offset>
+					<position x="-388" y="80.9171" z="-780.5064"/>
+					<quaternion qx="0" qy="0" qz="-1" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_turret_small_mg05" group="group07 " tags="turret_small_mg ">
+				<offset>
+					<position x="308" y="80.9171" z="-700.5064"/>
+					<quaternion qx="-1" qy="0" qz="0" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_turret_small_mg06" group="group07 " tags="turret_small_mg ">
+				<offset>
+					<position x="308" y="80.9171" z="-780.5064"/>
+					<quaternion qx="0" qy="0" qz="-1" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_turret_small_mg07" group="group07 " tags="turret_small_mg ">
+				<offset>
+					<position x="388" y="80.9171" z="-700.5064"/>
+					<quaternion qx="-1" qy="0" qz="0" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_turret_small_mg08" group="group07 " tags="turret_small_mg ">
+				<offset>
+					<position x="388" y="80.9171" z="-780.5064"/>
+					<quaternion qx="0" qy="0" qz="-1" qw="0"/>
+				</offset>
+			</connection>
+
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_front_b1w" tags="destructible">
+				<offset>
+					<position x="600" y="-2" z="1622"/>
+					<rotation yaw="0" pitch="0" roll="180"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_front_b2w" tags="destructible">
+				<offset>
+					<position x="-600" y="-2" z="1622"/>
+				</offset>
+			</connection>
+			
+		</connections>
+	</component>
+</components>

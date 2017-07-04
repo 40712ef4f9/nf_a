@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- XR 4.10 Bugfix/orkaround prevent logspam -->
+<diff>
+	<add sel="//do_all[@exact='$sell_amountlist.count']" pos="prepend">
+	  <do_if value="$sell_amountlist.{$a}? and $sell_amountlist.{$a}" negate="true">
+		<continue />
+	  </do_if>
+	</add>
+</diff>

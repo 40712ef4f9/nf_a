@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<diff>
+  <add sel="/aiscript/attention[@min='unknown']/actions/do_elseif[@value='this.station.macro.ismacro.struct_bt_alb_warehouse_macro']" pos="after">
+    <do_elseif value="this.station.macro.ismacro.struct_bt_alb_servicedock_macro">
+      <add_tradeware ware="ware.drp_cargolifter" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+      <add_tradeware ware="ware.drp_construction" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+      <add_tradeware ware="ware.drp_interceptor_mk1" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+      <add_tradeware ware="ware.drp_interceptor_mk2" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+      <add_tradeware ware="ware.drp_intrepid_mk1" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+      <add_tradeware ware="ware.drp_intrepid_mk2" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+      <add_tradeware ware="ware.drp_overrun_mk1" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+      <add_tradeware ware="ware.drp_overrun_mk2" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+      <add_tradeware ware="ware.drp_scoopcollector_mk1" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+      <add_tradeware ware="ware.drp_scoopcollector_mk2" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+      <add_tradeware ware="ware.drp_surfaceminer_mk1" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+      <add_tradeware ware="ware.drp_surfaceminer_mk2" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+      <add_tradeware ware="ware.fuelcells" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+      <add_tradeware ware="ware.dumbfiremissile" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+      <add_tradeware ware="ware.swarmmissile" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+      <add_default_production_wares object="this.station" lowerlimit="40" upperlimit="60"/>
+    </do_elseif>
+  </add>
+
+  <!--add sel="//do_while" >
+      <set_value name="$text" exact="this.station + ' ' + this.station.name + ' ' + this.station.zone.name" />
+	  <find_sell_offer seller="this.station" result="$selloffers" multiple="true">
+        <amount min="1" />
+      </find_sell_offer>
+	  <set_value name="$text" exact="' s:' + $selloffers.count" operation="add"/>
+	  <do_all exact="$selloffers.count" counter="$i" reverse="true">
+		<do_if value="$selloffers.{$i}.exists and $selloffers.{$i}.unitprice lt $selloffers.{$i}.ware.averageprice">
+		  <set_value name="$text" exact="'\n upd:' + $selloffers.{$i}.ware.id + ' ' + $selloffers.{$i}.unitprice + ' -> ' + ($selloffers.{$i}.ware.averageprice + $selloffers.{$i}.ware.pricerange/4)" operation="add"/>
+		  <update_trade trade="$selloffers.{$i}" price="$selloffers.{$i}.ware.averageprice + $selloffers.{$i}.ware.pricerange/4" />
+		</do_if>
+	  </do_all>
+	  <remove_value name="$selloffers"/>
+      <find_buy_offer buyer="this.station" result="$buyoffers" multiple="true">
+        <amount min="1" />
+      </find_buy_offer>
+	  <set_value name="$text" exact="'\n b:' + $buyoffers.count" operation="add"/>
+	  <do_all exact="$buyoffers.count" counter="$i" reverse="true">
+		<do_if value="$buyoffers.{$i}.exists and $buyoffers.{$i}.unitprice gt $buyoffers.{$i}.ware.averageprice">
+		  <set_value name="$text" exact="'\n upd:' + $buyoffers.{$i}.ware.id + ' ' + $buyoffers.{$i}.unitprice + ' -> ' + ($buyoffers.{$i}.ware.averageprice - $buyoffers.{$i}.ware.pricerange/4)" operation="add"/>
+		  <update_trade trade="$buyoffers.{$i}" price="$buyoffers.{$i}.ware.averageprice - $buyoffers.{$i}.ware.pricerange/4" />
+		</do_if>
+	  </do_all>
+	  <remove_value name="$buyoffers"/>
+	  <debug_text text="$text" filter="error" chance="100"/>
+	  <remove_value name="$text"/>
+  </add-->
+</diff>

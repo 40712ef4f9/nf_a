@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff>
+	<add sel="//do_if[@value='$offerindex?']/find_buy_offer"><price min="[$selloffer.unitprice, $selloffer.ware.averageprice].max"/></add>
+</diff>

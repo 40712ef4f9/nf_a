@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<replace sel="//job[@id='hol_collector_hydrogen_large']/ship/@ref">mmhol_miner_hydrogen_large</replace>  
+	<replace sel="//job[@id='tor_collector_hydrogen_large']/ship/@ref">mmhol_miner_hydrogen_large</replace>  
+	<replace sel="//job[@id='cs_collector_hydrogen_large']/ship/@ref">mmhol_miner_hydrogen_large</replace>  
+
+	<replace sel="//job[@id='hol_collector_ions_large']/ship/@ref">mmhol_miner_ions_large</replace>  
+	<replace sel="//job[@id='tor_collector_ions_large']/ship/@ref">mmhol_miner_ions_large</replace>  
+	<replace sel="//job[@id='cs_collector_ions_large']/ship/@ref">mmhol_miner_ions_large</replace>  
+
+	<replace sel="//job[@id='hol_collector_plasma_large']/ship/@ref">mmhol_miner_plasma_large</replace>  
+	<replace sel="//job[@id='tor_collector_plasma_large']/ship/@ref">mmhol_miner_plasma_large</replace>  
+	<replace sel="//job[@id='cs_collector_plasma_large']/ship/@ref">mmhol_miner_plasma_large</replace>  
+
+	<replace sel="//job[@id='hol_miner_ice_large']/ship/@ref">mmhol_miner_ice_large</replace>  
+	<replace sel="//job[@id='tor_miner_ice_large']/ship/@ref">mmhol_miner_ice_large</replace>  
+	<replace sel="//job[@id='cs_miner_ice_large']/ship/@ref">mmhol_miner_ice_large</replace>  
+
+	<replace sel="//job[@id='hol_miner_mineral_large_01']/ship/@ref">mmhol_miner_mineral_large</replace>  
+	<replace sel="//job[@id='tor_miner_mineral_large_01']/ship/@ref">mmhol_miner_mineral_large</replace>  
+	<replace sel="//job[@id='cs_miner_mineral_large_01']/ship/@ref">mmhol_miner_mineral_large</replace>  
+	<replace sel="//job[@id='hol_miner_mineral_large_02']/ship/@ref">mmhol_miner_mineral_large</replace>  
+	<replace sel="//job[@id='cs_miner_mineral_large_02']/ship/@ref">mmhol_miner_mineral_large</replace>  
+
+
+	<replace sel="//job[@id='hol_trader_agricultural_large']/ship/@ref">mmhol_trader_bulk_large</replace>  
+	<replace sel="//job[@id='hol_trader_refined_large_01']/ship/@ref">mmhol_trader_bulk_large</replace>  
+	<replace sel="//job[@id='hol_ranged_special_refined_trader']/ship/@ref">mmhol_trader_bulk_large</replace>  
+
+	<replace sel="//job[@id='hol_trader_energy_large_01']/ship/@ref">mmhol_trader_energy_large</replace>  
+	<replace sel="//job[@id='hol_trader_energy_large_02']/ship/@ref">mmhol_trader_energy_large</replace>  
+	<replace sel="//job[@id='hol_ranged_special_energy_trader']/ship/@ref">mmhol_trader_energy_large</replace>  
+	<replace sel="//job[@id='hol_ranged_special_energy_trader_02']/ship/@ref">mmhol_trader_energy_large</replace>  
+	<replace sel="//job[@id='tor_ranged_special_energy_trader']/ship/@ref">mmhol_trader_energy_large</replace>  
+	<replace sel="//job[@id='cs_ranged_special_energy_trader']/ship/@ref">mmhol_trader_energy_large</replace>  
+
+
+	<replace sel="//job[@id='hol_trader_food_large']/ship/@ref">mmhol_trader_container_large</replace>  
+	<replace sel="//job[@id='hol_trader_hightech_large_01']/ship/@ref">mmhol_trader_container_large</replace>  
+	<replace sel="//job[@id='hol_trader_pharmaceutical_large']/ship/@ref">mmhol_trader_container_large</replace>  
+
+	<replace sel="//job[@id='hol_trader_shiptech_large_01']/ship/@ref">mmhol_trader_container_large_l</replace>  
+	<replace sel="//job[@id='hol_trader_weapontech_large_01']/ship/@ref">mmhol_trader_container_large_l</replace>  
+
+	<replace sel="//job[@id='hol_trader_water_large']/ship/@ref">mmhol_trader_liquid_large</replace>  
+	<replace sel="//job[@id='tor_trader_water_large']/ship/@ref">mmhol_trader_liquid_large</replace>  
+	<replace sel="//job[@id='cs_trader_water_large']/ship/@ref">mmhol_trader_liquid_large</replace>  
+	<replace sel="//job[@id='hol_ranged_special_water_trader']/ship/@ref">mmhol_trader_liquid_large</replace>  
+
+	<replace sel="//job[@id='hol_ranged_special_universal_trader']/ship/@macro">units_size_l_kit_cargo_03_macro</replace>
+	<replace sel="//job[@id='hol_ranged_special_universal_trader']/ship/units">
+				<units>
+					<unit category="defence" mk="3" min="40" max="60"/>
+					<unit category="transport" mk="1" min="60" max="80"/>
+					<unit category="welder" mk="1" min="10" max="20"/>
+				</units>
+	</replace>
+	<replace sel="//job[@id='hol_ranged_special_universal_trader']/ship/@macro">units_size_l_kit_cargo_03_macro</replace>
+	<replace sel="//job[@id='hol_ranged_special_universal_trader']/ship/units">
+				<units>
+					<unit category="defence" mk="3" min="40" max="60"/>
+					<unit category="transport" mk="1" min="60" max="80"/>
+					<unit category="welder" mk="1" min="10" max="20"/>
+				</units>
+	</replace>
+	<replace sel="//job[@id='tor_ranged_special_universal_trader']/ship/@macro">units_size_l_kit_cargo_03_macro</replace>
+	<replace sel="//job[@id='tor_ranged_special_universal_trader']/ship/units">
+				<units>
+					<unit category="defence" mk="3" min="40" max="60"/>
+					<unit category="transport" mk="1" min="60" max="80"/>
+					<unit category="welder" mk="1" min="10" max="20"/>
+				</units>
+	</replace>
+	<replace sel="//job[@id='cs_ranged_special_universal_trader']/ship/@macro">units_size_l_kit_cargo_03_macro</replace>
+	<replace sel="//job[@id='cs_ranged_special_universal_trader']/ship/units">
+				<units>
+					<unit category="defence" mk="3" min="40" max="60"/>
+					<unit category="transport" mk="1" min="60" max="80"/>
+					<unit category="welder" mk="1" min="10" max="20"/>
+				</units>
+	</replace>
+	<replace sel="//job[@id='led_special_construction_trader_3']/ship/@macro">units_size_l_kit_cargo_03_macro</replace>
+	<replace sel="//job[@id='led_special_construction_trader_3']/ship/units">
+				<units>
+					<unit category="defence" mk="3" min="40" max="60"/>
+					<unit category="transport" mk="1" min="60" max="80"/>
+					<unit category="welder" mk="1" min="10" max="20"/>
+				</units>
+	</replace>
+
+
+	<add sel="//jobs">
+		<job id="cruises_sector01_route1" name="{20204,10014}">
+			<task task="move.patrol.route">
+				<param name="route" value="[[macro.tzonecluster_m_sector01_zone001_macro, position.[0,0,0]],
+					 [macro.tzonecluster_m_sector01_zone002_macro, position.[0,0,0]]]"/>
+				<param name="range" value="10km"/>
+			</task>
+			<quota sector="2" zone="1"/>
+			<location class="zone" macro="tzonecluster_m_sector01_zone001_macro"/>
+			<time interval="1200"/>
+			<ship ref="cruises"/>
+		</job>
+		<job id="cruises_sector01_route2" name="{20204,10014}">
+			<task task="move.patrol.route">
+				<param name="route" value="[[macro.tzonecluster_m_sector01_zone002_macro, position.[0,0,0]],
+					 [macro.tzonecluster_m_sector01_zone003_macro, position.[0,0,0]]]"/>
+				<param name="range" value="10km"/>
+			</task>
+			<quota sector="2" zone="1"/>
+			<location class="zone" macro="tzonecluster_m_sector01_zone003_macro"/>
+			<time interval="1200"/>
+			<ship ref="cruises"/>
+		</job>
+		<job id="cruises_sector01_route3" name="{20204,10014}">
+			<task task="move.patrol.route">
+				<param name="route" value="[[macro.tzonecluster_m_sector01_zone003_macro, position.[0,0,0]],
+					 [macro.tzonecluster_m_sector01_zone004_macro, position.[0,0,0]]]"/>
+				<param name="range" value="10km"/>
+			</task>
+			<quota sector="2" zone="1"/>
+			<location class="zone" macro="tzonecluster_m_sector01_zone004_macro"/>
+			<time interval="1200"/>
+			<ship ref="cruises"/>
+		</job>
+		<job id="cruises_sector01_route4" name="{20204,10014}">
+			<task task="move.patrol.route">
+				<param name="route" value="[[macro.tzonecluster_m_sector01_zone004_macro, position.[0,0,0]],
+					 [macro.tzonecluster_m_sector01_zone005_macro, position.[0,0,0]]]"/>
+				<param name="range" value="10km"/>
+			</task>
+			<quota sector="2" zone="1"/>
+			<location class="zone" macro="tzonecluster_m_sector01_zone005_macro"/>
+			<time interval="1200"/>
+			<ship ref="cruises"/>
+		</job>
+		<!--cluster_M sector_02 -->
+		<job id="cruises_sector02_route1" name="{20204,10014}">
+			<task task="move.patrol.route">
+				<param name="route" value="[[macro.tzonecluster_m_sector02_zone001_macro, position.[0,0,0]],
+					 [macro.tzonecluster_m_sector02_zone002_macro, position.[0,0,0]]]"/>
+				<param name="range" value="10km"/>
+			</task>
+			<quota sector="2" zone="1"/>
+			<location class="zone" macro="tzonecluster_m_sector02_zone001_macro"/>
+			<time interval="1200"/>
+			<ship ref="cruises"/>
+		</job>
+		<job id="cruises_sector02_route2" name="{20204,10014}">
+			<task task="move.patrol.route">
+				<param name="route" value="[[macro.tzonecluster_m_sector02_zone002_macro, position.[0,0,0]],
+					 [macro.tzonecluster_m_sector02_zone003_macro, position.[0,0,0]]]"/>
+				<param name="range" value="10km"/>
+			</task>
+			<quota sector="2" zone="1"/>
+			<location class="zone" macro="tzonecluster_m_sector02_zone003_macro"/>
+			<time interval="1200"/>
+			<ship ref="cruises"/>
+		</job>
+		<job id="cruises_sector02_route3" name="{20204,10014}">
+			<task task="move.patrol.route">
+				<param name="route" value="[[macro.tzonecluster_m_sector02_zone003_macro, position.[0,0,0]],
+					 [macro.tzonecluster_m_sector02_zone004_macro, position.[0,0,0]]]"/>
+				<param name="range" value="10km"/>
+			</task>
+			<quota sector="2" zone="1"/>
+			<location class="zone" macro="tzonecluster_m_sector02_zone004_macro"/>
+			<time interval="1200"/>
+			<ship ref="cruises"/>
+		</job>
+		<job id="cruises_sector02_route4" name="{20204,10014}">
+			<task task="move.patrol.route">
+				<param name="route" value="[[macro.tzonecluster_m_sector02_zone004_macro, position.[0,0,0]],
+					 [macro.tzonecluster_m_sector02_zone005_macro, position.[0,0,0]]]"/>
+				<param name="range" value="10km"/>
+			</task>
+			<quota sector="2" zone="1"/>
+			<location class="zone" macro="tzonecluster_m_sector02_zone005_macro"/>
+			<time interval="1200"/>
+			<ship ref="cruises"/>
+		</job>
+		
+		<!--cluster_M sector_03 -->
+		<job id="cruises_sector03_route1" name="{20204,10014}">
+			<task task="move.patrol.route">
+				<param name="route" value="[[macro.tzonecluster_m_sector03_zone001_macro, position.[0,0,0]],
+					 [macro.tzonecluster_m_sector03_zone002_macro, position.[0,0,0]]]"/>
+				<param name="range" value="10km"/>
+			</task>
+			<quota sector="2" zone="1"/>
+			<location class="zone" macro="tzonecluster_m_sector03_zone001_macro"/>
+			<time interval="1200"/>
+			<ship ref="cruises"/>
+		</job>
+		<job id="cruises_sector03_route2" name="{20204,10014}">
+			<task task="move.patrol.route">
+				<param name="route" value="[[macro.tzonecluster_m_sector03_zone002_macro, position.[0,0,0]],
+					 [macro.tzonecluster_m_sector03_zone003_macro, position.[0,0,0]]]"/>
+				<param name="range" value="10km"/>
+			</task>
+			<quota sector="2" zone="1"/>
+			<location class="zone" macro="tzonecluster_m_sector03_zone003_macro"/>
+			<time interval="1200"/>
+			<ship ref="cruises"/>
+		</job>
+		<job id="cruises_sector03_route3" name="{20204,10014}">
+			<task task="move.patrol.route">
+				<param name="route" value="[[macro.tzonecluster_m_sector03_zone003_macro, position.[0,0,0]],
+					 [macro.tzonecluster_m_sector03_zone004_macro, position.[0,0,0]]]"/>
+				<param name="range" value="10km"/>
+			</task>
+			<quota sector="2" zone="1"/>
+			<location class="zone" macro="tzonecluster_m_sector03_zone004_macro"/>
+			<time interval="1200"/>
+			<ship ref="cruises"/>
+		</job>
+		<job id="cruises_sector03_route4" name="{20204,10014}">
+			<task task="move.patrol.route">
+				<param name="route" value="[[macro.tzonecluster_m_sector03_zone004_macro, position.[0,0,0]],
+					 [macro.tzonecluster_m_sector03_zone005_macro, position.[0,0,0]]]"/>
+				<param name="range" value="10km"/>
+			</task>
+			<quota sector="2" zone="1"/>
+			<location class="zone" macro="tzonecluster_m_sector03_zone005_macro"/>
+			<time interval="1200"/>
+			<ship ref="cruises"/>
+		</job>
+		
+		<!--cluster_M sector_04 -->
+		<job id="cruises_sector04_route1" name="{20204,10014}">
+			<task task="move.patrol.route">
+				<param name="route" value="[[macro.tzonecluster_m_sector04_zone001_macro, position.[0,0,0]],
+					 [macro.tzonecluster_m_sector04_zone002_macro, position.[0,0,0]]]"/>
+				<param name="range" value="10km"/>
+			</task>
+			<quota sector="2" zone="1"/>
+			<location class="zone" macro="tzonecluster_m_sector04_zone001_macro"/>
+			<time interval="1200"/>
+			<ship ref="cruises"/>
+		</job>
+		<job id="cruises_sector04_route2" name="{20204,10014}">
+			<task task="move.patrol.route">
+				<param name="route" value="[[macro.tzonecluster_m_sector04_zone002_macro, position.[0,0,0]],
+					 [macro.tzonecluster_m_sector04_zone003_macro, position.[0,0,0]]]"/>
+				<param name="range" value="10km"/>
+			</task>
+			<quota sector="2" zone="1"/>
+			<location class="zone" macro="tzonecluster_m_sector04_zone003_macro"/>
+			<time interval="1200"/>
+			<ship ref="cruises"/>
+		</job>
+		<job id="cruises_sector04_route3" name="{20204,10014}">
+			<task task="move.patrol.route">
+				<param name="route" value="[[macro.tzonecluster_m_sector04_zone003_macro, position.[0,0,0]],
+					 [macro.tzonecluster_m_sector04_zone004_macro, position.[0,0,0]]]"/>
+				<param name="range" value="10km"/>
+			</task>
+			<quota sector="2" zone="1"/>
+			<location class="zone" macro="tzonecluster_m_sector04_zone004_macro"/>
+			<time interval="1200"/>
+			<ship ref="cruises"/>
+		</job>
+		<job id="cruises_sector04_route4" name="{20204,10014}">
+			<task task="move.patrol.route">
+				<param name="route" value="[[macro.tzonecluster_m_sector04_zone004_macro, position.[0,0,0]],
+					 [macro.tzonecluster_m_sector04_zone005_macro, position.[0,0,0]]]"/>
+				<param name="range" value="10km"/>
+			</task>
+			<quota sector="2" zone="1"/>
+			<location class="zone" macro="tzonecluster_m_sector04_zone005_macro"/>
+			<time interval="1200"/>
+			<ship ref="cruises"/>
+		</job>
+		<job id="gonerjob_hol" name="{20204,2811}">
+			<expirationtime min="43200" max="86400" />
+			<task task="move.voyager" />
+			<quota cluster="6" zone="1"/>
+			<location class="cluster" macro="cluster_m_macro"/>
+			<time interval="43200"/>
+			<ship ref="goner_prayer_04_p">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+	</add>
+</diff>

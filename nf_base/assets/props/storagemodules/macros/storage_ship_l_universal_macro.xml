@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Benedikt (192.168.3.105) at 30.07.2013_14-03-02-->
+<macros>
+  <macro name="storage_ship_l_universal_macro" class="storage">
+    <component ref="generic_storage" />
+    <properties>
+      <identification name="{20109,801}" />
+    </properties>
+    <connections>
+      <connection ref="cargo">
+        <macro ref="cargobay_ship_l_universal_macro" connection="StorageConnection" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

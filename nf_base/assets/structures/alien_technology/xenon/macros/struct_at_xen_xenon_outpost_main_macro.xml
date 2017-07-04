@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Benedikt (192.168.3.105) at 31.07.2013_11-43-35-->
+<macros>
+  <macro name="struct_at_xen_xenon_outpost_main_macro" class="destructible">
+    <component ref="struct_at_xen_xenon_outpost_main" />
+    <properties>
+      <identification name="{20107,5301}" description="{20107,5302}" unique="0" />
+      <explosiondamage value="100000" />
+      <effects>
+        <explosion ref="explosion_station_01" />
+        <sefx_hack_disabled ref="hack_deactivated_m" />
+      </effects>
+      <efficiency bonus="0.05" />
+    </properties>
+    <connections>
+
+<!-- weapon group 01-->
+      <connection ref="connection_shieldgenerator01">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgenerator02">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_turret_medium_xe01">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_xe02">
+        <macro ref="turret_medium_xe_bb_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_xe03">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe01">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe02">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe03">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+
+<!-- weapon group 02-->
+      <connection ref="connection_shieldgenerator03">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgenerator04">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_turret_medium_xe04">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_xe05">
+        <macro ref="turret_medium_xe_bb_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_xe06">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe04">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe05">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe06">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+
+<!-- weapon group 03-->
+      <connection ref="connection_shieldgenerator05">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_turret_medium_xe07">
+        <macro ref="turret_medium_xe_bb_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe07">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe08">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+
+<!-- weapon group 04-->
+      <connection ref="connection_shieldgenerator06">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_turret_medium_xe08">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe09">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe10">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+
+<!-- weapon group 05-->
+      <connection ref="connection_shieldgenerator07">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_turret_medium_xe09">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe11">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe12">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+
+<!-- weapon group 06-->
+      <connection ref="connection_shieldgenerator08">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgenerator09">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_turret_medium_xe10">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_xe11">
+        <macro ref="turret_medium_xe_bb_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_xe12">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe13">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe14">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe15">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+
+    </connections>
+  </macro>
+</macros>
+
+
+
+

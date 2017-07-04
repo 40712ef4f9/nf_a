@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="move.delivered" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd">
+  <params>
+    <param name="target" />
+    <param name="macro" default="null"/>
+    <param name="ware" default="null" comment="[$target.entity, ware.spe_drop_navbeacon, 1]"/>
+    <param name="payment" default="null" comment="[$seller.entity, $buyer.entity, 1Cr]"/>
+    <param name="script" default="null"/>
+    <param name="reference" default="null" comment="[class.gate, x,y,z, 10km]"/>
+    <param name="owner" default="player.primaryship.owner"/>
+    <param name="movedie" default="false"/>
+  </params>
+  <init>
+    <set_command command="command.freetrade" />
+  </init>
+  <attention min="unknown">
+    <actions>
+      <!-- debugging -->
+      <set_value name="$debugchance" exact="0" />
+
+      <do_if value="typeof $target == datatype.componentmacroslot">
+		<set_value name="$targetZone" exact="$target.component"/>
+		<set_value name="$pos" exact="$target.offset"/>
+      </do_if>
+      <do_else>
+		<set_value name="$targetZone" exact="$target.zone"/>
+		<create_position name="$pos" object="this.ship" space="$target" />
+      </do_else>
+
+      <label name="start" />
+
+      <run_script name="'move.undock'" />
+
+	  <!-- only move if we're outside the tolerance distance-->
+	  <create_orientation name="$BoostVector" refposition="$pos" orientation="look_at">
+		<position object="this.ship" space="this.ship.zone"/>
+	  </create_orientation>
+	  <move_to object="this.ship" destination="this.ship.zone" forcesteering="false" forceposition="false" forcerotation="true" finishonapproach="false">
+		<position value="this.ship.position"/>
+		<rotation value="$BoostVector"/>
+	  </move_to>
+
+      <do_if value="$macro != null and $macro.isclass.station">
+		<do_if value="typeof $target == datatype.componentmacroslot">
+		  <get_building_position position="$pos" object="this.ship" macro="$macro" buildlocation="$target" />
+		</do_if>
+		<do_else>
+			<create_position_outside_boundingbox name="$pos" distance="[this.ship.size, 4km].max" component="$target">
+			  <position value="$pos" />
+			</create_position_outside_boundingbox>
+		</do_else>
+      </do_if>
+      <do_else>
+		<create_position_outside_boundingbox name="$pos" distance="this.ship.size" component="$target">
+		  <position value="$pos" />
+		</create_position_outside_boundingbox>
+      </do_else>
+
+      <do_if value="this.ship.position != $pos">
+        <set_flight_control_model object="this.ship" flightcontrolmodel="flightcontrolmodel.spline"/><!--shouldn't be necessary, but will make sure that it's using the spline fcm--> 
+        <move_to object="this.ship" destination="$target" boost="true" finishonapproach="true" forceposition="false">
+          <position value="$pos" />
+        </move_to>
+      </do_if>
+	  <stop_moving object="this.ship" />
+
+	  <wait min="5s" max="15s"/>
+
+      <do_if value="typeof $target != datatype.componentmacroslot">
+		<get_safe_pos object="$target" zone="$targetZone" radius="500m" max="1km" result="$pos" allowyaxis="false" ignored="$target" />
+      </do_if>
+
+      <!-- process payment -->
+	  <do_if value="$payment != null">
+		<do_if value="$payment.{1}.exists and $payment.{2}.exists and $payment.{2}.money ge $payment.{3}">
+		  <transfer_money from="$payment.{2}" to="$payment.{1}" amount="$payment.{3}" />
+		</do_if>
+		<do_elseif value="$payment.{1} == player.entity">
+		  <reward_player money="$payment.{3}" />
+		</do_elseif>
+		<do_elseif value="$payment.{2} == player.entity and player.entity.money ge $payment.{3}">
+		  <reward_player money="0Cr - $payment.{3}" />
+		</do_elseif>
+		<do_else>
+		  <set_value name="$macro" exact="null"/>
+		  <set_value name="$target" exact="null"/>
+		</do_else>
+     </do_if>
+
+      <!-- remove -->
+      <do_if value="$target != null and typeof $target != datatype.componentmacroslot and $target.isclass.navbeacon">
+        <set_owner object="$target" faction="faction.ownerless" chance="if $target.isplayerowned then 100 else 0" comment="prevent log book spam" />
+        <destroy_object object="$target"/>
+      </do_if>
+      <do_elseif value="$macro != null and typeof $target != datatype.componentmacroslot and $target.macro.ismacro.{$macro}">
+        <write_to_logbook category="squad" text="'[%7] %1 : %2 %3 %4 - %5%6'.[$target.name, this.ship.cluster.name, this.ship.sector.name, this.ship.zone.name, if $payment.{3}? then $payment.{3}.formatted.default else 0Cr, {1001,101}, {1001,2955}]"  chance="if $owner == faction.player then 100 else 0"/>
+        <set_owner object="$target" faction="faction.ownerless" chance="if $target.isplayerowned then 100 else 0" comment="prevent log book spam" />
+        <destroy_object object="$target"/>
+        <set_value name="$macro" exact="null"/>
+      </do_elseif>
+
+      <!-- create -->
+      <do_if value="$macro != null">
+		<!-- new position? -->
+		<do_if value="$reference.{1}?">
+		  <find_object name="$objects" space="$targetZone" class="$reference.{1}" multiple="true"/>
+		  <do_all exact="$objects.count" counter="$i">
+			<do_if value="$newtarget?" negate="true">
+			  <set_value name="$newtarget" exact="$objects.{$i}"/>
+			</do_if>
+			<do_if value="$objects.{$i}.distanceto.{$target} lt $newtarget.distanceto.{$target}">
+			  <set_value name="$newtarget" exact="$objects.{$i}"/>
+			</do_if>
+		  </do_all>
+		  <remove_value name="$objects"/>
+		  <do_if value="$newtarget? and ( not $reference.{5}? or ($reference.{5}? and $newtarget.distanceto.{$target} le $reference.{5}) )">
+			<!--get_safe_pos object="$newtarget" zone="$newtarget.zone" y="-3km" result="$pos" allowyaxis="true" ignored="$target" />
+			<set_value name="$pos" exact="position.[$newtarget.position.x, $newtarget.position.y-2500m, $newtarget.position.z]"/-->
+			<create_position name="$pos" object="$newtarget" x="$reference.{2}" y="$reference.{3}" z="$reference.{4}" />
+			<set_value name="$rotation" exact="$newtarget.rotation"/>
+		  </do_if>
+		  <remove_value name="$newtarget"/>
+		</do_if>
+
+		<!-- create work -->
+		<do_if value="$macro.isclass.[class.ship_xs,class.ship_s,class.ship_m]">
+		  <create_ship name="$Ship" zone="$targetZone" macro="$macro">
+			<owner exact="$owner" overridenpc="true"/>
+			<pilot ref="fighter_albion_random"/>
+			<position x="$pos.x" y="$pos.y" z="$pos.z" />
+		  </create_ship>
+		  <start_script object="$Ship.pilot" name="$script"/>
+		  <remove_value name="$Ship"/>
+		</do_if>
+		<do_elseif value="$macro.isclass.[class.ship_l,class.ship_xl]">
+		  <create_ship name="$Ship" zone="$targetZone" macro="$macro">
+			<owner exact="$owner" overridenpc="true"/>
+			<pilot ref="pmc_fighter"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<position x="$pos.x" y="$pos.y" z="$pos.z" />
+		  </create_ship>
+		  <start_script object="$Ship.pilot" name="$script"/>
+		  <remove_value name="$Ship"/>
+		</do_elseif>
+		<do_elseif value="$macro.isclass.station">
+		  <set_value name="$buildlocation" exact="null"/>
+		  <set_value name="$distanceto" exact="5km"/>
+		  <do_if value="typeof $target == datatype.componentmacroslot and ($targetZone.buildlocations.indexof.{$target} or $targetZone.npcbuildlocations.indexof.{$target}) and not $target.child">
+			<set_value name="$buildlocation" exact="$target"/>
+		  </do_if>
+		  <do_else>
+			<do_if value="typeof $target == datatype.componentmacroslot and ($targetZone.buildlocations.indexof.{$target} or $targetZone.npcbuildlocations.indexof.{$target}) and $target.child">
+			  <set_value name="$target" exact="$target.child"/>
+			  <set_value name="$distanceto" exact="50km"/>
+			</do_if>
+			<do_all exact="$targetZone.freebuildlocations.count" counter="$i">
+			  <do_if value="$buildlocation == null and not $targetZone.freebuildlocations.{$i}.child and this.ship.distanceto.{$targetZone.freebuildlocations.{$i}} lt $distanceto">
+				<set_value name="$buildlocation" exact="$targetZone.freebuildlocations.{$i}"/>
+			  </do_if>
+			  <do_elseif value="$buildlocation and not $targetZone.freebuildlocations.{$i}.child and this.ship.distanceto.{$targetZone.freebuildlocations.{$i}} lt $distanceto and $buildlocation.offset.distanceto.{$pos} gt $targetZone.freebuildlocations.{$i}.offset.distanceto.{$pos}">
+				<set_value name="$buildlocation" exact="$targetZone.freebuildlocations.{$i}"/>
+			  </do_elseif>
+			</do_all>
+			<do_all exact="$targetZone.freenpcbuildlocations.count" counter="$i">
+			  <do_if value="$buildlocation == null and not $targetZone.freenpcbuildlocations.{$i}.child and this.ship.distanceto.{$targetZone.freenpcbuildlocations.{$i}} lt $distanceto">
+				<set_value name="$buildlocation" exact="$targetZone.freenpcbuildlocations.{$i}"/>
+			  </do_if>
+			  <do_elseif value="$buildlocation and not $targetZone.freenpcbuildlocations.{$i}.child and this.ship.distanceto.{$targetZone.freenpcbuildlocations.{$i}} lt $distanceto and $buildlocation.offset.distanceto.{$pos} gt $targetZone.freenpcbuildlocations.{$i}.offset.distanceto.{$pos}">
+				<set_value name="$buildlocation" exact="$targetZone.freenpcbuildlocations.{$i}"/>
+			  </do_elseif>
+			</do_all>
+		  </do_else>
+		  <remove_value name="$distanceto"/>
+
+		  <do_if value="$buildlocation">
+			<create_station name="$station" macro="$macro" zone="$buildlocation.component" buildlocation="$buildlocation" owner="$owner" >
+			  <position value="$buildlocation.offset"/>
+			  <buildsequence sequence="'a'" stage="1"/>
+			  <buildsequence sequence="'a'" stage="2"/>
+			  <buildsequence sequence="'a'" stage="3"/>
+			  <buildsequence sequence="'a'" stage="4"/>
+			  <buildsequence sequence="'a'" stage="5"/>
+			  <buildsequence sequence="'a'" stage="6"/>
+			  <buildsequence sequence="'a'" stage="7"/>
+			  <buildsequence sequence="'a'" stage="8"/>
+			  <buildsequence sequence="'a'" stage="9"/>
+			  <buildsequence sequence="'b'" stage="1"/>
+			  <buildsequence sequence="'b'" stage="2"/>
+			  <buildsequence sequence="'b'" stage="3"/>
+			  <buildsequence sequence="'b'" stage="4"/>
+			  <buildsequence sequence="'b'" stage="5"/>
+			  <buildsequence sequence="'b'" stage="6"/>
+			  <buildsequence sequence="'b'" stage="7"/>
+			  <buildsequence sequence="'b'" stage="8"/>
+			  <buildsequence sequence="'b'" stage="9"/>
+			  <buildsequence sequence="'c'" stage="1"/>
+			  <buildsequence sequence="'c'" stage="2"/>
+			  <buildsequence sequence="'c'" stage="3"/>
+			  <buildsequence sequence="'c'" stage="4"/>
+			  <buildsequence sequence="'c'" stage="5"/>
+			  <buildsequence sequence="'c'" stage="6"/>
+			  <buildsequence sequence="'c'" stage="7"/>
+			  <buildsequence sequence="'c'" stage="8"/>
+			  <buildsequence sequence="'c'" stage="9"/>
+			  <buildsequence sequence="'d'" stage="1"/>
+			  <buildsequence sequence="'d'" stage="2"/>
+			  <buildsequence sequence="'d'" stage="3"/>
+			  <buildsequence sequence="'d'" stage="4"/>
+			  <buildsequence sequence="'d'" stage="5"/>
+			  <buildsequence sequence="'d'" stage="6"/>
+			  <buildsequence sequence="'d'" stage="7"/>
+			  <buildsequence sequence="'d'" stage="8"/>
+			  <buildsequence sequence="'d'" stage="9"/>
+			  <buildsequence sequence="'e'" stage="1"/>
+			  <buildsequence sequence="'e'" stage="2"/>
+			  <buildsequence sequence="'e'" stage="3"/>
+			  <buildsequence sequence="'e'" stage="4"/>
+			  <buildsequence sequence="'e'" stage="5"/>
+			  <buildsequence sequence="'e'" stage="6"/>
+			  <buildsequence sequence="'e'" stage="7"/>
+			  <buildsequence sequence="'e'" stage="8"/>
+			  <buildsequence sequence="'e'" stage="9"/>
+			  <buildsequence sequence="'f'" stage="1"/>
+			  <buildsequence sequence="'f'" stage="2"/>
+			  <buildsequence sequence="'f'" stage="3"/>
+			  <buildsequence sequence="'f'" stage="4"/>
+			  <buildsequence sequence="'f'" stage="5"/>
+			  <buildsequence sequence="'f'" stage="6"/>
+			  <buildsequence sequence="'f'" stage="7"/>
+			  <buildsequence sequence="'f'" stage="8"/>
+			  <buildsequence sequence="'f'" stage="9"/>
+			  <buildsequence sequence="'g'" stage="1"/>
+			  <buildsequence sequence="'g'" stage="2"/>
+			  <buildsequence sequence="'g'" stage="3"/>
+			  <buildsequence sequence="'g'" stage="4"/>
+			  <buildsequence sequence="'g'" stage="5"/>
+			  <buildsequence sequence="'g'" stage="6"/>
+			  <buildsequence sequence="'g'" stage="7"/>
+			  <buildsequence sequence="'g'" stage="8"/>
+			  <buildsequence sequence="'g'" stage="9"/>
+			  <buildsequence sequence="'h'" stage="1"/>
+			  <buildsequence sequence="'h'" stage="2"/>
+			  <buildsequence sequence="'h'" stage="3"/>
+			  <buildsequence sequence="'h'" stage="4"/>
+			  <buildsequence sequence="'h'" stage="5"/>
+			  <buildsequence sequence="'h'" stage="6"/>
+			  <buildsequence sequence="'h'" stage="7"/>
+			  <buildsequence sequence="'h'" stage="8"/>
+			  <buildsequence sequence="'h'" stage="9"/>
+			  <buildsequence sequence="'i'" stage="1"/>
+			  <buildsequence sequence="'i'" stage="2"/>
+			  <buildsequence sequence="'i'" stage="3"/>
+			  <buildsequence sequence="'i'" stage="4"/>
+			  <buildsequence sequence="'i'" stage="5"/>
+			  <buildsequence sequence="'i'" stage="6"/>
+			  <buildsequence sequence="'i'" stage="7"/>
+			  <buildsequence sequence="'i'" stage="8"/>
+			  <buildsequence sequence="'i'" stage="9"/>
+			  <buildsequence sequence="'j'" stage="1"/>
+			  <buildsequence sequence="'j'" stage="2"/>
+			  <buildsequence sequence="'j'" stage="3"/>
+			  <buildsequence sequence="'j'" stage="4"/>
+			  <buildsequence sequence="'j'" stage="5"/>
+			  <buildsequence sequence="'j'" stage="6"/>
+			  <buildsequence sequence="'j'" stage="7"/>
+			  <buildsequence sequence="'j'" stage="8"/>
+			  <buildsequence sequence="'j'" stage="9"/>
+			  <buildsequence sequence="'k'" stage="1"/>
+			  <buildsequence sequence="'k'" stage="2"/>
+			  <buildsequence sequence="'k'" stage="3"/>
+			  <buildsequence sequence="'k'" stage="4"/>
+			  <buildsequence sequence="'k'" stage="5"/>
+			  <buildsequence sequence="'k'" stage="6"/>
+			  <buildsequence sequence="'k'" stage="7"/>
+			  <buildsequence sequence="'k'" stage="8"/>
+			  <buildsequence sequence="'k'" stage="9"/>
+			</create_station>
+		  </do_if>
+		  <do_else>
+			<do_if value="typeof $target == datatype.componentmacroslot and ($targetZone.buildlocations.indexof.{$target} or $targetZone.npcbuildlocations.indexof.{$target}) and $target.child">
+			  <get_safe_pos object="this.ship" zone="$targetZone" radius="10km" result="$pos" allowyaxis="true" ignored="this.ship" />
+			</do_if>
+			<create_station name="$station" macro="$macro" zone="$targetZone" owner="$owner" >
+			  <position x="$pos.x" y="$pos.y" z="$pos.z" />
+			  <rotation value="if $rotation? then $rotation else rotation.[0,0,0]" />
+			  <buildsequence sequence="'a'" stage="1"/>
+			  <buildsequence sequence="'a'" stage="2"/>
+			  <buildsequence sequence="'a'" stage="3"/>
+			  <buildsequence sequence="'a'" stage="4"/>
+			  <buildsequence sequence="'a'" stage="5"/>
+			  <buildsequence sequence="'a'" stage="6"/>
+			  <buildsequence sequence="'a'" stage="7"/>
+			  <buildsequence sequence="'a'" stage="8"/>
+			  <buildsequence sequence="'a'" stage="9"/>
+			  <buildsequence sequence="'b'" stage="1"/>
+			  <buildsequence sequence="'b'" stage="2"/>
+			  <buildsequence sequence="'b'" stage="3"/>
+			  <buildsequence sequence="'b'" stage="4"/>
+			  <buildsequence sequence="'b'" stage="5"/>
+			  <buildsequence sequence="'b'" stage="6"/>
+			  <buildsequence sequence="'b'" stage="7"/>
+			  <buildsequence sequence="'b'" stage="8"/>
+			  <buildsequence sequence="'b'" stage="9"/>
+			  <buildsequence sequence="'c'" stage="1"/>
+			  <buildsequence sequence="'c'" stage="2"/>
+			  <buildsequence sequence="'c'" stage="3"/>
+			  <buildsequence sequence="'c'" stage="4"/>
+			  <buildsequence sequence="'c'" stage="5"/>
+			  <buildsequence sequence="'c'" stage="6"/>
+			  <buildsequence sequence="'c'" stage="7"/>
+			  <buildsequence sequence="'c'" stage="8"/>
+			  <buildsequence sequence="'c'" stage="9"/>
+			  <buildsequence sequence="'d'" stage="1"/>
+			  <buildsequence sequence="'d'" stage="2"/>
+			  <buildsequence sequence="'d'" stage="3"/>
+			  <buildsequence sequence="'d'" stage="4"/>
+			  <buildsequence sequence="'d'" stage="5"/>
+			  <buildsequence sequence="'d'" stage="6"/>
+			  <buildsequence sequence="'d'" stage="7"/>
+			  <buildsequence sequence="'d'" stage="8"/>
+			  <buildsequence sequence="'d'" stage="9"/>
+			  <buildsequence sequence="'e'" stage="1"/>
+			  <buildsequence sequence="'e'" stage="2"/>
+			  <buildsequence sequence="'e'" stage="3"/>
+			  <buildsequence sequence="'e'" stage="4"/>
+			  <buildsequence sequence="'e'" stage="5"/>
+			  <buildsequence sequence="'e'" stage="6"/>
+			  <buildsequence sequence="'e'" stage="7"/>
+			  <buildsequence sequence="'e'" stage="8"/>
+			  <buildsequence sequence="'e'" stage="9"/>
+			  <buildsequence sequence="'f'" stage="1"/>
+			  <buildsequence sequence="'f'" stage="2"/>
+			  <buildsequence sequence="'f'" stage="3"/>
+			  <buildsequence sequence="'f'" stage="4"/>
+			  <buildsequence sequence="'f'" stage="5"/>
+			  <buildsequence sequence="'f'" stage="6"/>
+			  <buildsequence sequence="'f'" stage="7"/>
+			  <buildsequence sequence="'f'" stage="8"/>
+			  <buildsequence sequence="'f'" stage="9"/>
+			  <buildsequence sequence="'g'" stage="1"/>
+			  <buildsequence sequence="'g'" stage="2"/>
+			  <buildsequence sequence="'g'" stage="3"/>
+			  <buildsequence sequence="'g'" stage="4"/>
+			  <buildsequence sequence="'g'" stage="5"/>
+			  <buildsequence sequence="'g'" stage="6"/>
+			  <buildsequence sequence="'g'" stage="7"/>
+			  <buildsequence sequence="'g'" stage="8"/>
+			  <buildsequence sequence="'g'" stage="9"/>
+			  <buildsequence sequence="'h'" stage="1"/>
+			  <buildsequence sequence="'h'" stage="2"/>
+			  <buildsequence sequence="'h'" stage="3"/>
+			  <buildsequence sequence="'h'" stage="4"/>
+			  <buildsequence sequence="'h'" stage="5"/>
+			  <buildsequence sequence="'h'" stage="6"/>
+			  <buildsequence sequence="'h'" stage="7"/>
+			  <buildsequence sequence="'h'" stage="8"/>
+			  <buildsequence sequence="'h'" stage="9"/>
+			  <buildsequence sequence="'i'" stage="1"/>
+			  <buildsequence sequence="'i'" stage="2"/>
+			  <buildsequence sequence="'i'" stage="3"/>
+			  <buildsequence sequence="'i'" stage="4"/>
+			  <buildsequence sequence="'i'" stage="5"/>
+			  <buildsequence sequence="'i'" stage="6"/>
+			  <buildsequence sequence="'i'" stage="7"/>
+			  <buildsequence sequence="'i'" stage="8"/>
+			  <buildsequence sequence="'i'" stage="9"/>
+			  <buildsequence sequence="'j'" stage="1"/>
+			  <buildsequence sequence="'j'" stage="2"/>
+			  <buildsequence sequence="'j'" stage="3"/>
+			  <buildsequence sequence="'j'" stage="4"/>
+			  <buildsequence sequence="'j'" stage="5"/>
+			  <buildsequence sequence="'j'" stage="6"/>
+			  <buildsequence sequence="'j'" stage="7"/>
+			  <buildsequence sequence="'j'" stage="8"/>
+			  <buildsequence sequence="'j'" stage="9"/>
+			  <buildsequence sequence="'k'" stage="1"/>
+			  <buildsequence sequence="'k'" stage="2"/>
+			  <buildsequence sequence="'k'" stage="3"/>
+			  <buildsequence sequence="'k'" stage="4"/>
+			  <buildsequence sequence="'k'" stage="5"/>
+			  <buildsequence sequence="'k'" stage="6"/>
+			  <buildsequence sequence="'k'" stage="7"/>
+			  <buildsequence sequence="'k'" stage="8"/>
+			  <buildsequence sequence="'k'" stage="9"/>
+			</create_station>
+		  </do_else>
+		  <remove_value name="$buildlocation"/>
+
+		  <signal_objects object="player.copilot" param="'PopulateStation'" param2="$station" chance="if not $owner or $owner == faction.neutral or $owner == faction.ownerless then 0 else 100"/>
+		  <remove_value name="$station"/>
+		</do_elseif>
+		<do_elseif value="$macro.isclass.object">
+		  <create_object name="$object" macro="$macro" zone="$targetZone">
+			<owner exact="$owner"/>
+			<position x="$pos.x" y="$pos.y" z="$pos.z" />
+		  </create_object>
+		  <remove_value name="$object"/>
+		</do_elseif>
+		<write_to_logbook category="squad" text="'[%7] %1 : %2 %3 %4 - %5%6'.[$macro.name, this.ship.cluster.name, this.ship.sector.name, this.ship.zone.name, if $payment.{3}? then $payment.{3}.formatted.default else 0Cr, {1001,101}, {1001,2954}]" chance="if $owner == faction.player then 100 else 0"/>
+      </do_if>
+      <do_elseif value="$ware != null and $ware.{1}? and $ware.{2}? and $ware.{3}?">
+        <add_inventory entity="$ware.{1}" ware="$ware.{2}" exact="$ware.{3}" />
+      </do_elseif>
+
+	  <warp object="this.ship" zone="this.ship.zone">
+		<safepos object="this.ship" radius="this.ship.size" ignored="this.ship"/>
+	  </warp>
+      <!-- remove ship -->
+      <do_if value="$movedie">
+        <set_command command="command.explore" />
+		<run_script name="'move.die'">
+          <param name="byjump" value="this.ship.isclass.[class.ship_l,class.ship_xl]" />
+          <param name="byhostile" value="true" />
+        </run_script>
+      </do_if>
+
+    </actions>
+  </attention>
+</aiscript>

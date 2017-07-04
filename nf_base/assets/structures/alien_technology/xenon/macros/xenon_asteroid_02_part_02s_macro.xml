@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Mike (192.168.3.147) at 22.10.2015_08-51-37-->
+<macros>
+  <macro name="xenon_asteroid_02_part_02s_macro" class="storage">
+    <component ref="xenon_asteroid_02_part_02s" />
+    <properties>
+      <identification name="{20107,5401}" description="{20102,7902}" unique="0" />
+      <explosiondamage value="100000" />
+      <hull max="3600000" />
+      <effects>
+        <explosion ref="explosion_station_01" />
+        <sefx_hack_disabled ref="hack_deactivated_m" />
+      </effects>
+    </properties>
+    <connections>
+      <connection ref="connection_cargobay01">
+        <macro ref="cargobay_station_unique_03_macro" connection="StorageConnection" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

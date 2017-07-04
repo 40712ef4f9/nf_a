@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="interrupt.surrender" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" priority="10" version="1">
+  <params>
+    <param name="debugoutputchance" default="0" />
+  </params>
+  <interrupts>
+    <library>
+      <handler name="MMSurrender">
+        <conditions>
+		  <event_object_attacked_object object="this.defensible"/>
+		  <check_value value="not $mercy? or $mercy lt player.age" />
+		  <check_value value="this.defensible.isclass.[class.ship_l, class.ship_xl]" />
+		  <check_value value="event.param.isclass.[class.ship_l, class.ship_xl]" />
+		  <check_value value="event.param.primarypurpose == objectpurpose.trade" />
+		  <check_value value="event.param.isoperational" />
+		  <check_value value="event.param.hullpercentage lt 20" />
+		  <check_value value="event.param.shieldpercentage lt 1" />
+        </conditions>
+        <actions>
+			<set_value name="$mercy" exact="player.age+120s" />
+			<signal_objects object="player.galaxy" param="'MM Surrender'" param2="[this.defensible, event.param, 1]"/>
+        </actions>
+      </handler>
+      <!--handler name="MMSurrendered_plunder">
+			<conditions>
+				<event_object_signalled object="this.ship" param="'MM Surrendered'" />
+			</conditions>
+			<actions>
+			 	<set_value name="$target" exact="null" />
+				<abort_called_scripts resume="collect" />
+			</actions>
+      </handler-->
+      <handler name="MMSurrendered">
+			<conditions>
+				<event_object_signalled object="this.ship" param="'MM Surrendered'" />
+			</conditions>
+			<actions>
+			 	<set_value name="$target" exact="null" />
+				<abort_called_scripts />
+			</actions>
+      </handler>
+    </library>
+  </interrupts>
+</aiscript>

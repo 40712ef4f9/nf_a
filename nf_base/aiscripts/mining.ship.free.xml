@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<diff>
+  <add sel="/aiscript/attention[@min='unknown']/actions/do_if[@value='this.ship.jobexpired']" pos="after">
+      <do_if value="this.ship.pilot.$end_of_work? and this.ship.pilot.$end_of_work lt player.age">
+        <debug_text text="'%1 doing job %2 has expired, die!'.[this.ship.knownname, this.ship.job]" chance="$debugchance" />
+		<write_to_logbook category="general" text="'EOL: %1 [%2 / %3]'.[this.ship.knownname, @this.ship.pilot.$end_of_work, player.age]" chance="100"/>
+        <set_value name="$bigship" exact="this.ship.isclass.ship_l or this.ship.isclass.ship_xl" />
+        <run_script name="'move.die'">
+          <param name="byjump" value="$bigship" />
+          <param name="byhighway" value="not $bigship" />
+          <param name="bydock" value="not $bigship" />
+          <param name="byidle" value="true" />
+        </run_script>
+      </do_if>
+</add>
+</diff>

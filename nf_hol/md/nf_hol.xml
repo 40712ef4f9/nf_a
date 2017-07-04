@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<mdscript name="NF_HOL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../libraries/md.xsd">
+	<cues>
+		<cue name="NF_HOL_patch" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_cue_signalled cue="md.Setup.GameStart"/>
+					<event_game_loaded />
+				</check_any>
+			</conditions>
+			<delay min="300ms" />
+			<actions>
+				<do_if value="md.$NFMMprocessesdSectors? and player.age lt 3min and md.$NFMMprocessesdSectors.indexof.{'NF_HOL'} == 0">
+					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_HOL'"/>
+				</do_if>
+				<do_elseif value="md.$NFMMprocessesdSectors? and player.age ge 3min and md.$NFMMprocessesdSectors.indexof.{'NF_HOL'} == 0">
+					<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
+					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_HOL'"/>
+				</do_elseif>
+
+				<do_if value="global.$mmpiratesy_pfactions?">
+					<set_value name="$todo" exact="
+						[
+								faction.atlas,
+								faction.xenon
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="global.$mmpiratesy_pfactions.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="global.$mmpiratesy_pfactions" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+				<!--
+					capital / s + m boardingvessels
+				-->
+				<do_if value="global.$boardingvessel_cap?">
+					<set_value name="$todo" exact="
+						[
+								macro.units_size_l_cruise2_macro
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="global.$boardingvessel_cap.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="global.$boardingvessel_cap" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+				<!-- s + m ships TRADE -->
+				<do_if value="md.$todo_ships_small_others_trade?">
+						<set_value name="$todo" exact="
+							[
+								macro.units_size_m_xenon_miner_01_macro,
+								macro.units_size_m_xenon_collector_01_macro
+							]
+						"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<append_to_list name="md.$todo_ships_small_others_trade" exact="$todo.{$j}"/>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+				<do_if value="md.$todo_stations_moddlc?">
+						<set_value name="$todo" exact="
+							[
+								macro.xenon_asteroid_shipyard_macro,
+								macro.struct_at_xen_xenon_portal_macro,
+								macro.struct_at_xen_xenon_outpost_macro,
+								macro.xenon_asteroid_01_base_01b_macro
+							]
+						"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<append_to_list name="md.$todo_stations_moddlc" exact="$todo.{$j}"/>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+		  </actions>
+		</cue>
+	</cues>
+</mdscript>
+	

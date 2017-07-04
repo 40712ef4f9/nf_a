@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<aiscript name="move.probe" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd">
+<!-- Conquer_mod v019s -->
+<!-- CWIR -->
+<!-- Move and Jump Probe script-->
+  <params>
+    <param name="destination" default="this.ship.zone" />
+    <param name="position" default="null" />
+    <param name="jumpto" default="null" />
+  </params>
+  <interrupts>
+    <handler ref="TargetInvalidHandler" />
+  </interrupts>
+  <init>
+    <set_command command="command.explore"/>
+    <set_command_action commandaction="commandaction.calculating" />
+  </init>
+  <attention min="unknown">
+    <actions>
+	    <wait exact="3s" />
+
+		<do_if value="$destination and $destination.isclass.zone">
+			<set_command_action commandaction="commandaction.flyingto" param="if $jumpto and $jumpto.isclass.zone then $jumpto else $destination"/>
+			<do_if value="this.attention ge attention.visible and this.ship.zone == $destination">
+				<do_if value="$position" negate="true">
+					<get_safe_pos object="this.ship" zone="this.ship.zone" radius="500m" result="$position" directionobject="this.ship" direction="quadrant.front" />
+				</do_if>
+		
+				<move_to object="this.ship" destination="this.ship.zone" usehighways="false" abortpath="true" forcesteering="false" forceposition="false" finishonapproach="true" >
+					<safepos value="$position" ignored="this.ship"/>
+				</move_to>
+			</do_if>
+			<do_elseif value="this.ship.zone != $destination">
+				<run_script name="'move.generic'">
+				  <param name="destination" value="$destination" />
+				  <param name="position" value="$position" />
+				  <param name="endintargetzone" value="if $position then false else true" />
+				</run_script>
+			</do_elseif>
+			<do_else>
+				<wait exact="10s" />
+			</do_else>
+		</do_if>
+	
+		<do_if value="$jumpto and $jumpto.isclass.zone">
+			<set_command_action commandaction="commandaction.jumping" />
+			<wait exact="5s" />
+
+			<do_if value="this.attention ge attention.visible">
+				<play_sound object="this.ship" sound="'anim_jumpdrive_l_activation'" />
+				<add_effect object="this.ship" effect="'jump_jumpout_l'"/>
+				<wait exact="3.4s" />
+			</do_if>
+	
+			<warp object="this.ship" zone="$jumpto" >
+				<safepos radius="8km"/>
+			</warp>	  
+
+			<set_command_action commandaction="commandaction.scanningto" param="this.ship.zone"/>
+			<wait exact="8s" />
+	
+			<do_if value="$jumpto != player.ship.zone" >
+				<set_value name="$Loc" exact="$jumpto.name + ', ' + $jumpto.sector.knownname + ', ' + $jumpto.cluster.knownname"/>
+	
+				<show_notification caption="{40002,1}" details="{40002,2}" timeout="12s" queued="true" priority="50" sound="notification_generic">
+					<interaction text="''" param="$jumpto" param2="'GiveMeTheMap'" />
+				</show_notification>
+				<write_to_logbook category="general" text="({40002,3} + {40002,4}).[$Loc]"/>
+			</do_if>
+		</do_if>
+
+		<set_command_action commandaction="commandaction.standingby" />
+
+		<run_script name="'move.idle'">
+          <param name="MaxDistance" value="20km" />
+        </run_script>
+	  	  
+    </actions>
+  </attention>
+</aiscript>

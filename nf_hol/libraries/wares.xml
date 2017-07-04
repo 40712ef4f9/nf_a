@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="/wares">   
+		<ware id="shp_m_khaak_weaponplatform" name="{20107,8101} {20106,1201}" description="{20107,8102}" transport="ship" size="ship" volume="1" tags="ship">
+			<price min="1" average="1" max="1" />
+			<production time="180" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="energycells" amount="440" />
+					<ware ware="fusionreactor" amount="44" />
+					<ware ware="reinforcedmetalplating" amount="195" />
+				</primary>
+			</production>
+			<component ref="units_size_m_khaak_weaponplatform_macro" amount="1" />
+			<icon video="units_size_m_khaak_weaponplatform_macro" />
+		</ware>
+	</add>	
+	<add sel="/wares">
+		<ware id="shp_m_xenon_miner_01_br_xen" name="{20101,17501}" description="{20101,17502}" transport="ship" size="ship" volume="31260" tags="economy ship">
+			<price min="5012649" average="5897234" max="6781819" />
+			<production time="208" amount="1" method="default" name="{20206,101}">
+				<primary>
+					<ware ware="energycells" amount="979" />
+					<ware ware="foodrations" amount="338" />
+					<ware ware="fusionreactor" amount="11" />
+					<ware ware="holtzmanfieldgenerator" amount="1" />
+					<ware ware="microchips" amount="23" />
+					<ware ware="reinforcedmetalplating" amount="52" />
+					<ware ware="scanningarray" amount="23" />
+				</primary>
+			</production>
+			<production time="208" amount="1" method="omicron" name="{20206,301}">
+				<primary>
+					<ware ware="bofu" amount="158" />
+					<ware ware="emspectrometer" amount="25" />
+					<ware ware="energycells" amount="979" />
+					<ware ware="fusionreactor" amount="11" />
+					<ware ware="holtzmanfieldgenerator" amount="1" />
+					<ware ware="plasmapumps" amount="86" />
+					<ware ware="reinforcedmetalplating" amount="52" />
+				</primary>
+			</production>
+			<production time="208" amount="1" method="fieldsofop" name="{20206,601}">
+				<primary>
+					<ware ware="energycells" amount="979" />
+					<ware ware="foodrations" amount="338" />
+					<ware ware="fusionreactor" amount="11" />
+					<ware ware="holtzmanfieldgenerator" amount="1" />
+					<ware ware="microchips" amount="23" />
+					<ware ware="scanningarray" amount="23" />
+					<ware ware="teladianium" amount="695" />
+				</primary>
+			</production>
+			<production time="110" amount="1" method="xenon" name="{20206,701}">
+				<secondary>
+					<ware ware="energycells" amount="1000" />
+					<ware ware="ore" amount="800" />
+					<ware ware="ions" amount="500" />
+					<ware ware="nividium" amount="700" />
+					<ware ware="plasma" amount="500" />
+					<ware ware="silicon" amount="700" />
+				</secondary>
+				<effects>
+					<effect type="secondaryresource" product="0.15" />
+					<effect type="sunlight" product="0.1" />
+				</effects>
+			</production>
+			<production time="110" amount="1" method="br_xenon" name="{20206,701}">
+				<secondary>
+					<ware ware="energycells" amount="1000" />
+					<ware ware="ore" amount="800" />
+					<ware ware="ions" amount="500" />
+					<ware ware="nividium" amount="700" />
+					<ware ware="plasma" amount="500" />
+					<ware ware="silicon" amount="700" />
+				</secondary>
+				<effects>
+					<effect type="secondaryresource" product="0.15" />
+					<effect type="sunlight" product="0.1" />
+				</effects>
+			</production>
+			<component ref="units_size_m_xenon_miner_01_macro" />
+			<icon video="units_size_m_xenon_miner_01_macro" />
+		</ware>
+	</add>
+
+	<add sel="/wares">
+		<ware id="shp_m_xenon_collector_01_br_xen" name="{40000,65}" description="{20101,17502}" transport="ship" size="ship" volume="31260" tags="economy ship">
+			<price min="5012649" average="5897234" max="6781819" />
+			<production time="208" amount="1" method="default" name="{20206,101}">
+				<primary>
+					<ware ware="energycells" amount="979" />
+					<ware ware="foodrations" amount="338" />
+					<ware ware="fusionreactor" amount="11" />
+					<ware ware="holtzmanfieldgenerator" amount="1" />
+					<ware ware="microchips" amount="23" />
+					<ware ware="reinforcedmetalplating" amount="52" />
+					<ware ware="scanningarray" amount="23" />
+				</primary>
+			</production>
+			<production time="208" amount="1" method="omicron" name="{20206,301}">
+				<primary>
+					<ware ware="bofu" amount="158" />
+					<ware ware="emspectrometer" amount="25" />
+					<ware ware="energycells" amount="979" />
+					<ware ware="fusionreactor" amount="11" />
+					<ware ware="holtzmanfieldgenerator" amount="1" />
+					<ware ware="plasmapumps" amount="86" />
+					<ware ware="reinforcedmetalplating" amount="52" />
+				</primary>
+			</production>
+			<production time="208" amount="1" method="fieldsofop" name="{20206,601}">
+				<primary>
+					<ware ware="energycells" amount="979" />
+					<ware ware="foodrations" amount="338" />
+					<ware ware="fusionreactor" amount="11" />
+					<ware ware="holtzmanfieldgenerator" amount="1" />
+					<ware ware="microchips" amount="23" />
+					<ware ware="scanningarray" amount="23" />
+					<ware ware="teladianium" amount="695" />
+				</primary>
+			</production>
+			<production time="110" amount="1" method="xenon" name="{20206,701}">
+				<secondary>
+					<ware ware="energycells" amount="1000" />
+					<ware ware="ore" amount="800" />
+					<ware ware="ions" amount="500" />
+					<ware ware="nividium" amount="700" />
+					<ware ware="plasma" amount="500" />
+					<ware ware="silicon" amount="700" />
+				</secondary>
+				<effects>
+					<effect type="secondaryresource" product="0.15" />
+					<effect type="sunlight" product="0.1" />
+				</effects>
+			</production>
+			<production time="110" amount="1" method="br_xenon" name="{20206,701}">
+				<secondary>
+					<ware ware="energycells" amount="1000" />
+					<ware ware="ore" amount="800" />
+					<ware ware="ions" amount="500" />
+					<ware ware="nividium" amount="700" />
+					<ware ware="plasma" amount="500" />
+					<ware ware="silicon" amount="700" />
+				</secondary>
+				<effects>
+					<effect type="secondaryresource" product="0.15" />
+					<effect type="sunlight" product="0.1" />
+				</effects>
+			</production>
+			<component ref="units_size_m_xenon_collector_01_macro" />
+			<icon video="units_size_m_xenon_collector_01_macro" />
+		</ware>
+	</add>
+	<add sel="/wares">   
+		<ware id="ads_traffic_l_rd" name="ads_traffic_l_rd" transport="container" size="part" volume="1" tags="part">
+			<price min="1" average="1" max="1" />
+			<production time="1" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="energycells" amount="1" />
+					<ware ware="reinforcedmetalplating" amount="1" />
+				</primary>
+			</production>
+			<component ref="props_adsigns_traffic_l_random_macro" amount="1" />
+		</ware>
+		<ware id="stp_mass_st_01" name="stp_mass_st_01" transport="container" size="part" volume="1" tags="part">
+			<price min="1" average="1" max="1" />
+			<production time="84" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="bioopticwiring" amount="19" />
+					<ware ware="energycells" amount="50" />
+					<ware ware="fusionreactor" amount="4" />
+					<ware ware="reinforcedmetalplating" amount="19" />
+				</primary>
+			</production>
+			<component ref="masstraffic_station_01_center_01_macro" amount="1" />
+		</ware>
+		<ware id="shp_l_cruise_two" name="{20102,9301}" description="{20102,9302}" transport="ship" size="ship" volume="1" tags="ship">
+			<price min="20343053" average="27124070" max="33905088" />
+			<production time="984" amount="1" method="default" name="{20206,101}">
+				<primary>
+					<ware ware="bioopticwiring" amount="226" />
+					<ware ware="energycells" amount="1380" />
+					<ware ware="foodrations" amount="580" />
+					<ware ware="fusionreactor" amount="76" />
+					<ware ware="holtzmanfieldgenerator" amount="114" />
+					<ware ware="microchips" amount="242" />
+					<ware ware="plasmaflowregulator" amount="92" />
+					<ware ware="reinforcedmetalplating" amount="242" />
+					<ware ware="scanningarray" amount="168" />
+				</primary>
+			</production>
+			<production time="984" amount="1" method="omicron" name="{20206,301}">
+				<primary>
+					<ware ware="bioelectricneurongel" amount="234" />
+					<ware ware="bofu" amount="290" />
+					<ware ware="emspectrometer" amount="168" />
+					<ware ware="energycells" amount="1380" />
+					<ware ware="fusionreactor" amount="76" />
+					<ware ware="holtzmanfieldgenerator" amount="114" />
+					<ware ware="plasmaflowregulator" amount="92" />
+					<ware ware="plasmapumps" amount="228" />
+					<ware ware="reinforcedmetalplating" amount="242" />
+				</primary>
+			</production>
+			<production time="984" amount="1" method="fieldsofop" name="{20206,601}">
+				<primary>
+					<ware ware="bioopticwiring" amount="388" />
+					<ware ware="energycells" amount="3798" />
+					<ware ware="foodrations" amount="1216" />
+					<ware ware="fusionreactor" amount="106" />
+					<ware ware="holtzmanfieldgenerator" amount="70" />
+					<ware ware="microchips" amount="459" />
+					<ware ware="plasmaflowregulator" amount="106" />
+					<ware ware="scanningarray" amount="141" />
+					<ware ware="teladianium" amount="1094" />
+				</primary>
+			</production>
+			<component ref="units_size_l_cruise2_macro" amount="1" />
+			<icon video="units_size_l_cruise2_macro" />
+		</ware>
+	</add>	
+</diff>

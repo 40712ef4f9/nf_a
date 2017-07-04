@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Lino (192.168.3.137) at 19.01.2016_17-36-55-->
+<macros>
+  <macro name="struct_bt_hol_dock_pir_macro" class="station">
+    <component ref="struct_bt_hol_dock" />
+    <properties>
+      <identification name="{2802, 2301}" description="{2802,2302}" unique="0" />
+    </properties>
+    <connections>
+      <connection ref="ConnectionFor_landmarks_hq_center_01_macro">
+        <macro ref="landmarks_hq_center_01_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_landmarks_hq_tower_01_macro4">
+        <macro ref="landmarks_hq_tower_01_macro" connection="position">
+		  <connections>
+			<connection ref="connection_cargobay01">
+			  <macro ref="cargobay_station_unique_03dock_macro" connection="StorageConnection" />
+			</connection>
+		  </connections>
+		</macro>
+      </connection>
+      <connection ref="ConnectionFor_landmarks_hq_tower_01_macro5">
+        <macro ref="landmarks_hq_tower_01_macro" connection="position">
+		  <connections>
+			<connection ref="connection_cargobay01">
+			  <macro ref="cargobay_station_unique_03dock_macro" connection="StorageConnection" />
+			</connection>
+		  </connections>
+		</macro>
+      </connection>
+      <connection ref="ConnectionFor_props_surf_playerdock_admin_ol_macro">
+        <macro ref="props_surf_playerdock_admin_ol_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_props_surf_playerdock_repair_ol_macro">
+        <macro ref="props_surf_playerdock_repair_ol_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_props_tradeoffer_buy_energy">
+        <macro>
+          <component ref="props_tradeoffer_buy_energy" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_props_tradeoffer_buy_hightech">
+        <macro>
+          <component ref="props_tradeoffer_buy_hightech" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_props_tradeoffer_sell_energy">
+        <macro>
+          <component ref="props_tradeoffer_sell_energy" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_props_tradeoffer_sell_hightech">
+        <macro>
+          <component ref="props_tradeoffer_sell_hightech" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro">
+        <macro ref="struct_econ_ref_ar_pmc_dronedock_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_mdock">
+        <macro>
+          <component ref="struct_econ_ref_ar_pmc_mdock" connection="space" />
+          <connections>
+            <connection ref="connection_dock_m01">
+              <macro ref="props_surf_ar_docks_size_m_macro" connection="Connection01" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_warehouse_harbour_macro">
+        <macro ref="struct_econ_science_warehouse_harbour_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_warehouse_harbour_macro1">
+        <macro ref="struct_econ_science_warehouse_harbour_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_warehouse_harbour_macro2">
+        <macro ref="struct_econ_science_warehouse_harbour_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_warehouse_harbour_macro3">
+        <macro ref="struct_econ_science_warehouse_harbour_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_warehouse_harbour_macro4">
+        <macro ref="struct_econ_science_warehouse_harbour_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_warehouse_harbour_macro5">
+        <macro ref="struct_econ_science_warehouse_harbour_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro">
+        <macro ref="struct_econ_science_weaponplatform_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro1">
+        <macro ref="struct_econ_science_weaponplatform_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro2">
+        <macro ref="struct_econ_science_weaponplatform_macro" connection="position" />
+      </connection>
+      <connection ref="connection_controlroom01">
+        <macro ref="control_room_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_radar01">
+        <macro ref="radar_ship_xl_fallback_01_macro" connection="ship" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_u_macro">
+        <build mode="optional" group="defense" sequence="A" stage="1" tags="primary " />
+        <macro ref="struct_econ_ref_ar_pmc_u_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_n">
+        <macro>
+          <component ref="struct_econ_weapon_ar_n" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_h_macro">
+        <macro ref="struct_econ_ref_ar_pmc_h_macro" connection="space" />
+      </connection>
+      <connection ref="connection_dock_lxl01">
+        <macro ref="props_surf_ar_docks_size_l_xl_inv_lr_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_lxl02">
+        <macro ref="props_surf_ar_docks_size_l_xl_inv_lr_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_lxl03">
+        <macro ref="props_surf_ar_docks_size_l_xl_inv_lr_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_lxl04">
+        <macro ref="props_surf_ar_docks_size_l_xl_inv_lr_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_lxl05">
+        <macro ref="props_surf_ar_docks_size_l_xl_inv_lr_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_lxl06">
+        <macro ref="props_surf_ar_docks_size_l_xl_inv_lr_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_shieldgen_external01">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="space" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

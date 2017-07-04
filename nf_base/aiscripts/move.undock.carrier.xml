@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<!--
+
+this script handles undocking from the current dock
+Initial Author: Owen
+
+Important: 
+  Undock script will redirect to 'move.unpark' if necessary
+  Do NOT use 'move.unpark' directly, instead use 'move.undock'
+
+-->
+
+<aiscript name="move.undock.carrier" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="4">
+  <params>
+    <param name="do_faster" default="global.$mmcarrierconfig.$mm_carriers_sdockplus" />
+    <param name="debugchance" default="0"/>
+  </params>
+  <init>
+    <set_command_action commandaction="commandaction.undocking" />
+  </init>
+  <attention min="visible">
+    <actions>
+      <!-- debugging -->
+
+      <label name="start" />
+
+      <!-- check if we are currently docked -->
+      <do_if value="this.ship.dockslot != null">
+
+        <debug_text text="this.ship.knownname + ' is docked, so undock'" chance="$debugchance" />
+
+        <!--TODO: Handle if the dock-->
+
+        <set_value name="$olddockslot" exact="this.ship.dockslot" />
+
+        <!-- ok, everything checks out, now start the undocking procedure -->
+        <request_undocking ship="this.ship" queued="1" result="$success" />
+        <do_while value="$success" exact="0">
+          <wait exact="100ms" chance="if @$do_faster then 100 else 0" />
+          <wait min="2s" max="10s" chance="if @$do_faster then 0 else 100" sinceversion="4" />
+          <request_undocking ship="this.ship" queued="1" result="$success" />
+        </do_while>
+
+        <debug_text text="'undock request passed'" chance="$debugchance" />
+
+        <!-- ok, got a clear departure path -->
+        <request_undocking ship="this.ship" result="$success" />
+        <do_while value="$success" exact="0">
+          <wait exact="100ms" chance="if @$do_faster then 100 else 0" />
+          <wait min="2s" max="10s" chance="if @$do_faster then 0 else 100" sinceversion="4" />
+          <request_undocking ship="this.ship" result="$success" />
+        </do_while>
+        <disable_collisions_between object="this.ship" target="$olddockslot.component.container"/>
+
+        <do_if value="this.ship.isclass.ship_l or this.ship.isclass.ship_xl">
+          <detach_from_masstraffic object="this.ship" wait="true" sinceversion="1">
+            <interrupt_after_time time="3min" />
+          </detach_from_masstraffic>
+        </do_if>
+        <do_else>
+          <do_if value="not $olddockslot.component.external">
+            <!-- wait for the doors to open! -->
+            <wait exact="4s" chance="if @$do_faster then 0 else 100" />
+          </do_if>
+        </do_else>
+
+        <debug_text text="'now move to departurepos' + this.ship.knownname + ' in ' + this.zone.knownname" chance="$debugchance" />
+        <set_command_action commandaction="commandaction.undocking" />
+        <move_undocking object="this.ship" dock="$olddockslot" finishonapproach="true" forceposition="false" commandaction="false" chance="if @$do_faster then 0 else 100"/>
+
+        <debug_text text="'undock! closing doors...'" chance="$debugchance" />
+        <undock ship="this.ship" />
+        <do_if value="not $olddockslot.component.external">
+          <close_dockingbay_doors dock="$olddockslot" />
+        </do_if>
+        <!--clear_collision_filter object="this.ship" /-->
+
+        <!-- Final movement to a safe pos, clearing the undock pos -->
+        <get_safe_pos result="$safepos" zone="$olddockslot.component.container.zone" object="$olddockslot.component.container" radius="this.ship.size" direction="quadrant.front" directionobject="$olddockslot.component" direction2="[quadrant.down, quadrant.up].random" allowyaxis="true" />
+
+        <do_if value="@$do_faster">
+
+          <set_value name="$runs" exact="0" />
+          <do_while value="$runs lt 1 or this.ship.distanceto.[$olddockslot.component.container.zone, $safepos] gt 1km">
+            <set_value name="$runs" operation="add"/>
+            <warp object="this.ship" zone="$olddockslot.component.container.zone">
+              <!--position value="$safepos" /-->
+              <position value="position.[$safepos.x, $safepos.y, $safepos.z]" />
+              <!--safepos radius="this.ship.size*2" object="$olddockslot.component.container" direction="quadrant.front" directionobject="$olddockslot.component.container"  allowyaxis="true"/-->
+            </warp>
+            <wait exact="50ms" />
+            <break chance="if $runs lt 9 then 0 else 100" />
+          </do_while>
+
+        </do_if>
+        <do_else>
+
+          <do_if value="this.ship.docksize" exact="tag.dock_s">
+            <get_target_points macro="$olddockslot.component.container.macro" tags="[tag.ship_s, tag.launchpath]" result="$targetpoints" />
+          </do_if>
+          <do_elseif value="this.ship.docksize" exact="tag.dock_m">
+            <get_target_points macro="$olddockslot.component.container.macro" tags="[tag.ship_m, tag.launchpath]" result="$targetpoints" />
+          </do_elseif>
+          <do_else>
+            <create_list name="$targetpoints"/>
+          </do_else>
+
+          <do_if value="$targetpoints.count" min="1">
+
+            <!-- Prepare to leave in the dock slot-->
+            <set_avoid_collisions object="this.ship" enabled="false" />
+            <find_gravidar_contact name="$crowd" object="this.ship" multiple="true">
+              <match_distance object="this.ship" max="2km"/>
+            </find_gravidar_contact>
+            <do_all exact="$crowd.count" counter="$i">
+              <disable_collisions_between object="this.ship" target="$crowd.{$i}" />
+            </do_all>
+            <do_if value="$crowd.indexof.{$olddockslot.component.container}" negate="true">
+              <disable_collisions_between object="this.ship" target="$olddockslot.component.container" />
+            </do_if>
+            <remove_value name="$crowd"/>
+
+            <!-- Prepare to enter in the dock slot-->
+            <!-- Move to the first safe point. Needed for avoid collision before move_target_points-->
+            <move_to object="this.ship" destination="$olddockslot.component.container" forceposition="false" finishonapproach="true" forcesteering="true" sinceversion="4">
+              <position value="$targetpoints.{1}"/>
+            </move_to>
+
+            <!-- move to the remaining target points (if there are) -->
+            <do_if value="this.ship.docksize" exact="tag.dock_s">
+              <move_target_points object="this.ship" destination="$olddockslot.component.container" tags="[tag.ship_s, tag.launchpath]" relativemovement="true" finishonapproach="false" flightbehaviour="flightbehaviour.dronedock" sinceversion="4">
+                <nextposition value="$safepos" />
+              </move_target_points>
+            </do_if>
+            <do_elseif value="this.ship.docksize" exact="tag.dock_m">
+              <move_target_points object="this.ship" destination="$olddockslot.component.container" tags="[tag.ship_m, tag.launchpath]" relativemovement="true" finishonapproach="false" flightbehaviour="flightbehaviour.dronedock" sinceversion="4">
+                <nextposition value="$safepos" />
+              </move_target_points>
+            </do_elseif>
+            <do_elseif value="this.ship.docksize" exact="tag.dock_l">
+              <move_target_points object="this.ship" destination="$dockingslot.component.container" tags="[tag.ship_l, tag.dockpath]" relativemovement="true" finishonapproach="false" flightbehaviour="flightbehaviour.dronedock" >
+                <nextposition value="$approachpos" />
+              </move_target_points>
+            </do_elseif>
+            <do_elseif value="this.ship.docksize" exact="tag.dock_xl">
+              <move_target_points object="this.ship" destination="$dockingslot.component.container" tags="[tag.ship_xl, tag.dockpath]" relativemovement="true" finishonapproach="false" flightbehaviour="flightbehaviour.dronedock" >
+                <nextposition value="$approachpos" />
+              </move_target_points>
+            </do_elseif>
+          </do_if>
+
+          <move_to object="this.ship" destination="this.zone" commandaction="false" finishonapproach="true" sinceversion="4" >
+            <position value="$safepos" min="this.ship.size" max="this.ship.size*4" />
+          </move_to>
+
+        </do_else>
+
+      </do_if>
+      <do_elseif value="this.ship.docklink">
+        <!--Ship may have been interrupted from docking and so has a docking connection but is not docked-->
+        <undock ship="this.ship" />
+      </do_elseif>
+
+      <set_avoid_collisions object="this.ship" enabled="true" />
+      <clear_collision_filter object="this.ship" />
+    </actions>
+  </attention>
+  <attention min="unknown">
+    <actions>
+      <!-- debugging -->
+
+      <label name="start" />
+
+      <!-- check if we are currently docked -->
+      <do_if value="this.ship.dockslot != null">
+
+        <debug_text text="this.ship.knownname + ' is docked, so undock'" chance="$debugchance" />
+
+        <!--TODO: Handle if the dock-->
+
+        <set_value name="$olddockslot" exact="this.ship.dockslot" />
+
+        <!-- ok, everything checks out, now start the undocking procedure -->
+        <request_undocking ship="this.ship" queued="1" result="$success" />
+        <do_while value="$success" exact="0">
+          <wait exact="500ms" chance="0" />
+          <wait min="2s" max="8s" sinceversion="4" />
+          <request_undocking ship="this.ship" queued="1" result="$success" />
+        </do_while>
+
+        <debug_text text="'undock request passed'" chance="$debugchance" />
+
+        <!-- ok, got a clear departure path -->
+        <request_undocking ship="this.ship" result="$success" />
+        <do_while value="$success" exact="0">
+          <wait exact="500ms" chance="0" />
+          <wait min="2s" max="7s" sinceversion="4" />
+          <request_undocking ship="this.ship" result="$success" />
+        </do_while>
+        <disable_collisions_between object="this.ship" target="$olddockslot.component.container"/>
+
+        <do_if value="this.ship.isclass.ship_l or this.ship.isclass.ship_xl">
+          <detach_from_masstraffic object="this.ship" wait="true" sinceversion="1">
+            <interrupt_after_time time="3min" />
+          </detach_from_masstraffic>
+        </do_if>
+        <do_else>
+          <do_if value="not $olddockslot.component.external">
+            <!-- wait for the doors to open! -->
+            <wait exact="2s" />
+          </do_if>
+        </do_else>
+
+        <debug_text text="'now move to departurepos' + this.ship.knownname + ' in ' + this.zone.knownname" chance="$debugchance" />
+        <set_command_action commandaction="commandaction.undocking" />
+        <move_undocking object="this.ship" dock="$olddockslot" finishonapproach="true" forceposition="false" commandaction="false" chance="0"/>
+
+        <debug_text text="'undock! closing doors...'" chance="$debugchance" />
+        <undock ship="this.ship" />
+
+        <clear_collision_filter object="this.ship" />
+
+        <!-- Final movement to a safe pos, clearing the undock pos -->
+        <get_safe_pos result="$safepos" zone="$olddockslot.component.container.zone" object="$olddockslot.component.container" radius="this.ship.size" direction="quadrant.front" allowyaxis="true" />
+
+        <warp object="this.ship" zone="this.ship.zone" chance="0"/>
+        <wait exact="50ms" />
+
+        <move_to object="this.ship" destination="$dockingslot.component" chance="0" />
+
+        <move_target_points object="this.ship" destination="$dockingslot.component.container" chance="0" />
+        <move_target_points object="this.ship" destination="$dockingslot.component.container" chance="0" />
+
+        <move_to object="this.ship" destination="$dockingslot.component" chance="0" />
+
+        <warp object="this.ship" zone="$olddockslot.component.container.zone">
+          <position value="position.[$safepos.x, $safepos.y, $safepos.z]" />
+        </warp>
+
+      </do_if>
+      <do_elseif value="this.ship.docklink">
+        <!--Ship may have been interrupted from docking and so has a docking connection but is not docked-->
+        <undock ship="this.ship" />
+      </do_elseif>
+
+      <set_avoid_collisions object="this.ship" enabled="true" />
+      <clear_collision_filter object="this.ship" />
+    </actions>
+  </attention>
+  <on_abort>
+    <do_if value="this.ship.docklink">
+      <undock ship="this.ship" />
+    </do_if>
+    <set_avoid_collisions object="this.ship" enabled="true" />
+    <clear_collision_filter object="this.ship" />
+  </on_abort>
+</aiscript>

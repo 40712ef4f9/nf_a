@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Lino (192.168.3.139) at 15.10.2014_13-21-47-->
+<macros>
+  <macro name="units_size_xl_te_kit_none_02_xl_macro" class="ship_xl">
+    <component ref="units_size_xl_te_kit_none_02_xl" />
+    <properties>
+      <identification name="{20101,15211}" basename="{20101,15203}" description="{20101,15202}" variation="{20106,3601}" unique="0" mapicon="shipicon_carrier_l" />
+      <explosiondamage value="200000" />
+      <hull max="3100000" />
+      <effects>
+        <explosion ref="capital_explosion" />
+        <jumpin ref="jump_jumpin_xl" />
+        <jumpout ref="jump_jumpout_xl" />
+      </effects>
+      <purpose primary="fight" />
+    </properties>
+    <connections>
+      <connection ref="ConnectionFor_units_size_xl_te_kit_container_a">
+        <macro>
+          <component ref="units_size_xl_te_kit_container_a" connection="space" />
+          <connections>
+            <connection ref="connection_storage_m01">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m02">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m03">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m04">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m05">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m06">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m07">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m08">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m09">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m10">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m11">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m12">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m13">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m14">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m15">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m16">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_units_size_xl_te_kit_container_a1">
+        <macro>
+          <component ref="units_size_xl_te_kit_container_a" connection="space" />
+          <connections>
+            <connection ref="connection_storage_m01">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m02">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m03">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m04">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m05">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m06">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m07">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m08">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m09">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m10">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m11">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m12">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m13">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m14">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m15">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m16">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_units_size_xl_te_kit_container_a2">
+        <macro>
+          <component ref="units_size_xl_te_kit_container_a" connection="space" />
+          <connections>
+            <connection ref="connection_storage_m01">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m02">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m03">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m04">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m05">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m06">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m07">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m08">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m09">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m10">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m11">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m12">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m13">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m14">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m15">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m16">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_units_size_xl_te_kit_container_a3">
+        <macro>
+          <component ref="units_size_xl_te_kit_container_a" connection="space" />
+          <connections>
+            <connection ref="connection_storage_m01">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m02">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m03">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m04">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m05">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m06">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m07">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m08">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m09">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m10">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m11">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m12">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m13">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m14">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m15">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_storage_m16">
+              <macro ref="storage_te_dummy_01_macro" connection="connection_component01" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_units_size_xl_te_kit_defence_a">
+        <macro>
+          <component ref="units_size_xl_te_kit_defence_a" connection="space" />
+          <connections>
+            <connection ref="connection_shieldgen01">
+              <macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+            </connection>
+            <connection ref="connection_shieldgen02">
+              <macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+            </connection>
+            <connection ref="connection_turret_medium_pe01">
+              <macro ref="turret_medium_te_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_medium_pe02">
+              <macro ref="turret_medium_te_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_medium_pe03">
+              <macro ref="turret_medium_te_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg01">
+              <macro ref="turret_small_te_mg_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg02">
+              <macro ref="turret_small_te_mg_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg03">
+              <macro ref="turret_small_te_mg_macro" connection="connection_component01" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_units_size_xl_te_kit_defence_a1">
+        <macro>
+          <component ref="units_size_xl_te_kit_defence_a" connection="space" />
+          <connections>
+            <connection ref="connection_shieldgen01">
+              <macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+            </connection>
+            <connection ref="connection_shieldgen02">
+              <macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+            </connection>
+            <connection ref="connection_turret_medium_pe01">
+              <macro ref="turret_medium_te_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_medium_pe02">
+              <macro ref="turret_medium_te_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_medium_pe03">
+              <macro ref="turret_medium_te_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg01">
+              <macro ref="turret_small_te_mg_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg02">
+              <macro ref="turret_small_te_mg_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg03">
+              <macro ref="turret_small_te_mg_macro" connection="connection_component01" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_units_size_xl_te_kit_end_a">
+        <macro>
+          <component ref="units_size_xl_te_kit_end_a" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_units_size_xl_te_kit_front_b">
+        <macro>
+          <component ref="units_size_xl_te_kit_front_b" connection="space" />
+          <connections>
+            <connection ref="connection_engine_l_01">
+              <macro ref="engine_size_l_te_kit_none_02_macro" connection="Connection01" />
+            </connection>
+            <connection ref="connection_engine_l_02">
+              <macro ref="engine_size_l_te_kit_none_02_macro" connection="Connection01" />
+            </connection>
+            <connection ref="connection_engine_l_03">
+              <macro ref="engine_size_l_te_kit_none_02_macro" connection="Connection01" />
+            </connection>
+            <connection ref="connection_engine_l_04">
+              <macro ref="engine_size_l_te_kit_none_02_macro" connection="Connection01" />
+            </connection>
+            <connection ref="connection_engine_l_05">
+              <macro ref="engine_size_l_te_kit_none_02_macro" connection="Connection01" />
+            </connection>
+            <connection ref="connection_engine_l_06">
+              <macro ref="engine_size_l_te_kit_none_02_macro" connection="Connection01" />
+            </connection>
+            <connection ref="connection_engine_m_01">
+              <macro ref="engine_size_m_te_kit_01s_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_engine_m_02">
+              <macro ref="engine_size_m_te_kit_01s_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_engine_m_03">
+              <macro ref="engine_size_m_te_kit_01s_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_engine_m_04">
+              <macro ref="engine_size_m_te_kit_01s_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_engine_m_05">
+              <macro ref="engine_size_m_te_kit_01s_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_engine_m_06">
+              <macro ref="engine_size_m_te_kit_01s_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_radar_external01">
+              <macro ref="radar_ship_xl_military_01_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_shieldgen01">
+              <macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+            </connection>
+            <connection ref="connection_shieldgen02">
+              <macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+            </connection>
+            <connection ref="connection_shieldgen03">
+              <macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+            </connection>
+            <connection ref="connection_shieldgen04">
+              <macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+            </connection>
+            <connection ref="connection_turret_medium_pe_lb01">
+              <macro ref="turret_medium_te_lb_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_medium_pe_lb02">
+              <macro ref="turret_medium_te_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_medium_pe_lb03">
+              <macro ref="turret_medium_te_lb_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_medium_pe_lb04">
+              <macro ref="turret_medium_te_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_medium_pe_lb05">
+              <macro ref="turret_medium_te_lb_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_medium_pe_lb06">
+              <macro ref="turret_medium_te_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg02">
+              <macro ref="turret_small_mg_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg03">
+              <macro ref="turret_small_mg_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg04">
+              <macro ref="turret_small_mg_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg05">
+              <macro ref="turret_small_mg_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg06">
+              <macro ref="turret_small_mg_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg07">
+              <macro ref="turret_small_mg_macro" connection="connection_component01" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_units_size_xl_te_kit_livingsection_a">
+        <macro>
+          <component ref="units_size_xl_te_kit_livingsection_a" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="connection_cockpit01">
+        <macro ref="cockpit_bridge_te_l_01_macro" connection="connection_component01">
+          <connections>
+            <connection ref="connection_dock_p01">
+              <macro ref="playerdock_capship01_macro" connection="connection_component01" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="connection_dock_s01">
+        <macro ref="props_surf_ar_docks_size_s_floor_macro" connection="Connection_component" />
+      </connection>
+      <connection ref="connection_jumpdrive01">
+        <macro ref="props_surf_ar_jumpdrive_l_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_radar_fallback01">
+        <macro ref="radar_ship_xl_fallback_01_macro" connection="ship" />
+      </connection>
+      <connection ref="connection_shieldgen_01">
+        <macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external01">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external02">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_storage01">
+        <macro ref="storage_ship_xl_fuel_01_macro" connection="ShipConnection" />
+      </connection>
+      <connection ref="connection_dock_m01">
+        <macro ref="props_surf_ar_docks_size_m_inv_2_te_macro" connection="Connection01" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

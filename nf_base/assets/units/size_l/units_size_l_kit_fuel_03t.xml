@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<components>
+	<component name="units_size_l_kit_fuel_03t" class="ship_l">
+		<source geometry="assets\units\size_l\\units_size_l_kit_container_03_data"/>
+		<layers>
+			<layer>
+				<waypoints/>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="ship">
+				<offset/>
+			</connection>
+			<connection name="Connection01" tags="part nocollision  ">
+				<offset/>
+				<parts>
+					<part name="part_dummy" wreck="part_dummy_wreck">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="lensflares.vertexcolor_basis"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="10" y="0" z="10"/>
+							<center x="0" y="0" z="0"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection02" tags="part  ">
+				<offset/>
+				<parts/>
+			</connection>
+			<connection name="connection_cockpit01" tags="cockpit ">
+				<offset>
+					<position x="0" y="73.21522" z="-602.5"/>
+				</offset>
+			</connection>
+			<connection name="connection_storage01" tags="storage ">
+				<offset>
+					<position x="-2.655659E-07" y="-2.655659E-07" z="-6.075439"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_s01" group="group01 " tags="dock_s ">
+				<offset>
+					<position x="-1.037366E-05" y="-193" z="0"/>
+					<quaternion qx="8.432163E-09" qy="-0.7071069" qz="-0.7071066" qw="-8.432165E-09"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_s02" group="group01 " tags="dock_s ">
+				<offset>
+					<position x="0" y="-136.0361" z="408.1115"/>
+					<quaternion qx="0.7071065" qy="-1.067702E-07" qz="-1.067701E-07" qw="-0.707107"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen01" group="group01 " tags="shieldgenerator ">
+				<offset>
+					<position x="-1.037366E-05" y="-194" z="60"/>
+					<quaternion qx="-1" qy="7.54979E-08" qz="-4.371139E-08" qw="3.300118E-15"/>
+				</offset>
+			</connection>
+			<connection name="connection_storage02" tags="storage ">
+				<offset/>
+			</connection>
+			<connection name="connection_storage03" tags="storage ">
+				<offset/>
+			</connection>
+			<connection name="connection_radar_fallback01" tags="radar ">
+				<offset/>
+			</connection>
+			<connection name="connection_shieldgen_external01" tags="shieldgenerator external ">
+				<offset>
+					<position x="0" y="-52.60152" z="11.16339"/>
+					<quaternion qx="4.371139E-08" qy="-1" qz="-7.54979E-08" qw="3.300118E-15"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen_external02" tags="shieldgenerator external ">
+				<offset>
+					<position x="0" y="-52.60152" z="-260"/>
+					<quaternion qx="4.371139E-08" qy="-1" qz="-7.54979E-08" qw="3.300118E-15"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen_external03" tags="shieldgenerator external ">
+				<offset>
+					<position x="0" y="-122" z="-120"/>
+					<quaternion qx="-0.9999996" qy="-0" qz="-0" qw="-9.197433E-04"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen_external04" tags="shieldgenerator external ">
+				<offset>
+					<position x="0" y="-117.5" z="-320"/>
+					<quaternion qx="-0.9999996" qy="-0" qz="-0" qw="-9.197433E-04"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_extender1_b" tags="destructible">
+				<offset>
+					<position x="-3.46553E-05" y="-12.89465" z="11.75758"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_cargo" tags="destructible">
+				<offset>
+					<position x="-1.56486E-05" y="-9" z="-264.5"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_cargo_p2" tags="destructible">
+				<offset>
+					<position x="-1.037366E-05" y="-165" z="-41"/>
+					<rotation yaw="0" pitch="0" roll="-180"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_end_a" tags="destructible">
+				<offset>
+					<position x="0" y="-11.34939" z="-546.7"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_front_c" tags="destructible">
+				<offset>
+					<position x="0" y="-11.349" z="254.4798"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_front_b" tags="destructible">
+				<offset>
+					<position x="-1.037366E-05" y="-159" z="10"/>
+					<rotation yaw="180" pitch="0" roll="-180"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_front_b_p2" tags="destructible">
+				<offset>
+					<position x="-1.037366E-05" y="-159" z="-412"/>
+					<rotation yaw="180" pitch="0" roll="-180"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_s01_p2" group="group01 " tags="dock_s ">
+				<offset>
+					<position x="-1.037366E-05" y="-193" z="-422"/>
+					<quaternion qx="8.432163E-09" qy="-0.7071069" qz="-0.7071066" qw="-8.432165E-09"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen01_p2" group="group01 " tags="shieldgenerator ">
+				<offset>
+					<position x="-1.037366E-05" y="-194" z="-352"/>
+					<quaternion qx="-1" qy="7.54979E-08" qz="-4.371139E-08" qw="3.300118E-15"/>
+				</offset>
+			</connection>
+
+			<connection name="ConnectionFor_props_tradeoffer_buy_energy" tags="tradeofferdock">
+				<offset>
+					<position x="-97" y="-27" z="11.75758"/>
+					<rotation yaw="-90" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_tradeoffer_sell_energy" tags="tradeofferdock">
+				<offset>
+					<position x="97" y="-27" z="11.75758"/>
+					<rotation yaw="90" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+
+		</connections>
+	</component>
+</components>

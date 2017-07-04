@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="command.tender.ship" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" priority="2" version="1" >
+	<!--
+  Wrapper script for player fleet tender
+
+	TODO
+	* add support for escorting cargo ships
+  -->
+	<params>
+		<param name="target" default="null" />
+		<param name="destination" default="null" />
+		<param name="source" default="this.ship" />
+		<param name="repeat" default="false" />
+		<param name="debugchance" default="0"/>
+	</params>
+	<init>
+		<set_command command="command.support" param="player.primaryship" />
+	</init>
+	<attention min="unknown">
+		<actions>
+
+			<set_value name="$debugchance" exact="0" />
+
+			<set_value name="$bigship" exact="this.ship.isclass.ship_xl or this.ship.isclass.ship_l" />
+
+			<!-- Label to allow us to repeat indefinitely -->
+			<label name="start" />
+
+			<!-- command action for waiting time -->
+			<set_command_action commandaction="commandaction.calculating" />
+
+			<do_if value="$target.exists and $target.zone.isclass.highway">
+				<wait exact="3s" />
+				<resume label="start" />
+			</do_if>
+
+			<do_if value="not $destination.exists and $target.exists and not $target.zone.isclass.highway">
+				<set_value name="$destination" exact="$target.zone" />
+			</do_if>
+
+			<do_if value="not $destination.exists">
+				<return />
+			</do_if>
+
+			<!-- recall drones -->
+			<run_script name="'lib.recall.drones'" />      
+
+			<run_script name="'move.undock'" />
+
+			<!-- Warp to different zone -->
+			<label name="warp" />
+
+			<do_if value="this.ship.zone != $destination">
+
+				<wait exact="5s"/>
+
+				<run_script name="'move.generic'">
+					<param name="destination" value="$destination"/>
+					<param name="forcesteering" value="not $bigship" />
+					<param name="endintargetzone" value="true" />
+					<param name="debugchance" value="$debugchance"/>
+				</run_script>
+			</do_if>
+
+
+			<label name="collect" />
+
+			<wait exact="3s" />
+
+			<set_value name="$reqfuel" exact="0"/>
+			<set_value name="$reqfuel_max" exact="0"/>
+			<do_if value="$target.exists">
+				<create_list name="$targets"/>
+				<append_to_list name="$targets" exact="$target"/>
+			</do_if>
+			<do_else>
+				<find_ship name="$targets" multiple="true" space="$destination" class="[class.ship_l, class.ship_xl]" owner="this.ship.owner" recursive="true"/>
+
+				<do_all exact="$targets.count" counter="$i" reverse="true">
+					<do_if value="$targets.{$i} == this.ship or $targets.{$i} == $source or $source.subordinates.indexof.{$targets.{$i}}">
+						<remove_value name="$targets.{$i}"/>
+						<continue />
+					</do_if>
+					<evaluate_ammo_storage object="$targets.{$i}" type="missile" capacity="$launchercapacity" macros="$macrolist" amounts="$amountlist" wares="$warelist" />
+
+					<do_if value="$launchercapacity gt 0 and $macrolist.count gt 0">
+						<set_value name="$target" exact="$targets.{$i}"/>
+						<do_if value="$targets.{$i}.cargo.{ware.fuelcells}.count lt $targets.{$i}.cargo.{ware.fuelcells}.max">
+							<set_value name="$target" exact="$targets.{$i}"/>
+							<set_value name="$reqfuel" exact="[$targets.{$i}.cargo.{ware.fuelcells}.max, 2500].min - $targets.{$i}.cargo.{ware.fuelcells}.count" operation="add"/>
+							<set_value name="$reqfuel_max" exact="$targets.{$i}.cargo.{ware.fuelcells}.max - $targets.{$i}.cargo.{ware.fuelcells}.count" operation="add"/>
+						</do_if>
+					</do_if>
+					<do_elseif value="$targets.{$i}.cargo.{ware.fuelcells}.count lt $targets.{$i}.cargo.{ware.fuelcells}.max">
+						<set_value name="$target" exact="$targets.{$i}"/>
+						<set_value name="$reqfuel" exact="[$targets.{$i}.cargo.{ware.fuelcells}.max, 2500].min - $targets.{$i}.cargo.{ware.fuelcells}.count" operation="add"/>
+						<set_value name="$reqfuel_max" exact="$targets.{$i}.cargo.{ware.fuelcells}.max - $targets.{$i}.cargo.{ware.fuelcells}.count" operation="add"/>
+					</do_elseif>
+					<do_else>
+						<remove_value name="$targets.{$i}"/>
+					</do_else>
+					<remove_value name="$launchercapacity"/>
+					<remove_value name="$macrolist"/>
+					<remove_value name="$amountlist"/>
+					<remove_value name="$warelist"/>
+				</do_all>
+			</do_else>
+
+			<set_value name="$gas" exact="if $source.isclass.[class.ship_xl, class.ship_l] then $source.cargo.{ware.fuelcells}.count - 200 else $source.cargo.{ware.fuelcells}.count" />
+			<do_all exact="$source.subordinates.count" counter="$s">
+				<do_if value="$source.subordinates.{$s}.cargo.{ware.fuelcells}.count">
+					<set_value name="$gas" exact="if $source.subordinates.{$s}.isclass.[class.ship_xl, class.ship_l] then $source.subordinates.{$s}.cargo.{ware.fuelcells}.count - 200 else $source.subordinates.{$s}.cargo.{ware.fuelcells}.count" operation="add"/>
+				</do_if>
+			</do_all>
+			<set_value name="$fuel_l" exact="0" />
+			<do_if value="$reqfuel and $gas">
+				<do_if value="$reqfuel_max le $gas">
+					<set_value name="$fuel_c" exact="(1.0)f" />
+				</do_if>
+				<do_elseif value="$reqfuel gt $gas">
+					<set_value name="$fuel_c" exact="(($gas)f / ($reqfuel)f)f" />
+					<set_value name="$fuel_l" exact="100" />
+				</do_elseif>
+				<do_elseif value="$reqfuel_max gt $gas">
+					<set_value name="$fuel_c" exact="(($gas)f / ($reqfuel_max)f)f" />
+				</do_elseif>
+			</do_if>
+			<remove_value name="$reqfuel"/>
+			<remove_value name="$reqfuel_max"/>
+			<set_value name="$text" exact="'%1 [%2]: \n'.[this.ship.name, $destination.name]" />
+			<set_value name="$line" exact="1" />
+
+			<set_command command="command.support" param="$destination" />
+
+
+			<label name="work" />
+
+			<wait min="2s" max="6s" />        
+
+			<do_if value="$target.isoperational">
+
+				<set_value name="$endtime" exact="player.age + 5min" />
+				<set_value name="$doAmmo" exact="true" />
+				<set_value name="$doFuel" exact="if $gas then true else false" />
+				<set_command_action commandaction="commandaction.flyingto" param="$target" />
+				<set_value name="$text" exact="' [ %1 ] :'.[$target.name]" operation="add" />
+
+				<do_while value="player.age lt $endtime and $target.exists and not $target.iswreck and $target.zone == this.ship.zone">   
+
+					<do_if value="this.ship.distanceto.{$target}" min="this.ship.size + $target.size + 1000m">
+						<get_safe_pos zone="this.zone" radius="this.ship.size" result="$safepos" ignored="this.ship" object="$target" />
+						<move_to object="this.ship" destination="this.ship.zone" forceposition="false" forcerotation="true" usehighways="not $bigship" commandaction="false">
+							<position value="$safepos" z="1m" />
+							<interrupt_after_time time="120s" comment="interrupt the blocking action, but the move continues"/>
+						</move_to>
+					</do_if>
+
+					<do_if value="$doAmmo">
+						<evaluate_ammo_storage object="$target" type="missile" capacity="$launchercapacity" macros="$macrolist" amounts="$amountlist" wares="$warelist" />
+						<do_if value="$launchercapacity gt 0 and $macrolist.count gt 0">
+							<do_if value="$target.ammostorage.missile.count lt ($launchercapacity + $target.ammostorage.missile.basecapacity)">
+								<do_all exact="$warelist.count" counter="$i">
+									<set_value name="$ware" exact="$warelist.{$i}" />
+									<set_value name="$macro" exact="$macrolist.{$i}" />
+									<do_if value="$target.isoperational">
+										<set_value name="$ammoamount" exact="$target.ammostorage.{$macro}.count" />
+										<do_if value="$ammoamount lt $amountlist.{$i}">
+											<set_value name="$reload" exact="$amountlist.{$i} - $ammoamount" />
+											<set_value name="$result" exact="$reload" />
+
+											<remove_cargo object="$source" ware="$ware" exact="$reload" result="$subtract"/>
+											<set_value name="$result" exact="$subtract" operation="subtract"/>
+											<do_all exact="$source.subordinates.count" counter="$s" chance="if $result then 100 else 0">
+												<do_if value="$source.subordinates.{$s}.cargo.{$ware}.count">
+													<remove_cargo ware="$ware" object="$source.subordinates.{$s}" exact="$result" result="$subtract" />
+													<set_value name="$result" exact="$subtract" operation="subtract"/>
+												</do_if>
+												<do_if value="$result le 0">
+													<break />
+												</do_if>
+											</do_all>
+
+											<add_ammo object="$target" macro="$macro" amount="$reload - $result"/> 
+											<set_value name="$text" exact="' %2 %1,'.[$ware.name, $reload - $result]" operation="add" />
+
+											<remove_value name="$reload"/>
+											<remove_value name="$result"/>
+										</do_if>
+										<remove_value name="$ammoamount"/>
+									</do_if>
+								</do_all>
+								<remove_value name="$ware"/>
+								<remove_value name="$macro"/>
+							</do_if>
+						</do_if>
+						<remove_value name="$amountlist"/>
+						<remove_value name="$launchercapacity"/>
+						<remove_value name="$macrolist"/>
+						<remove_value name="$warelist"/>
+						<set_value name="$doAmmo" exact="false" comment="done"/>
+					</do_if>
+
+					<wait min="10s" max="20s" />        
+
+					<do_if value="$doFuel">
+						<do_if value="$target.cargo.{ware.fuelcells}.count lt 2500 and $target.cargo.{ware.fuelcells}.count lt $target.cargo.{ware.fuelcells}.max" chance="$fuel_l">
+							<set_value name="$amount" exact="(([$target.cargo.{ware.fuelcells}.max, 2500].min - $target.cargo.{ware.fuelcells}.count) * $fuel_c)i"/>
+						</do_if>
+						<do_elseif value="$target.cargo.{ware.fuelcells}.count lt $target.cargo.{ware.fuelcells}.max" chance="100 - $fuel_l">
+							<set_value name="$amount" exact="(($target.cargo.{ware.fuelcells}.max - $target.cargo.{ware.fuelcells}.count) * $fuel_c)i"/>
+						</do_elseif>
+
+						<do_if value="$amount">
+							<add_cargo ware="ware.fuelcells" object="$target" exact="$amount" result="$result"/>
+							<set_value name="$text" exact="' %2 %1'.[ware.fuelcells.name, $result]" operation="add" />
+
+							<remove_cargo ware="ware.fuelcells" object="$source" exact="[$result, $source.cargo.{ware.fuelcells}.count - 200].min" result="$subtract" chance="if $source.isclass.[class.ship_xl, class.ship_l] then 100 else 0"/>
+							<remove_cargo ware="ware.fuelcells" object="$source" exact="$result" result="$subtract" chance="if $source.isclass.[class.ship_xl, class.ship_l] then 0 else 100"/>
+							<set_value name="$result" exact="$subtract" operation="subtract"/>
+							<do_all exact="$source.subordinates.count" counter="$s" chance="if $result then 100 else 0">
+								<do_if value="$source.subordinates.{$s}.cargo.{ware.fuelcells}.count">
+									<remove_cargo ware="ware.fuelcells" object="$source.subordinates.{$s}" exact="[$result, $source.subordinates.{$s}.cargo.{ware.fuelcells}.count - 200].min" result="$subtract" chance="if $source.subordinates.{$s}.isclass.[class.ship_xl, class.ship_l] then 100 else 0"/>
+									<remove_cargo ware="ware.fuelcells" object="$source.subordinates.{$s}" exact="$result" result="$subtract" chance="if $source.subordinates.{$s}.isclass.[class.ship_xl, class.ship_l] then 0 else 100"/>
+									<set_value name="$result" exact="$subtract" operation="subtract"/>
+								</do_if>
+								<do_if value="$result le 0">
+									<break />
+								</do_if>
+							</do_all>
+						</do_if>
+						<remove_value name="$amount"/>
+						<remove_value name="$result"/>
+
+						<set_value name="$doFuel" exact="false" comment="done"/>
+					</do_if>
+
+					<wait min="15s" max="25s" />        
+
+				</do_while>
+
+			</do_if>
+
+			<set_command_action commandaction="commandaction.flying" />
+			<remove_value name="$targets.{$targets.indexof.{$target}}"/>
+			<set_value name="$target" exact="null" />
+
+			<do_if value="$targets.count">
+				<do_all exact="$targets.count" counter="$i" reverse="true">
+					<do_if value="$targets.{$i}.exists and $targets.{$i}.zone == $destination" negate="true">
+						<remove_value name="$targets.{$i}"/>
+					</do_if>
+					<do_elseif value="$target.exists" negate="true">
+						<set_value name="$target" exact="$targets.{$i}"/>
+					</do_elseif>
+					<do_elseif value="this.ship.distanceto.{$targets.{$i}} lt this.ship.distanceto.{$target}">
+						<set_value name="$target" exact="$targets.{$i}"/>
+					</do_elseif>
+				</do_all>
+
+				<do_if value="$target.exists">
+					<do_if value="$line lt 8">
+						<set_value name="$text" exact="' \n'" operation="add" />
+						<set_value name="$line" operation="add" />
+					</do_if>
+					<do_else>
+						<write_to_logbook category="squad" text="$text"/>
+						<set_value name="$text" exact="'%1 [%2]: \n'.[this.ship.name, $destination.name]" />
+						<set_value name="$line" exact="1" />
+					</do_else>
+					<resume label="work"/>
+				</do_if>
+			</do_if>
+			<remove_value name="$gas"/>
+
+			<write_to_logbook category="squad" text="$text"/>
+			<remove_value name="$text"/>
+
+			<do_if value="$repeat">
+				<resume label="collect"/>
+			</do_if>
+
+			<do_if value="player.ship != this.ship">
+				<speak actor="this" line="1035" comment="It's done, Sir." />
+			</do_if>
+
+		</actions>
+	</attention>
+</aiscript>

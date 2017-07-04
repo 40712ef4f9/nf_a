@@ -1,0 +1,2497 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mdscript name="MM_Carriers" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+		<!--  conversation hook defence guy  -->
+		<cue name="MM_Carriers_con" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="default" />
+					<event_conversation_returned_to_section section="default" />
+				</check_any>
+				<check_value value="event.object.type" exact="entitytype.defencecontrol" />
+				<check_value value="event.object.trueowner" exact="faction.player" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_any>
+					<check_value value="event.object.container.class" exact="class.ship_l" />
+					<check_value value="event.object.container.class" exact="class.ship_xl" />
+				</check_any>
+			</conditions>
+			<actions>
+				<find_dock_location container="event.object.container" size="tag.dock_m" name="$dock" />
+				<do_if value="$dock" negate="true">
+					<find_dock_location container="event.object.container" size="tag.dock_s" name="$dock" />
+				</do_if>
+				<do_if value="$dock">
+					<add_player_choice_sub text="{2802,8151}" section="mmca_carrier" comment="Carrier" />
+				</do_if>
+				<do_else>
+					<add_player_choice_sub text="{2802,8161}" section="mmca_skunk" comment="Transfer" />
+					<add_player_choice_sub text="'Drones'" section="mmca_carrier_drone" selectable="event.object.container.units.{unitcategory.defence}.count gt 0" comment="Drone Commands"  />
+				</do_else>
+				<remove_value name="$dock"/>
+			</actions>
+		</cue>
+		<cue name="MM_Carriers_con_st" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="default" />
+					<event_conversation_returned_to_section section="default" />
+				</check_any>
+				<check_value value="event.object.type" exact="entitytype.defencecontrol" />
+				<check_value value="event.object.trueowner" exact="faction.player" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_value value="event.object.container.class" exact="class.station" />
+			</conditions>
+			<actions>
+				<add_player_choice_sub text="{2802,8151}" section="mmca_station" comment="Carrier" />
+			</actions>
+		</cue>
+		<cue name="MM_Carriers_station" instantiate="true">
+			<conditions>
+				<event_conversation_next_section section="mmca_station"/>
+			</conditions>
+			<actions>
+				<do_if value="event.param2?">
+					<do_if value="event.param2 == 'patrol'">
+						<do_if value="event.object.$patrol?" negate="true">
+							<set_value name="event.object.$patrol" exact="1" />
+						</do_if>
+						<do_elseif value="event.object.$patrol" exact="1">
+							<set_value name="event.object.$patrol" exact="2" />
+						</do_elseif>
+						<do_elseif value="event.object.$patrol gt 1">
+							<remove_value name="event.object.$patrol"/>
+						</do_elseif>
+					</do_if>
+				</do_if>
+				<add_player_choice_sub text="{2802,8280}.[ if event.object.$patrol? then if event.object.$patrol == 1 then {2802,8282} else {2802,8286} else {2802,8284} ]" section="mmca_station" choiceparam="'patrol'" comment="Transfer" />
+				<!--
+				<add_player_choice_sub text="'Drones'" section="mmca_carrier_drone" selectable="event.object.container.units.{unitcategory.defence}.count gt 0" comment="Drone Commands"  />
+-->
+
+				<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				<!--
+				<set_value name="$fighters" exact="event.object.container.subordinates.{entitytype.defencecontrol}"/>
+				<do_all exact="$fighters.count" counter="$i" reverse="true">
+					<do_if value="$fighters.{$i}.isclass.ship_l or $fighters.{$i}.isclass.ship_xl or $fighters.{$i}.primarypurpose != objectpurpose.fight" negate="true">
+					  <remove_value name="$fighters.{$i}"/>
+					</do_if>
+				</do_all>
+				<do_if value="$fighters.count" negate="true">
+					<add_player_choice_sub text="'Drones'" section="mmca_carrier_drone" selectable="event.object.container.units.{unitcategory.defence}.count gt 0" comment="Drone Commands"  />
+				</do_if>
+				<do_else>
+					<add_player_choice_sub text="{2802,8161}" section="mmca_skunk" comment="Transfer" />
+					<add_player_choice_sub text="'Drones'" section="mmca_carrier_drone" selectable="event.object.container.units.{unitcategory.defence}.count gt 0" comment="Drone Commands"  />
+				</do_else>
+				<remove_value name="$fighters"/>
+-->
+			</actions>
+		</cue>
+
+		<cue name="MM_Carriers_advcom" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_next_section section="mmadvcom_main" />
+					<event_conversation_returned_to_section section="mmadvcom_main" />
+					<event_conversation_next_section section="mmadvcom_next" />
+					<event_conversation_returned_to_section section="mmadvcom_next" />
+				</check_any>
+				<check_value value="event.object.trueowner" exact="faction.player" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_value value="event.object.container.isclass.[class.ship_s,class.ship_m,class.ship_l,class.ship_xl]" />
+			</conditions>
+			<actions>
+				<set_value name="$docklink" exact="true" />
+				<do_if value="event.param" exact="'mmadvcom_main'">
+					<do_if value="event.object.type" exact="entitytype.commander">
+						<do_if value="event.object.ship.commander.exists and event.object.ship.commander.macro.ismacro.{global.$mmcarriers_xl}">
+							<add_player_choice text="'l/xl '+{2802,8155}" section="mmca_salvage_drop_self" comment="Start Ships" chance="if event.object.ship.dockslot then 100 else 0 "/>
+							<add_player_choice text="'l/xl '+{2802,8154}" section="mmca_salvage_self" comment="Dock Ships" chance="if event.object.ship.dockslot then 0 else 100 "/>
+							<set_value name="$docklink" exact="false" />
+						</do_if>
+						<do_else>
+							<find_dock_location container="event.object.container" size="tag.dock_m" name="$dock" />
+							<do_if value="$dock" negate="true">
+								<find_dock_location container="event.object.container" size="tag.dock_s" name="$dock" />
+							</do_if>
+							<do_if value="$dock">
+								<add_player_choice_sub text="{2802,8151}" section="mmca_carrier" comment="Carrier" />
+							</do_if>
+							<remove_value name="$dock"/>
+							<do_if value="event.object.container.macro.ismacro.{global.$mmcarriers_xl}">
+								<set_value name="$docked" exact="0" />
+								<set_value name="$docked_tt" exact="''" />
+								<set_value name="$docked" exact="0" />
+								<set_value name="$macro_tmp" exact="table[]" />
+								<create_group groupname="$docks" />
+								<do_all exact="2" counter="$j">
+									<find_dock_location container="event.object.container" size="[tag.dock_xl, tag.dock_l].{$j}" name="$dock" multiple="true"/>
+									<do_all exact="$dock.count" counter="$i">
+										<do_if value="$docks.indexof.{$dock.{$i}.component} == 0">
+											<add_to_group groupname="$docks" object="$dock.{$i}.component" />
+										</do_if>
+										<do_else>
+											<continue />
+										</do_else>
+										<do_if value="$dock.{$i}.component.docked.count">
+											<set_value name="$docked" operation="add" />
+											<do_all exact="$dock.{$i}.component.docked.count" counter="$k">
+												<do_if value="$macro_tmp.{'$%1'.[$dock.{$i}.component.docked.{$k}.macro.id]}?">
+													<set_value name="$macro_tmp.{'$%1'.[$dock.{$i}.component.docked.{$k}.macro.id]}.{2}" operation="add" />
+												</do_if>
+												<do_else>
+													<set_value name="$macro_tmp.{'$%1'.[$dock.{$i}.component.docked.{$k}.macro.id]}" exact="[$dock.{$i}.component.docked.{$k}.macro,1]"/>
+												</do_else>
+											</do_all>
+										</do_if>
+									</do_all>
+									<remove_value name="$dock"/>
+								</do_all>
+								<do_if value="$macro_tmp.keys.list.count">
+									<create_group groupname="$docks_ms" />
+									<do_all exact="2" counter="$j">
+										<find_dock_location container="event.object.container" size="[tag.dock_m, tag.dock_s].{$j}" name="$dock" multiple="true"/>
+										<do_all exact="$dock.count" counter="$i">
+											<do_if value="$docks_ms.indexof.{$dock.{$i}.component} == 0">
+												<add_to_group groupname="$docks_ms" object="$dock.{$i}.component" />
+											</do_if>
+											<do_else>
+												<continue />
+											</do_else>
+											<do_if value="$dock.{$i}.component.docked.count">
+												<do_all exact="$dock.{$i}.component.docked.count" counter="$k">
+													<do_if value="$macro_tmp.{'$%1'.[$dock.{$i}.component.docked.{$k}.macro.id]}?">
+														<set_value name="$macro_tmp.{'$%1'.[$dock.{$i}.component.docked.{$k}.macro.id]}.{2}" operation="add" />
+													</do_if>
+													<do_else>
+														<set_value name="$macro_tmp.{'$%1'.[$dock.{$i}.component.docked.{$k}.macro.id]}" exact="[$dock.{$i}.component.docked.{$k}.macro,1]"/>
+													</do_else>
+												</do_all>
+											</do_if>
+										</do_all>
+										<remove_value name="$dock"/>
+									</do_all>
+									<set_value name="$keys" exact="$macro_tmp.keys.list" />
+									<set_value name="$spacer" exact="if $keys.count gt 3 then ', ' else '\n'" />
+									<do_all exact="$keys.count" counter="$k">
+										<do_if value="$macro_tmp.{$keys.{$k}}.{2}">
+											<set_value name="$docked_tt" exact="if $k == 1 then '[%1] %2'.[$macro_tmp.{$keys.{$k}}.{2}, $macro_tmp.{$keys.{$k}}.{1}.name] else ($spacer + '[%1] %2'.[$macro_tmp.{$keys.{$k}}.{2}, $macro_tmp.{$keys.{$k}}.{1}.name])" operation="add" />							
+										</do_if>
+									</do_all>
+									<remove_value name="$keys"/>
+									<remove_value name="$spacer"/>
+									<remove_value name="$docks_ms"/>
+								</do_if>
+
+								<add_player_choice text="{2802,8155}" section="mmca_salvage_drop" comment="Start Ships" tooltip="$docked_tt" chance="if $macro_tmp.keys.list.count then 100 else 0 "/>
+								<add_player_choice_sub 	text="{2802,8200}" section="mmca_salvage_something" choiceparam="[0, 0, 'zone', event.object.container.zone, null, null, 'selectplayerobject', ['mmca_salvage', null, null, true, false, true]]" comment="Player object" chance="if $docks.list.count gt $docked then 100 else 0 "/>
+								<remove_value name="$dock"/>
+								<remove_value name="$docks"/>
+								<remove_value name="$docked"/>
+								<remove_value name="$docked_tt"/>
+								<remove_value name="$macro_tmp"/>
+							</do_if>
+						</do_else>
+
+						<do_if value="event.object.ship.commander.exists and event.object.ship.commander == player.primaryship and event.object.ship.cargo.{ware.swarmmissile}.max and (event.object.ship.cargo.{ware.fuelcells}.count == event.object.ship.cargo.{ware.fuelcells}.max or event.object.ship.cargo.{ware.dumbfiremissile}.count or event.object.ship.cargo.{ware.swarmmissile}.count)">
+							<add_player_choice_sub text="{2802,8288}" tooltip="{2802,8289}" section="mmca_salvage_something" choiceparam="[0, 0, 'sector', event.object.container.sector, null, null, 'selectzone', ['mmca_commands_tender']]"/>
+						</do_if>
+
+					</do_if>
+					<do_elseif value="event.object.type == entitytype.pilot and event.object.ship.commander.exists and event.object.ship.commander.macro.ismacro.{global.$mmcarriers}">
+						<add_player_choice text="{2802,8155}" section="mmcs_start_c_s" comment="Start Ships" chance="if event.object.ship.dockslot then 100 else 0 "/>
+						<add_player_choice text="{2802,8154}" section="mmcs_dock_c_s" comment="Dock Ships" chance="if event.object.ship.dockslot then 0 else 100 "/>
+						<set_value name="$docklink" exact="false" />
+					</do_elseif>
+				</do_if>
+				<do_elseif value="event.param" exact="'mmadvcom_next'">
+					<add_player_choice_sub text="{2802,8250}" section="mmca_salvage_something" choiceparam="[0, 0, 'zone', event.object.container.zone, null, null, 'selectplayerobject', ['mmca_commands_closepatrol', null, null, false, false]]" comment="Player object" chance="if event.object.container.isclass.[class.ship_l, class.ship_xl] and event.object.container.commander? and event.object.container.commander == player.primaryship then 100 else 0"/>
+					<add_player_choice_sub text="{2802,8260}" section="mmca_mcommands" comment="Player object" chance="if event.object.container.isclass.[class.ship_l, class.ship_xl] and event.object.container.commander? and (event.object.container.commander == player.primaryship or event.object.container.commander == null or (event.object.container.commander.isclass.station and event.object.container.commanderentity.type == entitytype.defencecontrol)) then 100 else 0"/>
+
+
+					<do_if value="$docklink">
+						<add_player_choice_sub text="{2802,8210}" section="mmca_salvage_something" tooltip="{2802,8211}" selectable="@player.platform.container != event.object.container" choiceparam="[0, 0, 'zone', event.object.container.zone, null, null, 'selectplayerobject', ['mmca_dock_at', null, null, false, false, false, false, true]]" comment="Player object" chance="if event.object.ship.dockslot or event.object.command.value == command.dockat then 0 else 100 "/>
+						<add_player_choice_sub text="if event.object.ship.dockslot then {2802,8212} else {2802,8214}" section="mmca_dock_un" chance="if event.object.ship.dockslot or (event.object.container.defencenpc.$locked? and event.object.command.value == command.dockat) then 100 else 0 "/>
+						<add_player_choice_sub text="{2802,8216}" tooltip="{2802,8217}" section="mmca_dock_unlock" chance="if event.object.container.defencenpc.$locked? and event.object.command.value != command.dockat and not @event.object.ship.dockslot then 100 else 0 "/>
+					</do_if>
+				</do_elseif>
+				<remove_value name="$docklink"/>
+			</actions>
+		</cue>
+
+		<!--  conversation hook attack command  -->
+		<cue name="SectionHandler_MM_Carriers_attack" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_next_section section="gOrders_attack" />
+					<event_conversation_returned_to_section section="gOrders_attack" />
+				</check_any>
+				<check_value value="event.object.owner" exact="faction.player" />
+				<check_any>
+					<check_value value="event.object.container.class" exact="class.ship_l" />
+					<check_value value="event.object.container.class" exact="class.ship_xl" />
+				</check_any>
+			</conditions>
+			<actions>
+				<find_dock_location container="event.object.container" size="tag.dock_m" name="$dock" />
+				<do_if value="$dock" negate="true">
+					<find_dock_location container="event.object.container" size="tag.dock_s" name="$dock" />
+				</do_if>
+				<do_if value="$dock">
+					<set_value name="$to_command" exact="0" />
+					<set_value name="$to_start" exact="0" />
+					<set_value name="$subordinates" exact="event.object.container.subordinates" />
+					<do_all exact="$subordinates.count" counter="$i">
+						<do_if value="$subordinates.{$i}.primarypurpose == objectpurpose.fight and $subordinates.{$i}.isclass.[class.ship_s, class.ship_m] and $subordinates.{$i}.dockslot == null">
+							<set_value name="$to_command" operation="add" />
+							<break />
+						</do_if>
+						<do_if value="$subordinates.{$i}.primarypurpose == objectpurpose.fight and $subordinates.{$i}.isclass.[class.ship_s, class.ship_m] and $subordinates.{$i}.dockslot != null">
+							<set_value name="$to_start" operation="add" />
+						</do_if>
+					</do_all>
+					<add_player_choice_sub text="{2802,8158}" position="right" section="mmca_own_fleet" selectable="$to_command gt 0" comment="Fighter Attacks" chance="if $to_command == 0 and $to_start gt 0 then 0 else 100" />
+					<add_player_choice text="{2802,8155}" position="right" section="mmc_start_c" choiceparam="'preparetodie'" selectable="$to_start gt 0" comment="Start Ships" chance="if $to_command == 0 and $to_start gt 0 then 100 else 0" />
+					<remove_value name="$subordinates"/>
+					<remove_value name="$to_command"/>
+					<remove_value name="$to_start"/>
+				</do_if>
+				<remove_value name="$dock"/>
+			</actions>
+		</cue>
+
+		<cue name="SectionHandler_MM_Carriers_pilot" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="default" />
+					<event_conversation_returned_to_section section="default" />
+					<!--event_conversation_next_section section="switchcommanderentity" /-->
+				</check_any>
+				<check_value value="event.object.type" exact="entitytype.pilot" />
+				<check_value value="event.object.owner" exact="faction.player" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_value value="event.object.ship.commander.exists and event.object.ship.commander.macro.ismacro.{global.$mmcarriers}" />
+			</conditions>
+			<actions>
+				<!--do_if value="event.param == 'switchcommanderentity'">
+					<do_if value="event.object.ship.commander.defencenpc and event.object.ship.commander.pilot">
+
+						<set_value name="$commandertype" exact="event.object.ship.commandertype"/>
+						<set_value name="$commander" exact="event.object.ship.commander"/>
+						<set_value name="$object" exact="event.object.container"/>
+
+						<do_if value="event.param2? and event.param2.{1}? and event.param2.{1} == 'switchcommanderentity'">
+							<do_if value="event.param2.{2}? and typeof event.param2.{2} == datatype.entitytype and event.param2.{2} != $commandertype">
+								<set_object_commander object="$object" commander="event.object.ship.commander" type="event.param2.{2}" />
+								<set_value name="$commandertype" exact="event.param2.{2}"/>
+							</do_if>
+							<do_else>
+								<set_object_commander object="$object" commander="event.object.ship.commander" />
+								<set_value name="$commandertype" exact="event.object.ship.commandertype"/>
+							</do_else>
+						</do_if>
+	
+						<set_value name="$entitytypes" exact="[entitytype.pilot, entitytype.commander, entitytype.defencecontrol, entitytype.manager, entitytype.engineer, entitytype.architect, entitytype.marine]"/>
+
+						<do_if value="$commander.pilot.exists and $commander.tradenpc.exists">
+							<add_player_choice text="'Assign to %1'.[$commander.pilot.type.name]" section="switchcommanderentity" choiceparam="['switchcommanderentity', $commander.pilot.type.name]" immediate="$commandertype == $commander.pilot.type" selectable="$commander.pilot.exists"/>
+							<add_player_choice text="'... to %1'.[entitytype.manager.name]" section="switchcommanderentity" choiceparam="['switchcommanderentity', entitytype.manager]" immediate="$commandertype == entitytype.manager" selectable="$commander.tradenpc.exists" />
+						</do_if>
+						<do_elseif value="$commander.tradenpc.exists">
+							<add_player_choice text="'Assign to %1'.[entitytype.manager.name]" section="switchcommanderentity" choiceparam="['switchcommanderentity', entitytype.manager]" immediate="$commandertype == entitytype.manager" selectable="$commander.tradenpc.exists"/>
+							<add_player_choice_return text="{1002,20}" position="bottom_right" comment="switchcommanderentity"/>
+						</do_elseif>
+						<do_else>
+							<add_player_choice text="'Assign to %1'.[$commander.pilot.type.name]" section="switchcommanderentity" choiceparam="['switchcommanderentity', $commander.pilot.type.name]" immediate="$commandertype == $commander.pilot.type" selectable="$commander.pilot.exists"/>
+							<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+						</do_else>
+						<add_player_choice text="'... to %1'.[entitytype.defencecontrol.name]" section="switchcommanderentity" choiceparam="['switchcommanderentity', entitytype.defencecontrol]" immediate="$commandertype == entitytype.defencecontrol" selectable="$commander.defencenpc.exists"/>
+						<add_player_choice text="'... to %1'.[entitytype.engineer.name]" section="switchcommanderentity" choiceparam="['switchcommanderentity', entitytype.engineer]" immediate="$commandertype == entitytype.engineer" selectable="$commander.engineer.exists"/>
+						<add_player_choice text="'... to %1'.[entitytype.architect.name]" section="switchcommanderentity" choiceparam="['switchcommanderentity', entitytype.architect]" immediate="$commandertype == entitytype.architect" chance="($commander.architect.exists) *100"/>
+						<add_player_choice text="'... to %1'.[entitytype.marine.name]" section="switchcommanderentity" choiceparam="['switchcommanderentity', entitytype.marine]" immediate="$commandertype == entitytype.marine" chance="($commander.boardingnpc.exists) *100"/>
+
+						<remove_value name="$commandertype_new"/>
+						<remove_value name="$commandertype"/>
+						<remove_value name="$entitytypes"/>
+						<remove_value name="$object"/>
+					</do_if>
+				</do_if>
+				<do_else-->
+				<add_player_choice text="{2802,8155}" position="top_right" section="mmcs_start_c_s" comment="Start Ships" chance="if event.object.ship.dockslot then 100 else 0 "/>
+				<add_player_choice text="{2802,8154}" position="top_right" section="mmcs_dock_c_s" comment="Dock Ships" chance="if event.object.ship.dockslot then 0 else 100 "/>
+				<!--add_player_choice text="'Assign to ...'" section="switchcommanderentity" chance="if event.object.ship.commander.defencenpc and event.object.ship.commander.pilot then 100 else 0 "/>
+				</do_else-->
+			</actions>
+		</cue>
+		<!--
+		<cue name="SectionHandler_MM_Carriers_xl_attack" instantiate="true" >
+			<conditions>
+				<check_any>
+				  <event_conversation_next_section section="gOrders_attack" />
+				  <event_conversation_returned_to_section section="gOrders_attack" />
+				</check_any>
+				<check_value value="event.object.owner" exact="faction.player" />
+				<check_value value="event.object.container.macro.ismacro.{global.$mmcarriers_xl}" />
+			</conditions>
+			<actions>
+				<set_value name="$docked" exact="0" />
+				<create_group groupname="$docks" />
+				<do_all exact="2" counter="$j">
+					<find_dock_location container="event.object.container" size="[tag.dock_xl, tag.dock_l].{$j}" name="$dock" multiple="true"/>
+					<do_all exact="$dock.count" counter="$i">
+						<do_if value="$docks.indexof.{$dock.{$i}.component}" negate="true">
+							<add_to_group groupname="$docks" object="$dock.{$i}.component" />
+						</do_if>
+						<do_else>
+							<continue />
+						</do_else>
+						<do_if value="$dock.{$i}.component.external and $dock.{$i}.component.docked.count">
+							<set_value name="$docked" operation="add" />
+						</do_if>
+					</do_all>
+				</do_all>
+
+				<add_player_choice text="{2802,8155}" position="top_right" section="mmca_salvage_drop" comment="Start Ships" chance="if $dock.count le $docked then 100 else 0 "/>
+				<add_player_choice_sub 	text="{2802,8200}" position="top_right" section="mmca_salvage_something" choiceparam="[0, 0, 'zone', event.object.container.zone, null, null, 'selectplayerobject', ['mmca_salvage']]" comment="Player object" chance="if $dock.count gt $docked then 100 else 0 "/>
+				<remove_value name="$dock"/>
+				<remove_value name="$docks"/>
+				<remove_value name="$docked"/>
+			</actions>
+		</cue>
+-->
+		<cue name="MM_Carriers_commands" instantiate="true">
+			<conditions>
+				<event_conversation_next_section sectionprefix="mmca_commands_"/>
+			</conditions>
+			<actions>
+				<do_if value="event.param" exact="'mmca_commands_closepatrol'">
+					<set_object_commander object="event.object.container" commander="event.param2.{3}" />
+					<start_script name="'move.patrol'" object="event.object">
+						<param name="patrolobject" value="event.param2.{3}" comment="selected Object" />
+						<param name="range_max" value="event.object.container.commander.size/2 + event.object.container.maxradarrange/2" />
+						<param name="allowstations" value="false" />
+					</start_script>
+				</do_if>
+				<do_elseif value="event.param" exact="'mmca_commands_routepatrol'">
+					<remove_object_commander object="event.object.container" />
+					<start_script name="'move.patrol.route'" object="event.object">
+						<param name="route" value="event.object.$route" comment="selected Object" />
+						<param name="allowstations" value="false" />
+					</start_script>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmca_commands_tender'">
+					<do_if value="event.param2.{3}.isclass.zone">
+						<signal_objects object="event.object.container" param="'tender action'" param2="null" param3="event.param2.{3}" />
+					</do_if>
+				</do_elseif>
+			</actions>
+		</cue>
+		<cue name="MM_Carriers_commands_manage" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_conversation_next_section sectionprefix="mmca_mcommands"/>
+					<event_conversation_returned_to_section sectionprefix="mmca_mcommands" />
+				</check_any>
+			</conditions>
+			<actions>
+				<do_if value="event.param" exact="'mmca_mcommands_manage'">
+					<do_if value="event.object.$route?" negate="true">
+						<create_list name="event.object.$route" />
+					</do_if>
+					<do_if value="md.$carrier_route_tmp? and event.object.$route.{md.$carrier_route_tmp}? and event.param2.{3}? and event.param2.{3}.isclass.zone">
+						<set_value name="event.object.$route.{md.$carrier_route_tmp}" exact="event.param2.{3}" />
+					</do_if>
+					<set_value name="$todo_options_start" exact="if md.$carrier_route_tmp? and event.object.$route.{md.$carrier_route_tmp}? then md.$carrier_route_tmp else if event.param2? and event.object.$route.{event.param2}? then event.param2 else 1" />
+					<set_value name="$todo_options_max" exact="event.object.$route.count" />
+					<set_value name="$todo_add" exact="true" />
+
+					<do_all exact="6" counter="$i">
+						<do_if value="$i == 5 and ($todo_options_start + 1) le $todo_options_max">
+							<add_player_choice_sub 		text="{2802,8205}.[$todo_options_start, $todo_options_max]" position="right" section="mmca_mcommands_manage" 	choiceparam="$todo_options_start"/>
+						</do_if>
+						<do_elseif value="$i lt 6 and $todo_options_start le $todo_options_max">
+							<add_player_choice		text="'%1. %2'.[$todo_options_start, event.object.$route.{$todo_options_start}.macro.name]" position="$i" section="mmca_mcommands_do" choiceparam="$todo_options_start"/>
+							<set_value name="$todo_options_start"  operation="add" exact="1" /> 
+						</do_elseif>
+						<do_elseif value="$i lt 6 and $todo_add and $todo_options_start gt $todo_options_max">
+							<add_player_choice		text="{2802,8262}" position="$i" 	section="gOrders_attackall" choiceparam="[0, 0, 'sector', event.object.container.sector, null, null, 'selectzone', ['mmca_mcommands_add']]" />
+
+							<set_value name="$todo_add" exact="false" />
+						</do_elseif>
+					</do_all>
+					<remove_value name="md.$carrier_route_tmp"/>
+					<remove_value name="$todo_add"/>
+					<remove_value name="$todo_options_start"/>
+					<remove_value name="$todo_options_max"/>
+				</do_if>
+				<do_elseif value="event.param" exact="'mmca_mcommands_do'">
+					<do_if value="event.param2? and event.object.$route.{event.param2}?">
+						<do_if value="not md.$carrier_route_tmp? and event.param2? and event.object.$route.{event.param2}?">
+							<set_value name="md.$carrier_route_tmp" exact="event.param2" />
+						</do_if>
+						<add_player_choice		text="{2802,8264}.[event.object.$route.{md.$carrier_route_tmp}.name]" section="gOrders_attackall" choiceparam="[0, 0, 'sector', event.object.container.sector, null, null, 'selectzone', ['mmca_mcommands_manage']]"/>
+						<add_player_choice		text="{2802,8266}.[event.object.$route.{md.$carrier_route_tmp}.name]" section="mmca_mcommands_remove" choiceparam="md.$carrier_route_tmp"/>
+					</do_if>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmca_mcommands_add'">
+					<do_if value="event.param2.{3}? and event.param2.{3}.isclass.zone">
+						<do_if value="event.object.$route?" negate="true">
+							<create_list name="event.object.$route" />
+						</do_if>
+						<append_to_list name="event.object.$route" exact="event.param2.{3}" />
+					</do_if>
+					<add_player_choice		text="{2802,8268}"		section="mmca_mcommands_manage" choiceparam="1"/>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmca_mcommands_remove'">
+					<remove_value name="event.object.$route.{event.param2}"/>
+					<remove_value name="md.$carrier_route_tmp"/>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmca_mcommands_copy'">
+					<set_value name="md.$carrier_route" exact="event.object.$route.clone" />
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmca_mcommands_overwrite'">
+					<set_value name="event.object.$route" exact="md.$carrier_route.clone" />
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmca_mcommands_delete'">
+					<remove_value name="event.object.$route"/>
+				</do_elseif>
+				<do_else>
+					<set_value name="$tmp_route" exact="''" />
+					<set_value name="$tmp_route_glob" exact="''" />
+					<set_value name="$tmp_space" exact="null" />
+					<do_if value="event.object.$route? and event.object.$route.count">
+						<do_all exact="event.object.$route.count" counter="$i">
+							<do_if value="$tmp_space == event.object.$route.{$i}.sector" negate="true">
+								<set_value name="$tmp_space" exact="event.object.$route.{$i}.sector" />
+								<set_value name="$tmp_route" exact="'%2%3:%1'.[event.object.$route.{$i}.knownname, if $i == 1 then '' else '\n', event.object.$route.{$i}.sector.knownname]" operation="add"/>
+							</do_if>
+							<do_else>
+								<set_value name="$tmp_route" exact="'%2* %1'.[event.object.$route.{$i}.knownname, if $i == 1 then '' else '\n']" operation="add"/>
+							</do_else>
+						</do_all>
+						<set_value name="$tmp_space" exact="null" />
+					</do_if>
+					<do_if value="md.$carrier_route? and md.$carrier_route.count">
+						<do_all exact="md.$carrier_route.count" counter="$i">
+							<do_if value="$tmp_space == md.$carrier_route.{$i}.sector" negate="true">
+								<set_value name="$tmp_space" exact="md.$carrier_route.{$i}.sector" />
+								<set_value name="$tmp_route_glob" exact="'%2%3:%1'.[md.$carrier_route.{$i}.knownname, if $i == 1 then '' else '\n', md.$carrier_route.{$i}.sector.knownname]" operation="add"/>
+							</do_if>
+							<do_else>
+								<set_value name="$tmp_route_glob" exact="'%2* %1'.[md.$carrier_route.{$i}.knownname, if $i == 1 then '' else '\n']" operation="add"/>
+							</do_else>
+						</do_all>
+					</do_if>
+					<remove_value name="$tmp_space"/>
+
+					<add_player_choice_sub	text="{2802,8270}"	section="mmca_mcommands_manage" choiceparam="1"/>
+					<add_player_choice		text="{2802,8278}"	section="mmca_commands_routepatrol" tooltip="$tmp_route" selectable="event.object.$route? and event.object.$route.count"	/>
+					<add_player_choice		text="{2802,8272}"	section="mmca_mcommands_delete" tooltip="$tmp_route" selectable="event.object.$route? and event.object.$route.count" />
+					<add_player_choice		text="{2802,8274}"	section="mmca_mcommands_copy" tooltip="$tmp_route" selectable="event.object.$route? and event.object.$route.count" />
+					<add_player_choice		text="{2802,8276}"	section="mmca_mcommands_overwrite" tooltip="$tmp_route_glob" selectable="md.$carrier_route? and md.$carrier_route.count" />
+					<remove_value name="$tmp_route"/>
+					<remove_value name="$tmp_route_glob"/>
+				</do_else>
+				<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+			</actions>
+		</cue>
+
+		<cue name="MM_Carriers_dockat" instantiate="true">
+			<conditions>
+				<event_conversation_next_section sectionprefix="mmca_dock_"/>
+			</conditions>
+			<actions>
+				<do_if value="event.param" exact="'mmca_dock_at'">
+					<find_dock_location container="event.param2.{3}" size="event.object.container.docksize" name="$dock" />
+					<!--debug_text text="'DOCKAT: Target: %1 [%3] Ship: %2'.[event.param2.{3}.name, event.object.container.name, $dock]" filter="error" chance="100" /-->
+					<do_if value="$dock and event.param2.{3} != event.object.container">
+						<remove_object_commander object="event.object.container" chance="if event.object.container.commander? and event.object.container.commander == player.primaryship then 100 else 0"/>
+						<do_if value="event.object.container.owner" exact="event.object.container.trueowner" negate="true">
+							<get_control_entities groupname="$Entities" object="event.object.container"/>
+							<do_all exact="$Entities.count" counter="$j" > 
+								<set_cover_owner object="$Entities.{$j}"/>
+							</do_all> 
+							<set_cover_owner object="event.object.container"/>
+							<remove_value name="$Entities"/>
+						</do_if>
+
+						<set_value name="$object" exact="event.object.container" />
+						<include_actions ref="MM_Carriers_do_overalllist_simple" />
+						<remove_value name="$object"/>
+						<create_list name="$toCommand" />
+						<append_to_list name="$toCommand" exact="event.object.container" />
+						<do_all exact="$theShipfollowers.count" counter="$j" > 
+							<do_if value="(not @$theShipfollowers.{$j}.pilot.$shiptrader_docking) and (not $theShipfollowers.{$j}.dockslot) and (not $theShipfollowers.{$j}.docklink) and (not @$theShipfollowers.{$j}.pilot.$ship_parking)">
+								<append_to_list name="$toCommand" exact="$theShipfollowers.{$j}" />
+							</do_if>
+						</do_all> 
+						<remove_value name="$theShipfollowers"/>
+
+						<set_value name="$delay" exact="500ms" />
+						<do_if value="not $toCommand.indexof.{event.param2.{3}}">
+							<do_all exact="$toCommand.count" counter="$c"> 
+								<do_if value="$toCommand.{$c}.isclass.[class.ship_l, class.ship_xl] and $toCommand.{$c}.defencenpc">
+									<signal_objects object="$toCommand.{$c}.defencenpc" param="'stop attack'" param2="'permanent'" comment="Set Hold Fire Mode" />
+									<set_value name="$toCommand.{$c}.defencenpc.$locked" exact="1" />
+								</do_if>
+
+								<do_if value="not $toCommand.{$c}.commander.exists or $toCommand.{$c}.commander.exists and $toCommand.{$c}.commander == player.primaryship">
+									<start_script object="event.object" name="'player.default'" />
+									<signal_objects object="$toCommand.{$c}" param="'dock at'" param2="event.param2.{3}" delay="$delay"/>
+									<set_value name="$delay" min="1s" max="2s" operation="add" />
+								</do_if>
+								<do_elseif value="$toCommand.{$c}.commander.exists and $toCommand.{$c}.commander != player.primaryship">
+									<start_script object="$toCommand.{$c}.pilot" name="'carrier.default'" chance="if $toCommand.{$c}.pilot.$carrier? then 0 else 100">
+										<param name="do_escort" value="true" />
+									</start_script>
+									<signal_objects object="$toCommand.{$c}" param="'dock at'" param2="event.param2.{3}" delay="$delay"/>
+									<set_value name="$delay" min="1s" max="2s" operation="add" />
+								</do_elseif>
+								<do_else>
+									<start_script object="event.object" name="'move.dockat'">
+										<param name="destination" value="event.param2.{3}" />
+									</start_script>
+								</do_else>
+							</do_all> 
+						</do_if>
+						<do_else>
+							<show_help position="8" log="false" force="true" duration="2s" custom="'Error: dock is part of the group'" />
+						</do_else>
+						<remove_value name="$toCommand"/>
+						<remove_value name="$delay"/>
+
+					</do_if>
+					<do_else>
+						<show_help position="8" log="false" force="true" duration="2s" custom="'Error: no suitable dock'" />
+					</do_else>
+					<remove_value name="$dock"/>
+				</do_if>
+				<do_elseif value="event.param" exact="'mmca_dock_un'">
+
+					<set_value name="$base" exact="if event.object.container.dockslot then event.object.container.dockslot.component.container else if event.object.command.value == command.dockat then event.object.command.param else null" />
+					<set_value name="$object" exact="event.object.container" />
+					<include_actions ref="MM_Carriers_do_overalllist_simple" />
+					<remove_value name="$object"/>
+					<create_list name="$toCommand" />
+					<append_to_list name="$toCommand" exact="event.object.container" />
+					<do_all exact="$theShipfollowers.count" counter="$j" > 
+						<do_if value="((not @$theShipfollowers.{$j}.pilot.$shiptrader_docking) and (not $theShipfollowers.{$j}.dockslot) and (not $theShipfollowers.{$j}.docklink) and (not @$theShipfollowers.{$j}.pilot.$ship_parking)) or ($theShipfollowers.{$j}.dockslot and $theShipfollowers.{$j}.dockslot.component.container == $base)">
+							<append_to_list name="$toCommand" exact="$theShipfollowers.{$j}" />
+						</do_if>
+					</do_all> 
+					<remove_value name="$theShipfollowers"/>
+
+					<do_all exact="$toCommand.count" counter="$c" > 
+						<do_if value="$toCommand.{$c}.isclass.[class.ship_l, class.ship_xl] and $toCommand.{$c}.defencenpc">
+							<signal_objects object="$toCommand.{$c}.defencenpc" param="'stop attack'" param2="'stop permanent'" comment="Set Hold Fire Mode" />
+							<remove_value name="$toCommand.{$c}.defencenpc.$locked" />
+						</do_if>
+
+						<do_if value="not $toCommand.{$c}.commander.exists or $toCommand.{$c}.commander.exists and $toCommand.{$c}.commander == player.primaryship">
+							<start_script object="event.object" name="'player.default'" chance="if $toCommand.{$c}.pilot.commandaction.value == commandaction.standingby then 0 else 100"/>
+							<signal_objects object="$toCommand.{$c}" param="'undock'" />
+						</do_if>
+						<do_elseif value="$toCommand.{$c}.commander.exists and $toCommand.{$c}.commander != player.primaryship">
+							<start_script object="$toCommand.{$c}.pilot" name="'carrier.default'" chance="if $toCommand.{$c}.pilot.$carrier? then 0 else 100">
+								<param name="do_escort" value="true" />
+							</start_script>
+							<signal_objects object="$toCommand.{$c}" param="'undock'" />
+						</do_elseif>
+						<do_else>
+							<start_script object="event.object" name="'move.escort'">
+								<param name="target" value="event.object.container.commander" />
+							</start_script>
+						</do_else>
+					</do_all> 
+					<remove_value name="$toCommand"/>
+					<remove_value name="$base"/>
+
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmca_dock_unlock'">
+					<signal_objects object="event.object.container.defencenpc" param="'stop attack'" param2="'stop permanent'" comment="Set Hold Fire Mode" />
+					<remove_value name="event.object.container.defencenpc.$locked"/>
+				</do_elseif>
+			</actions>
+		</cue>
+
+		<cue name="SectionHandler_MM_Carriers_xl_pilot" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="default" />
+					<event_conversation_returned_to_section section="default" />
+				</check_any>
+				<check_value value="event.object.type" exact="entitytype.commander" />
+				<check_value value="event.object.owner" exact="faction.player" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_value value="event.object.ship.commander.exists and event.object.ship.commander.macro.ismacro.{global.$mmcarriers_xl}" />
+			</conditions>
+			<actions>
+				<add_player_choice text="{2802,8155}" position="top_right" section="mmca_salvage_drop_self" comment="Start Ships" chance="if event.object.ship.dockslot then 100 else 0 "/>
+				<add_player_choice text="{2802,8154}" position="top_right" section="mmca_salvage_self" comment="Dock Ships" chance="if event.object.ship.dockslot then 0 else 100 "/>
+			</actions>
+		</cue>
+
+		<cue name="MM_Carriers_xl_salvage" instantiate="true">
+			<conditions>
+				<event_conversation_next_section sectionprefix="mmca_salvage"/>
+			</conditions>
+			<actions>
+				<do_if value="event.param" exact="'mmca_salvage'">
+					<find_dock_location container="event.object.container" size="event.param2.{3}.docksize" name="$dock" />
+					<find_object_component name="$engine" object="event.param2.{3}" class="[class.engine]" checkoperational="true" />
+
+					<do_if value="event.param2.{3}.isplayerowned and $dock and not ($dock.component.external and $dock.component.docked.count) and event.param2.{3}.pilot.exists and event.object.container != event.param2.{3} and $engine">
+						<set_object_commander object="event.param2.{3}" commander="event.object.container" />
+						<start_script object="event.param2.{3}.pilot" name="'move.dockat'">
+							<param name="destination" value="event.param2.{3}.commander" />
+							<param name="dockingslot" value="$dock" />
+						</start_script>
+					</do_if>
+					<do_elseif value="event.param2.{3}.isplayerowned and $dock and not ($dock.component.external and $dock.component.docked.count) and event.object.container != event.param2.{3}">
+						<remove_object_commander object="event.param2.{3}" />
+						<set_object_commander object="event.param2.{3}" commander="event.object.container" />
+						<abort_scripts entity="event.param2.{3}.pilot" chance="if event.param2.{3}.pilot.exists then 100 else 0"/>
+						<start_script object="event.object" name="'player.default'" />
+						<signal_objects object="event.object.container" param="'collect ship'" param2="event.param2.{3}" param3="$dock" />
+					</do_elseif>
+					<do_elseif value="event.param2.{3}.owner == faction.ownerless and $dock and not ($dock.component.external and $dock.component.docked.count) and event.object.container != event.param2.{3}">
+						<remove_object_commander object="event.param2.{3}" />
+						<!--set_owner object="event.param2.{3}" faction="faction.player" overridenpc="true"/>
+						<set_object_commander object="event.param2.{3}" commander="event.object.container" />
+						<abort_scripts entity="event.param2.{3}.pilot" chance="if event.param2.{3}.pilot.exists then 100 else 0"/-->
+						<start_script object="event.object" name="'player.default'" />
+						<signal_objects object="event.object.container" param="'collect ship'" param2="event.param2.{3}" param3="$dock" delay="3s" />
+					</do_elseif>
+					<do_else>
+						<!-- TODO Fehler -->
+						<do_if value="event.object.container == event.param2.{3}">
+							<show_help position="8" log="false" force="true" duration="2s" custom="'Error: ship can not pick up itself'" />
+						</do_if>
+						<do_else>
+							<show_help position="8" log="false" force="true" duration="2s" custom="'Error: No dock available'" />
+						</do_else>
+					</do_else>
+				</do_if>
+				<do_elseif value="event.param" exact="'mmca_salvage_something'">
+					<open_conversation_menu menu="MapMenu" param="event.param2" param2="event.param3" />
+					<add_conversation_view view="closeupdetailmonitor" />
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmca_salvage_drop'">
+
+					<do_all exact="4" counter="$j">
+						<find_dock_location container="event.object.container" size="[tag.dock_m, tag.dock_s, tag.dock_xl, tag.dock_l].{$j}" name="$dock" multiple="true"/>
+						<do_all exact="$dock.count" counter="$i">
+							<do_all exact="$dock.{$i}.component.docked.count" counter="$k" reverse="true">
+								<set_value name="$docked" exact="$dock.{$i}.component.docked.{$k}" />
+								<do_if value="$docked.pilot.exists">
+									<do_if value="$dock.{$i}.component.external">
+										<request_undocking ship="$docked" result="$success" />
+										<undock ship="$docked" />
+										<do_if value="$docked.isclass.[class.ship_l,class.ship_xl] and event.object.container.isclass.[class.ship_l,class.ship_xl]">
+											<create_position name="$pos" object="$docked" y="-450m" />
+										</do_if>
+										<do_else>
+											<create_position name="$pos" object="$docked" y="-50m" />
+										</do_else>
+										<warp object="$docked" zone="event.object.container.zone">
+											<position value="$pos" />
+											<rotation value="$docked.rotation" />
+										</warp>
+										<remove_value name="$pos"/>
+									</do_if>
+									<start_script object="$docked.pilot" name="'carrier.default'" chance="if $docked.pilot.$carrier? then 0 else 100">
+										<param name="base" value="event.object.container" />
+										<param name="commander" value="event.object.container" />
+									</start_script>
+									<signal_objects object="$docked" param="'modeoff'" />
+								</do_if>
+								<do_else>
+									<request_undocking ship="$docked" result="$success" />
+									<undock ship="$docked" />
+									<warp object="$docked" zone="event.object.container.zone">
+										<safepos radius="$docked.size*2" object="$dock.{$i}.component.container" min="500m" max="1km" direction="quadrant.down" directionobject="$dock.{$i}.component"  allowyaxis="true"/>
+										<rotation value="$docked.rotation" />
+									</warp>
+									<clear_collision_filter object="$docked" />
+									<remove_object_commander object="$docked" />
+									<remove_value name="$success"/>
+								</do_else>
+								<remove_value name="$docked"/>
+							</do_all>
+						</do_all>
+						<remove_value name="$dock"/>
+					</do_all>
+
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmca_salvage_self'">
+					<find_dock_location container="event.object.container.commander" size="event.object.container.docksize" name="$dock" />
+					<find_object_component name="$engine" object="event.object.container" class="[class.engine]" checkoperational="true" />
+					<do_if value="$dock and not ($dock.component.external and $dock.component.docked.count) and $engine">
+						<start_script object="event.object" name="'carrier.default'" chance="if event.object.$carrier? then 0 else 100" />
+						<signal_objects object="event.object.container" param="'dock at end'" param2="event.object.container.commander" param3="$dock" />
+					</do_if>
+					<do_elseif value="$dock and not ($dock.component.external and $dock.component.docked.count)">
+						<remove_object_commander object="event.object.container" />
+						<abort_scripts entity="event.object"/>
+						<start_script object="event.object.container.commander.pilot" name="'player.default'" />
+						<signal_objects object="event.object.container" param="'collect ship'" param2="event.object.container" param3="$dock" />
+					</do_elseif>
+					<do_else>
+						<!-- TODO Fehler -->
+						<show_help position="8" log="false" force="true" duration="2s" custom="'Error: No dock available'" />
+
+					</do_else>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmca_salvage_drop_self'">
+
+					<do_if value="event.object.container.pilot.exists">
+						<start_script object="event.object.container.pilot"  name="'move.undock'" />
+					</do_if>
+					<do_else>
+						<request_undocking ship="event.object.container" result="$success" />
+						<undock ship="event.object.container" />
+						<warp object="event.object.container" zone="event.object.container.zone">
+							<safepos radius="event.object.container.size*2" min="500m" max="2km" direction="quadrant.down" directionobject="$dock.{$i}.component"  allowyaxis="true" object="event.object.container"/>
+						</warp>
+						<clear_collision_filter object="event.object.container" />
+						<remove_object_commander object="event.object.container" />
+						<remove_value name="$success"/>
+					</do_else>
+
+				</do_elseif>
+				<do_else>
+					<!-- TODO Fehler -->
+				</do_else>
+				<remove_value name="$dock"/>
+			</actions>
+		</cue>
+
+		<!--  submenu carrier  -->
+		<cue name="MM_Carriers_carrier" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_conversation_next_section sectionprefix="mmca_carrier"/>
+					<event_conversation_returned_to_section sectionprefix="mmca_carrier" />
+				</check_any>
+			</conditions>
+			<actions>
+				<set_value name="$theShip" exact="event.object.container" />
+				<set_value name="$shipsdocked" exact="0" />
+				<set_value name="$shipsfly" exact="0" />
+				<set_value name="$backlink" exact="100" />
+
+				<!-- Count Carrier -->
+				<set_value name="$follower" exact="0" />
+				<set_value name="$object" exact="$theShip" />
+				<include_actions ref="MM_Carriers_do_list" />
+				<remove_value name="$object"/>
+				<set_value name="$subordinates" exact="$theShipfollowers.list" />
+				<remove_value name="$theShipfollowers"/>
+				<do_if value="$subordinates.count gt 0">
+					<do_all exact="$subordinates.count" counter="$i">
+						<set_value name="$theShipfollower" exact="$subordinates.{$i}" />
+						<do_if value="$theShipfollower.isclass.[class.ship_s, class.ship_m]" negate="true">
+							<continue />
+						</do_if>
+						<do_if value="$theShipfollower.dockslot == null" negate="true">
+							<set_value name="$shipsdocked" operation="add" />
+						</do_if>
+						<do_else>
+							<set_value name="$shipsfly" operation="add" />
+						</do_else>
+					</do_all>
+					<remove_value name="$theShipfollower"/>
+				</do_if>
+
+				<!-- Menu -->
+				<do_if value="event.param" exact="'mmca_carrier_setting'">
+					<set_value name="$on" exact="{1001,2648}" />
+					<set_value name="$off" exact="{1001,2649}" />
+					<set_value name="$config" exact="table[
+							$mm_carriers_ad_glob = $off,
+							$mm_carriers_ad_glob_s = 1,
+							$mm_carriers_ad = $off,
+							$mm_carriers_ad_s = 1,
+							$mm_carriers_sdockplus = $off,
+							$mm_carriers_sdockplus_s = 1,
+							$mm_carriers_protect_this = $off,
+							$mm_carriers_protect_this_s = 1
+					]" comment="end $config"/>
+
+					<do_if value="event.param2?">
+						<do_if value="event.param2.{2}?">
+							<do_if value="(typeof event.param2.{1}).isstring">
+								<!-- Key workaround -->
+								<set_value name="$key" exact="[ '$' + event.param2.{1} ]" />
+								<!-- global List -->
+								<do_if value="global.$mmcarrierconfig.{$key.{1}}?">
+									<set_value name="global.$mmcarrierconfig.{$key.{1}}" exact="event.param2.{2}" />
+								</do_if>
+								<do_elseif value="$theShip.pilot.{$key.{1}}? or ['mm_carriers_ad', 'carrier_restart_fighters', 'mm_carriers_protect_this'].indexof.{event.param2.{1}}">
+									<set_value name="$theShip.pilot.{$key.{1}}" exact="event.param2.{2}" />
+								</do_elseif>
+							</do_if>
+						</do_if>
+					</do_if>
+					<set_value name="$config.$mm_carriers_ad_glob" exact="$on" chance="global.$mmcarrierconfig.$mm_carriers_ad_glob*100" />
+					<set_value name="$config.$mm_carriers_ad_glob_s" exact="0" chance="global.$mmcarrierconfig.$mm_carriers_ad_glob*100" />
+					<set_value name="$config.$mm_carriers_ad" exact="$on" chance="@$theShip.pilot.$mm_carriers_ad*100" />
+					<set_value name="$config.$mm_carriers_ad_s" exact="0" chance="@$theShip.pilot.$mm_carriers_ad*100" />
+					<set_value name="$config.$mm_carriers_sdockplus" exact="$on" chance="global.$mmcarrierconfig.$mm_carriers_sdockplus*100" />
+					<set_value name="$config.$mm_carriers_sdockplus_s" exact="0" chance="global.$mmcarrierconfig.$mm_carriers_sdockplus*100" />
+					<set_value name="$config.$mm_carriers_protect_this" exact="$on" chance="@$theShip.pilot.$mm_carriers_protect_this*100" />
+					<set_value name="$config.$mm_carriers_protect_this_s" exact="0" chance="@$theShip.pilot.$mm_carriers_protect_this*100" />
+					<set_value name="$config.$mm_carriers_garage_min_s" exact="global.$mmcarrierconfig.$mm_carriers_garage_min+10" />
+					<do_if value="$config.$mm_carriers_garage_min_s" min="101">
+						<set_value name="$config.$mm_carriers_garage_min_s" exact="50" />
+					</do_if>
+					<do_elseif value="$config.$mm_carriers_garage_min_s" min="100">
+						<set_value name="$config.$mm_carriers_garage_min_s" exact="99" />
+					</do_elseif>
+
+					<add_player_choice text="{2802,8181}.[$config.$mm_carriers_ad_glob]" section="mmca_carrier_setting" choiceparam="['mm_carriers_ad_glob', $config.$mm_carriers_ad_glob_s]" comment="Automatic Docking Global" />
+					<add_player_choice text="{2802,8182}.[$config.$mm_carriers_ad]" selectable="global.$mmcarrierconfig.$mm_carriers_ad_glob" section="mmca_carrier_setting" choiceparam="['mm_carriers_ad', $config.$mm_carriers_ad_s]" comment="Automatic Docking" />
+					<add_player_choice text="{2802,8183}.[$config.$mm_carriers_protect_this]" section="mmca_carrier_setting" choiceparam="['mm_carriers_protect_this', $config.$mm_carriers_protect_this_s]" comment="One Squad to protection" />
+					<add_player_choice text="{2802,8185}.[$config.$mm_carriers_sdockplus]" section="mmca_carrier_setting" choiceparam="['mm_carriers_sdockplus', $config.$mm_carriers_sdockplus_s]" comment="Fast Dock/Undock" />
+					<!--<add_player_choice text="'Set undock Ships - once'" section="mmca_carrier_setting" choiceparam="['carrier_restart_fighters', true]" selectable="$shipsdocked gt 0" immediate="@event.object.container.pilot.$carrier_restart_fighters" comment="Automatic undock docked fighters after next travel" /> -->
+					<add_player_choice text="{2802,8184}.[global.$mmcarrierconfig.$mm_carriers_garage_min]" section="mmca_carrier_setting" choiceparam="['mm_carriers_garage_min', $config.$mm_carriers_garage_min_s]" comment="Automatic Docking" />
+					<remove_value name="$off"/>
+					<remove_value name="$on"/>
+					<remove_value name="$config"/>
+					<remove_value name="$key"/>
+				</do_if>
+				<do_elseif value="event.param" exact="'mmca_carrier_more'">
+					<add_player_choice text="{2802,8167}" position="top_left" section="mmc_start_learntofly" selectable="$shipsdocked gt 0 or $shipsfly gt 0" comment="Start Ships for practice" />
+					<add_player_choice_sub text="{2802,8195}" position="bottom_left" section="mmca_squadmanager" selectable="$shipsfly gt 0" comment="Squads"  />
+					<add_player_choice_sub text="{1001,2679}" position="right" section="mmca_carrier_setting" comment="Settings"  />
+					<!--add_player_choice_sub text="'Fighter Specials'" section="mmca_own_fleet_attackspez" comment="Special Fighter Attacks" chance="0" /-->
+					<add_player_choice text="{2802,8199}" section="mmca_own_fleet_do_explore" selectable="$shipsdocked gt 0 or $shipsfly gt 0"  comment="Explore" />
+					<!--add_player_choice_sub text="{1001,8}" position="top_right" section="mmca_carrier_drone" comment="Drone Commands" /-->
+					<add_player_choice text="{2802,8165}" position="top_right" section="mmc_dronedock" selectable="event.object.container.units.{unitcategory.defence}.count gt 0" comment="force Drones to dock" />
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmca_carrier_drone'">
+					<add_player_choice text="'Start drones'" position="top_left" section="mmc_dronestart" comment="Start Ships" chance="0" />
+				</do_elseif>
+				<do_else>
+					<add_player_choice_sub text="{2802,8155}" position="top_left" section="mmc_start_c" selectable="$shipsdocked gt 0" comment="Start Ships" />
+					<add_player_choice_sub text="{2802,8154}" position="top_right" section="mmc_dock_c" selectable="$shipsfly gt 0" comment="Dock Ships" />
+					<add_player_choice_sub text="{2802,8161}" section="mmca_skunk" comment="Transfer" />
+					<add_player_choice_sub text="{2802,8158}" section="mmca_own_fleet" comment="Fighter Attacks" />
+					<add_player_choice_sub text="{1002,16008}" section="mmca_carrier_more" comment="More ... Commands" />
+				</do_else>
+
+				<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" chance="$backlink"/>
+				<!-- clean -->
+				<remove_value name="$backlink"/>
+				<remove_value name="$subordinates"/>
+				<remove_value name="$shipsdocked"/>
+				<remove_value name="$shipsfly"/>
+				<remove_value name="$theShip"/>
+			</actions>
+		</cue>	
+
+		<!--  submenu tranfer  -->
+		<cue name="MM_Carriers_transfer" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_conversation_next_section section="mmca_skunk"/>
+					<event_conversation_returned_to_section section="mmca_skunk" />
+				</check_any>
+			</conditions>
+			<actions>
+				<set_value name="$theShip" exact="event.object.container" />
+				<set_value name="$shipsfly_carrier" exact="0" />
+				<set_value name="$shipsfly_skunk" exact="0" />
+
+				<!-- Count Carrier -->
+				<set_value name="$simpel" />
+				<set_value name="$object" exact="$theShip" />
+				<include_actions ref="MM_Carriers_do_list" />
+				<remove_value name="$object"/>
+				<set_value name="$subordinates" exact="$theShipfollowers.list" />
+				<remove_value name="$theShipfollowers"/>
+				<do_if value="$subordinates.count gt 0">
+					<do_all exact="$subordinates.count" counter="$i">
+						<set_value name="$theShipfollower" exact="$subordinates.{$i}" />
+						<do_if value="$theShipfollower.isclass.[class.ship_s, class.ship_m] and $theShipfollower.dockslot == null">
+							<!-- count -->
+							<set_value name="$shipsfly_carrier" operation="add" exact="1" />
+						</do_if>
+					</do_all>
+					<remove_value name="$theShipfollower"/>
+					<remove_value name="$subordinates"/>
+				</do_if>
+
+				<!-- Count Skunk -->
+				<set_value name="$subordinates" exact="player.primaryship.subordinates" />
+				<do_if value="$subordinates.count gt 0">
+					<do_all exact="$subordinates.count" counter="$i">
+						<set_value name="$theShipfollower" exact="$subordinates.{$i}" />
+						<do_if value="$theShipfollower.isclass.[class.ship_s, class.ship_m]">
+							<!-- count -->
+							<set_value name="$shipsfly_skunk" operation="add" exact="1" />
+						</do_if>
+					</do_all>
+					<remove_value name="$theShipfollower"/>
+					<remove_value name="$subordinates"/>
+				</do_if>
+
+				<!-- Menu -->
+				<add_player_choice_sub text="{2802,8163}.[$shipsfly_skunk]" position="top_right" section="mmc_fskunk" selectable="$shipsfly_skunk gt 0" comment="from Skunk" />
+				<add_player_choice_sub text="{2802,8164}.[$shipsfly_carrier]" position="top_left" section="mmc_tskunk" selectable="$shipsfly_carrier gt 0" comment="to Skunk" />
+				<add_player_choice_sub text="{2802,8162}.[$shipsfly_carrier]" position="left" section="mmc_tskunk_esc" selectable="$shipsfly_carrier gt 0" comment="to Skunk escort" />
+				<!--add_player_choice_sub text="{2802,8166}.[$shipsfly_carrier]" position="bottom_left" section="mmc_fship_esc" selectable="$shipsfly_carrier gt 0" comment="from Ship escort .."  choiceparam="[0, 0, 'zone', player.primaryship.zone, null, null, 'selectobject', ['mmc_fship_esc_zoneselected']]"/-->
+
+				<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				<!-- clean -->
+				<remove_value name="$subordinates"/>
+				<remove_value name="$shipsfly_skunk"/>
+				<remove_value name="$shipsfly_carrier"/>
+				<remove_value name="$theShip"/>
+			</actions>
+		</cue>	
+
+		<cue name="MM_Carriers_fleet_own" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_conversation_next_section sectionprefix="mmca_own_fleet"/>
+					<event_conversation_returned_to_section sectionprefix="mmca_own_fleet" />
+				</check_any>
+			</conditions>
+			<actions>
+				<set_value name="$theShip" exact="event.object.container" />
+				<set_value name="$formation" exact="[formationshape.vshape, formationshape.invvshape, formationshape.triangle, formationshape.eagle, formationshape.circle, formationshape.twin, formationshape.vulcan, formationshape.pointguard, formationshape.invpointguard].random" />
+
+				<!-- start carriers -->
+				<do_if value="event.param" exact="'mmca_own_fleet_start_fighter'">
+					<!-- get Data -->
+					<set_value name="$object" exact="$theShip" />
+					<include_actions ref="MM_Carriers_do_overalllist_simple" />
+
+					<do_if value="$theShipfollowers.count gt 0">
+						<!-- presorting -->
+						<do_all exact="$theShipfollowers.count" counter="$i" reverse="true">
+							<do_if value="$theShipfollowers.{$i}.isclass.[class.ship_s, class.ship_m] and $theShipfollowers.{$i}.primarypurpose == objectpurpose.fight" negate="true">
+								<remove_from_group group="$theShipfollowers" object="$theShipfollowers.{$i}" />
+							</do_if>
+						</do_all>
+						<!-- do work -->
+						<do_all exact="$theShipfollowers.count" counter="$i" >
+							<set_value name="$toCommand" exact="$theShipfollowers.{$i}" />
+							<do_if value="$toCommand.commander.primarypurpose == objectpurpose.fight or ($toCommand.commander.primarypurpose != objectpurpose.fight and $toCommand.commander.pilot.command.value != command.escort)">
+								<start_script name="'carrier.default'" object="$toCommand.pilot">
+									<param name="base" value="$theShip" />
+									<param name="formation" value="$formation" />
+								</start_script>
+							</do_if>
+						</do_all>
+						<remove_value name="$toCommand"/>
+					</do_if>
+					<remove_value name="$theShipfollowers"/>
+					<remove_value name="$object"/>
+				</do_if>
+				<!-- docking carriers -->
+				<do_elseif value="event.param" exact="'mmca_own_fleet_dock_fighter'">
+					<!-- get Data -->
+					<set_value name="$object" exact="$theShip" />
+					<include_actions ref="MM_Carriers_do_overalllist_simple" />
+
+					<do_if value="$theShipfollowers.count gt 0">
+						<!-- presorting -->
+						<do_all exact="$theShipfollowers.count" counter="$i" reverse="true">
+							<do_if value="$theShipfollowers.{$i}.isclass.[class.ship_s, class.ship_m] and $theShipfollowers.{$i}.primarypurpose == objectpurpose.fight" negate="true">
+								<remove_from_group group="$theShipfollowers" object="$theShipfollowers.{$i}" />
+							</do_if>
+						</do_all>
+						<!-- do work -->
+						<do_all exact="$theShipfollowers.count" counter="$i" >
+							<set_value name="$toCommand" exact="$theShipfollowers.{$i}" />
+							<do_if value="$toCommand.commander.primarypurpose == objectpurpose.fight or ($toCommand.commander.primarypurpose != objectpurpose.fight and $toCommand.commander.pilot.command.value != command.escort)">
+								<find_dock_location container="$theShip" name="$dock" size="$toCommand_sub.docksize" />
+								<start_script object="$toCommand.pilot" name="'move.dockat'">
+									<param name="destination" value="$object" />
+									<param name="dockingslot" value="$dock" />
+								</start_script>
+							</do_if>
+						</do_all>
+						<remove_value name="$toCommand"/>
+					</do_if>
+					<remove_value name="$theShipfollowers"/>
+					<remove_value name="$object"/>
+				</do_elseif>
+				<!-- command fighters -->
+				<do_elseif value="event.param" list="[	'mmca_own_fleet_do_attack_all',
+														'mmca_own_fleet_do_attack',
+														'mmca_own_fleet_do_patrol',
+														'mmca_own_fleet_do_withdraw',
+														'mmca_own_fleet_do_comeback',
+														'mmca_own_fleet_do_explore',
+														'mmca_own_fleet_do_attack_mines',
+														'mmca_own_fleet_do_attack_asteroids',
+														'mmca_own_fleet_do_attack_crates' ]">
+					<set_value name="$follower" exact="0" />
+					<set_value name="$object" exact="$theShip" />
+					<set_value name="$entitytype" exact="entitytype.defencecontrol" chance="if event.param == 'mmca_own_fleet_do_explore' then 100 else 0" />
+					<include_actions ref="MM_Carriers_do_list" />
+					<!-- fight against the evil ... -->
+					<set_value name="$targets_count" exact="0" />
+					<set_value name="$k" exact="0"/>
+					<set_value name="$do_fighters" exact="100"/>
+					<!-- ... mines -->
+					<do_if value="event.param" exact="'mmca_own_fleet_do_attack_mines'">
+						<!--<find_object name="$targets" space="$theShip.zone" class="class.mine" recursive="true" multiple="true"/>
+						<find_gravidar_contact name="$targets" object="$theShip">
+							<match class="class.mine"/>
+						</find_gravidar_contact>-->
+						<find_object name="$targets" space="$theShip.zone" class="class.mine" multiple="true">
+							<match_distance object="$theShip" max="$theShip.maxradarrange"/>
+						</find_object>
+
+						<set_value name="$targets_count" exact="$targets.count" />
+						<set_value name="$checkrelation" exact="false" />
+					</do_if>
+					<!-- ... crates -->
+					<do_elseif value="event.param" exact="'mmca_own_fleet_do_attack_crates'">
+						<find_object name="$targets" space="$theShip.zone" class="class.collectable" canbepickedup="true" recursive="true" multiple="true">
+							<match_distance object="$theShip" max="$theShip.maxradarrange"/>
+						</find_object>
+						<set_value name="$targets_count" exact="$targets.count" />
+						<set_value name="$checkrelation" exact="false" />
+					</do_elseif>
+					<!-- ... asteroids -->
+					<do_elseif value="event.param" exact="'mmca_own_fleet_do_attack_asteroids'">
+						<find_object name="$targets" space="$theShip.zone" class="class.asteroid" multiple="true" max="40">
+							<match_distance object="$theShip" max="$theShip.maxradarrange"/>
+							<match_wares ware="ware.ice" negate="true"/>
+							<match_wares ware="ware.ore" negate="true"/>
+							<match_wares ware="ware.crystals" negate="true"/>
+							<match_wares ware="ware.nividium" negate="true"/>
+							<match_wares ware="ware.silicon" negate="true"/>
+						</find_object>
+						<!--<find_gravidar_contact name="$targets" object="$theShip" max="40">
+							<match class="class.asteroid"/>
+						</find_gravidar_contact>-->
+						<set_value name="$targets_count" exact="$targets.count" />
+						<set_value name="$checkrelation" exact="false" />
+					</do_elseif>
+					<!-- take a fast look into all zones -->
+					<do_elseif value="event.param" exact="'mmca_own_fleet_do_explore'">
+						<find_zone groupname="$zones" space="$theShip.sector" multiple="true" mapzone="true" tempzone="false"/>
+						<do_all exact="$zones.count" counter="$i" reverse="true">
+							<do_if value="$zones.{$i}.istemporaryzone or $zones.{$i}.isclass.highway or not $zones.{$i}.ismapzone">
+								<remove_from_group group="$zones" object="$zones.{$i}"/>
+							</do_if>
+						</do_all>
+
+						<create_list name="$temp" />
+						<do_all exact="$theShipfollowers.list.count" counter="$i">
+							<do_if value="$theShipfollowers.list.{$i}.macro.ismacro.{md.$mmc_explorers} and (not $theShipfollowers.list.{$i}.engineer.exists or $theShipfollowers.list.{$i}.engineer.isclass.computer) and $theShipfollowers.list.{$i}.zone == $theShip.zone">
+								<append_to_list name="$temp" exact="$theShipfollowers.list.{$i}"/>
+							</do_if>
+						</do_all>
+						<do_if value="$temp.count and $zones.count le $temp.count">
+							<clear_group group="$theShipfollowers" />
+							<add_to_group groupname="$theShipfollowers" list="$temp" />
+						</do_if>
+						<remove_value name="$temp"/>
+
+						<set_value name="$l" exact="$theShipfollowers.list.count" />
+						<do_all exact="$zones.count" counter="$i">
+							<do_if value="$zones.{$i}.istemporaryzone or $zones.{$i}.isclass.highway or not $zones.{$i}.ismapzone">
+								<continue />
+							</do_if>
+							<set_value name="$k" operation="add" />
+							<do_if value="$k" max="$l">
+								<set_value name="$toCommand" exact="$theShipfollowers.list.{$k}" />
+								<do_while value="not (($toCommand.primarypurpose == objectpurpose.fight or $toCommand.macro.ismacro.{md.$mmc_explorers}) and (not $toCommand.engineer.exists or $toCommand.engineer.isclass.computer) and $toCommand.commander == $theShip)" chance="if $k le $l then 100 else 0">
+									<set_value name="$k" operation="add" />
+									<set_value name="$toCommand" exact="$theShipfollowers.list.{$k}" />
+								</do_while>
+								<do_if value="$k ge $l and $theShipfollowers.list.indexof.{$toCommand} != $k">
+									<break />
+								</do_if>
+								<!-- send to zones in sektor 
+								<start_script object="$toCommand.pilot" name="'move.patrol'">
+									<param name="patrolobject" value="$zones.{$i}" />
+									<param name="engageenemies" value="false" />
+								</start_script>-->
+								<start_script object="$toCommand.pilot" name="'carrier.default'" chance="if $toCommand.pilot.$carrier? then 0 else 100">
+									<param name="base" value="$theShip" />
+								</start_script>
+								<signal_objects object="$toCommand" param="'scout zone'" param2="$zones.{$i}" />
+								<!-- not so alone in the dark -->
+								<do_if value="$toCommand.subordinates.count">
+									<do_all exact="$toCommand.subordinates.count" counter="$j">
+										<do_if value="not $toCommand.subordinates.{$j}.engineer.exists or $toCommand.subordinates.{$j}.engineer.isclass.computer">
+											<start_script name="'carrier.default'" object="$toCommand.subordinates.{$j}.pilot" chance="if $toCommand.subordinates.{$j}.pilot.$carrier? then 0 else 100">
+												<param name="base" value="$theShip" />
+												<param name="formation" value="$formation" />
+											</start_script>
+										</do_if>
+									</do_all>
+								</do_if>
+							</do_if>
+						</do_all>
+						<set_value name="$do_fighters" exact="0"/>
+						<remove_value name="$toCommand"/>
+						<remove_value name="$zones"/>
+					</do_elseif>
+					<!-- command fighters do -->
+					<do_if value="$theShipfollowers.count gt 0" chance="$do_fighters">
+						<set_value name="$protection" exact="100" />
+						<set_value name="$protection_i" exact="0" />
+						<do_all exact="$theShipfollowers.count" counter="$i">
+							<set_value name="$toCommand" exact="$theShipfollowers.{$i}" />
+							<do_if value="$toCommand.primarypurpose == objectpurpose.fight and (not $toCommand.engineer.exists or $toCommand.engineer.isclass.computer) and $toCommand.dockslot == null">
+
+								<do_if value="event.param" exact="'mmca_own_fleet_do_withdraw'">
+									<start_script object="$toCommand.pilot" name="'carrier.default'" chance="if $toCommand.pilot.$carrier? then 0 else 100">
+										<param name="base" value="$theShip" />
+									</start_script>
+									<signal_objects object="$toCommand" param="'withdraw battle'" />
+								</do_if>
+
+								<do_elseif value="$toCommand.commander == $theShip">
+									<!-- protect job -->
+									<do_if value="@$theShip.pilot.$mm_carriers_protect_this" exact="1" chance="$protection">
+										<start_script object="$toCommand.pilot" name="'carrier.default'">
+											<param name="base" value="$theShip" />
+											<param name="commander" value="$theShip" />
+											<param name="protect_base" value="true" />
+										</start_script>
+										<set_value name="$protection_i" operation="add" />
+										<do_if value="$protection_i" min="[4, $theShipfollowers.count/3].min">
+											<set_value name="$protection" exact="0" />
+										</do_if>
+									</do_if>
+									<!-- commands -->
+									<do_elseif value="event.param" exact="'mmca_own_fleet_do_attack_all'">
+										<start_script object="$toCommand.pilot" name="'carrier.default'" chance="if $toCommand.pilot.$carrier? then 0 else 100">
+											<param name="base" value="$theShip" />
+										</start_script>
+										<signal_objects object="$toCommand" param="'attack enemies'" param2="event.param2.{3}" param3="player.age + 10min" />
+									</do_elseif>
+
+									<do_elseif value="event.param" exact="'mmca_own_fleet_do_attack'">
+										<start_script object="$toCommand.pilot" name="'carrier.default'" chance="if $toCommand.pilot.$carrier? then 0 else 100">
+											<param name="base" value="$theShip" />
+										</start_script>
+										<signal_objects object="$toCommand" param="'attack object'" param2="event.param2.{3}" param3="player.age + 20min" />
+									</do_elseif>
+
+									<do_elseif value="event.param" exact="'mmca_own_fleet_do_patrol'">
+										<start_script object="$toCommand.pilot" name="'carrier.default'" chance="if $toCommand.pilot.$carrier? then 0 else 100">
+											<param name="base" value="$theShip" />
+										</start_script>
+										<signal_objects object="$toCommand" param="'fight enemies'" param2="event.param2.{3}" param3="player.age + 10min" />
+									</do_elseif>
+
+									<do_elseif value="event.param" exact="'mmca_own_fleet_do_comeback'">
+										<start_script object="$toCommand.pilot" name="'carrier.default'" chance="if $toCommand.pilot.$carrier? then 0 else 100">
+											<param name="base" value="$theShip" />
+										</start_script>
+										<signal_objects object="$toCommand" param="'modeoff'" />
+									</do_elseif>
+
+									<do_elseif value="event.param" list="[	'mmca_own_fleet_do_attack_mines',
+																			'mmca_own_fleet_do_attack_asteroids',
+																			'mmca_own_fleet_do_attack_crates' ]">
+										<do_if value="$targets_count">
+											<set_value name="$tps" exact="$targets_count / $theShipfollowers.count" />
+											<create_group groupname="$primarytargets" />
+											<create_group groupname="$secondarytargets" />
+											<do_if value="$tps ge 1">
+												<do_all exact="$tps">
+													<set_value name="$k" operation="add" />
+													<add_to_group groupname="$primarytargets" object="$targets.{$k}"/>
+													<set_value name="$k" exact="0" chance="if $k == $targets_count then 100 else 0"/>
+												</do_all>
+												<add_to_group groupname="$secondarytargets" list="$targets"/>
+											</do_if>
+											<do_else>
+												<add_to_group groupname="$primarytargets" list="$targets"/>
+												<set_value name="$secondarytargets" exact="null"/>
+											</do_else>
+											<remove_value name="$tps"/>
+											<start_script object="$toCommand.pilot" name="'carrier.default'" chance="if $toCommand.pilot.$carrier? then 0 else 100">
+												<param name="base" value="$theShip" />
+											</start_script>
+											<signal_objects object="$toCommand" param="'attack plus'" param2="$primarytargets" param3="$secondarytargets" />
+											<remove_value name="$primarytargets"/>
+											<remove_value name="$secondarytargets"/>
+										</do_if>
+									</do_elseif>
+
+								</do_elseif>
+								<!-- real follower -->
+								<do_else>
+									<start_script name="'carrier.default'" object="$toCommand.pilot">
+										<param name="base" value="$theShip" />
+										<param name="commander" value="$toCommand.commander" />
+										<param name="formation" value="$formation" />
+									</start_script>
+								</do_else>
+
+							</do_if>
+						</do_all>
+						<remove_value name="$toCommand"/>
+						<remove_value name="$protection"/>
+						<remove_value name="$protection_i"/>
+					</do_if>
+					<remove_value name="$do_fighters"/>
+					<remove_value name="$object"/>
+					<remove_value name="$targets"/>
+					<remove_value name="$targets_count"/>
+					<remove_value name="$checkrelation"/>
+					<remove_value name="$follower"/>
+					<remove_value name="$theShipfollow_carriers"/>
+					<remove_value name="$theShipfollowers"/>
+				</do_elseif>
+
+				<do_elseif value="event.param" list="[	'mmca_own_fleet_do_attack_all_s3',
+														'mmca_own_fleet_do_attack_all_s5',
+														'mmca_own_fleet_do_attack_all_s7',
+														'mmca_own_fleet_do_patrol_s3',
+														'mmca_own_fleet_do_patrol_s5',
+														'mmca_own_fleet_do_patrol_s7'
+														 ]">
+					<set_value name="$simpel_S" />
+					<set_value name="$object" exact="$theShip" />
+					<include_actions ref="MM_Carriers_do_list" />
+					<do_if value="event.param" list="[	'mmca_own_fleet_do_attack_all_s3',
+														'mmca_own_fleet_do_attack_all_s5',
+														'mmca_own_fleet_do_attack_all_s7'
+														 ]">
+						<set_value name="$do" exact="'attack'" />
+						<do_if value="event.param" exact="'mmca_own_fleet_do_attack_all_s3'">
+							<set_value name="$squadamount" exact="3" />
+						</do_if>
+						<do_elseif value="event.param" exact="'mmca_own_fleet_do_attack_all_s5'">
+							<set_value name="$squadamount" exact="5" />
+						</do_elseif>
+						<do_elseif value="event.param" exact="'mmca_own_fleet_do_attack_all_s7'">
+							<set_value name="$squadamount" exact="7" />
+						</do_elseif>
+					</do_if>
+					<do_elseif value="event.param" list="[	'mmca_own_fleet_do_patrol_s3',
+															'mmca_own_fleet_do_patrol_s5',
+															'mmca_own_fleet_do_patrol_s7'
+															 ]">
+						<set_value name="$do" exact="'patrol'" />
+						<do_if value="event.param" exact="'mmca_own_fleet_do_patrol_s3'">
+							<set_value name="$squadamount" exact="3" />
+						</do_if>
+						<do_elseif value="event.param" exact="'mmca_own_fleet_do_patrol_s5'">
+							<set_value name="$squadamount" exact="5" />
+						</do_elseif>
+						<do_elseif value="event.param" exact="'mmca_own_fleet_do_patrol_s7'">
+							<set_value name="$squadamount" exact="7" />
+						</do_elseif>
+
+					</do_elseif>
+
+					<do_if value="$theShipfollowers.count gt 0">
+						<set_value name="$squadcount" exact="0" />
+						<set_value name="$protection" exact="100" />
+
+						<do_all exact="$theShipfollowers.count" counter="$i">
+							<set_value name="$toCommand" exact="$theShipfollowers.{$i}" />
+							<do_if value="$toCommand.primarypurpose == objectpurpose.fight and (not $toCommand.engineer.exists or $toCommand.engineer.isclass.computer) and $toCommand.dockslot == null">
+
+								<do_if value="$squadcount" exact="0">
+									<!-- protect job -->
+									<do_if value="@$theShip.pilot.$mm_carriers_protect_this" exact="1" chance="$protection">
+										<start_script object="$toCommand.pilot" name="'carrier.default'">
+											<param name="base" value="$theShip" />
+											<param name="commander" value="$theShip" />
+											<param name="protect_base" value="true" />
+										</start_script>
+										<set_value name="$protection" exact="0" />
+									</do_if>
+									<!-- commands -->	
+									<do_elseif value="$do" exact="'attack'">
+										<start_script object="$toCommand.pilot" name="'carrier.default'" chance="if $toCommand.pilot.$carrier? then 0 else 100">
+											<param name="base" value="$theShip" />
+										</start_script>
+										<signal_objects object="$toCommand" param="'attack enemies'" param2="event.param2.{3}" param3="player.age + 10min" />
+									</do_elseif>
+
+									<do_elseif value="$do" exact="'patrol'">
+										<start_script object="$toCommand.pilot" name="'carrier.default'" chance="if $toCommand.pilot.$carrier? then 0 else 100">
+											<param name="base" value="$theShip" />
+										</start_script>
+										<signal_objects object="$toCommand" param="'fight enemies'" param2="event.param2.{3}" param3="player.age + 10min" />
+									</do_elseif>
+									<set_value name="$squadleader" exact="$theShipfollowers.{$i}" />
+									<set_value name="$squadcount" operation="add" />
+
+								</do_if>
+								<!-- follower -->
+								<do_elseif value="$squadleader?">
+									<start_script name="'carrier.default'" object="$toCommand.pilot">
+										<param name="base" value="$theShip" />
+										<param name="commander" value="$squadleader" />
+										<param name="formation" value="$formation" />
+									</start_script>
+									<set_value name="$squadcount" operation="add" />
+								</do_elseif>
+
+								<do_if value="$squadcount" exact="$squadamount">
+									<remove_value name="$squadleader"/>
+									<set_value name="$squadcount" exact="0" />
+								</do_if>
+
+							</do_if>
+						</do_all>
+						<remove_value name="$squadleader"/>
+						<remove_value name="$squadcount"/>
+						<remove_value name="$toCommand"/>
+						<remove_value name="$protection"/>
+					</do_if>
+					<remove_value name="$squadamount"/>
+					<remove_value name="$do"/>
+					<remove_value name="$object"/>
+					<remove_value name="$follower"/>
+					<remove_value name="$theShipfollow_carriers"/>
+					<remove_value name="$theShipfollowers"/>
+				</do_elseif>
+				<!-- Menu -->
+				<do_elseif value="event.param" list="[	'mmca_own_fleet',
+														'mmca_own_fleet_patrol',
+														'mmca_own_fleet_attackall',
+														'mmca_own_fleet_attackspez']">
+					<!-- Count Fleet -->
+					<set_value name="$simpel_S" />
+					<set_value name="$object" exact="$theShip" />
+					<include_actions ref="MM_Carriers_do_list" />
+
+					<set_value name="$fleet_small" exact="0" />
+					<set_value name="$fleet_small_docked" exact="0" />
+					<set_value name="$fleet_small_fly" exact="0" />
+
+					<do_all exact="$theShipfollowers.count" counter="$i" >
+
+						<!-- Small -->
+						<do_if value="$theShipfollowers.{$i}.isclass.[class.ship_s, class.ship_m] and $theShipfollowers.{$i}.primarypurpose == objectpurpose.fight">
+							<!-- primary Fighter on Carrier -->
+							<set_value name="$fleet_small" operation="add" />
+
+							<do_if value="$theShipfollowers.{$i}.dockslot == null">
+								<set_value name="$fleet_small_fly" operation="add" />
+							</do_if>
+							<do_else>
+								<set_value name="$fleet_small_docked" operation="add" />
+							</do_else>
+						</do_if>
+
+					</do_all>
+
+					<do_if value="event.param" exact="'mmca_own_fleet'">
+						<add_player_choice_sub text="{1002,2043} + ' (' + $fleet_small_fly + ')'" section="mmca_own_fleet_patrol" comment="Patrol In Zone" selectable="$fleet_small_fly gt 0" />
+						<add_player_choice_sub text="{1002,2041} + ' (' + $fleet_small_fly + ')'" section="mmca_own_fleet_attackall" comment="Attack All Enemies in Zone" selectable="$fleet_small_fly gt 0" />
+						<add_player_choice_sub text="{1002,2042} + ' (' + $fleet_small_fly + ')'" section="gOrders_attackobject" comment="Attack Object" choiceparam="[0, 0, 'zone', player.primaryship.zone, null, null, 'selectobject', ['mmca_own_fleet_do_attack']]" selectable="$fleet_small_fly gt 0" />
+
+						<add_player_choice_sub text="{2802,8159}.[$theShip.name] + ' (' + $fleet_small_fly + ')'" section="mmca_own_fleet_do_comeback" comment="Follow me again" selectable="$fleet_small_fly gt 0" />
+						<add_player_choice_sub text="{1002,2057} + ' (' + $fleet_small_fly + ')'" section="mmca_own_fleet_do_withdraw" comment="Withdraw battle" />
+						<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+					</do_if>
+					<do_elseif value="event.param" exact="'mmca_own_fleet_patrol'">
+						<do_if value="@player.primaryship.zone.issuperhighway">
+							<add_player_choice_sub text="{1002,2043} + ' (' + $fleet_small_fly + ')'" section="gOrders_attackall" comment="Patrol In Zone" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectzone', ['mmca_own_fleet_do_patrol']]" selectable="$fleet_small_fly gt 0" />
+							<add_player_choice_sub text="{1002,2043} + {2802,8160}.[3]" section="gOrders_attackall" comment="Patrol In Zone" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectzone', ['mmca_own_fleet_do_patrol_s3']]" selectable="$fleet_small_fly gt 0" />
+							<add_player_choice_sub text="{1002,2043} + {2802,8160}.[5]" section="gOrders_attackall" comment="Patrol In Zone" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectzone', ['mmca_own_fleet_do_patrol_s5']]" selectable="$fleet_small_fly gt 0" />
+							<add_player_choice_sub text="{1002,2043} + {2802,8160}.[7]" section="gOrders_attackall" comment="Patrol In Zone" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectzone', ['mmca_own_fleet_do_patrol_s7']]" selectable="$fleet_small_fly gt 0" />
+						</do_if>
+						<do_else>
+							<add_player_choice_sub text="{1002,2043} + ' (' + $fleet_small_fly + ')'" section="gOrders_attackall" comment="Patrol In Zone" choiceparam="[0, 0, 'sector', player.primaryship.sector, null, player.primaryship.zone, 'selectzone', ['mmca_own_fleet_do_patrol']]" selectable="$fleet_small_fly gt 0" />
+							<add_player_choice_sub text="{1002,2043} + {2802,8160}.[3]" section="gOrders_attackall" comment="Patrol In Zone" choiceparam="[0, 0, 'sector', player.primaryship.sector, null, player.primaryship.zone, 'selectzone', ['mmca_own_fleet_do_patrol_s3']]" selectable="$fleet_small_fly gt 0" />
+							<add_player_choice_sub text="{1002,2043} + {2802,8160}.[5]" section="gOrders_attackall" comment="Patrol In Zone" choiceparam="[0, 0, 'sector', player.primaryship.sector, null, player.primaryship.zone, 'selectzone', ['mmca_own_fleet_do_patrol_s5']]" selectable="$fleet_small_fly gt 0" />
+							<add_player_choice_sub text="{1002,2043} + {2802,8160}.[7]" section="gOrders_attackall" comment="Patrol In Zone" choiceparam="[0, 0, 'sector', player.primaryship.sector, null, player.primaryship.zone, 'selectzone', ['mmca_own_fleet_do_patrol_s7']]" selectable="$fleet_small_fly gt 0" />
+						</do_else>
+					</do_elseif>
+					<do_elseif value="event.param" exact="'mmca_own_fleet_attackall'">
+						<do_if value="@player.primaryship.zone.issuperhighway">
+							<add_player_choice_sub text="{1002,2041} + ' (' + $fleet_small_fly + ')'" section="gOrders_attackall" comment="Attack All Enemies in Zone" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectzone', ['mmca_own_fleet_do_attack_all']]" selectable="$fleet_small_fly gt 0" />
+							<add_player_choice_sub text="{1002,2041} + {2802,8160}.[3]" section="gOrders_attackall" comment="Attack All Enemies in Zone" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectzone', ['mmca_own_fleet_do_attack_all_s3']]" selectable="$fleet_small_fly gt 0" />
+							<add_player_choice_sub text="{1002,2041} + {2802,8160}.[5]" section="gOrders_attackall" comment="Attack All Enemies in Zone" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectzone', ['mmca_own_fleet_do_attack_all_s5']]" selectable="$fleet_small_fly gt 0" />
+							<add_player_choice_sub text="{1002,2041} + {2802,8160}.[7]" section="gOrders_attackall" comment="Attack All Enemies in Zone" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectzone', ['mmca_own_fleet_do_attack_all_s7']]" selectable="$fleet_small_fly gt 0" />
+						</do_if>
+						<do_else>
+							<add_player_choice_sub text="{1002,2041} + ' (' + $fleet_small_fly + ')'" section="gOrders_attackall" comment="Attack All Enemies in Zone" choiceparam="[0, 0, 'sector', player.primaryship.sector, null, player.primaryship.zone, 'selectzone', ['mmca_own_fleet_do_attack_all']]" selectable="$fleet_small_fly gt 0" />
+							<add_player_choice_sub text="{1002,2041} + {2802,8160}.[3]" section="gOrders_attackall" comment="Attack All Enemies in Zone" choiceparam="[0, 0, 'sector', player.primaryship.sector, null, player.primaryship.zone, 'selectzone', ['mmca_own_fleet_do_attack_all_s3']]" selectable="$fleet_small_fly gt 0" />
+							<add_player_choice_sub text="{1002,2041} + {2802,8160}.[5]" section="gOrders_attackall" comment="Attack All Enemies in Zone" choiceparam="[0, 0, 'sector', player.primaryship.sector, null, player.primaryship.zone, 'selectzone', ['mmca_own_fleet_do_attack_all_s5']]" selectable="$fleet_small_fly gt 0" />
+							<add_player_choice_sub text="{1002,2041} + {2802,8160}.[7]" section="gOrders_attackall" comment="Attack All Enemies in Zone" choiceparam="[0, 0, 'sector', player.primaryship.sector, null, player.primaryship.zone, 'selectzone', ['mmca_own_fleet_do_attack_all_s7']]" selectable="$fleet_small_fly gt 0" />
+						</do_else>
+					</do_elseif>
+					<do_elseif value="event.param" exact="'mmca_own_fleet_attackspez'">
+						<find_object name="$mines" space="$theShip.zone" class="class.mine" recursive="true" multiple="true">
+							<match_distance object="$theShip" max="$theShip.maxradarrange"/>
+						</find_object>
+						<find_object name="$crates" space="$theShip.zone" class="class.collectable" canbepickedup="true" recursive="true" multiple="true">
+							<match_distance object="$theShip" max="$theShip.maxradarrange"/>
+						</find_object>
+						<find_object name="$asteroids" space="$theShip.zone" class="class.asteroid" multiple="true">
+							<match_distance object="$theShip" max="$theShip.maxradarrange"/>
+							<match_wares ware="ware.ice" negate="true"/>
+							<match_wares ware="ware.ore" negate="true"/>
+							<match_wares ware="ware.crystals" negate="true"/>
+							<match_wares ware="ware.nividium" negate="true"/>
+							<match_wares ware="ware.silicon" negate="true"/>
+						</find_object>
+						<add_player_choice text="{2802,8196}.[$mines.count]" section="mmca_own_fleet_do_attack_mines" comment="Attack All Mines in Zone" selectable="$fleet_small_fly gt 0 and $mines.count gt 0" />
+						<add_player_choice text="{2802,8197}.[$crates.count]" section="mmca_own_fleet_do_attack_crates" comment="Attack All Crates in Zone" selectable="$fleet_small_fly gt 0 and $crates.count gt 0" />
+						<add_player_choice text="{2802,8198}.[$asteroids.count]" section="mmca_own_fleet_do_attack_asteroids" comment="Attack All Asteroids in Zone" selectable="$fleet_small_fly gt 0 and $asteroids.count gt 0" />
+						<add_player_choice text="{2802,8199}" section="mmca_own_fleet_do_explore" comment="Explore" />
+						<remove_value name="$mines"/>
+						<remove_value name="$crates"/>
+						<remove_value name="$asteroids"/>
+					</do_elseif>
+
+					<!-- clean -->
+					<remove_value name="$toCommand"/>
+					<remove_value name="$fleet_small"/>
+					<remove_value name="$fleet_small_fly"/>
+					<remove_value name="$fleet_small_docked"/>
+					<remove_value name="$object"/>
+					<remove_value name="$follower"/>
+					<remove_value name="$theShipfollow_carriers"/>
+					<remove_value name="$theShipfollowers"/>
+				</do_elseif>
+
+				<!-- clean -->
+				<remove_value name="$formation"/>
+				<remove_value name="$theShip"/>
+			</actions>
+		</cue>	
+
+		<cue name="MM_Carriers_squadmanager" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_conversation_next_section sectionprefix="mmca_squadmanager"/>
+					<event_conversation_returned_to_section sectionprefix="mmca_squadmanager" />
+				</check_any>
+			</conditions>
+			<actions>
+				<!-- base -->
+				<set_value name="$theShip" exact="event.object.container" />
+				<set_value name="$formation" exact="[formationshape.vshape, formationshape.invvshape, formationshape.triangle, formationshape.eagle, formationshape.circle, formationshape.twin, formationshape.vulcan, formationshape.pointguard, formationshape.invpointguard].random" />
+				<set_value name="$simpel_S" />
+				<set_value name="$object" exact="$theShip" />
+				<include_actions ref="MM_Carriers_do_list" />
+
+				<!-- do -->
+				<do_if value="$theShipfollowers.count gt 0">
+					<do_if value="event.param" exact="'mmca_squadmanager_split'">
+						<do_all exact="$theShipfollowers.count" counter="$i" reverse="true">
+							<do_if value="$theShipfollowers.{$i}.dockslot == null" negate="true">
+								<remove_from_group group="$theShipfollowers" object="$theShipfollowers.{$i}" />
+							</do_if>
+						</do_all>
+						<do_all exact="$theShipfollowers.count" counter="$i" >
+							<set_value name="$toCommand" exact="$theShipfollowers.{$i}" />
+							<set_object_commander object="$toCommand" commander="$theShip" />
+							<start_script name="'move.escort'" object="$toCommand.pilot">
+								<param name="target" value="$theShip" />
+								<param name="formation" value="$formation" />
+							</start_script>
+						</do_all>
+						<add_npc_line line="1018" speaker="event.object" view="facenormal" comment="Affirmative" chance="100" />
+					</do_if>
+					<do_elseif value="event.param" exact="'mmca_squadmanager_build'">
+						<create_group groupname="$leader" />
+						<create_group groupname="$follower" />
+						<do_all exact="$theShipfollowers.count" counter="$i" >
+							<do_if value="$theShipfollowers.{$i}.commander" exact="$theShip" negate="true">
+								<continue />
+							</do_if>
+							<do_if value="$theShipfollowers.{$i}.dockslot == null" negate="true">
+								<continue />
+							</do_if>
+							<do_if value="global.$mmcarrierconfig.$mm_carriers_leadermacro" exact="$theShipfollowers.{$i}.macro" chance="[100, (event.param2.{2}-$leader.count)*100].min">
+								<add_to_group groupname="$leader" object="$theShipfollowers.{$i}" />
+							</do_if>
+							<do_elseif value="global.$mmcarrierconfig.$mm_carriers_followermacro" exact="$theShipfollowers.{$i}.macro" chance="[100, (event.param2.{1}*event.param2.{2}-$follower.count)*100].min">
+								<add_to_group groupname="$follower" object="$theShipfollowers.{$i}" />
+							</do_elseif>
+						</do_all>
+
+						<set_value name="$i" exact="0" />
+						<set_value name="$j" exact="0" />
+						<do_all exact="event.param2.{2}">
+							<set_value name="$i" operation="add"/>
+							<do_all exact="event.param2.{1}">
+								<set_value name="$j" operation="add"/>
+								<do_if value="$follower.{$j}? and $leader.{$i}?" >
+									<set_object_commander object="$follower.{$j}" commander="$leader.{$i}" />
+								</do_if>
+							</do_all>
+						</do_all>
+
+						<add_to_group groupname="$leader" list="$follower.list" />
+						<do_all exact="$leader.count" counter="$i">
+							<set_value name="$toCommand" exact="$leader.{$i}" />
+							<start_script name="'carrier.default'" object="$toCommand.pilot">
+								<param name="base" value="$theShip" />
+								<param name="commander" value="$toCommand.commander" />
+								<param name="formation" value="$formation" />
+							</start_script>
+						</do_all>
+
+						<remove_value name="$leader"/>
+						<remove_value name="$follower"/>
+						<remove_value name="$toCommand"/>
+						<add_npc_line line="1035" speaker="event.object" view="facenormal" comment="It's done, Sir." chance="100" />
+					</do_elseif>
+
+					<do_if value="event.param" exact="'mmca_squadmanager'" negate="true">
+						<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+					</do_if>
+					<do_else>
+						<set_value name="$config" exact="table[
+							$mm_carriers_leadermacro = 0,
+							$mm_carriers_followermacro = 0,
+							$squadof_3 = 0,
+							$squadof_3_pos = 0,
+							$squadof_3_pref = false,
+							$squadof_5 = 0,
+							$squadof_5_pos = 0,
+							$squadof_5_pref = false,
+							$squadof_7 = 0,
+							$squadof_7_pos = 0,
+							$squadof_7_pref = false
+						]" comment="end $config"/>
+						<do_if value="event.param2?">
+							<do_if value="event.param2.{2}?">
+								<do_if value="(typeof event.param2.{1}).isstring">
+									<!-- Key workaround -->
+									<set_value name="$key" exact="[ '$' + event.param2.{1} ]" />
+									<do_if value="global.$mmcarrierconfig.{$key.{1}}? or ['mm_carriers_leadermacro', 'mm_carriers_followermacro'].indexof.{event.param2.{1}}">
+										<set_value name="global.$mmcarrierconfig.{$key.{1}}" exact="event.param2.{2}" />
+									</do_if>
+								</do_if>
+							</do_if>
+						</do_if>
+
+						<create_list name="$ship_macros"/>
+						<do_all exact="$theShipfollowers.count" counter="$i" >
+							<do_if value="$theShipfollowers.{$i}.macro" list="$ship_macros" negate="true">
+								<append_to_list name="$ship_macros" exact="$theShipfollowers.{$i}.macro" />
+							</do_if>
+						</do_all>
+
+						<do_all exact="$ship_macros.count" counter="$i" >
+							<set_value name="$key" exact="[ '$' + $ship_macros.{$i} ]" />
+							<set_value name="$config.{$key.{1}}" exact="0" />
+							<do_all exact="$theShipfollowers.count" counter="$j" >
+								<do_if value="$theShipfollowers.{$j}.commander" exact="$theShip" negate="true">
+									<continue />
+								</do_if>
+								<do_if value="$theShipfollowers.{$j}.dockslot == null" negate="true">
+									<continue />
+								</do_if>
+								<do_if value="$theShipfollowers.{$j}.macro" exact="$ship_macros.{$i}">
+									<set_value name="$config.{$key.{1}}" operation="add"/>
+								</do_if>
+							</do_all>
+							<do_if value="@global.$mmcarrierconfig.$mm_carriers_leadermacro" exact="$ship_macros.{$i}">
+								<set_value name="$config.$mm_carriers_leadermacro" exact="$i" />
+							</do_if>
+							<do_if value="@global.$mmcarrierconfig.$mm_carriers_followermacro" exact="$ship_macros.{$i}">
+								<set_value name="$config.$mm_carriers_followermacro" exact="$i" />
+							</do_if>
+						</do_all>
+
+						<do_if value="$config.$mm_carriers_leadermacro+1" max="$ship_macros.count">
+							<set_value name="$config.$mm_carriers_leadermacro_new" exact="$ship_macros.{$config.$mm_carriers_leadermacro+1}" />
+						</do_if>
+						<do_else>
+							<set_value name="$config.$mm_carriers_leadermacro_new" exact="$ship_macros.{1}" />
+						</do_else>
+						<do_if value="$config.$mm_carriers_followermacro+1" max="$ship_macros.count">
+							<set_value name="$config.$mm_carriers_followermacro_new" exact="$ship_macros.{$config.$mm_carriers_followermacro+1}" />
+						</do_if>
+						<do_else>
+							<set_value name="$config.$mm_carriers_followermacro_new" exact="$ship_macros.{1}" />
+						</do_else>
+
+						<add_player_choice text="{2802,8191}.[@global.$mmcarrierconfig.$mm_carriers_leadermacro.name]" section="mmca_squadmanager" choiceparam="['mm_carriers_leadermacro', $config.$mm_carriers_leadermacro_new]" comment="Leadermacro" />
+						<add_player_choice text="{2802,8192}.[@global.$mmcarrierconfig.$mm_carriers_followermacro.name]" section="mmca_squadmanager" choiceparam="['mm_carriers_followermacro', $config.$mm_carriers_followermacro_new]" comment="Followermacro" />
+						<add_player_choice text="{2802,8194}" section="mmca_squadmanager_split" comment="Split Squads"  />
+
+						<do_if value="$ship_macros.count gt 0 and global.$mmcarrierconfig.$mm_carriers_leadermacro? and global.$mmcarrierconfig.$mm_carriers_followermacro?">
+							<set_value name="$key" exact="[ '$' + global.$mmcarrierconfig.$mm_carriers_leadermacro, '$' + global.$mmcarrierconfig.$mm_carriers_followermacro ]" />
+
+							<do_if value="$key.{2} == $key.{1} and $config.{$key.{1}} gt 2">
+								<set_value name="$config.$squadof_3" exact="($config.{$key.{1}}/3)i" />
+								<set_value name="$config.$squadof_5" exact="($config.{$key.{1}}/5)i" />
+								<set_value name="$config.$squadof_7" exact="($config.{$key.{1}}/7)i" />
+								<set_value name="$config.$squadof_3_pos" exact="$config.$squadof_3 gt 0"/>
+								<set_value name="$config.$squadof_5_pos" exact="$config.$squadof_5 gt 0"/>
+								<set_value name="$config.$squadof_7_pos" exact="$config.$squadof_7 gt 0"/>
+								<set_value name="$config.$squadof_3_pref" exact="$config.{$key.{2}} % ($config.$squadof_3*3) == 0" chance="$config.$squadof_3_pos*100" />
+								<set_value name="$config.$squadof_5_pref" exact="$config.{$key.{2}} % ($config.$squadof_5*5) == 0" chance="$config.$squadof_5_pos*100"/>
+								<set_value name="$config.$squadof_7_pref" exact="$config.{$key.{2}} % ($config.$squadof_7*7) == 0" chance="$config.$squadof_7_pos*100"/>
+							</do_if>
+							<do_elseif value="$key.{2} != $key.{1} and $config.{$key.{2}} ge 2 and $config.{$key.{1}} ge 1">
+								<set_value name="$config.$squadof_3" exact="[($config.{$key.{2}}/2)i, $config.{$key.{1}}].min" />
+								<set_value name="$config.$squadof_5" exact="[($config.{$key.{2}}/4)i, $config.{$key.{1}}].min" />
+								<set_value name="$config.$squadof_7" exact="[($config.{$key.{2}}/6)i, $config.{$key.{1}}].min" />
+								<set_value name="$config.$squadof_3_pos" exact="$config.$squadof_3 gt 0"/>
+								<set_value name="$config.$squadof_5_pos" exact="$config.$squadof_5 gt 0"/>
+								<set_value name="$config.$squadof_7_pos" exact="$config.$squadof_7 gt 0"/>
+								<set_value name="$config.$squadof_3_pref" exact="( $config.{$key.{2}} % ($config.$squadof_3*2) + $config.{$key.{1}} % ($config.$squadof_3*1) ) == 0" chance="$config.$squadof_3_pos*100" />
+								<set_value name="$config.$squadof_5_pref" exact="( $config.{$key.{2}} % ($config.$squadof_5*4) + $config.{$key.{1}} % ($config.$squadof_5*1) ) == 0" chance="$config.$squadof_5_pos*100"/>
+								<set_value name="$config.$squadof_7_pref" exact="( $config.{$key.{2}} % ($config.$squadof_7*6) + $config.{$key.{1}} % ($config.$squadof_7*1) ) == 0" chance="$config.$squadof_7_pos*100"/>
+							</do_elseif>
+						</do_if>
+						<add_player_choice text="{2802,8193}.[$config.$squadof_3, 2]" section="mmca_squadmanager_build" choiceparam="[2, $config.$squadof_3]" selectable="$config.$squadof_3_pos" immediate="$config.$squadof_3_pref" comment="Create X" />
+						<add_player_choice text="{2802,8193}.[$config.$squadof_5, 4]" section="mmca_squadmanager_build" choiceparam="[4, $config.$squadof_5]" selectable="$config.$squadof_5_pos" immediate="$config.$squadof_5_pref" comment="Create X" />
+						<add_player_choice text="{2802,8193}.[$config.$squadof_7, 6]" section="mmca_squadmanager_build" choiceparam="[6, $config.$squadof_7]" selectable="$config.$squadof_7_pos" immediate="$config.$squadof_7_pref" comment="Create X" />
+
+					</do_else>
+				</do_if>
+				<do_else>
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+				</do_else>
+				<!-- clean -->
+				<remove_value name="$ship_macros"/>
+				<remove_value name="$config"/>
+				<remove_value name="$key"/>
+				<remove_value name="$object"/>
+				<remove_value name="$theShip"/>
+				<remove_value name="$follower"/>
+				<remove_value name="$formation"/>
+				<remove_value name="$theShipfollowers"/>
+				<remove_value name="$theShipfollow_carriers"/>
+				<remove_value name="$theShipfollow_capital"/>
+			</actions>
+		</cue>	
+
+		<!--  work work  -->
+		<cue name="MM_Carriers_do" instantiate="true" >
+			<conditions>
+				<event_conversation_next_section sectionprefix="mmc_"/>
+			</conditions>
+			<actions>
+				<set_value name="$theShip" exact="event.object.container" />
+				<set_value name="$formation" exact="[formationshape.vshape, formationshape.invvshape, formationshape.triangle, formationshape.eagle, formationshape.circle, formationshape.twin, formationshape.vulcan, formationshape.pointguard, formationshape.invpointguard].random" />
+				<!-- start -->
+				<do_if value="event.param" exact="'mmc_start_c'">
+					<set_value name="$simpel" />
+					<set_value name="$object" exact="$theShip" />
+					<include_actions ref="MM_Carriers_do_list" />
+					<remove_value name="$object"/>
+					<set_value name="$subordinates" exact="$theShipfollowers.list" />
+					<remove_value name="$theShipfollowers"/>
+					<do_if value="$subordinates.count gt 0">
+						<!-- open hangar -->
+						<activate_battlestate object="$theShip" state="open_hangar" chance="if global.$mmcarrierconfig.$mm_carriers_sdockplus then 0 else 100"/>
+						<do_all exact="$subordinates.count" counter="$i">
+							<set_value name="$theShipfollower" exact="$subordinates.{$i}" />
+							<do_if value="$theShipfollower.isclass.[class.ship_s, class.ship_m]">
+								<do_if value="$theShipfollower.primarypurpose == objectpurpose.fight" negate="true" chance="if @event.param2 == 'preparetodie' then 100 else 0">
+									<continue />
+								</do_if>
+								<!-- end of repair -->
+								<do_if value="$theShipfollower.engineer.exists and $theShipfollower.engineer.isclass.npc">
+									<do_if value="$theShipfollower.hullpercentage" min="70">
+										<destroy_object object="$theShipfollower.engineer"/>
+									</do_if>
+									<do_else>
+										<continue />
+									</do_else>
+								</do_if>
+								<!-- /end of repair -->
+								<start_script name="'carrier.default'" object="$theShipfollower.pilot">
+									<param name="base" value="$theShip" />
+									<param name="do_escort" value="if @event.param2 == 'preparetodie' then false else $theShip" />
+									<param name="formation" value="$formation" />
+								</start_script>
+								<!-- followers -->
+								<set_value name="$subordinates_sub" exact="$theShipfollower.subordinates" />
+								<do_if value="$subordinates_sub.count gt 0">
+									<do_all exact="$subordinates_sub.count" counter="$i_sub">
+										<set_value name="$theShipfollower_sub" exact="$subordinates_sub.{$i_sub}" />
+										<do_if value="$theShipfollower_sub.isclass.[class.ship_s, class.ship_m]">
+											<!-- end of repair -->
+											<do_if value="$theShipfollower_sub.engineer.exists and $theShipfollower_sub.engineer.isclass.npc">
+												<do_if value="$theShipfollower_sub.hullpercentage" min="70">
+													<destroy_object object="$theShipfollower_sub.engineer"/>
+												</do_if>
+												<do_else>
+													<continue />
+												</do_else>
+											</do_if>
+											<!-- /end of repair -->
+											<start_script name="'carrier.default'" object="$theShipfollower_sub.pilot">
+												<param name="base" value="$theShip" />
+												<param name="commander" value="$theShipfollower" />
+												<param name="formation" value="$formation" />
+											</start_script>
+										</do_if>
+									</do_all>
+									<remove_value name="$theShipfollower_sub"/>
+								</do_if>
+								<remove_value name="$subordinates_sub"/>
+								<!-- followers -->
+							</do_if>
+						</do_all>
+						<remove_value name="$theShipfollower"/>
+					</do_if>
+					<remove_value name="$subordinates"/>
+					<remove_value name="$theShip.pilot.$carrier_restart_fighters"/>
+					<!-- close hangar -->
+					<activate_battlestate object="$theShip" state="close_hangar" chance="if global.$mmcarrierconfig.$mm_carriers_sdockplus then 0 else 100" />
+				</do_if>
+				<!-- start carriers learntofly -->
+				<do_elseif value="event.param" exact="'mmc_start_learntofly'">
+					<set_value name="$simpel" />
+					<set_value name="$object" exact="$theShip" />
+					<include_actions ref="MM_Carriers_do_list" />
+					<remove_value name="$object"/>
+					<set_value name="$subordinates" exact="$theShipfollowers.list" />
+					<remove_value name="$theShipfollowers"/>
+					<do_if value="$subordinates.count gt 0">
+						<!-- open hangar -->
+						<activate_battlestate object="$theShip" state="open_hangar" chance="if global.$mmcarrierconfig.$mm_carriers_sdockplus then 0 else 100"/>
+						<do_all exact="$subordinates.count" counter="$i">
+							<set_value name="$theShipfollower" exact="$subordinates.{$i}" />
+							<do_if value="$theShipfollower.isclass.[class.ship_s, class.ship_m]">
+								<!-- end of repair -->
+								<do_if value="$theShipfollower.engineer.exists and $theShipfollower.engineer.isclass.npc">
+									<do_if value="$theShipfollower.hullpercentage" min="70">
+										<destroy_object object="$theShipfollower.engineer"/>
+									</do_if>
+									<do_else>
+										<continue />
+									</do_else>
+								</do_if>
+								<!-- /end of repair -->
+								<start_script name="'move.learntofly'" object="$theShipfollower.pilot" />
+								<!-- followers -->
+								<set_value name="$subordinates_sub" exact="$theShipfollower.subordinates" />
+								<do_if value="$subordinates_sub.count gt 0">
+									<do_all exact="$subordinates_sub.count" counter="$i_sub">
+										<set_value name="$theShipfollower_sub" exact="$subordinates_sub.{$i_sub}" />
+										<do_if value="$theShipfollower_sub.isclass.[class.ship_s, class.ship_m]">
+											<!-- end of repair -->
+											<do_if value="$theShipfollower_sub.engineer.exists and $theShipfollower_sub.engineer.isclass.npc">
+												<do_if value="$theShipfollower_sub.hullpercentage" min="70">
+													<destroy_object object="$theShipfollower_sub.engineer"/>
+												</do_if>
+												<do_else>
+													<continue />
+												</do_else>
+											</do_if>
+											<!-- /end of repair -->
+											<start_script name="'move.learntofly'" object="$theShipfollower_sub.pilot" />
+										</do_if>
+									</do_all>
+									<remove_value name="$theShipfollower_sub"/>
+								</do_if>
+								<remove_value name="$subordinates_sub"/>
+								<!-- followers -->
+							</do_if>
+						</do_all>
+						<remove_value name="$theShipfollower"/>
+					</do_if>
+					<remove_value name="$subordinates"/>
+					<!-- close hangar -->
+					<activate_battlestate object="$theShip" state="close_hangar" />
+				</do_elseif>
+				<!-- docking -->
+				<do_elseif value="event.param" exact="'mmc_dock_c'">
+					<set_value name="$subordinates" exact="$theShip.subordinates" />
+					<set_value name="$dock_s_i" exact="0" />
+					<set_value name="$dock_m_i" exact="0" />
+					<do_if value="$subordinates.count gt 0">
+						<!-- open hangar -->
+						<activate_battlestate object="$theShip" state="open_hangar" chance="if global.$mmcarrierconfig.$mm_carriers_sdockplus then 0 else 100"/>
+						<do_all exact="$subordinates.count" counter="$i">
+							<set_value name="$theShipfollower" exact="$subordinates.{$i}" />
+							<do_if value="$theShipfollower.isclass.[class.ship_s, class.ship_m]">
+								<!-- followers -->
+								<set_value name="$subordinates_sub" exact="$theShipfollower.subordinates" />
+								<do_if value="$subordinates_sub.count gt 0">
+									<do_all exact="$subordinates_sub.count" counter="$i_sub">
+										<!--<do_if value="$subordinates_sub.{$i_sub} == null">
+											<continue />
+										</do_if>-->
+										<set_value name="$theShipfollower_x" exact="$subordinates_sub.{$i_sub}" />
+										<include_actions ref="MM_Carriers_do_dock_x" />
+									</do_all>
+								</do_if>
+								<remove_value name="$subordinates_sub"/>
+								<!-- followers -->
+								<set_value name="$theShipfollower_x" exact="$theShipfollower" />
+								<include_actions ref="MM_Carriers_do_dock_x" />
+							</do_if>
+						</do_all>
+						<remove_value name="$theShipfollower"/>
+					</do_if>
+					<remove_value name="$dock_s_i"/>
+					<remove_value name="$dock_s_i_max"/>
+					<remove_value name="$dock_s"/>
+					<remove_value name="$dock_m_i"/>
+					<remove_value name="$dock_m_i_max"/>
+					<remove_value name="$dock_m"/>
+					<remove_value name="$subordinates"/>
+					<remove_value name="$theShip.pilot.$carrier_restart_fighters"/>
+					<!-- close hangar -->
+					<activate_battlestate object="$theShip" state="close_hangar" chance="if global.$mmcarrierconfig.$mm_carriers_sdockplus then 0 else 100"/>
+				</do_elseif>
+				<!-- tranfer from or to Skunk -->
+				<do_elseif value="event.param" exact="'mmc_fskunk'">
+					<set_value name="$subordinates" exact="player.primaryship.subordinates" />
+					<do_if value="$subordinates.count gt 0">
+						<do_all exact="$subordinates.count" counter="$i">
+							<set_value name="$theShipfollower" exact="$subordinates.{$i}" />
+							<do_if value="$theShipfollower.isclass.[class.ship_s, class.ship_m]">
+								<set_object_commander object="$theShipfollower" commander="$theShip" />
+								<start_script name="'move.escort'" object="$theShipfollower.pilot">
+									<param name="target" value="$theShip" />
+									<param name="formation" value="$formation" />
+								</start_script>
+							</do_if>
+						</do_all>
+						<remove_value name="$theShipfollower"/>
+					</do_if>
+					<remove_value name="$subordinates"/>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmc_tskunk'">
+					<set_value name="$simpel" />
+					<set_value name="$object" exact="$theShip" />
+					<include_actions ref="MM_Carriers_do_list" />
+					<remove_value name="$object"/>
+					<set_value name="$subordinates" exact="$theShipfollowers.list" />
+					<remove_value name="$theShipfollowers"/>
+					<do_if value="$subordinates.count gt 0">
+						<do_all exact="$subordinates.count" counter="$i">
+							<set_value name="$theShipfollower" exact="$subordinates.{$i}" />
+							<do_if value="$theShipfollower.isclass.[class.ship_s, class.ship_m] and $theShipfollower.dockslot == null">
+								<remove_object_commander object="$theShipfollower"/>
+								<add_to_player_squad object="$theShipfollower" />
+								<start_script name="'player.default'" object="$theShipfollower.pilot" />
+							</do_if>
+						</do_all>
+						<remove_value name="$theShipfollower"/>
+					</do_if>
+					<remove_value name="$subordinates"/>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmc_tskunk_esc'">
+					<add_to_group groupname="$subordinates" list="$theShip.subordinates" />
+					<do_all exact="$subordinates.count" counter="$i" reverse="true">
+						<do_if value="$subordinates.{$i}.isclass.[class.ship_s, class.ship_m] and $subordinates.{$i}.dockslot == null" negate="true">
+							<remove_from_group group="$subordinates" object="$subordinates.{$i}" />
+						</do_if>
+					</do_all>
+					<do_if value="$subordinates.count gt 0">
+						<do_all exact="$subordinates.count" counter="$i">
+							<set_value name="$theShipfollower" exact="$subordinates.{$i}" />
+							<do_if value="$theShipfollower.isclass.[class.ship_s, class.ship_m] and $theShipfollower.dockslot == null">
+								<signal_objects object="$theShipfollower" param="'skunk commander'" />
+								<!--add_to_player_squad object="$theShipfollower" />
+								<remove_object_commander object="$theShipfollower"/>
+								<set_object_commander object="$theShipfollower" commander="player.primaryship" />
+								<start_script name="'move.escort'" object="$theShipfollower.pilot">
+									<param name="target" value="player.primaryship" />
+									<param name="formation" value="$formation" />
+								</start_script-->
+							</do_if>
+						</do_all>
+						<remove_value name="$theShipfollower"/>
+						<show_help position="8" log="false" force="true" duration="3s" custom="'To transfer Ships back to carrier, command 2x &quot;%1&quot;'.[{1002,2028}]" />
+					</do_if>
+					<remove_value name="$subordinates"/>
+				</do_elseif>
+				<!-- do escort job -->
+				<do_elseif value="event.param == 'mmc_fship_esc'">
+					<open_conversation_menu menu="MapMenu" param="event.param2" param2="event.param3" />
+					<add_conversation_view view="closeupdetailmonitor" />
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmc_fship_esc_zoneselected'">
+					<add_to_group groupname="$subordinates" list="$theShip.subordinates" />
+					<do_all exact="$subordinates.count" counter="$i" reverse="true">
+						<do_if value="$subordinates.{$i}.isclass.[class.ship_s, class.ship_m] and $subordinates.{$i}.dockslot == null" negate="true">
+							<remove_from_group group="$subordinates" object="$subordinates.{$i}" />
+						</do_if>
+					</do_all>
+					<do_if value="$subordinates.count gt 0">
+						<do_all exact="$subordinates.count" counter="$i">
+							<set_value name="$theShipfollower" exact="$subordinates.{$i}" />
+							<do_if value="event.param2.{3}.isoperational">
+								<!--set_object_commander object="$theShipfollower" commander="player.primaryship" /-->
+								<!--do_if value="$i lt $subordinates.count/2">
+									<start_script name="'move.escort'" object="$theShipfollower.pilot">
+										<param name="target" value="event.param2.{3}" />
+										<param name="formation" value="$formation" />
+									</start_script>
+								</do_if>
+								<do_else-->
+								<start_script object="$theShipfollower.pilot" name="'move.patrol'">
+									<param name="patrolobject" value="event.param2.{3}" />
+								</start_script>
+								<!--/do_else-->
+							</do_if>
+						</do_all>
+						<remove_value name="$theShipfollower"/>
+					</do_if>
+					<remove_value name="$subordinates"/>
+				</do_elseif>
+				<!-- drone start -->
+				<do_elseif value="event.param" exact="'mmc_dronestart'">
+					<find_object_component groupname="$dronedocks" object="$theShip" class="class.dronelaunchpad" multiple="true" checkoperational="true" integrated="false" />
+					<set_value name="$drones" exact="[ 	[macro.units_size_drone_attackdrone_impulse_mk1_macro, unitcategory.defence, 1],
+														[macro.units_size_drone_attackdrone_impulse_mk2_macro, unitcategory.defence, 2],
+														[macro.units_size_drone_attackdrone_plasma_mk1_macro, unitcategory.defence, 3],
+														[macro.units_size_drone_attackdrone_plasma_mk2_macro, unitcategory.defence, 4] ]" />
+					<set_value name="$j" exact="0" comment="counter" />
+					<set_value name="$k" exact="9" comment="target" />
+					<do_all exact="$drones.count" counter="$i">
+						<do_if value="$theShip.availableunits.{$drones.{$i}.{2}}.mk.{$drones.{$i}.{3}}.count ge $k/2">
+							<set_value name="$macro" exact="$drones.{$i}.{1}" />
+							<break />
+						</do_if>
+					</do_all>
+					<remove_value name="$drones"/>
+					<set_value name="$fail" exact="false" />
+					<debug_text text="'Drones: %1 %2'.[$macro.name, $dronedocks.count]" filter="error" chance="0" />
+					<do_while value="$j le $k and not $fail and $macro? and $dronedocks.count">
+						<set_value name="$fail" exact="true" />
+						<do_all exact="$dronedocks.count" counter="$i" reverse="true">
+							<do_if value="$j ge $k">
+								<break />
+							</do_if>
+							<debug_text text="'Drones: %1 %2 no. %3'.[$macro.name, $dronedocks.count, $j]" filter="error" chance="0" />
+							<launch_drone name="$drone" object="$dronedocks.{$i}" exact="1" group="unitcategory.defence" /><!--macro="$macro" -->
+							<do_if value="$drone">
+								<set_value name="$fail" exact="false" />
+								<set_value name="$j" operation="add" />
+								<start_script name="'fight.attack.object.drone.leader'" object="$drone.pilot" /><!-- fight.attack.object.drone.defence -->
+							</do_if>
+							<remove_value name="$drone"/>
+						</do_all>
+					</do_while>
+					<remove_value name="$dronedocks"/>
+					<remove_value name="$macro"/>
+					<remove_value name="$fail"/>
+				</do_elseif>
+				<!-- drone docking -->
+				<do_elseif value="event.param" exact="'mmc_dronedock'">
+					<add_to_group groupname="$drones" list="$theShip.subordinates" comment="use a group to handle the destruction/dock of drones" />
+					<!-- Filter subordinates to get only drones -->
+					<do_all exact="$drones.count" counter="$i" reverse="true">
+						<do_if value="not $drones.{$i}.isclass.drone">
+							<remove_from_group group="$drones" object="$drones.{$i}" />
+						</do_if>
+					</do_all>
+					<do_if value="$drones.count gt 0">
+						<find_object_component groupname="$dronedocks" object="$theShip" class="class.dronelaunchpad" multiple="true" checkoperational="true" integrated="false" />
+						<do_if value="$dronedocks">
+							<set_value name="$dock_xs_i" exact="0" />
+							<set_value name="$dock_xs_i_max" exact="$dronedocks.count" />
+							<!-- Script dock for them -->
+							<do_all exact="$drones.count" counter="$i">
+								<!-- If is not in command dock or action docking -->
+								<do_if value="($drones.{$i}.pilot.command.value != command.dockat) and ($drones.{$i}.pilot.commandaction.value != commandaction.docking)">
+									<set_value name="$dock_xs_i" operation="add" />
+									<start_script name="'move.dockat.drone'" object="$drones.{$i}.pilot">
+										<param name="destination" value="$theShip" />
+										<param name="dronelaunchpad" value="$dronedocks.{$dock_xs_i}" />
+									</start_script>
+									<do_if value="$dock_xs_i" exact="$dock_xs_i_max">
+										<set_value name="$dock_xs_i" exact="0" />
+									</do_if>
+								</do_if>
+							</do_all>
+							<remove_value name="$dock_xs_i"/>
+							<remove_value name="$dock_xs_i_max"/>
+						</do_if>
+						<do_else>
+							<!-- Script dock for them -->
+							<do_all exact="$drones.count" counter="$i">
+								<!-- If is not in command dock or action docking -->
+								<do_if value="($drones.{$i}.pilot.command.value != command.dockat) and ($drones.{$i}.pilot.commandaction.value != commandaction.docking)">
+									<start_script name="'move.dockat.drone'" object="$drones.{$i}.pilot">
+										<param name="destination" value="$theShip" />
+									</start_script>
+								</do_if>
+							</do_all>
+						</do_else>
+						<remove_value name="$dronedocks"/>
+					</do_if>
+					<remove_value name="$drones"/>
+				</do_elseif>
+				<!-- clean -->
+				<remove_value name="$formation"/>
+				<remove_value name="$theShip"/>
+			</actions>
+		</cue>
+		<!--  work work  -->
+		<cue name="MM_Carriers_do_followers" instantiate="true" >
+			<conditions>
+				<event_conversation_next_section sectionprefix="mmcs_"/>
+			</conditions>
+			<actions>
+				<set_value name="$theShip" exact="event.object.ship.commander" />
+				<set_value name="$formation" exact="[formationshape.vshape, formationshape.invvshape, formationshape.triangle, formationshape.eagle, formationshape.circle, formationshape.twin, formationshape.vulcan, formationshape.pointguard, formationshape.invpointguard].random" />
+
+				<do_if value="event.param" exact="'mmcs_start_c_s'">
+					<!-- open hangar -->
+					<activate_battlestate object="$theShip" state="open_hangar" chance="if global.$mmcarrierconfig.$mm_carriers_sdockplus then 0 else 100"/>
+
+					<set_value name="$theShipfollower" exact="event.object.ship" />
+					<do_if value="$theShipfollower.isclass.[class.ship_s, class.ship_m]">
+						<!-- end of repair -->
+						<do_if value="$theShipfollower.engineer.exists and $theShipfollower.engineer.isclass.npc">
+							<destroy_object object="$theShipfollower.engineer"/>
+						</do_if>
+						<!-- /end of repair -->
+						<start_script name="'carrier.default'" object="$theShipfollower.pilot">
+							<param name="base" value="$theShip" />
+							<param name="do_escort" value="$theShip" />
+							<param name="formation" value="$formation" />
+						</start_script>
+						<!-- followers -->
+						<set_value name="$subordinates_sub" exact="$theShipfollower.subordinates" />
+						<do_if value="$subordinates_sub.count gt 0">
+							<do_all exact="$subordinates_sub.count" counter="$i_sub">
+								<set_value name="$theShipfollower_sub" exact="$subordinates_sub.{$i_sub}" />
+								<do_if value="$theShipfollower_sub.isclass.[class.ship_s, class.ship_m]">
+									<!-- end of repair -->
+									<do_if value="$theShipfollower_sub.engineer.exists and $theShipfollower_sub.engineer.isclass.npc">
+										<destroy_object object="$theShipfollower_sub.engineer"/>
+									</do_if>
+									<!-- /end of repair -->
+									<start_script name="'carrier.default'" object="$theShipfollower_sub.pilot">
+										<param name="base" value="$theShip" />
+										<param name="commander" value="$theShipfollower" />
+										<param name="formation" value="$formation" />
+									</start_script>
+								</do_if>
+							</do_all>
+							<remove_value name="$theShipfollower_sub"/>
+						</do_if>
+						<remove_value name="$subordinates_sub"/>
+						<!-- followers -->
+					</do_if>
+					<remove_value name="$theShipfollower"/>
+					<!-- close hangar -->
+					<activate_battlestate object="$theShip" state="close_hangar" chance="if global.$mmcarrierconfig.$mm_carriers_sdockplus then 0 else 100" />
+				</do_if>
+				<!-- docking carriers -->
+				<do_elseif value="event.param" exact="'mmcs_dock_c_s'">
+					<set_value name="$dock_s_i" exact="0" />
+					<set_value name="$dock_m_i" exact="0" />
+					<!-- open hangar -->
+					<activate_battlestate object="$theShip" state="open_hangar" chance="if global.$mmcarrierconfig.$mm_carriers_sdockplus then 0 else 100"/>
+
+					<set_value name="$theShipfollower" exact="event.object.ship" />
+					<do_if value="$theShipfollower.isclass.[class.ship_s, class.ship_m]">
+						<!-- followers -->
+						<set_value name="$subordinates_sub" exact="$theShipfollower.subordinates" />
+						<do_if value="$subordinates_sub.count gt 0">
+							<do_all exact="$subordinates_sub.count" counter="$i_sub">
+								<set_value name="$theShipfollower_x" exact="$subordinates_sub.{$i_sub}" />
+								<include_actions ref="MM_Carriers_do_dock_x" />
+							</do_all>
+							<remove_value name="$theShipfollower_sub"/>
+						</do_if>
+						<remove_value name="$subordinates_sub"/>
+						<!-- followers -->
+						<set_value name="$theShipfollower_x" exact="$theShipfollower" />
+						<include_actions ref="MM_Carriers_do_dock_x" />
+					</do_if>
+					<remove_value name="$theShipfollower"/>
+					<remove_value name="$dock_s_i"/>
+					<remove_value name="$dock_s_i_max"/>
+					<remove_value name="$dock_s"/>
+					<remove_value name="$dock_m_i"/>
+					<remove_value name="$dock_m_i_max"/>
+					<remove_value name="$dock_m"/>
+					<remove_value name="$subordinates"/>
+					<!-- close hangar -->
+					<activate_battlestate object="$theShip" state="close_hangar" chance="if global.$mmcarrierconfig.$mm_carriers_sdockplus then 0 else 100"/>
+				</do_elseif>
+				<!-- clean -->
+				<remove_value name="$formation"/>
+				<remove_value name="$theShip"/>
+			</actions>
+		</cue>
+
+		<cue name="MM_Carriers_init">
+			<actions>
+				<do_if value="global.$mmcarrierconfig?" negate="true">
+					<set_value name="global.$mmcarrierconfig" exact="table[
+						$mm_carriers_ad_glob = 1,
+						$mm_carriers_garage_min = 70,
+						$mm_carriers_sdockplus = 1
+					]" comment="end $mmcarrierconfig"/>
+				</do_if>
+				<do_if value="global.$mmcarriers?" negate="true">
+					<set_value name="global.$mmcarriers" exact="[
+							macro.units_size_xl_capital_destroyer_1_macro
+						]"/>
+				</do_if>
+			</actions>
+		</cue>
+
+		<cue name="MM_Carriers_RRF_base">
+			<actions>
+				<do_if value="global.$RRFspaces?" negate="true">
+					<find_sector groupname="global.$RRFspaces" space="player.galaxy" multiple="true" />
+				</do_if>
+				<do_else>
+					<clear_group group="global.$RRFspaces" />
+					<find_sector groupname="global.$RRFspaces" space="player.galaxy" multiple="true" />
+				</do_else>
+				<do_if value="global.$RRFunits?" negate="true">
+					<create_group groupname="global.$RRFunits" />
+				</do_if>
+			</actions>
+			<cues>
+				<cue name="MM_Carriers_RRF_watch" instantiate="true">
+					<conditions>
+						<check_any>
+							<event_object_signalled group="global.$RRFspaces" param="'help requested'" />
+							<event_object_signalled group="global.$RRFspaces" param="'help offered'" />
+							<event_object_signalled group="global.$RRFspaces" param="'help removed'" />
+						</check_any>
+					</conditions>
+					<actions>
+						<do_if value="event.param == 'help requested'">
+							<signal_objects group="global.$RRFunits" param="'help requested'" param2="event.param2" delay="200ms" />
+						</do_if>
+						<do_else>
+							<do_if value="global.$RRFunits?" negate="true">
+								<create_group groupname="global.$RRFunits" />
+							</do_if>
+							<do_if value="event.param == 'help offered'">
+								<do_if value="event.param2.isclass.ship and global.$RRFunits.list.indexof.{event.param2} == 0">
+									<add_to_group groupname="global.$RRFunits" object="event.param2" />
+								</do_if>
+							</do_if>
+							<do_else>
+								<remove_from_group group="global.$RRFunits" object="event.param2" />
+							</do_else>
+						</do_else>
+					</actions>
+				</cue>
+			</cues>
+		</cue>
+
+		<cue name="MM_Carriers_patch2" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_cue_signalled cue="md.Setup.GameStart"/>
+					<event_game_loaded/>
+				</check_any>
+			</conditions>
+			<actions>
+				<do_if value="global.$mmcarrierconfig?" negate="true">
+					<set_value name="global.$mmcarrierconfig" exact="table[
+						$mm_carriers_ad_glob = 1,
+						$mm_carriers_garage_min = 70
+					]" comment="end $mmcarrierconfig"/>
+				</do_if>
+				<do_if value="global.$mmcarrierconfig.$mm_carriers_sdockplus?" negate="true">
+					<set_value name="global.$mmcarrierconfig.$mm_carriers_sdockplus" exact="1" />
+				</do_if>
+
+				<set_value name="global.$mmcarriers" exact="[
+						macro.units_size_xl_capital_destroyer_1_macro
+					]"/>
+				<set_value name="global.$mmcarriers_xl" exact="[ ]"/>
+				<set_value name="md.$mmc_explorers" exact="[ ]"/>
+
+				<do_if value="global.$RRFspaces?" negate="true">
+					<find_sector groupname="global.$RRFspaces" space="player.galaxy" multiple="true" />
+				</do_if>
+				<do_else>
+					<clear_group group="global.$RRFspaces" />
+					<find_sector groupname="global.$RRFspaces" space="player.galaxy" multiple="true" />
+				</do_else>
+
+				<set_value name="md.$mmcarrierversion" exact="219" />
+				<set_value name="md.$mmcarrier_on" exact="if global.$mmcarrierconfig.$mm_carriers_ad_glob then player.age else 1.0" />
+			</actions>
+		</cue>
+
+		<cue name="MM_Carriers_AdvCom_work" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_conversation_next_section sectionprefix="mmadvcom_"/>
+					<event_conversation_returned_to_section sectionprefix="mmadvcom_" />
+				</check_any>
+				<check_value value="md.$mm_advcom" exact="'carriers'" />
+			</conditions>
+			<actions>
+
+				<do_if value="event.param == 'mmadvcom_main'">
+					<add_player_choice 		text="{1002,12025}" 	position="bottom_right" section="mmadvcom_next" />
+				</do_if>
+				<do_elseif value="event.param == 'mmadvcom_next'">
+					<!--add_player_choice 		text="{1002,12025}" 	position="bottom_right" section="mmadvcom_last" />
+				</do_elseif>
+				<do_elseif value="event.param == 'mmadvcom_last'"-->
+					<add_player_choice_sub text="{1002,1051}" tooltip="{1026, 20006}" section="gMain_object" position="right" choiceparam="[0, 0, event.object.ship]" comment="Show Ship Details" />
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+				</do_elseif>
+
+			</actions>
+		</cue>	
+		<cue name="MM_Carriers_AdvCom_init" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_cue_signalled cue="md.Setup.GameStart"/>
+					<event_game_loaded/>
+				</check_any>
+			</conditions>
+			<delay max="500ms"/>
+			<actions>
+				<set_value name="md.$mm_advcom" exact="'carriers'"/>
+			</actions>
+		</cue>
+
+		<!--
+		<set_value name="$simpel" comment="optional"/>
+		<set_value name="$simpelXL" comment="optional"/>
+		<set_value name="$follower" exact="100" comment="optional"/>
+		<set_value name="$object" exact="$theShip" />
+		<set_value name="$entitytype" exact="entitytype.defencecontrol" comment="optional" />
+		<include_actions ref="MM_Carriers_do_list" />
+		<remove_value name="$object"/>
+		<remove_value name="$theShipfollow_carriers"/>
+		<remove_value name="$theShipfollow_capital"/>
+		<remove_value name="$theShipfollowers"/>
+		-->
+		<library name="MM_Carriers_do_list">
+			<actions>
+				<!--do_if value="$object.subordinates.{$entitytype}.count" chance="if $entitytype? and typeof $entitytype == datatype.entitytype then 100 else 0">
+					<set_value name="$subordinates" exact="$object.subordinates.{$entitytype}" />
+				</do_if>
+				<do_elseif value="$object.subordinates.{entitytype.commander}.count" chance="if $object.pilot? and $object.pilot.type == entitytype.commander then 100 else 0">
+					<set_value name="$subordinates" exact="$object.subordinates.{entitytype.commander}" />
+				</do_elseif>
+				<do_else>
+					<set_value name="$subordinates" exact="$object.subordinates" />
+				</do_else-->
+				<set_value name="$subordinates" exact="$object.subordinates" />
+				<do_if value="$simpel?">
+					<set_value name="$follower" exact="0" />
+					<set_value name="$followerCap" exact="0" />
+				</do_if>
+				<do_elseif value="$simpelXL?">
+					<set_value name="$follower" exact="0" />
+					<set_value name="$followerCap" exact="100" />
+				</do_elseif>
+				<do_else>
+					<set_value name="$follower" exact="if $follower? then $follower else 100" />
+					<set_value name="$followerCap" exact="if $followerCap? then $followerCap else 100" />
+				</do_else>
+				<create_group groupname="$theShipfollowers" />
+				<create_group groupname="$theShipfollow_capital" chance="$followerCap"/>
+				<create_group groupname="$theShipfollow_carriers" chance="$followerCap"/>
+				<do_if value="$subordinates.count" min="1">
+					<do_all exact="$subordinates.count" counter="$i">
+						<do_if value="$subordinates.{$i}.subordinates.count gt 0" chance="$follower">
+							<do_if value="$subordinates.{$i}.isclass.[class.ship_s, class.ship_m]">
+								<add_to_group groupname="$theShipfollowers" object="$subordinates.{$i}" />
+								<add_to_group groupname="$theShipfollowers" list="$subordinates.{$i}.subordinates" />
+							</do_if>
+							<do_elseif value="$subordinates.{$i}.isclass.[class.ship_l, class.ship_xl]" chance="$followerCap">
+								<!--find_dock_location container="$subordinates.{$i}" size="tag.dock_s" name="$dock"/>
+								<do_if value="$dock" negate="true"-->
+								<do_if value="$subordinates.{$i}.macro.ismacro.{global.$mmcarriers}" negate="true">
+									<add_to_group groupname="$theShipfollowers" list="$subordinates.{$i}.subordinates" />
+									<add_to_group groupname="$theShipfollow_capital" object="$subordinates.{$i}" />
+								</do_if>
+								<do_else>
+									<add_to_group groupname="$theShipfollow_carriers" object="$subordinates.{$i}" />
+								</do_else>
+								<remove_value name="$dock"/>
+							</do_elseif>
+						</do_if>
+						<do_elseif value="$subordinates.{$i}.isclass.[class.ship_s, class.ship_m]">
+							<add_to_group groupname="$theShipfollowers" object="$subordinates.{$i}" />
+						</do_elseif>
+						<do_elseif value="$subordinates.{$i}.macro.ismacro.{global.$mmcarriers}" chance="$followerCap">
+							<add_to_group groupname="$theShipfollow_carriers" object="$subordinates.{$i}" />
+						</do_elseif>
+						<do_elseif value="$subordinates.{$i}.isclass.[class.ship_l, class.ship_xl]" chance="$followerCap">
+							<add_to_group groupname="$theShipfollow_capital" object="$subordinates.{$i}" />
+						</do_elseif>
+					</do_all>
+				</do_if>
+				<remove_value name="$subordinates"/>
+				<remove_value name="$entitytype"/>
+				<remove_value name="$followerCap"/>
+				<remove_value name="$follower"/>
+				<remove_value name="$simpel"/>
+			</actions>
+		</library>
+		<!--
+		<set_value name="$object" exact="$theShip" />
+		<include_actions ref="MM_Carriers_do_overalllist_detail" />
+		<remove_value name="$object"/>
+		<remove_value name="$theShipfollowers"/>
+		<remove_value name="$theShipfollow_small"/>
+		<remove_value name="$theShipfollow_carriers"/>
+		<remove_value name="$theShipfollow_bigship"/>
+		-->
+		<!--<library name="MM_Carriers_do_overalllist_detail">
+			<actions>
+				<add_to_group groupname="$theShipfollowers" list="$object.subordinates" />
+				<create_group groupname="$theShipfollow_small" />
+				<create_group groupname="$theShipfollow_carriers" />
+				<create_group groupname="$theShipfollow_bigship" />
+				<set_value name="$do_while_i" exact="0" />
+				<do_while value="$do_while_i le $theShipfollowers.count" >
+					<set_value name="$do_while_i" operation="add"  exact="1" />
+					<do_if value="$theShipfollowers.{$do_while_i}.subordinates? and @$theShipfollowers.{$do_while_i}.subordinates.count gt 0">
+						<do_all exact="$theShipfollowers.{$do_while_i}.subordinates.count" counter="$do_all_i" >
+							<!{1}** alle **{1}>
+							<do_if value="$theShipfollowers.{$do_while_i}.subordinates.{$do_all_i}.isclass.ship">
+								<add_to_group groupname="$theShipfollowers" object="$theShipfollowers.{$do_while_i}.subordinates.{$do_all_i}" />
+							</do_if>
+							<!{1}** sorting **{1}>
+							<do_if value="$theShipfollowers.{$do_while_i}.subordinates.{$do_all_i}.isclass.[class.ship_l, class.ship_xl]">
+								<add_to_group groupname="$theShipfollow_bigship" object="$theShipfollowers.{$do_while_i}.subordinates.{$do_all_i}" />
+								<find_dock_location container="$theShipfollowers.{$do_while_i}.subordinates.{$do_all_i}" size="tag.dock_s" name="$dock"/>
+								<do_if value="$dock">
+									<add_to_group groupname="$theShipfollow_carriers" object="$theShipfollowers.{$do_while_i}.subordinates.{$do_all_i}" />
+								</do_if>
+								<do_elseif value="$theShipfollowers.{$do_while_i}.subordinates.{$do_all_i}.isclass.[class.ship_s, class.ship_m]">
+									<add_to_group groupname="$theShipfollow_small" object="$theShipfollowers.{$do_while_i}.subordinates.{$do_all_i}" />
+								</do_elseif>
+							</do_if>
+							<do_elseif value="$theShipfollowers.{$do_while_i}.subordinates.{$do_all_i}.isclass.[class.ship_s, class.ship_m]">
+								<add_to_group groupname="$theShipfollow_small" object="$theShipfollowers.{$do_while_i}.subordinates.{$do_all_i}" />
+							</do_elseif>
+						</do_all>
+					</do_if>
+				</do_while>
+			</actions>
+		</library>-->
+		<!--
+		<set_value name="$object" exact="$theShip" />
+		<include_actions ref="MM_Carriers_do_overalllist_simple" />
+		<remove_value name="$object"/>
+		<remove_value name="$theShipfollowers"/>
+		-->
+		<library name="MM_Carriers_do_overalllist_simple">
+			<actions>
+				<!--do_if value="$object.subordinates.{$entitytype}.count" chance="if $entitytype? and typeof $entitytype == datatype.entitytype then 100 else 0">
+					<add_to_group groupname="$theShipfollowers" list="$object.subordinates.{$entitytype}" />
+				</do_if>
+				<do_elseif value="$object.subordinates.{entitytype.commander}.count" chance="if $object.pilot? and $object.pilot.type == entitytype.commander then 100 else 0">
+					<add_to_group groupname="$theShipfollowers" list="$object.subordinates.{entitytype.commander}" />
+				</do_elseif>
+				<do_else>
+				</do_else-->
+				<add_to_group groupname="$theShipfollowers" list="$object.subordinates" />
+				<set_value name="$do_while_i" exact="0" />
+				<do_while value="$do_while_i le $theShipfollowers.count" >
+					<set_value name="$do_while_i" operation="add"  exact="1" />
+					<do_if value="$theShipfollowers.{$do_while_i}.subordinates? and @$theShipfollowers.{$do_while_i}.subordinates.count gt 0">
+						<do_all exact="$theShipfollowers.{$do_while_i}.subordinates.count" counter="$do_all_i" >
+							<do_if value="$theShipfollowers.{$do_while_i}.subordinates.{$do_all_i}.isclass.ship">
+								<add_to_group groupname="$theShipfollowers" object="$theShipfollowers.{$do_while_i}.subordinates.{$do_all_i}" />
+							</do_if>
+						</do_all>
+					</do_if>
+				</do_while>
+				<remove_value name="$entitytype"/>
+			</actions>
+		</library>
+		<!--
+		<set_value name="$damaged_ship" exact="$theShipfollower" />
+		<include_actions ref="MM_Carriers_do_create_mech" />
+		-->
+		<library name="MM_Carriers_do_create_mech">
+			<actions>
+				<create_cue_actor name="$mechanic" cue="this">
+					<!-- <select faction="faction.xenon" tags="tag.engineer"/> deck crew is not xenon ... not yet :D -->
+					<select race="race.argon" tags="tag.engineer"/>
+					<owner exact="$damaged_ship.owner" />
+					<skills>
+						<skill type="combat" exact="5"/>
+						<skill type="engineering" exact="5"/>
+						<skill type="leadership" exact="5"/>
+						<skill type="management" exact="5"/>
+						<skill type="morale" exact="5"/>
+						<skill type="navigation" exact="5"/>
+						<skill type="science" exact="5"/>
+					</skills>
+				</create_cue_actor>
+				<set_entity_type entity="$mechanic" type="entitytype.engineer" />
+				<assign_engineer object="$damaged_ship" actor="$mechanic" />
+				<do_if value="$mechanic.container">
+					<start_script object="$mechanic" name="'engineer.ai'" />
+				</do_if>
+				<remove_cue_actor actor="$mechanic" cue="this" />
+				<remove_value name="$mechanic" />
+				<remove_value name="$damaged_ship" />
+			</actions>
+		</library>
+		<!--
+		<set_value name="$theShipfollower_x" exact="$subordinates_sub.{$i_sub}" />
+		<include_actions ref="MM_Carriers_do_dock_x" />
+					<remove_value name="$dock_s_i"/>
+					<remove_value name="$dock_s_i_max"/>
+					<remove_value name="$dock_s"/>
+					<remove_value name="$dock_m_i"/>
+					<remove_value name="$dock_m_i_max"/>
+					<remove_value name="$dock_m"/>
+		-->
+		<library name="MM_Carriers_do_dock_x">
+			<actions>
+				<do_if value="$theShipfollower_x.isclass.[class.ship_s, class.ship_m]">
+					<start_script object="$theShipfollower_x.pilot" name="'carrier.default'" chance="if $theShipfollower_x.pilot.$carrier? then 0 else 100" >
+						<param name="base" value="$theShip" />
+					</start_script>
+					<do_if value="$theShipfollower_x.docksize" exact="tag.dock_s">
+						<do_if value="not $dock_s?">
+							<find_dock_location container="$theShip" name="$dock_s" size="tag.dock_s" multiple="true" />
+							<set_value name="$dock_s_i_max" exact="$dock_s.count" />
+						</do_if>
+						<do_if value="$dock_s">
+							<set_value name="$dock_s_i" operation="add" />
+							<!--start_script object="$theShipfollower_x.pilot" name="'move.dockat'">
+								<param name="destination" value="$theShip" />
+								<param name="dockingslot" value="$dock_s.{$dock_s_i}" />
+							</start_script-->
+							<signal_objects object="$theShipfollower_x" param="'dock at end'" param2="$theShip" param3="$dock_s.{$dock_s_i}" />
+							<set_value name="$dock_s_i" exact="0" chance="if $dock_s_i == $dock_s_i_max then 100 else 0"/>
+						</do_if>
+					</do_if>
+					<do_elseif value="$theShipfollower_x.docksize" exact="tag.dock_m">
+						<do_if value="not $dock_m?">
+							<find_dock_location container="$theShip" name="$dock_m" size="tag.dock_m" multiple="true" />
+							<set_value name="$dock_m_i_max" exact="$dock_m.count" />
+						</do_if>
+						<do_if value="$dock_m">
+							<set_value name="$dock_m_i" operation="add" />
+							<!--start_script object="$theShipfollower_x.pilot" name="'move.dockat'">
+								<param name="destination" value="$theShip" />
+								<param name="dockingslot" value="$dock_m.{$dock_m_i}" />
+							</start_script-->
+							<signal_objects object="$theShipfollower_x" param="'dock at end'" param2="$theShip" param3="$dock_m.{$dock_m_i}" />
+							<set_value name="$dock_m_i" exact="0" chance="if $dock_m_i == $dock_m_i_max then 100 else 0"/>
+						</do_if>
+					</do_elseif>
+					<!-- repair -->
+					<do_if value="$theShipfollower_x.hullpercentage" max="global.$mmcarrierconfig.$mm_carriers_garage_min">
+						<do_if value="$theShipfollower_x.engineer.exists" negate="true">
+							<set_value name="$damaged_ship" exact="$theShipfollower_x" />
+							<include_actions ref="MM_Carriers_do_create_mech" />
+						</do_if>
+					</do_if>
+					<!-- /repair -->
+				</do_if>
+				<remove_value name="$theShipfollower_x"/>
+			</actions>
+		</library>
+	</cues>
+</mdscript>

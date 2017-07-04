@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<!-- Conquer_mod v020 -->
+<components>
+	<component name="units_size_l_troop_transporter5" class="ship_l">
+		<source geometry="assets\units\size_l\\units_size_l_kit_hybrid_01_data"/>
+		<layers>
+			<layer>
+				<waypoints>
+					<waypoint name="XU_Waypoint14" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="336.8592" y="-16.79542" z="32.67242">
+						<links>
+							<link ref="XU_Waypoint13"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint13" tags="sizeLevel1 typedock end dynamicmasstraffic " x="36.85959" y="-16.79542" z="32.67236">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint12" tags="sizeLevel1 typedock start dynamicmasstraffic " x="36.85962" y="17.45458" z="5.672485">
+						<links>
+							<link ref="XU_Waypoint11"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint11" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="336.8592" y="17.45458" z="5.672485">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint10" tags="sizeLevel1 typedock start dynamicmasstraffic " x="36.85956" y="17.45458" z="32.67249">
+						<links>
+							<link ref="XU_Waypoint09"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint09" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="336.8592" y="17.45458" z="32.67249">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint08" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-337.2169" y="17.45458" z="5.672363">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint07" tags="sizeLevel1 typedock start dynamicmasstraffic " x="-37.21741" y="17.45458" z="5.672363">
+						<links>
+							<link ref="XU_Waypoint08"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint06" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-337.217" y="17.45458" z="32.67249">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint05" tags="sizeLevel1 typedock start dynamicmasstraffic " x="-37.21741" y="17.45458" z="32.67249">
+						<links>
+							<link ref="XU_Waypoint06"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint04" tags="sizeLevel1 typedock end dynamicmasstraffic " x="-37.21741" y="-16.79542" z="5.672478">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint03" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-337.217" y="-16.79542" z="5.67247">
+						<links>
+							<link ref="XU_Waypoint04"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint02" tags="sizeLevel1 typedock end dynamicmasstraffic " x="-37.21741" y="-16.79543" z="32.67249">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint01" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-337.217" y="-16.79543" z="32.67247">
+						<links>
+							<link ref="XU_Waypoint02"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint16" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="336.8592" y="-16.79543" z="5.672424">
+						<links>
+							<link ref="XU_Waypoint15"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint15" tags="sizeLevel1 typedock end dynamicmasstraffic " x="36.8596" y="-16.79543" z="5.672363">
+						<links/>
+					</waypoint>
+				</waypoints>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="ship">
+				<offset/>
+			</connection>
+			<connection name="Connection01" tags="part nocollision  ">
+				<offset/>
+				<parts>
+					<part name="part_dummy" wreck="part_dummy_wreck">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="lensflares.vertexcolor_basis"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="10" y="0" z="10"/>
+							<center x="0" y="0" z="0"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection02" tags="part  ">
+				<offset/>
+				<parts/>
+			</connection>
+			<connection name="connection_cockpit01" tags="cockpit cockpit_visible">
+				<offset>
+					<position x="-7.116314E-06" y="75.5" z="-710.0333"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_s01" tags="dock_s ">
+				<offset>
+					<!--<position x="0" y="-27.16906" z="594.507"/>-->
+					<position x="0" y="-23.16906" z="145.507"/>
+					<quaternion qx="0.7071066" qy="-1.067702E-07" qz="-1.067701E-07" qw="-0.7071069"/>
+				</offset>
+			</connection>
+			<connection name="connection_storage01" tags="storage ">
+				<offset/>
+			</connection>
+			<connection name="connection_storage02" tags="storage ">
+				<offset/>
+			</connection>
+			<connection name="connection_radar_fallback01" tags="radar ">
+				<offset/>
+			</connection>
+			<connection name="connection_storage03" tags="storage ">
+				<offset/>
+			</connection>
+			<connection name="connection_shieldgen_external01" tags="shieldgenerator external ">
+				<offset>
+					<position x="0" y="32.77893" z="-562.509"/>
+					<quaternion qx="-6.600236E-15" qy="1.509958E-07" qz="-1" qw="4.371139E-08"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_main_b" tags="destructible">
+				<offset>
+					<position x="-3.397743E-05" y="-3.397743E-05" z="-621.0332"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_front_b" tags="destructible">
+				<offset>
+					<position x="-2.759809E-05" y="-13.64107" z="661.0706"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_extender2_g" tags="destructible">
+				<offset>
+					<position x="-3.484308E-06" y="-28.91331" z="-254.5847"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_extender1_b" tags="destructible">
+				<offset>
+					<position x="-3.415958E-05" y="-14.44357" z="19.07472"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_extender2_c" tags="destructible">
+				<offset>
+					<position x="-4.522971E-07" y="-31.23763" z="291.2187"/>
+				</offset>
+			</connection>
+		</connections>
+	</component>
+</components>

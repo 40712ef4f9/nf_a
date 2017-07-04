@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<components>
+	<component name="struct_econ_science_fuelstation_dock" class="destructible">
+		<properties>
+			<hull max="0" integrated="1"/>
+		</properties>
+		<source geometry="assets\structures\Economy\science\struct_econ_science_fuelstation_a_data"/>
+		<layers>
+			<layer>
+				<waypoints/>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="Connection01" tags="part  ">
+				<offset>
+					<position x="-1.282295E-05" y="0" z="0"/>
+				</offset>
+				<parts>
+					<part name="part_main" wreck="part_main_wreck">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_hulls_02"/>
+									<material id="2" ref="argon.ar_trims_01"/>
+									<material id="3" ref="argon.ar_unique_03"/>
+								</materials>
+							</lod>
+							<lod index="1">
+								<materials>
+									<material id="1" ref="argon.ar_hulls_02"/>
+									<material id="2" ref="argon.ar_trims_01"/>
+									<material id="3" ref="argon.ar_unique_03"/>
+								</materials>
+							</lod>
+							<lod index="2">
+								<materials>
+									<material id="1" ref="argon.ar_hulls_02"/>
+									<material id="2" ref="argon.ar_trims_01"/>
+								</materials>
+							</lod>
+							<lod index="3">
+								<materials>
+									<material id="1" ref="argon.ar_hulls_02"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="129.7403" y="149.4801" z="455.0437"/>
+							<center x="-2.435835E-06" y="-89.95415" z="329.406"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection02" tags="part nocollision detail_s  ">
+				<offset>
+					<position x="-1.282295E-05" y="-95.26492" z="329.7861"/>
+				</offset>
+				<parts>
+					<part name="detail_s_alpha">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="generic.generic_alphatrims_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="126.618" y="168.7015" z="444.0431"/>
+							<center x="-2.435835E-06" y="-7.629395E-06" z="0"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection03" tags="part detail_s  ">
+				<offset>
+					<position x="-2.045235E-05" y="-62.59599" z="417.2977"/>
+				</offset>
+				<parts>
+					<part name="detail_s_main">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_hulls_02"/>
+									<material id="2" ref="argon.ar_trims_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="126.3393" y="139.2984" z="407.2196"/>
+							<center x="2.808174E-05" y="7.629395E-06" z="-46.5014"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection04" tags="part detail_l  ">
+				<offset>
+					<position x="-1.282295E-05" y="-101.6269" z="292.5722"/>
+				</offset>
+				<parts>
+					<part name="detail_l_main">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_hulls_02"/>
+									<material id="2" ref="argon.ar_trims_01"/>
+									<material id="3" ref="generic.generic_techtrims_01"/>
+									<material id="4" ref="argon.ar_unique_03"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="148.5938" y="167.7976" z="441.5539"/>
+							<center x="-2.435835E-06" y="7.629395E-06" z="16.72147"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection05" tags="part detail_s nocollision  ">
+				<offset>
+					<position x="0" y="-91.9082" z="384.0208"/>
+				</offset>
+				<parts>
+					<part name="fx_lights">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="effects.lightcone_soft_near"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="93.34956" y="16.11691" z="31.40574"/>
+							<center x="0" y="-5.045143" z="-21.04236"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection06" tags="part  ">
+				<offset>
+					<position x="-1.282295E-05" y="0" z="1000"/>
+				</offset>
+				<parts/>
+			</connection>
+		</connections>
+	</component>
+</components>

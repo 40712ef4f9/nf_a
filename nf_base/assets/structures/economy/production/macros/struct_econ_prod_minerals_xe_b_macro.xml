@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Michael (192.168.3.146) at 09.11.2015_11-39-50-->
+<macros>
+  <macro name="struct_econ_prod_minerals_xe_b_macro" class="production">
+    <component ref="generic_production" />
+    <properties>
+      <identification name="{20107,5401}" description="{20107,5402}" unique="0" />
+      <hull integrated="1" />
+      <secrecy level="6" />
+      <production wares="shieldgenerator">
+        <queue ware="shieldgenerator" method="xenon" />
+      </production>
+    </properties>
+  </macro>
+</macros>

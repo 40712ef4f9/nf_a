@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="/aiscript/attention/actions/do_while/do_if[@value='not this.ship.units.collect.{$ware}.count'][1]" pos="after">
+		<do_if value="$zone.owner? and @$zone.owner.hasrelation.enemy.{this.ship.owner}">
+			<get_control_entities groupname="$Entities" object="this.ship"/>
+			<do_if value="$Entities?">
+				<do_all exact="$Entities.count" counter="$i" > 
+					<set_cover_owner object="$Entities.{$i}" faction="$zone.owner"/>
+				</do_all> 
+				<set_cover_owner object="this.ship" faction="$zone.owner"/>
+			</do_if>
+			<remove_value name="$Entities"/>
+		</do_if>
+	</add>
+	<add sel="/aiscript/attention/actions/do_while[1]" pos="after">
+		<do_if value="this.ship.owner != this.ship.trueowner">
+			<get_control_entities groupname="$Entities" object="this.ship"/>
+			<do_if value="$Entities?">
+				<do_all exact="$Entities.count" counter="$i" > 
+					<set_cover_owner object="$Entities.{$i}"/>
+				</do_all> 
+				<set_cover_owner object="this.ship"/>
+			</do_if>
+			<remove_value name="$Entities"/>
+		</do_if>
+	</add>
+	<add sel="/aiscript">
+  <on_abort>
+	<do_if value="this.ship.owner != this.ship.trueowner">
+		<get_control_entities groupname="$Entities" object="this.ship"/>
+		<do_if value="$Entities?">
+			<do_all exact="$Entities.count" counter="$i" > 
+				<set_cover_owner object="$Entities.{$i}"/>
+			</do_all> 
+			<set_cover_owner object="this.ship"/>
+		</do_if>
+		<remove_value name="$Entities"/>
+	</do_if>
+  </on_abort>
+	</add>
+</diff>

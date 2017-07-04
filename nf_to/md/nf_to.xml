@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<mdscript name="NF_TO" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../libraries/md.xsd">
+	<cues>
+		<cue name="NF_TO_patch" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_cue_signalled cue="md.Setup.GameStart"/>
+					<event_game_loaded />
+				</check_any>
+			</conditions>
+			<delay min="190ms" />
+			<actions>
+				<do_if value="md.$NFMMprocessesdSectors? and player.age lt 3min and md.$NFMMprocessesdSectors.indexof.{'NF_TO'} == 0">
+					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_TO'"/>
+				</do_if>
+				<do_elseif value="md.$NFMMprocessesdSectors? and player.age ge 3min and md.$NFMMprocessesdSectors.indexof.{'NF_TO'} == 0">
+					<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
+					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_TO'"/>
+				</do_elseif>
+
+				<do_if value="md.$todo_ships_capital_mod?">
+						<set_value name="$todo" exact="
+							[
+								macro.units_size_xl_te_kit_none_02_xl_macro,
+								macro.units_size_xl_te_kit_none_x1_macro,
+								macro.units_size_xl_te_kit_none_x1s_macro
+							]
+						"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<append_to_list name="md.$todo_ships_capital_mod" exact="$todo.{$j}"/>
+					</do_all> 
+					<debug_text text="'ADD Ships to the Cheatpackage'" filter="error" chance="0" />
+					<remove_value name="$todo"/>
+				</do_if>
+			</actions>
+		</cue>
+	</cues>
+</mdscript>
+	

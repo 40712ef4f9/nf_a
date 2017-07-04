@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<diff>
+	<add sel="/aiscript/attention[@min='unknown']/actions/do_if[@value='this.station.owner != faction.player']/set_value[@name='$tradingstations']" pos="after">
+		<append_to_list name="$tradingstations" exact="macro.struct_bt_hol_dock_pir_macro"/>
+	</add>
+</diff>

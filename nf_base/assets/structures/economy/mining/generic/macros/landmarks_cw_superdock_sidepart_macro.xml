@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Benedikt (192.168.3.146) at 17.10.2013_14-02-34-->
+<macros>
+  <macro name="landmarks_cw_superdock_sidepart_macro" class="destructible">
+    <component ref="struct_econ_mining_cw_generic_special_dock" />
+    <properties>
+      <identification name="PortalGenerator" description="010011001110000111000101000" unique="0" />
+      <hull invulnerable="0" />
+      <effects>
+        <explosion ref="explosion_station_01" />
+        <sefx_hack_disabled ref="hack_deactivated_s" />
+      </effects>
+    </properties>
+  </macro>
+</macros>

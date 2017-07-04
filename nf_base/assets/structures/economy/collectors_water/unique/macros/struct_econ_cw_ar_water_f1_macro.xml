@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Benedikt (192.168.3.146) at 30.10.2013_15-18-45-->
+<macros>
+  <macro name="struct_econ_cw_ar_water_f1_macro" class="destructible">
+    <component ref="struct_econ_cw_ar_water_f" />
+    <properties>
+      <identification name="{20107,301}" description="{20107,302}" />
+      <explosiondamage value="100000" />
+      <hull max="3800000" />
+      <effects>
+        <explosion ref="capital_explosion" />
+        <sefx_hack_disabled ref="hack_deactivated_m" />
+      </effects>
+      <efficiency bonus="0.04" />
+    </properties>
+    <connections>
+      <connection ref="connection_shieldgenerator01">
+        <macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_turret_small_mg01">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg02">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg03">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

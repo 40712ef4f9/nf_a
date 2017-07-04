@@ -1,0 +1,316 @@
+<?xml version="1.0"?>
+<diff>
+	<!-- checked for 2.10 -->
+	<add sel="//components/component[@name='units_size_l_xenon_01']/connections">		
+		<connection name="connection_dock_p01" tags="dock_p ">
+			<offset>
+				<position x="0" y="-285" z="330"/>
+				<quaternion qx="-0" qy="1" qz="0" qw="0"/>
+			</offset>
+		</connection>		
+		<connection name="connection_dock_s01" group="group02 " tags="dock_s ">
+			<offset>
+				<position x="0" y="-356" z="658"/>
+				<quaternion qx="0" qy="0.7071" qz="-0.7071" qw="0"/>
+			</offset>
+		</connection>
+	</add>
+	<add sel="//waypoints" >
+		<waypoint name="XU_Waypoint63" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="660.2332" y="21.5" z="-61.24994">
+			<links>
+				<link ref="XU_Waypoint62"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint62" tags="typenormal sizeLevel1 dynamicmasstraffic " x="387.2333" y="21.5" z="-61.24998">
+			<links>
+				<link ref="XU_Waypoint58"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint61" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="660.2333" y="21.5" z="-34.24994">
+			<links>
+				<link ref="XU_Waypoint60"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint60" tags="typenormal sizeLevel1 dynamicmasstraffic " x="454.2333" y="21.5" z="-34.24997">
+			<links>
+				<link ref="XU_Waypoint52"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint59" tags="sizeLevel1 typedock end dynamicmasstraffic " x="80.23331" y="38.25" z="11.74996">
+			<links/>
+		</waypoint>
+		<waypoint name="XU_Waypoint58" tags="typenormal sizeLevel1 dynamicmasstraffic " x="350.2333" y="38.25" z="11.75">
+			<links>
+				<link ref="XU_Waypoint59"/>
+				<link ref="XU_Waypoint57"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint57" tags="typenormal sizeLevel1 dynamicmasstraffic " x="310.2333" y="38.25" z="91.75001">
+			<links>
+				<link ref="XU_Waypoint56"/>
+				<link ref="XU_Waypoint55"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint56" tags="sizeLevel1 typedock end dynamicmasstraffic " x="80.23328" y="38.25" z="91.74997">
+			<links/>
+		</waypoint>
+		<waypoint name="XU_Waypoint55" tags="typenormal sizeLevel1 dynamicmasstraffic " x="280.2333" y="38.25" z="151.75">
+			<links>
+				<link ref="XU_Waypoint54"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint54" tags="sizeLevel1 typedock end dynamicmasstraffic " x="80.23325" y="38.25" z="151.75">
+			<links/>
+		</waypoint>
+		<waypoint name="XU_Waypoint53" tags="sizeLevel1 typedock end dynamicmasstraffic " x="80.23326" y="38.25" z="231.75">
+			<links/>
+		</waypoint>
+		<waypoint name="XU_Waypoint52" tags="typenormal sizeLevel1 dynamicmasstraffic " x="350.2333" y="38.25" z="231.75">
+			<links>
+				<link ref="XU_Waypoint53"/>
+				<link ref="XU_Waypoint50"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint51" tags="sizeLevel1 typedock end dynamicmasstraffic " x="80.23323" y="38.25" z="351.75">
+			<links/>
+		</waypoint>
+		<waypoint name="XU_Waypoint50" tags="typenormal sizeLevel1 dynamicmasstraffic " x="310.2332" y="38.25" z="351.75">
+			<links>
+				<link ref="XU_Waypoint51"/>
+				<link ref="XU_Waypoint49"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint49" tags="typenormal sizeLevel1 dynamicmasstraffic " x="280.2332" y="38.25" z="431.75">
+			<links>
+				<link ref="XU_Waypoint48"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint48" tags="sizeLevel1 typedock end dynamicmasstraffic " x="80.23323" y="38.25" z="431.75">
+			<links/>
+		</waypoint>
+		<waypoint name="XU_Waypoint47" tags="typenormal sizeLevel1 dynamicmasstraffic " x="387.2333" y="55.75" z="-34.24998">
+			<links>
+				<link ref="XU_Waypoint46"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint46" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="660.2332" y="55.75" z="-34.24994">
+			<links/>
+		</waypoint>
+		<waypoint name="XU_Waypoint45" tags="typenormal sizeLevel1 dynamicmasstraffic " x="454.2333" y="55.75" z="-61.24997">
+			<links>
+				<link ref="XU_Waypoint44"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint44" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="660.2333" y="55.75" z="-61.24994">
+			<links/>
+		</waypoint>
+		<waypoint name="XU_Waypoint43" tags="sizeLevel1 typedock start dynamicmasstraffic " x="80.23328" y="38.25" z="-108.25">
+			<links>
+				<link ref="XU_Waypoint42"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint42" tags="typenormal sizeLevel1 dynamicmasstraffic " x="350.2333" y="38.25" z="-108.25">
+			<links>
+				<link ref="XU_Waypoint47"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint41" tags="typenormal sizeLevel1 dynamicmasstraffic " x="310.2333" y="38.25" z="-188.25">
+			<links>
+				<link ref="XU_Waypoint42"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint40" tags="sizeLevel1 typedock start dynamicmasstraffic " x="80.23334" y="38.25" z="-188.25">
+			<links>
+				<link ref="XU_Waypoint41"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint39" tags="typenormal sizeLevel1 dynamicmasstraffic " x="280.2333" y="38.25" z="-248.25">
+			<links>
+				<link ref="XU_Waypoint41"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint38" tags="sizeLevel1 typedock start dynamicmasstraffic " x="80.23331" y="38.25" z="-248.25">
+			<links>
+				<link ref="XU_Waypoint39"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint37" tags="sizeLevel1 typedock start dynamicmasstraffic " x="80.23334" y="38.25" z="-328.25">
+			<links>
+				<link ref="XU_Waypoint36"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint36" tags="typenormal sizeLevel1 dynamicmasstraffic " x="350.2333" y="38.25" z="-328.25">
+			<links>
+				<link ref="XU_Waypoint45"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint35" tags="sizeLevel1 typedock start dynamicmasstraffic " x="80.23335" y="38.25" z="-448.25">
+			<links>
+				<link ref="XU_Waypoint34"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint34" tags="typenormal sizeLevel1 dynamicmasstraffic " x="310.2333" y="38.25" z="-448.25">
+			<links>
+				<link ref="XU_Waypoint36"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint64" tags="sizeLevel1 typedock start dynamicmasstraffic " x="80.23335" y="38.25" z="-528.25">
+			<links>
+				<link ref="XU_Waypoint33"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint33" tags="typenormal sizeLevel1 dynamicmasstraffic " x="280.2333" y="38.25" z="-528.25">
+			<links>
+				<link ref="XU_Waypoint34"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint20" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-650.0001" y="55.75" z="-35">
+			<links/>
+		</waypoint>
+		<waypoint name="XU_Waypoint19" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-444" y="55.75" z="-35">
+			<links>
+				<link ref="XU_Waypoint20"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint18" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-649.9999" y="55.75" z="-62">
+			<links/>
+		</waypoint>
+		<waypoint name="XU_Waypoint17" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-377" y="55.75" z="-62">
+			<links>
+				<link ref="XU_Waypoint18"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint04" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-444" y="21.5" z="-62">
+			<links>
+				<link ref="XU_Waypoint12"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint03" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-650" y="21.5" z="-62">
+			<links>
+				<link ref="XU_Waypoint04"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint02" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-377" y="21.5" z="-35">
+			<links>
+				<link ref="XU_Waypoint06"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint01" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-649.9999" y="21.5" z="-35">
+			<links>
+				<link ref="XU_Waypoint02"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint16" tags="sizeLevel1 typedock end dynamicmasstraffic " x="-70" y="38.25" z="-528">
+			<links/>
+		</waypoint>
+		<waypoint name="XU_Waypoint15" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-270" y="38.25" z="-528">
+			<links>
+				<link ref="XU_Waypoint16"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint10" tags="sizeLevel1 typedock end dynamicmasstraffic " x="-70" y="38.25" z="-248">
+			<links/>
+		</waypoint>
+		<waypoint name="XU_Waypoint09" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-270" y="38.25" z="-248">
+			<links>
+				<link ref="XU_Waypoint10"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint08" tags="sizeLevel1 typedock end dynamicmasstraffic " x="-70" y="38.25" z="-188">
+			<links/>
+		</waypoint>
+		<waypoint name="XU_Waypoint07" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-300" y="38.25" z="-188">
+			<links>
+				<link ref="XU_Waypoint08"/>
+				<link ref="XU_Waypoint09"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint24" tags="sizeLevel1 typedock start dynamicmasstraffic " x="-70.00002" y="38.25" z="91.99999">
+			<links>
+				<link ref="XU_Waypoint23"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint23" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-300" y="38.25" z="91.99999">
+			<links>
+				<link ref="XU_Waypoint22"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint26" tags="sizeLevel1 typedock start dynamicmasstraffic " x="-70" y="38.25" z="152">
+			<links>
+				<link ref="XU_Waypoint25"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint25" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-270" y="38.25" z="152">
+			<links>
+				<link ref="XU_Waypoint23"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint32" tags="sizeLevel1 typedock start dynamicmasstraffic " x="-70" y="38.25" z="432">
+			<links>
+				<link ref="XU_Waypoint31"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint31" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-270" y="38.25" z="432">
+			<links>
+				<link ref="XU_Waypoint30"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint14" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-300" y="38.25" z="-448">
+			<links>
+				<link ref="XU_Waypoint13"/>
+				<link ref="XU_Waypoint15"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint13" tags="sizeLevel1 typedock end dynamicmasstraffic " x="-70.00002" y="38.25" z="-448">
+			<links/>
+		</waypoint>
+		<waypoint name="XU_Waypoint12" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-340" y="38.25" z="-328">
+			<links>
+				<link ref="XU_Waypoint11"/>
+				<link ref="XU_Waypoint14"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint11" tags="sizeLevel1 typedock end dynamicmasstraffic " x="-70" y="38.25" z="-328">
+			<links/>
+		</waypoint>
+		<waypoint name="XU_Waypoint30" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-300" y="38.25" z="352">
+			<links>
+				<link ref="XU_Waypoint28"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint29" tags="sizeLevel1 typedock start dynamicmasstraffic " x="-70" y="38.25" z="352">
+			<links>
+				<link ref="XU_Waypoint30"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint28" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-340" y="38.25" z="232">
+			<links>
+				<link ref="XU_Waypoint19"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint27" tags="sizeLevel1 typedock start dynamicmasstraffic " x="-70" y="38.25" z="232">
+			<links>
+				<link ref="XU_Waypoint28"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint22" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-340" y="38.25" z="12">
+			<links>
+				<link ref="XU_Waypoint17"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint21" tags="sizeLevel1 typedock start dynamicmasstraffic " x="-70" y="38.25" z="12">
+			<links>
+				<link ref="XU_Waypoint22"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint06" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-340" y="38.25" z="-108">
+			<links>
+				<link ref="XU_Waypoint05"/>
+				<link ref="XU_Waypoint07"/>
+			</links>
+		</waypoint>
+		<waypoint name="XU_Waypoint05" tags="sizeLevel1 typedock end dynamicmasstraffic " x="-70" y="38.25" z="-108">
+			<links/>
+		</waypoint>
+	</add>
+</diff>

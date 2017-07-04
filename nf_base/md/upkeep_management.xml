@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<replace sel="//do_if[@value='not $Needs_Subordinate_Trade_Ship_Result']/@value">not $Needs_Subordinate_Trade_Ship_Result and ($Object.tradewares.list.count or $Object.resources.list.count)</replace>
+	<replace sel="//library[@name='CheckObject']/actions/do_if/do_if/do_if/do_all/do_if/do_if[@value='$Marine.exists']/@value">$Marine.exists and $Object.boardingnpc != $Marine</replace>
+	<replace sel="//do_if[@value='$Object.tradenpc']/do_if[@value='$Object.units.{unitcategory.transport}.count lt 5']/@value">$Object.units.maxcount and $Object.units.{unitcategory.transport}.count lt 5</replace>
+</diff>

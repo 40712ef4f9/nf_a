@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="//connections">		
+			<connection name="connection_storage02" tags="storage ">
+				<offset/>
+			</connection>		
+			<connection name="connection_storage03" tags="storage ">
+				<offset/>
+			</connection>		
+
+
+			<connection name="connection_turret_medium_pe08" group="group12 " tags="turret_medium_pe ">
+				<offset>
+					<position x="150.1151" y="-37.62686" z="156.472"/>
+					<quaternion qx="-0.3120926" qy="0.6327562" qz="-0.3098432" qw="-0.63735"/>
+				</offset>
+			</connection>
+			<connection name="connection_turret_medium_pe09" group="group12 " tags="turret_medium_pe ">
+				<offset>
+					<position x="150.1151" y="-37.68476" z="74.798"/>
+					<quaternion qx="-0.3137881" qy="0.6304908" qz="-0.3096892" qw="-0.6388357"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen23" group="group12 " tags="shieldgenerator ">
+				<offset>
+					<position x="156.9478" y="6.845575" z="156.472"/>
+					<quaternion qx="-1.082331E-03" qy="-3.110779E-03" qz="-0.9444486" qw="-0.3286425"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen22" group="group12 " tags="shieldgenerator ">
+				<offset>
+					<position x="157.8224" y="6.845566" z="74.798"/>
+					<quaternion qx="-6.322625E-04" qy="-1.817377E-03" qz="-0.944452" qw="-0.3286436"/>
+				</offset>
+			</connection>
+
+			<connection name="connection_shieldgen21" group="group13 " tags="shieldgenerator ">
+				<offset>
+					<position x="-157.8119" y="6.845566" z="156.472"/>
+					<quaternion qx="6.856472E-04" qy="-1.970043E-03" qz="-0.9444531" qw="0.3286395"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen20" group="group13 " tags="shieldgenerator ">
+				<offset>
+					<position x="-156.9312" y="6.845575" z="74.798"/>
+					<quaternion qx="1.376059E-03" qy="-3.954167E-03" qz="-0.9444469" qw="0.3286374"/>
+				</offset>
+			</connection>
+			<connection name="connection_turret_medium_pe10" group="group13 " tags="turret_medium_pe ">
+				<offset>
+					<position x="-150.2124" y="-37.62685" z="156.472"/>
+					<quaternion qx="-0.3120925" qy="-0.6327559" qz="0.3098426" qw="-0.6373506"/>
+				</offset>
+			</connection>
+			<connection name="connection_turret_medium_pe07" group="group13 " tags="turret_medium_pe ">
+				<offset>
+					<position x="-150.2124" y="-37.68476" z="74.798"/>
+					<quaternion qx="-0.313789" qy="-0.63049" qz="0.3096895" qw="-0.6388358"/>
+				</offset>
+			</connection>
+
+			<connection name="connection_shieldgen_external04" tags="shieldgenerator external ">
+				<offset>
+					<position x="2.106919E-07" y="-94.18256" z="237"/>
+				</offset>
+			</connection>
+
+
+			<connection name="connection_shieldgen19" group="group14 " tags="shieldgenerator ">
+				<offset>
+					<position x="49.68415" y="-66.30998" z="577.2242"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen18" group="group14 " tags="shieldgenerator ">
+				<offset>
+					<position x="-49.72343" y="-66.30998" z="577.2242"/>
+				</offset>
+			</connection>
+			<connection name="connection_turret_medium_lb05" group="group14 " tags="turret_medium_lb ">
+				<offset>
+					<position x="49.90368" y="-66.3763" z="495"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="-1.192488E-08"/>
+				</offset>
+			</connection>
+			<connection name="connection_turret_medium_lb06" group="group14 " tags="turret_medium_lb ">
+				<offset>
+					<position x="-49.95637" y="-66.3763" z="495"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="-1.192488E-08"/>
+				</offset>
+			</connection>
+		</add>  
+</diff> 

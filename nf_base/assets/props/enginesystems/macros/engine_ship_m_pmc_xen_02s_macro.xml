@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Michael (192.168.3.144) at 06.08.2014_15-04-51-->
+<macros>
+  <macro name="engine_ship_m_pmc_xen_02s_macro" class="engine">
+    <component ref="props_enginesystems_m_pmc_xen_02" />
+    <properties>
+      <identification name="{20104,1201}" description="{20104,1202}" unique="0" />
+      <acceleration forward="120" reverse="160" strafe="200" pitch="275" yaw="275" roll="200" />
+      <angular />
+      <speed forward="360" reverse="-100" strafe="150" pitch="110" yaw="110" roll="160" />
+      <hull integrated="1" />
+      <sounds>
+        <ambient ref="engineambient_small" />
+      </sounds>
+    </properties>
+    <connections>
+      <connection ref="conn_booster01">
+        <macro ref="enginebooster_size_m_02_macro" connection="engine" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

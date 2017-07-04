@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<mdscript name="NPC_Shiptrader_Small_Pl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+
+  <cues>
+    <cue name="DockingShip_Cleanup" instantiate="true" namespace="this">
+      <conditions>
+        <event_cue_signalled />
+      </conditions>
+      <actions>
+        <set_value name="$param" exact="event.param" />
+      </actions>
+      <cues>
+        <cue name="DockingShip_Docked">
+          <conditions>
+            <event_object_docked object="$param.{1}" dock="$param.{2}" />
+          </conditions>
+          <delay exact="1s" />
+          <actions>
+            <debug_text text="'starting script detected II'" />
+            <remove_value name="$param.{1}.pilot.$shiptrader_docking" />
+            <do_if value="$param.{1}.isplayerowned">
+              <start_script object="$param.{1}.pilot" name="'player.default'"/>
+            </do_if>
+            <do_else>
+              <set_value name="$soldship2" exact="$param.{1}" />
+              <include_actions ref="SellShipActions_Jobs" />
+              <remove_value name="$soldship2" />
+            </do_else>
+            <remove_value name="$param" />
+          </actions>
+        </cue>
+      </cues>
+    </cue>
+
+    <cue name="Base" instantiate="true" namespace="this">
+      <conditions>
+        <event_platform_actor_created type="entitytype.smallshiptrader" />
+        <check_value value="event.param.isplayerowned"/>
+      </conditions>
+      <actions>
+        <!-- <debug_text text="'Actor %1 (%2) was created, type=%3, at docking bay %4 (distance=%5m)'.[event.param, event.param.knownname, event.param2, event.param.parent.knownname, event.param.distanceto.{player.entity}]" /> -->
+        <set_value name="$actor" exact="event.param" />
+        <set_comm_handler actor="$actor" customhandler="true" />
+      </actions>
+      <cues>
+        <cue name="ActorDestructed">
+          <conditions>
+            <event_object_destroyed object="$actor" />
+          </conditions>
+          <actions>
+            <do_if value="$ship? and $ship">
+              <do_if value="$ship.pilot.$shiptrader_docking">
+                <do_if value="$ship.docklink">
+                  <debug_text text="'docklink detected'" />
+                  <signal_cue_instantly cue="md.NPC_Shiptrader_Small_Pl.DockingShip_Cleanup" param="[$ship, $actor.container]" />
+                </do_if>
+                <do_else>
+                  <debug_text text="'starting script detected I'" />
+                  <remove_value name="$ship.pilot.$shiptrader_docking" />
+                  <do_if value="$ship.isplayerowned">
+                    <start_script object="$ship.pilot" name="'player.default'"/>
+                  </do_if>
+                  <do_else>
+                    <set_value name="$soldship2" exact="$ship" />
+                    <include_actions ref="SellShipActions_Jobs" />
+                    <remove_value name="$soldship2" />
+                  </do_else>
+                </do_else>
+              </do_if>
+            </do_if>
+            <!-- No actor, no handler instances -->
+            <cancel_cue cue="Base" />
+          </actions>
+        </cue>
+
+        <!-- Itemtrader specific cues -->
+
+        <!-- Start handler for default conversation -->
+        <cue name="DefaultComm" instantiate="true">
+          <conditions>
+            <check_any>
+              <event_conversation_started actor="$actor" />
+              <event_conversation_returned_to_section actor="$actor" />
+            </check_any>
+            <check_value value="event.param == 'default'" />
+          </conditions>
+          <actions>
+            <!-- Check 'kill' relation first, exit conversation if true. -->
+            <do_if value="event.object.hasrelation.enemy.{faction.player}">
+              <add_npc_line line="4" comment="(greeting rejected)" />
+            </do_if>
+            <do_else>
+              <do_if value="event.name == 'event_conversation_started'">
+                <debug_text text="'Itemtrader conversation started: %1, actor=%2, %3'.[event.param, event.object, event.object.knownname]" />
+                <set_conversation_return_section section="g_goodbye" />
+                <!-- Greeting -->
+                <!-- <add_npc_line speaker="player.entity" line="1100" comment="Hi there." /> -->
+                <add_npc_line line="4100" comment="Hello pilot. Is there anything I can offer you?" />
+              </do_if>
+              <do_else>
+                <add_conversation_view view="facecopilot" chance="(not player.hudmode) * 100" />
+              </do_else>
+
+              <find_dock_location container="$actor.container" name="$dock" size="tag.dock_m" />
+
+              <!-- Player choices:
+                1: Buy ships
+                2: Modify a ship
+                3: Sell a ship
+                4: Where can I find ...? / Engage: Smalltalk
+                5: 
+                6: Goodbye
+              -->
+              <add_player_choice_sub text="{1002,8008}" position="top_left" section="cSmallshiptrader_buyship" choiceparam="[0, 0, $actor]" comment="Buy a ship" selectable="$dock" />
+              <add_player_choice_sub text="{1002,8005}" position="left" section="cSmallshiptrader_modifyship" comment="Modify a ship" selectable="$dock and not @$ship" />
+              <add_player_choice_sub text="{1002,8006}" position="bottom_left" section="cSmallshiptrader_selectship" choiceparam="[0, 0, 'player', 'sellship', ['cSmallshiptrader_sellshipselected', $actor.container]]" comment="Sell a ship" selectable="$dock" />
+
+              <do_if value="not $actor.$SmalltalkDone? and player.age lt @$actor.$TopicTimeout">
+                <add_player_choice_sub text="{1002,900000}" section="gSmalltalk_start" position="top_right" baseparam="event.param2" />
+              </do_if>
+              <do_else>
+                <add_player_choice_sub text="{1002,12008}" comment="Where can I find ...?" section="g_askforway" position="top_right" baseparam="event.param2" />
+              </do_else>
+              <do_if value="player.room != $actor.room">
+                <add_player_choice_sub text="{1002,12010}" comment="How can I find you?" section="g_askforway_finish" position="right" baseparam="event.param2" choiceparam="[$actor]" />
+              </do_if>
+              <add_player_choice_return text="{1002,2}" position="bottom_right" comment="Goodbye"/>
+            </do_else>
+          </actions>
+        </cue>
+
+        <!-- Section handler for itemtrader -->
+        <cue name="SectionHandler" instantiate="true">
+          <conditions>
+            <check_any>
+              <event_conversation_next_section sectionprefix="cSmallshiptrader_" actor="$actor" />
+              <event_conversation_returned_to_section sectionprefix="cSmallshiptrader_" actor="$actor" />
+            </check_any>
+          </conditions>
+          <actions>
+            <debug_text text="'&lt;%1&gt; section: \'%2\''.[event.name, event.param]" />
+
+            <do_if value="event.param == 'cSmallshiptrader_buyship'">
+              <do_if value="event.name == 'event_conversation_next_section'">
+                <add_npc_line line="1118" comment="Here is a list of ships we can build." view="closeupdetailmonitor" />
+              </do_if>
+              <open_conversation_menu menu="ProductSalesMenu" param="event.param2" param2="event.param3" />
+            </do_if>
+
+            <do_elseif value="event.param == 'cSmallshiptrader_selectamount'">
+              <add_npc_line line="4160" comment="How many do you want?" view="closeupdetailmonitor" />
+              <open_conversation_menu menu="ProductSalesSliderMenu" param="event.param2" param2="event.param3" />
+            </do_elseif>
+
+            <do_elseif value="event.param == 'cSmallshiptrader_selectdrones'">
+              <add_conversation_view view="closeupdetailmonitor" />
+              <open_conversation_menu menu="SmallShipTraderDronesMenu" param="event.param2" param2="event.param3" />
+            </do_elseif>
+
+            <do_elseif value="event.param == 'cSmallshiptrader_selectdronesamount'">
+              <add_conversation_view view="closeupdetailmonitor" />
+              <open_conversation_menu menu="SmallShipTraderDronesSliderMenu" param="event.param2" param2="event.param3" />
+            </do_elseif>
+
+            <do_elseif value="event.param == 'cSmallshiptrader_spawnships'">
+              <add_npc_line line="4150" comment="Excellent choice." view="facecopilot" chance="(not player.hudmode) * 100" />
+              <set_value name="$macro" exact="ware.{event.param2.{3}}.objectmacro" />
+              <set_value name="$amount" exact="event.param2.{4}" />
+              <set_value name="$droneplan" exact="@event.param2.{5}" />
+              <find_dock_location container="$actor.container" name="$rawdocks" size="$macro.docksize" multiple="true" />
+              <do_if value="@$rawdocks.count">
+                <set_value name="$customer_faction" exact="faction.player" />
+                <create_list name="$docks" />
+                <do_all exact="$rawdocks.count">
+                  <set_value name="$rnd" min="1" max="$rawdocks.count" />
+                  <append_to_list name="$docks" exact="$rawdocks.{$rnd}" />
+                  <remove_value name="$rawdocks.{$rnd}" />
+                </do_all>
+                <set_value name="$shipscreated" exact="0" />
+                <do_all exact="$amount" counter="$i">
+                  <create_ship dock="$docks.{($i % $docks.count) + 1}" macro="$macro" name="$ship">
+                    <owner exact="$customer_faction" />
+                    <pilot group="argon.pilot">
+                      <owner exact="$customer_faction" />
+                      <skills>
+                        <skill type="combat" exact="5"/>
+                        <skill type="engineering" exact="5"/>
+                        <skill type="leadership" exact="5"/>
+                        <skill type="management" exact="5"/>
+                        <skill type="morale" exact="5"/>
+                        <skill type="navigation" exact="5"/>
+                        <skill type="science" exact="5"/>
+                      </skills>
+                    </pilot>
+                  </create_ship>
+                  <do_if value="$spawnedship.exists">
+                    <set_value name="$shipscreated" operation="add" exact="1" />
+                    <do_if value="$droneplan">
+                      <set_value name="$object" exact="$spawnedship" />
+                      <include_actions ref="ApplyDroneplan" />
+                      <remove_value name="$object" />
+                    </do_if>
+                    <set_object_commander object="$spawnedship" commander="player.primaryship" />
+                    <start_script object="$spawnedship.pilot" name="'player.default'"/>
+                    <do_if value="$spawnedship.isplayerowned">
+                      <start_script object="$spawnedship.pilot" name="'player.default'"/>
+                    </do_if>
+                    <do_else>
+                      <set_value name="$soldship2" exact="$spawnedship" />
+                      <include_actions ref="SellShipActions_Jobs" />
+                      <remove_value name="$soldship2" />
+                    </do_else>
+                  </do_if>
+                </do_all>
+                <remove_value name="$spawnedship" />
+                <remove_cargo object="$actor.container" ware="ware.{event.param2.{3}}" exact="$shipscreated" />
+                <set_value name="stat.ships_bought" operation="add" exact="$shipscreated" />
+                <remove_value name="$shipscreated" />
+                <remove_value name="$customer_faction" />
+                <remove_value name="$macro" />
+                <remove_value name="$amount" />
+                <remove_value name="$droneplan" />
+                <remove_value name="$docks"/>
+                <remove_value name="$rawdocks"/>
+                <remove_value name="$rnd"/>
+              </do_if>
+              <do_else>
+                <debug_text text="'ERROR - no dock was found to spawn ships [Florian]'" />
+              </do_else>
+            </do_elseif>
+
+            <do_elseif value="event.param == 'cSmallshiptrader_modifyship'">
+              <add_conversation_view view="facecopilot" chance="(not player.hudmode) * 100" />
+              <add_player_choice_sub text="{1002,5007}" position="top_left" section="cSmallshiptrader_selectship" choiceparam="[0, 0, 'player', 'selectobject', ['cSmallshiptrader_equipdrones', null, null, null, false, true, true, false, true, true, true, true, null, null, null, null, null, false]]" comment="Equip drones" />
+              <add_player_choice_sub text="{1002,8003}" position="bottom_left" section="cSmallshiptrader_selectship" choiceparam="[0, 0, 'player', 'selectobject', ['cSmallshiptrader_repairship', null, null, null, false, true, true, false, null, true, true, true, null, null, null, null, null, false]]" comment="Repair ship"/>
+              <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+            </do_elseif>
+
+            <do_elseif value="event.param == 'cSmallshiptrader_equipdrones'">
+              <add_conversation_view view="closeupdetailmonitor" />
+              <do_if value="event.name == 'event_conversation_next_section'">
+                <open_conversation_menu menu="SmallShipTraderDronesMenu" param="[event.param2.{1}, event.param2.{2}, $actor, null, event.param2.{3}, 1]" param2="event.param3" />
+              </do_if>
+              <do_else>
+                <open_conversation_menu menu="SmallShipTraderDronesMenu" param="event.param2" param2="event.param3" />
+              </do_else>
+            </do_elseif>
+
+            <do_elseif value="event.param == 'cSmallshiptrader_drones'">
+              <add_conversation_view view="facecopilot" />
+              <set_value name="$ship" exact="event.param2.{3}" />
+              <set_value name="$droneplan" exact="event.param2.{4}" />
+
+              <find_dock_location container="$actor.container" name="$dock" size="$ship.docksize" />
+
+              <set_value name="$ship.pilot.$shiptrader_docking" exact="$dock" />
+              <signal_cue cue="ListenOnShipDestroyed" />
+              <do_if value="$ship.commander == player.primaryship">
+                <signal_objects object="$ship" param="'dock at'" param2="$actor.container" param3="$dock"/>
+              </do_if>
+              <do_else>
+                <start_script object="$ship.pilot" name="'move.dockat'">
+                  <param name="destination" value="$actor.container" />
+                  <param name="dockingslot" value="$dock" />
+                </start_script>
+              </do_else>
+              <signal_cue cue="MoveSelectedShip" />
+            </do_elseif>
+
+            <do_elseif value="event.param == 'cSmallshiptrader_repairship'">
+              <add_npc_line line="1123" comment="Please select the hull percentage you want to have repaired." view="closeupdetailmonitor"/>
+              <do_if value="event.name == 'event_conversation_next_section'">
+                <open_conversation_menu menu="RepairSliderMenu" param="[event.param2.{1}, event.param2.{2}, $actor, null, event.param2.{3}, '', 0, false, 'smallship']" param2="event.param3" />
+              </do_if>
+              <do_else>
+                <open_conversation_menu menu="RepairSliderMenu" param="event.param2" param2="event.param3" />
+              </do_else>
+            </do_elseif>
+
+            <do_elseif value="event.param == 'cSmallshiptrader_repair'">
+              <add_conversation_view view="facecopilot" chance="(not player.hudmode) * 100" />
+              <set_value name="$ship" exact="event.param2.{3}" />
+              <set_value name="$repairpercentage" exact="event.param2.{4}" />
+
+              <find_dock_location container="$actor.container" name="$dock" size="$ship.docksize" />
+
+              <set_value name="$ship.pilot.$shiptrader_docking" exact="$dock" />
+              <signal_cue cue="ListenOnShipDestroyed" />
+              <do_if value="$ship.commander == player.primaryship">
+                <signal_objects object="$ship" param="'dock at'" param2="$actor.container" param3="$dock"/>
+              </do_if>
+              <do_else>
+                <start_script object="$ship.pilot" name="'move.dockat'">
+                  <param name="destination" value="$actor.container" />
+                  <param name="dockingslot" value="$dock" />
+                </start_script>
+              </do_else>
+              <signal_cue cue="MoveSelectedShip" />
+            </do_elseif>
+
+            <do_elseif value="event.param == 'cSmallshiptrader_selectship'">
+              <add_conversation_view view="closeupdetailmonitor" />
+              <open_conversation_menu menu="PropertyMenu" param="event.param2" param2="event.param3" />
+            </do_elseif>
+
+            <do_elseif value="event.param == 'cSmallshiptrader_sellshipselected'">
+              <add_conversation_view view="facenormal" />
+              <set_value name="$soldship" exact="event.param2.{1}" />
+              <set_value name="$soldshipprice" exact="event.param2.{2} * 1Cr" />
+              <do_if value="(typeof $soldship == datatype.list) and ($soldship.count gt 1)">
+                <add_player_choice text="{1002,8009}" position="top_left" selectable="$actor.money gt 50000000Cr and $actor.money gt $soldshipprice" section="cSmallshiptrader_sellshipconfirmed" comment="Yes, sell these ships" />
+              </do_if>
+              <do_else>
+                <add_player_choice text="{1002,8007}" position="top_left" selectable="$actor.money gt 50000000Cr and $actor.money gt $soldshipprice" section="cSmallshiptrader_sellshipconfirmed" comment="Yes, sell this ship" />
+              </do_else>
+              <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+            </do_elseif>
+
+            <do_elseif value="event.param == 'cSmallshiptrader_sellshipconfirmed'">
+              <add_conversation_view view="facenormal" />
+              <!--transfer_money from="$actor" to="player.entity" amount="$soldshipprice" /-->
+              <set_value name="$transfer_data" exact="[$actor, player.entity, $soldshipprice, false]" />
+              <include_actions ref="TransferMoney" />
+              <do_if value="typeof $soldship == datatype.list">
+                <do_all exact="$soldship.count" counter="$i">
+                  <set_value name="$soldship2" exact="$soldship.{$i}"/>
+                  <include_actions ref="SellShipActions" />
+                </do_all>
+              </do_if>
+              <do_else>
+                <set_value name="$soldship2" exact="$soldship"/>
+                <include_actions ref="SellShipActions" />
+              </do_else>
+            </do_elseif>
+
+            <do_else>
+              <debug_text text="'ERROR: Unexpected section \'' + event.param + '\''" filter="general" />
+            </do_else>
+          </actions>
+        </cue>
+
+        <cue name="ListenOnShipDestroyed" instantiate="true">
+          <conditions>
+            <event_cue_signalled />
+          </conditions>
+          <cues>
+            <cue name="ShipDestroyed">
+              <conditions>
+                <event_object_destroyed object="$ship" />
+              </conditions>
+              <actions>
+                <include_actions ref="CleanupShiptrader" />
+              </actions>
+            </cue>
+          </cues>
+        </cue>
+
+        <cue name="MoveSelectedShip" instantiate="true">
+          <conditions>
+            <event_cue_signalled />
+          </conditions>
+          <actions>
+            <start_conversation actor="$ship.pilot" conversation="Speak_OnDockingStarted" type="normal" convparam="1033" />
+          </actions>
+          <cues>
+            <cue name="SelectedShipArrived">
+              <conditions>
+                <event_object_docked object="$ship" dock="$actor.container" />
+              </conditions>
+              <delay exact="1s" />
+              <actions>
+                <start_conversation actor="$ship.pilot" conversation="Speak_OnDockingFinished" type="unqueued" convparam="1034" />
+              </actions>
+              <cues>
+                <cue name="Undock">
+                  <conditions>
+                    <event_cue_completed cue="parent" />
+                  </conditions>
+                  <delay exact="30s" />
+                  <actions>
+                    <do_if value="$droneplan?">
+                      <set_value name="$object" exact="$ship" />
+                      <include_actions ref="ApplyDroneplan" />
+                      <remove_value name="$object" />
+                    </do_if>
+                    <do_elseif value="$repairpercentage?">
+                      <set_object_hull object="$ship" exact="$repairpercentage" />
+                    </do_elseif>
+
+                    <remove_value name="$ship.pilot.$shiptrader_docking" />
+                    <start_script object="$ship.pilot" name="'player.default'"/>
+                    <include_actions ref="CleanupShiptrader" />
+                  </actions>
+                </cue>
+              </cues>
+            </cue>
+          </cues>
+        </cue>
+
+        <library name="CleanupShiptrader">
+          <actions>
+            <remove_value name="$ship" />
+            <remove_value name="$droneplan" />
+            <remove_value name="$repairpercentage" />
+            <do_if value="MoveSelectedShip.static">
+              <reset_cue cue="MoveSelectedShip.static" />
+            </do_if>
+            <do_else>
+              <reset_cue cue="MoveSelectedShip" />
+            </do_else>
+            <do_if value="ListenOnShipDestroyed.static">
+              <reset_cue cue="ListenOnShipDestroyed.static" />
+            </do_if>
+            <do_else>
+              <reset_cue cue="ListenOnShipDestroyed" />
+            </do_else>
+          </actions>
+        </library>
+
+        <!--
+      <set_value name="$transfer_data" exact="[$from, $to, $amount, $reward]" />    
+    -->
+        <library name="TransferMoney">
+          <actions>
+            <do_if value="$transfer_data.{1} == $actor and $actor.container.tradenpc.exists">
+              <set_value name="$transfer_data.{1}" exact="$actor.container.tradenpc" />
+            </do_if>
+            <do_elseif value="$transfer_data.{2} == $actor and $actor.container.tradenpc.exists">
+              <set_value name="$transfer_data.{2}" exact="$actor.container.tradenpc" />
+            </do_elseif>
+
+            <set_value name="$counterparty" exact="false" />
+            <do_if value="$transfer_data.{1}.isplayerowned or $transfer_data.{2}.isplayerowned">
+              <find_object_component name="$counterparty" class="class.npc" object="$actor.container">
+                <match owner="faction.player" negate="true" />
+                <match owner="faction.neutral" negate="true" />
+                <match_relation faction="faction.player" relation="neutral" comparison="ge" />
+              </find_object_component>
+              <do_if value="$counterparty" negate="true">
+                <create_list name="$customerfactions" />
+                <find_station name="$otherstations" space="$actor.container.sector" multiple="true" >
+                  <match owner="faction.enemy" negate="true"/>    
+                  <match owner="faction.criminal" negate="true"/>    
+                  <match owner="faction.smuggler" negate="true"/>    
+                  <match owner="faction.neutral" negate="true"/>    
+                  <match owner="faction.ownerless" negate="true"/>    
+                  <match owner="faction.player" negate="true"/>    
+                  <match owner="faction.friend" negate="true"/>
+                </find_station>
+                <do_all exact="$otherstations.count" counter="$j">
+                  <do_if value="not $otherstations.{$j}.isplayerowned and $otherstations.{$j}.owner.relationto.{faction.player} ge -0.01">
+                    <do_if value="$customerfactions.indexof.{$otherstations.{$j}.owner}" negate="true">
+                      <append_to_list name="$customerfactions" exact="$otherstations.{$j}.owner"/>
+                    </do_if>
+                  </do_if>
+                </do_all>
+                <remove_value name="$otherstations" />
+                <do_if value="$customerfactions.count" negate="true">
+                  <find_station name="$otherstations" space="$actor.container.cluster" multiple="true" >
+                    <match owner="faction.enemy" negate="true"/>    
+                    <match owner="faction.criminal" negate="true"/>    
+                    <match owner="faction.smuggler" negate="true"/>    
+                    <match owner="faction.neutral" negate="true"/>    
+                    <match owner="faction.ownerless" negate="true"/>    
+                    <match owner="faction.player" negate="true"/>    
+                    <match owner="faction.friend" negate="true"/>
+                  </find_station>
+                  <do_all exact="$otherstations.count" counter="$j">
+                    <do_if value="not $otherstations.{$j}.isplayerowned and $otherstations.{$j}.owner.relationto.{faction.player} ge -0.01">
+                      <do_if value="$customerfactions.indexof.{$otherstations.{$j}.owner}" negate="true">
+                        <append_to_list name="$customerfactions" exact="$otherstations.{$j}.owner"/>
+                      </do_if>
+                    </do_if>
+                  </do_all>
+                  <remove_value name="$otherstations" />
+                </do_if>
+                <do_if value="$customerfactions.count" negate="true">
+                  <set_value name="$customerfactions_x" exact="[ faction.albionenergy, faction.beryll, faction.heartofalbion, faction.leddaindustrial, faction.nolimits, faction.plutarch, faction.wholesomefoods, faction.aquarius, faction.argongovernment, faction.familyryak, faction.chow, faction.frantonpharma, faction.jonferson, faction.canteran ]" />
+                  <do_all exact="$customerfactions_x.count" counter="$j">
+                    <do_if value="$customerfactions_x.{$j}.relationto.{faction.player} ge -0.01">
+                      <do_if value="$customerfactions.indexof.{$customerfactions_x.{$j}}" negate="true">
+                        <append_to_list name="$customerfactions" exact="$customerfactions_x.{$j}"/>
+                      </do_if>
+                    </do_if>
+                  </do_all>
+                  <remove_value name="$customerfactions_x" />
+                </do_if>
+
+                <do_if value="$customerfactions.count">
+                  <set_value name="$customer_faction" exact="$customerfactions.random" />
+                </do_if>
+                <do_else>
+                  <set_value name="$customer_faction" exact="faction.acmecorp" />
+                </do_else>
+
+                <remove_value name="$otherstations" />
+                <remove_value name="$customerfactions" />
+
+                <find_dock_location name="$Dock" container="$actor.container" dockpopulationtype="dockpopulationtype.trade"/>
+                <create_platform_actor name="$counterparty" type="entitytype.commander" dockingbay="$Dock.component" ref="manager_omicron_lyrae_random">
+                  <owner exact="$customer_faction"/>
+                </create_platform_actor>
+                <remove_value name="$Dock" />
+                <remove_value name="$customer_faction" />
+              </do_if>
+            </do_if>
+            <do_if value="player.primaryship.owner != player.primaryship.trueowner">
+              <find_dock_location name="$Dock" container="$actor.container" dockpopulationtype="dockpopulationtype.trade"/>
+              <create_platform_actor name="$counterparty2" type="entitytype.commander" dockingbay="$Dock.component" ref="manager_omicron_lyrae_random">
+                <owner exact="player.primaryship.owner"/>
+              </create_platform_actor>
+              <remove_value name="$Dock" />
+            </do_if>
+
+            <do_if value="($transfer_data.{1} == player.entity and player.primaryship.owner != player.primaryship.trueowner) and $counterparty2 and not $transfer_data.{4}">
+              <set_value name="$newfaction" exact="$counterparty2.owner" />
+              <transfer_money from="$counterparty2" to="$transfer_data.{2}" amount="$transfer_data.{3}" />
+            </do_if>
+            <do_elseif value="$transfer_data.{2} == player.entity and $counterparty and not $transfer_data.{4}">
+              <set_value name="$newfaction" exact="$counterparty.owner" />
+              <transfer_money from="$counterparty" to="$transfer_data.{2}" amount="$transfer_data.{3}" />
+            </do_elseif>
+            <do_else>
+              <transfer_money from="$transfer_data.{1}" to="$transfer_data.{2}" amount="$transfer_data.{3}" />
+            </do_else>
+            <remove_value name="$counterparty" />
+            <remove_value name="$counterparty2" />
+            <remove_value name="$transfer_data" />
+          </actions>
+        </library>
+
+        <library name="SellShipActions_Jobs">
+          <actions>
+            <include_actions ref="md.NPC_Shiptrader_Pl.SellShipActions_Jobs" />
+          </actions>
+        </library>
+
+        <library name="SellShipActions">
+          <actions>
+            <include_actions ref="md.NPC_Shiptrader_Pl.SellShipActions" />
+          </actions>
+        </library>
+
+        <library name="ApplyDroneplan">
+          <actions>
+            <do_all exact="$droneplan.count" counter="$i">
+              <do_if value="$droneplan.{$i}.{2} lt 0">
+                <remove_units object="$object" macro="macro.{$droneplan.{$i}.{1}}" exact="-$droneplan.{$i}.{2}" />
+              </do_if>
+            </do_all>
+            <do_all exact="$droneplan.count" counter="$i">
+              <do_if value="$droneplan.{$i}.{2} ge 0">
+                <add_units object="$object" macro="macro.{$droneplan.{$i}.{1}}" exact="$droneplan.{$i}.{2}" />
+              </do_if>
+            </do_all>
+          </actions>
+        </library>
+
+        <!-- Remove variable if signal was never send -->
+        <!-- Fixing broken shiptrader setup after trying to modify ships without a captain -->
+        <cue name="ClearShiptrader_v2">
+          <delay exact="1s" />
+          <actions>
+            <do_if value="$ship?">
+              <do_if value="not @$ship.pilot.$shiptrader_docking">
+                <include_actions ref="CleanupShiptrader" />
+              </do_if>
+            </do_if>
+          </actions>
+        </cue>
+
+        <cue name="V4_10__Patch_Check_ShiptraderDockingShips">
+          <conditions>
+            <event_object_signalled object="$actor" param="'V4_10__Patch_Shiptrader_Docking'" />
+          </conditions>
+          <actions>
+            <do_if value="$ship?">
+              <remove_from_group group="md.$V4_10__Patch_ShiptraderDockingShips" object="$ship" />
+            </do_if>
+          </actions>
+        </cue>
+
+      </cues>
+    </cue>
+
+  </cues>
+
+</mdscript>

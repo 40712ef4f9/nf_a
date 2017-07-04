@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="//connection[@ref='connection_dock_l01']/macro/properties/builder"> 	
+		<macro ref="units_size_l_weaponplatform_macro" />
+	</add>  
+	<add sel="//connection[@ref='connection_dock_l02']/macro/properties/builder"> 	
+		<macro ref="units_size_l_player_fury_macro" />
+		<macro ref="units_size_l_player_harpy_macro" />
+	</add>  
+	<add sel="//connection[@ref='connection_dock_xl01']/macro/properties/builder"> 	
+		<macro ref="units_size_xl_kit_destroyer_01_macro" />  
+		<macro ref="units_size_xl_kit_cargo_01_macro" />
+	</add>  
+</diff>

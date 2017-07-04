@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<aiscript name="move.generic.carrier" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="7" priority="1">
+  <!--
+
+  Move to Script
+  by Michael
+  
+  Generic routine for moving to a specific location.
+
+  -->
+  <params>
+    <param name="destination" comment="can be a space or an object in a zone. Providing Sector and Cluster will attempt to find the nearest zone"/>
+    <param name="position" default="null" comment="position is treated as an offset to destination. Default: safe position on [0,0,0] of destination"/>
+    <param name="rotation" default="null" comment="rotation the ship should have - overrides lookat"/>
+    <param name="lookat" default="null" comment="position the ship should point to - overridden by rotation"/>
+    <param name="nojump" default="false" comment="set true to prevent Big ships from using their jumpdrive (only use for insector movement - for review when we have capship in-sector boosters)"/>
+    <param name="skipcharge" default="false" comment="skip the jump drive charge time (only to be used in special cases e.g. plot missions)"/>
+    <param name="ignorefuel" default="false" comment="ignore jump fuel requirements (only to be used in special cases e.g. plot missions)"/>
+    <param name="autorefuel" default="true" comment="automatically take steps to re-fuel if necessary"/>
+    <param name="disablecollisionavoidance" default="false" comment="HACK - disable collisionavoidance for this ship"/>
+    <param name="abortpath" default="true" comment="disable aborting existing path"/>
+    <param name="forcesteering" default="false" comment="force steering flight control model"/>
+    <param name="endintargetzone" default="false" comment="complete this script if we are in the correct zone, no matter where"/>
+    <param name="dockships" default="true" comment="dock smallships if carrier"/>
+    <param name="movethroughgates" default="true" comment="move or jump through gates"/>
+    <param name="debugchance" default="0"/>
+  </params>
+  <interrupts>
+    <handler ref="TargetInvalidHandler" />
+  </interrupts>
+  <attention min="unknown">
+    <actions>
+      <do_if value="$disablecollisionavoidance">
+        <set_avoid_collisions object="this.ship" enabled="false"/>
+      </do_if>
+      <set_value name="$bigship" exact="this.ship.isclass.ship_xl or this.ship.isclass.ship_l" />
+      <do_if value="not global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad">
+        <set_value name="$dockships" exact="false"/>
+      </do_if>
+      <do_if value="global.$nfconfig.$AdvJump and this.combinedskill gt 50">
+        <set_value name="$movethroughgates" exact="false"/>
+      </do_if>
+
+      <run_script name="'move.undock'" />
+
+      <set_value name="$failcounter" exact="0" />
+
+      <label name="check" />
+
+      <do_if value="(not $destination.exists) or (not $destination.isoperational)">
+        <debug_text text="'ERROR: destination does not exist!'" chance="$debugchance" comment="could be a valid case because if it's an object or a tempzone"/>
+        <return />
+      </do_if>
+
+      <do_if value="$destination.isclass.zone">
+        <do_if value="$bigship and $destination.isclass.highway">
+          <debug_text text="'Error: %1(%2) has been told to fly into highway %3(%4).'.[this.ship.knownname, this.ship, $destination.knownname, $destination]"/>
+          <return/>
+        </do_if>
+        <set_value name="$targetzone" exact="$destination"/>
+      </do_if>
+      <do_elseif value="$destination.isclass.sector or $destination.isclass.cluster">
+        <!--Is the ship already there?-->
+        <do_if value="this.ship.hascontext.{$destination}">
+          <do_if value="this.$carrier_restart_fighters?">
+            <resume label="carrierundock"/>
+          </do_if>
+          <return/>
+        </do_if>
+
+        <debug_text text="'Attempting to find nearest zone within :' + $destination.knownname" chance="$debugchance"/>
+        <find_zone name="$pathzone" priorityzone="true" tempzone="false" space="$destination">
+          <match class="class.highway" negate="true"/>
+        </find_zone>
+        <do_if value="$pathzone">
+          <get_global_path component="$pathcomponents" usehighways="false" multiple="true">
+            <start object="this.ship"/>
+            <end object="$pathzone"/>
+          </get_global_path>
+          <do_all exact="$pathcomponents.count" counter="$Counter">
+            <do_if value="$pathcomponents.{$Counter}.hascontext.{$destination}">
+              <do_if value="$pathcomponents.{$Counter}.isclass.zone and @$pathcomponents.{$Counter}.haspriority">
+                <set_value name="$targetzone" exact="$pathcomponents.{$Counter}"/>
+                <break/>
+              </do_if>
+              <do_elseif value="$pathcomponents.{$Counter}.isclass.object">
+                <set_value name="$targetzone" exact="$pathcomponents.{$Counter}.zone"/>
+                <break/>
+              </do_elseif>
+            </do_if>
+          </do_all>
+        </do_if>
+        <do_if value="$targetzone?">
+          <remove_value name="$pathzone"/>
+          <remove_value name="$pathcomponents"/>
+          <set_value name="$destination" exact="$targetzone"/>
+          <debug_text text="'Setting destination to :' + $destination.knownname" chance="$debugchance"/>
+        </do_if>
+        <do_else>
+          <debug_text text="'ERROR: No path found to ' + $destination.knownname"/>
+          <return/>
+        </do_else>
+      </do_elseif>
+      <do_else>
+        <do_if value="$bigship and $destination.zone.isclass.highway">
+          <!-- chance="$debugchance"-->
+          <debug_text text="'%1(%2) has been told to follow %3(%4) which is in a highway. Waiting.'.[this.ship.knownname, this.ship, $destination.knownname, $destination]"/>
+          <wait min="45s" max="60s" sinceversion="4">
+            <interrupt>
+              <conditions>
+                <event_object_changed_zone object="$destination"/>
+              </conditions>
+            </interrupt>
+          </wait>
+          <resume label="check"/>
+        </do_if>
+        <set_value name="$targetzone" exact="$destination.zone"/>
+      </do_else>
+
+      <do_if value="$nojump and this.sector != $destination.sector">
+        <set_value name="$nojump" exact="false"/>
+        <debug_text text="'ERROR: Setting $nojump to false as the destination is in another sector. On ' + this.ship.knownname + ' in ' + this.zone.knownname"/>
+      </do_if>
+
+      <label name="move" />
+	  <signal_objects object="player.galaxy" param="'learned.something'" param2="[this, ware.inv_virtualseminarnavigation, 'move.c']" />
+
+      <do_if value="(not $destination.exists) or (not $destination.isoperational)">
+        <debug_text text="'ERROR: destination does not exist!'" chance="$debugchance" comment="could be a valid case because if it's an object or a tempzone"/>
+        <return />
+      </do_if>
+
+      <!-- command action calculating -->
+      <set_command_action commandaction="commandaction.calculating" />
+
+      <!-- check offset position. If there is not, set a safepos on a random direction -->
+      <do_if value="not $position">
+        <do_if value="$targetzone == $destination">
+          <get_safe_pos result="$position" zone="$targetzone" object="$destination" radius="this.ship.size" max="this.ship.size * 3" ignored="this.ship" />
+        </do_if>
+        <do_else>
+          <!-- we are going to something that is not a zone, default to no relative offset - we are creating a safepos in the short-distance section anyway -->
+          <set_value name="$position" exact="position.[0, 0, 0]" />
+        </do_else>
+      </do_if>
+
+      <do_if value="(this.zone != $targetzone) and (this.ship.distanceto.[$destination, $position] gt 20km)">
+        <!-- long distance -->
+        <do_if value="$bigship">
+          <!-- Carrier - grab your followers -->
+          <do_if value="@this.$carrier_fighters_docked == 3 or not $dockships" negate="true" chance="if this.ship.subordinates.count then 100 else 0">
+            <set_value name="$iscarrier" exact="this.ship.macro.ismacro.{global.$mmcarriers}"/>
+            <run_script name="'lib.is.carrier'" result="$iscarrier"  chance="0"/>
+            <do_if value="$iscarrier and (this.zone != $targetzone)">
+              <run_script name="'lib.recall.fighters'" />
+            </do_if>
+            <remove_value name="$iscarrier"/>
+          </do_if>
+
+          <do_if value="(this.sector == $destination.sector) or ($nojump == true)">
+            <debug_text text="'Long distance trip. Using engine booster...'" chance="$debugchance" />
+            <run_script name="'move.nohighway'" result="$nohighwayresult">
+              <param name="target" value="$destination" />
+              <param name="position" value="$position" />
+              <param name="debugchance" value="$debugchance" />
+            </run_script>
+            <run_script name="'move.nohighway'" chance="0" />
+            <debug_text text="'boost complete. Moving into final position.'" chance="$debugchance" />
+            <do_if value="@$nohighwayresult">
+              <do_if value="$endintargetzone">
+                <!-- no need to move to a safepos now, we're happy just being here -->
+                <do_if value="this.$carrier_restart_fighters?">
+                  <resume label="carrierundock"/>
+                </do_if>
+                <return />
+              </do_if>
+            </do_if>
+            <do_else>
+              <debug_text text="'long-distance boost move failed: distance to target pos: %1, current zone: %2, target zone: %3, target pos %4, relative to %5'.[this.ship.distanceto.[$destination, $position], this.zone.knownname, $targetzone.knownname, $position, $destination]" filter="error" chance="$debugchance" />
+              <!-- Boost faild, go to check -->
+              <wait min="1s" max="3s" />
+              <resume label="check" />
+            </do_else>
+          </do_if>
+          <do_else>
+            <!--Move through gate  -->
+            <get_jump_path start="this.sector" end="$targetzone.sector" component="$jumppath" multiple="true" />
+            <do_if value="$jumppath.{1}? and $jumppath.{1} == this.sector and $jumppath.{2}.isclass.gate and $movethroughgates">
+
+              <run_script name="'move.jumpgate'" sinceversion="3">
+                <param name="jumpgate" value="$jumppath.{2}" comment="the jumpgate" />
+                <param name="debugchance" value="$debugchance" />
+              </run_script>
+
+              <!-- compatibility -->
+              <move_to object="this.ship" destination="this.zone" usehighways="false" finishonapproach="true" abortpath="true" sinceversion="6" chance="0">
+                <interrupt_after_time time="0s" />
+              </move_to>
+            </do_if>
+            <do_else>
+              <debug_text text="'Long distance trip. Using jump drive...'" chance="$debugchance" />
+              <run_script name="'move.jump'" result="$jumpresult">
+                <param name="destination" value="$destination" />
+                <param name="position" value="$position" />
+                <param name="skipcharge" value="$skipcharge" />
+                <param name="ignorefuel" value="$ignorefuel" />
+                <param name="autorefuel" value="$autorefuel" />
+                <param name="debugchance" value="$debugchance" />
+              </run_script>
+              <do_if value="$jumpresult" exact="false">
+                <debug_text text="'ERROR: Jump to %1(%2) failed'.[$destination.knownname, $position]" />
+                <set_value name="$nojump" exact="true" />
+                <wait min="10s" max="1min" />
+              </do_if>
+            </do_else>
+            <debug_text text="'Jump/move gate complete. Moving into final position.'" chance="$debugchance" />
+            <resume label="check" />
+          </do_else>
+        </do_if>
+        <do_else>
+          <debug_text text="'Long distance trip. Using highways...'" chance="$debugchance" />
+          <move_to object="this.ship" destination="$destination" usehighways="true" abortpath="$abortpath" forcesteering="$forcesteering" forceposition="false">
+            <position value="$position" />
+            <interrupt>
+              <conditions>
+                <event_object_changed_zone object="this.ship" zone="$targetzone" />
+              </conditions>
+            </interrupt>
+          </move_to>
+          <debug_text text="'Arrived in zone %1. Moving to final position.'.[$targetzone.knownname]" chance="$debugchance" />
+        </do_else>
+      </do_if>
+
+      <!-- short distance -->
+      <!-- for compatibility interrupt the actions after 0s -->
+      <move_to object="this.ship" destination="$entrygate" usehighways="not $bigship" finishonapproach="true" abortpath="$abortpath" chance="0">
+        <interrupt_after_time time="0s" />
+      </move_to>
+      <move_gate object="this.ship" gate="$entrygate" abortpath="true" chance="0">
+        <interrupt_after_time time="0s" />
+      </move_gate>
+      <wait sinceversion="1" exact="0" chance="0"/>
+      <move_to object="this.ship" destination="this.zone" usehighways="false" finishonapproach="true" abortpath="true" sinceversion="6" chance="0">
+        <interrupt_after_time time="0s" />
+      </move_to>
+
+      <do_if value="@$endintargetzone and this.ship.zone == $targetzone">
+        <!-- Carrier - free like a bird -->
+        <do_if value="this.$carrier_restart_fighters?">
+          <run_script name="'lib.undock.fighters'" chance="0"/>
+          <resume label="carrierundock"/>
+        </do_if>
+        <!-- no need to move to a safepos now, we're happy just being here -->
+        <return />
+      </do_if>
+
+      <move_to object="this.ship" destination="null" comment="Compatibility: Necessary to use the do_all loop properly with a new move_to action" chance="0" />
+      <move_to object="this.ship" destination="null" comment="Compatibility: Necessary to use the do_all loop properly with a new move_to action" chance="0" sinceversion="2" />
+
+      <!-- check destination -->
+      <do_if value="(not $destination.exists) or (not $destination.isoperational)">
+        <debug_text text="'ERROR: destination does not exist!'" chance="$debugchance" comment="could be a valid case because if it's an object or a tempzone"/>
+        <do_if value="this.$carrier_restart_fighters?">
+          <resume label="carrierundock"/>
+        </do_if>
+        <return />
+      </do_if>
+
+      <!-- Safety check if were are not in the correct targetzone yet. Valid case with moving ships  -->
+      <do_if value="$destination.isclass.ship and ($destination.zone != $targetzone)">
+        <debug_text text="'Destination is a ship, and it changed zone, so targetzone is outdated, resume to check again' " chance="$debugchance" />
+        <resume label="check" />        
+      </do_if>
+      
+      <!-- regular position in space -->
+      <get_safe_pos result="$safepos" zone="$targetzone" radius="this.ship.size" object="$destination" value="$position" ignored="this.ship" />
+      <do_if value="not @$rotation and @$lookat">
+        <create_orientation name="$rotation" orientation="look_at" refposition="$lookat">
+          <position value="$safepos" />
+        </create_orientation>
+      </do_if>
+      <debug_text text="'Short distance trip to %1 in %2. D=%3, using highways: %4'.[$safepos, $targetzone.knownname, this.ship.distanceto.[$targetzone, $safepos], (not $bigship)]" chance="$debugchance" />
+      <do_if value="not @$rotation">
+        <move_to object="this.ship" destination="$targetzone" usehighways="not $bigship" abortpath="$abortpath" forcesteering="(not $bigship) and $forcesteering" forceposition="false" finishonapproach="true" sinceversion="5" >
+          <position value="$safepos" max="this.ship.size" />
+        </move_to>
+      </do_if>
+      <do_else>
+        <move_to object="this.ship" destination="$targetzone" usehighways="not $bigship" abortpath="$abortpath" forcesteering="(not $bigship) and $forcesteering" forceposition="false" finishonapproach="true" sinceversion="5">
+          <position value="$safepos" />
+          <rotation value="$rotation" />
+        </move_to>
+      </do_else>
+
+      <!-- If it's not yet close enough to the position -->
+      <do_if value="not $destination.isclass.ship and this.ship.distanceto.[$targetzone, $safepos] gt 10km">
+        <debug_text text="'Not successfuly reached the position in targetzone %1(%2)! %3(%4) is currently in %5(%6), %7m from the target destination (actual distance %8).'.[$targetzone.knownname, $targetzone, this.ship.knownname, this.ship, this.ship.zone.knownname, this.ship.zone, this.ship.distanceto.[$targetzone, $safepos], this.ship.distanceto.[$destination, $position]]" filter="error" chance="$debugchance" />
+      </do_if>
+
+      <move_to object="this.ship" destination="$targetzone" forceposition="false" forcerotation="true" sinceversion="5" chance="0"/>
+      <move_to object="this.ship" destination="$targetzone" forceposition="false" forcerotation="false" sinceversion="5" chance="0"/>
+      <wait exact="5s" sinceversion="3" chance="0"/>
+      <set_to_default_flight_control_model object="this.ship" />
+
+      <stop_boost object="this.ship" />
+      <!-- Carrier - go on, start working -->
+      <label name="carrierundock" />
+      <do_if value="this.$carrier_restart_fighters?">
+        <run_script name="'lib.undock.fighters'"/>
+      </do_if>
+      <set_to_default_flight_control_model object="this.ship" />
+    </actions>
+  </attention>
+  <on_abort>
+    <!-- Carrier - restart on abort -->
+	<do_if value="this.$carrier_restart_fighters?">
+		<create_group groupname="$theShipfollowers" />
+		<create_list name="$docks"/>
+		<do_all exact="2" counter="$j">
+			<find_dock_location container="this.ship" size="[tag.dock_m, tag.dock_s].{$j}" name="$dock" multiple="true"/>
+			<do_all exact="$dock.count" counter="$i">
+				<do_if value="$dock.{$i}" list="$docks" negate="true">
+					<append_to_list name="$docks" exact="$dock.{$i}"/>
+				</do_if>
+			</do_all>
+			<remove_value name="$dock"/>
+		</do_all>
+		<do_all exact="$docks.count" counter="$i">
+			<add_to_group groupname="$theShipfollowers" list="$docks.{$i}.component.docked" chance="if $docks.{$i}.component.docked.count then 100 else 0"/>
+		</do_all>
+		<remove_value name="$docks"/>
+		<do_all exact="$theShipfollowers.count" counter="$i">
+			<do_if value="$theShipfollowers.{$i}.engineer.exists and $theShipfollowers.{$i}.engineer.isclass.npc">
+				<destroy_object object="$theShipfollowers.{$i}.engineer"/>
+			</do_if>
+			<signal_objects object="$theShipfollowers.{$i}" param="'modeoff'" />
+		</do_all>
+		<remove_value name="$theShipfollowers"/>
+	</do_if>
+  </on_abort>
+</aiscript>

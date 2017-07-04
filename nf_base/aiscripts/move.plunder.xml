@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff>
+  <replace sel="/aiscript/params/param[@name='checkrelation']/@default">true</replace>
+  <replace sel="/aiscript/attention[@min='unknown']/actions/do_if[@value='this.ship.jobexpired or not this.ship.units.{unitcategory.transport}.count']/@value">this.ship.jobexpired or not this.ship.units.{unitcategory.transport}.count or (this.ship.pilot.$end_of_work? and this.ship.pilot.$end_of_work lt player.age)</replace>
+    <replace sel="/aiscript/attention/actions/do_if/do_else/run_script/@name">if not global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad then 'move.generic' else if this.ship.macro.ismacro.{global.$mmcarriers} then 'move.generic.carrier' else 'move.generic'</replace>
+	<add sel="/aiscript/attention[@min='unknown']/actions/do_elseif[@exact=&quot;'sector'&quot;]" pos="after">
+      <do_elseif value="$range" exact="'cluster'">
+        <set_value name="$space" exact="this.ship.cluster" />
+        <set_value name="$pursuelimit" exact="class.sector"/>
+      </do_elseif>
+	</add>
+	<add sel="//interrupts">
+		<handler ref="MMSurrender" />
+	</add>
+	<add sel="/aiscript/attention[@min='unknown']/actions/do_elseif[@exact=&quot;'sector'&quot;]" pos="after">
+      <do_elseif value="not (typeof $range).isstring and $range.class? and [class.cluster,class.sector,class.zone].indexof.{$range.class}">
+        <do_if value="$range.class" exact="class.zone">
+          <set_value name="$space" exact="null" />
+          <set_value name="$pursuelimit" exact="class.zone"/>
+        </do_if>
+        <do_else>
+          <set_value name="$space" exact="$range" />
+          <set_value name="$pursuelimit" exact="class.sector"/>
+        </do_else>
+      </do_elseif>
+	</add>
+	<add sel="//attention[@min='unknown']/actions/do_else/do_if[@value=&quot;$range != 'sector'&quot;]" pos="after">
+        <do_if value="this.$params.$range?">
+          <set_value name="this.$params.$range" exact="'sector'"/>
+        </do_if>
+	</add>
+</diff>

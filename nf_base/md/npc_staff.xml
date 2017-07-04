@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <replace sel="/mdscript/cues/cue/cues/cue[@name='DefaultComm']/actions/do_else/do_if/do_if/add_player_choice_sub[@section='gMain_object']/@text" silent="1">{1002,12025}</replace>
+  <replace sel="/mdscript/cues/cue/cues/cue[@name='DefaultComm']/actions/do_else/do_if/do_if/add_player_choice_sub[@section='gMain_object']/@tooltip" silent="1">{1002,12025}</replace>
+  <replace sel="/mdscript/cues/cue/cues/cue[@name='DefaultComm']/actions/do_else/do_if/do_if/add_player_choice_sub[@section='gMain_object']/@section" silent="1">mmadvcom_main</replace>
+  <!-- Cue to add construction drones to existing architects. -->
+  <add sel="/mdscript[@name='NPC_Staff']/cues/cue[@name='OnPlatformPopulation_Staff']/cues">
+    <cue name="NPC_S_Destroyed_cleanup" onfail="cancel">
+      <conditions>
+        <check_value value="not $actor.exists"/>
+      </conditions>
+      <actions>
+        <debug_text text="'NPC_Staff destroyed!'" chance="100"/>
+
+        <cancel_cue cue="OnPlatformPopulation_Staff"/>
+      </actions>
+    </cue>
+  </add>
+  <add sel="//cue[@name='OnFired']/actions" pos="prepend">
+    <set_owner object="$actor" faction="faction.neutral" />
+    <signal_cue_instantly cue="md.NF_BASE.NF_kill_NPC" param="$actor" delay="20s"/>
+  </add>
+</diff>

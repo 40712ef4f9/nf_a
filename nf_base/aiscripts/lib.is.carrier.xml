@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="lib.is.carrier" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" priority="5">
+  <attention min="unknown">
+    <actions>
+		<do_if value="this.$carrier_fighters_docked?">
+			<do_if value="this.$carrier_fighters_docked" min="2">
+				<set_value name="$iscarrier" exact="true"/>
+				<return value="$iscarrier" />
+			</do_if>
+			<do_elseif value="this.$carrier_fighters_docked == 1">
+				<set_value name="$iscarrier" exact="false"/>
+				<return value="$iscarrier" />
+			</do_elseif>
+		</do_if>
+
+		<set_value name="$dock_i" exact="0" /> 
+		<set_value name="$iscarrier" exact="false" /> 
+
+		<do_all exact="2" counter="$j">
+			<find_dock_location container="this.ship" size="[tag.dock_m, tag.dock_s].{$j}" name="$dock" multiple="true"/>
+			<do_all exact="$dock.count" counter="$i">
+				<do_if value="$dock.{$i}.component.external" negate="true">
+					<set_value name="$dock_i" operation="add" />
+					<break />
+				</do_if>
+			</do_all>
+			<remove_value name="$dock"/>
+		</do_all>
+
+		<do_if value="$dock_i" min="1">
+			<set_value name="$iscarrier" exact="true" /> 
+		</do_if>
+		<remove_value name="$dock_i"/>
+
+		<return value="$iscarrier" />
+    </actions>
+  </attention>
+</aiscript>

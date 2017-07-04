@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mdscript name="MM_defenceplatform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+		<cue name="MM_defenceplatform_init_new">
+			<actions>
+				<set_value name="md.$mmdefenceplatformmacros" exact="[macro.units_size_m_weaponplatform_macro, macro.units_size_m_xenon_weaponplatform_macro]"/>
+			</actions>
+		</cue>
+		<cue name="MM_defenceplatform_check" instantiate="true"><!-- checkinterval="8min" -->
+			<conditions>
+			  <event_game_loaded/>
+			</conditions>
+			<delay max="8s"/><!-- 200s -->
+			<actions>
+				<do_all exact="md.$mmdefenceplatformmacros.count" counter="$i">
+					<find_ship name="$platforms_tmp" space="player.galaxy" multiple="true" macro="md.$mmdefenceplatformmacros.{$i}"/>
+					<do_if value="$platforms_tmp">
+						<add_to_group groupname="$platforms" list="$platforms_tmp" />
+					</do_if>
+					<remove_value name="$platforms_tmp"/>
+				</do_all>
+				<do_all exact="$platforms.count" counter="$i">
+					<do_if value="$platforms.{$i}.pilot? and $platforms.{$i}.pilot.command.value == null">
+						<start_script object="$platforms.{$i}.pilot" name="'fight.attack.object.platform'"/>
+					</do_if>
+				</do_all>
+				<remove_value name="$platforms"/>
+			</actions>
+		</cue>
+		<cue name="MM_defenceplatform_ObjectDropped" instantiate="true">
+		  <conditions>
+			<check_any>
+			  <event_object_signalled object="player.primaryship" param="'player_dropped_object'"/>
+			  <event_object_dropped_objects object="player.primaryship"/>
+			</check_any>
+		  </conditions>
+		  <actions>
+			<do_if value="event.name" exact="'event_object_signalled'">
+			  <set_value name="$dropped" exact="event.param2"/>
+			</do_if>
+			<do_else>
+			  <set_value name="$dropped" exact="event.param"/>
+			</do_else>
+			<do_all exact="$dropped.count" counter="$i">
+			  <do_if value="$dropped.{$i}.isclass.navbeacon">
+			  
+				<start_conversation actor="player.copilot" conversation="MMDP_conv" convparam="[null, $dropped.{$i}, null, 1]" />
+				<break />
+
+			  </do_if>
+			</do_all>
+			<remove_value name="$dropped"/>
+		  </actions>
+		</cue>
+		<cue name="SectionHandler_MM_defenceplatform" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="default" />
+					<event_conversation_returned_to_section section="default" />
+				</check_any>
+				<check_value value="event.object.type" exact="entitytype.pilot" />
+				<check_value value="event.object.trueowner" exact="faction.player" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_value value="event.object.container.macro.ismacro.{md.$mmdefenceplatformmacros}" />
+			</conditions>
+			<actions>
+				<add_player_choice_sub text="{1001,6702}" section="mmdp_platform_do" selectable="not event.object.$markedtoremove? or (event.object.$markedtoremove? and event.object.$markedtoremove lt player.age)" choiceparam="['remove', event.object.container]" />
+				<add_player_choice_sub text="{1001,84}" position="left" section="mmdp_platform_do" choiceparam="['list']" />
+				<add_player_choice_sub text="if event.object.$config_attackenemies? and event.object.$config_attackenemies == false then {1001,4213} else {1001,4214}" position="bottom_left" section="mmdp_platform_do" choiceparam="['change', event.object.container]" />
+			</actions>
+		</cue>
+		<cue name="MM_defenceplatform_conv" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="MMDP_conv" />
+					<event_conversation_next_section sectionprefix="MMDP_conv"/>
+					<event_conversation_returned_to_section sectionprefix="MMDP_conv" />
+					<check_all>
+						<event_conversation_next_section section="cArch_selectUpgradesMenu"/>
+						<check_value value="md.$mmdp_beacon? and md.$mmdp_beacon.exists and md.$mmdp_beacon.zone == player.primaryship.zone" />
+					</check_all>
+				</check_any>
+			</conditions>
+			<actions>
+				<do_if value="event.param == 'MMDP_conv'">
+					<set_value name="$build" exact="false" />
+					<do_if value="player.primaryship.subordinates.count" chance="0">
+						<do_all exact="player.primaryship.subordinates.count" counter="$i">
+							<do_if value="player.primaryship.subordinates.{$i}.primarypurpose == objectpurpose.build and player.primaryship.subordinates.{$i}.zone == player.primaryship.zone">
+								<set_value name="$build" exact="player.primaryship.subordinates.{$i}" />
+								<break />
+							</do_if>
+						</do_all>
+					</do_if>
+
+					<set_value name="$todo_options" exact="md.$mmdefenceplatformmacros.clone"/>
+					<set_value name="$todo_options_start" exact="if event.param2.{4}? then event.param2.{4} else 1" />
+					<set_value name="$todo_options_max" exact="$todo_options.count" />
+					<do_if value="event.param2.{2}? and event.param2.{2}.isclass.navbeacon">
+						<set_value name="md.$mmdp_beacon" exact="event.param2.{2}" />
+					</do_if>
+					<do_if value="md.$mmdp_beacon? and md.$mmdp_beacon.exists and md.$mmdp_beacon.isclass.navbeacon">
+						<set_value name="$max" exact="if $build then 3 else 4" />
+						<do_all exact="$max" counter="$i">
+							<do_if value="$i == $max and ($todo_options_start + 1) le $todo_options_max">
+								<add_player_choice 		text="'Next 5, start with %1 of %2'.[$todo_options_start, $todo_options_max]" 	section="MMDP_conv" 		choiceparam="[null, md.$mmdp_beacon, null, $todo_options_start + 1]"/>
+							</do_if>
+							<do_elseif value="$todo_options_start le $todo_options_max">
+								<add_player_choice_sub text="'%1 %2'.[{1004,15}, $todo_options.{$todo_options_start}.name]" tooltip="'%1: %2%5 \n%3: %4%5'.[{1001,2964}, [3000000Cr].{1}.formatted.default, {1001,2965}, [2000000Cr].{1}.formatted.default, {1001,101}]" selectable="player.entity.money ge 3000000Cr" section="mmdp_platform_do" choiceparam="['create', md.$mmdp_beacon, $todo_options.{$todo_options_start}]" />
+		
+								<set_value name="$todo_options_start"  operation="add" exact="1" /> 
+							</do_elseif>
+							<do_elseif value="$todo_options_max gt $max and $todo_options_start == $todo_options_max and $i lt $max">
+								<add_player_choice 		text="{1002,20}" 	section="MMDP_conv"		choiceparam="[null, md.$mmdp_beacon, null, 1]"  comment="Back"/>
+							</do_elseif>
+						</do_all>
+					</do_if>
+					<remove_value name="$todo_options_max"/>
+					<remove_value name="$todo_options_start"/>
+					<remove_value name="$todo_options"/>
+					<remove_value name="$max"/>
+					<!--show_help position="8" log="false" force="true" duration="5s" custom="'%1: %2%5 \n%3: %4%5'.[{1001,2964}, [3000000Cr].{1}.formatted.default, {1001,2965}, [2000000Cr].{1}.formatted.default, {1001,101}]"  chance="if $todo_options_start == 1 then 100 else 0"/-->
+					
+					<add_player_choice_sub text="{1002,12025}" position="right" section="MMDP_conv_more" choiceparam="[null, md.$mmdp_beacon, null, 1]" />
+
+					<add_player_choice_sub text="{1002,4002}" position="top_right" section="MMDP_conv_build" choiceparam="[0, 0, $build.architect, $build.buildmodule, 1]" chance="if $build and $build.architect.exists then 100 else 0" />
+
+					<remove_value name="$build"/>
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				</do_if>
+				<do_elseif value="event.param == 'MMDP_conv_build'">
+					<open_conversation_menu menu="BuilderMacrosMenu" param="event.param2" param2="event.param3" />
+				</do_elseif>
+				<do_elseif value="md.$mmdp_beacon? and event.param == 'cArch_selectUpgradesMenu' and md.$mmdp_beacon.zone == player.primaryship.zone">
+					<add_player_choice text="'%1 %2'.[{1004,15}, macro.{event.param2.{6}}.name]" selectable="player.entity.money ge 100000000Cr" tooltip="'%1: %2%3'.[{1001,2964}, [100000000Cr].{1}.formatted.default, {1001,101}]" section="mmdp_platform_do" choiceparam="['place', md.$mmdp_beacon, macro.{event.param2.{6}}, player.primaryship.owner, 100000000Cr, null, event.param2.{3}.ship]" />
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				</do_elseif>
+				<do_elseif value="event.param == 'MMDP_conv_more'">
+					<add_player_choice text="'%1 %2'.[{1004,15}, macro.props_gates_jumpbeacon_macro.name]" selectable="player.entity.money ge 1000000Cr" section="mmdp_platform_do" tooltip="'%1: %2%3'.[{1001,2964}, [1000000Cr].{1}.formatted.default, {1001,101}]" choiceparam="['place', event.param2.{2}, macro.props_gates_jumpbeacon_macro, faction.neutral, 1000000Cr, null]" />
+					<add_player_choice_sub text="{1001,84}" position="right" section="mmdp_platform_do" choiceparam="['list', event.param2.{2}]" />
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				</do_elseif>
+			</actions>
+		</cue>
+		<cue name="MM_defenceplatform_work" instantiate="true">
+		  <conditions>
+			<event_conversation_next_section section="mmdp_platform_do"/>
+		  </conditions>
+		  <actions>
+			<remove_value name="md.$mmdp_beacon"/>
+
+			<do_if value="event.param2.{1} == 'list'">
+				<create_group groupname="$platforms" />
+				<do_all exact="md.$mmdefenceplatformmacros.count" counter="$i">
+					<find_ship name="$platforms_tmp" space="player.galaxy" owner="faction.player" multiple="true" macro="md.$mmdefenceplatformmacros.{$i}"/>
+					<do_if value="$platforms_tmp.count">
+						<add_to_group groupname="$platforms" list="$platforms_tmp" />
+					</do_if>
+					<remove_value name="$platforms_tmp"/>
+				</do_all>
+				<do_if value="$platforms.count">
+					<set_value name="$text" exact="''"/>
+					<set_value name="$helper" exact="table[]"/>
+					<do_all exact="$platforms.count" counter="$i">
+						<do_if value="$macro_tmp.{'$%1'.[$platforms.{$i}.macro.id]}?">
+							<append_to_list name="$helper.{'$%1'.[$platforms.{$i}.macro.id]}" exact="$platforms.{$i}" />
+						</do_if>
+						<do_else>
+							<set_value name="$helper.{'$%1'.[$platforms.{$i}.macro.id]}" exact="[$platforms.{$i}]"/>
+						</do_else>
+					</do_all>
+	
+					<set_value name="$keys" exact="$helper.keys.list" />
+					<set_value name="$spacer" exact="if $platforms.count gt 15 then ', ' else '\n'" />
+					<do_all exact="$keys.count" counter="$k">
+						<do_if value="$helper.{$keys.{$k}}.count">
+							<set_value name="$text" exact="'+++[ %1 ]+++ \n'.[$helper.{$keys.{$k}}.{1}.macro.name]" operation="add"/>
+	
+							<do_all exact="$helper.{$keys.{$k}}.count" counter="$j">
+								<set_value name="$text" exact="' * %1 [%2]%3'.[$helper.{$keys.{$k}}.{$j}.name, $helper.{$keys.{$k}}.{$j}.zone.name, $spacer]" operation="add"/>
+							</do_all>
+						</do_if>
+					</do_all>
+					<remove_value name="$keys"/>
+					<remove_value name="$spacer"/>
+					<remove_value name="$helper"/>
+
+					<write_to_logbook category="tips" text="$text"/>
+					<show_help position="9" log="false" force="true" duration="10s" custom="$text" />
+				</do_if>
+				<do_else>
+					<show_help position="9" log="false" force="true" duration="3s" custom="{1001,5705}" />
+				</do_else>
+				<do_if value="event.param2.{2}? and event.param2.{2}.isclass.navbeacon">
+					<set_owner object="event.param2.{2}" faction="faction.ownerless" chance="if event.param2.{2}.isplayerowned then 100 else 0" comment="prevent log book spam" />
+					<destroy_object object="event.param2.{2}" explosion="false"/>
+					<add_inventory entity="player.entity" ware="ware.spe_drop_navbeacon" exact="1" />
+				</do_if>
+				<remove_value name="$platforms"/>
+				<remove_value name="$text"/>
+			</do_if>
+			<do_elseif value="event.param2.{1} == 'change'">
+				<do_if value="not event.param2.{2}.pilot.$config_attackenemies? or event.param2.{2}.pilot.$config_attackenemies? and event.param2.{2}.pilot.$config_attackenemies == true">
+					<set_value name="event.param2.{2}.pilot.$config_attackenemies" exact="false"/>
+					<start_script object="event.param2.{2}.pilot" name="'fight.attack.object.platform'">
+						<param name="allowothertargets" value="false" />
+						<param name="config_attackenemies" value="false" />
+					</start_script>
+				</do_if>
+				<do_else>
+					<set_value name="event.param2.{2}.pilot.$config_attackenemies" exact="true"/>
+					<start_script object="event.param2.{2}.pilot" name="'fight.attack.object.platform'"/>
+				</do_else>
+				<add_player_choice text="if event.param2.{2}.pilot.$config_attackenemies? and event.param2.{2}.pilot.$config_attackenemies == false then {1001,4213} else {1001,4214}" position="bottom_left" section="mmdp_platform_do" choiceparam="['change', event.object.container]" />
+				<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+			</do_elseif>
+			<do_else>
+				<set_value name="$movedie" exact="true" />
+				<do_if value="event.param2.{2}.isclass.station or (event.param2.{3}? and event.param2.{3}.isclass.station) and event.param2.{7}? and event.param2.{7}.isclass.ship">
+					<set_value name="$Ship" exact="event.param2.{7}" />
+					<remove_object_commander object="$Ship" />
+					<set_value name="$movedie" exact="false" />
+				</do_if>
+				<do_elseif value="event.param2.{2}.isclass.station or (event.param2.{3}? and event.param2.{3}.isclass.station)">
+					<create_ship name="$Ship" zone="event.param2.{2}.zone" macro="units_size_xl_builder_ship_plot_01_macro" capturable="false">
+						<owner exact="faction.neutral" overridenpc="true"/>
+						<pilot ref="trader_albion_random"/>
+						<defence ref="fighter_albion_random"/>
+						<engineer ref="engineer_albion_random"/>
+						<units>
+							<unit category="unitcategory.defence" mk="4" min="40" max="75"/>
+							<unit category="unitcategory.welder" mk="1" exact="40" />
+							<unit category="unitcategory.transport" mk="1" exact="10" />
+						</units>
+						<cargo>
+							<wares list="[ware.fuelcells]">
+								<fillpercent min="40" max="60"/>
+							</wares>
+						</cargo>
+						<position object="event.param2.{2}" min="10km" max="15km"/>
+					</create_ship>
+					<find_dock_location name="$target_dock"  multiple="false" container="$Ship" size="tag.dock_p" />
+					<create_platform_actor name="$shiparch" dockingbay="$target_dock.component" group="argon.architect" type="entitytype.architect">
+						<owner exact="faction.neutral"/>
+					</create_platform_actor>
+					<assign_architect actor="$shiparch" object="$Ship"/>
+					<set_room_locked room="$target_dock.component" locked="true"/>
+					<remove_value name="$shiparch"/>
+					<remove_value name="$target_dock"/>
+				</do_elseif>
+				<do_else>
+					<create_ship name="$Ship" zone="event.param2.{2}.zone" macro="units_size_m_crystal_collector_macro">
+						<owner exact="faction.neutral" overridenpc="true"/>
+						<pilot ref="fighter_albion_random"/>
+						<position object="event.param2.{2}" min="10km" max="15km"/>
+						<units>
+							<unit category="unitcategory.welder" mk="1" exact="2" />
+							<unit category="unitcategory.transport" mk="1" exact="1" />
+						</units>
+					</create_ship>
+				</do_else>
+	
+				<do_if value="event.param2.{1} == 'create' and event.param2.{2}.isclass.navbeacon and md.$mmdefenceplatformmacros.indexof.{event.param2.{3}}">
+					<set_object_name object="$Ship" name="'%1 %2'.[{20204,10013}, $Ship.knownname]" chance="if $movedie then 100 else 0"/>
+					<start_script object="$Ship.pilot" name="'move.delivered'">
+						<param name="target" value="event.param2.{2}" />
+						<param name="macro" value="event.param2.{3}" />
+						<param name="payment" value="[null, player.entity, 3000000Cr]" />
+						<param name="script" value="'fight.attack.object.platform'" />
+						<param name="movedie" value="$movedie" />
+					</start_script>
+				</do_if>
+				<do_elseif value="event.param2.{1} == 'place' and event.param2.{2}.isclass.navbeacon and event.param2.{2}.isclass.object">
+					<set_object_name object="$Ship" name="'%1 %2'.[{20204,10013}, $Ship.knownname]" chance="if $movedie then 100 else 0"/>
+					<start_script object="$Ship.pilot" name="'move.delivered'">
+						<param name="target" value="event.param2.{2}" />
+						<param name="macro" value="event.param2.{3}" />
+						<param name="payment" value="[null, player.entity, event.param2.{5}]" />
+						<param name="owner" value="event.param2.{4}" />
+						<param name="reference" value="event.param2.{6}" />
+						<param name="movedie" value="$movedie" />
+					</start_script>
+				</do_elseif>
+				<do_elseif value="event.param2.{1} == 'remove' and event.param2.{2}.isclass.drone">
+					<set_value name="event.param2.{2}.pilot.$markedtoremove" exact="player.age + 20min"/>
+					<set_object_name object="$Ship" name="'%1 %2'.[{20204,10008}, $Ship.knownname]" chance="if $movedie then 100 else 0" />
+					<start_script object="$Ship.pilot" name="'move.delivered'">
+						<param name="target" value="event.param2.{2}" />
+						<param name="macro" value="event.param2.{2}.macro" />
+						<param name="payment" value="[player.entity, null, 2000000Cr]" />
+						<param name="ware" value="[player.entity, ware.spe_drop_navbeacon, 1]" />
+						<param name="movedie" value="$movedie" />
+					</start_script>
+				</do_elseif>
+				<do_elseif value="$Ship.exists and $Ship.pilot.command == null and $movedie">
+					<destroy_object object="$Ship"/>
+				</do_elseif>
+	
+				<remove_value name="$movedie"/>
+				<remove_value name="$Ship"/>
+			</do_else>
+
+		  </actions>
+		</cue>
+		<cue name="MM_defenceplatform_work_npcs" instantiate="true" namespace="this">
+			<conditions>
+				<event_object_signalled object="player.copilot" param="'PopulateStation'" />
+			</conditions>
+			<actions>						
+				<set_value name="$createdStation" exact="event.param2" />
+				<do_if value="@$createdStation.exists">
+					<set_value name="$faction" exact="$createdStation.owner" />
+					<!-- add drones -->
+					<set_value name="$Unitcapacity" exact="$createdStation.units.maxcount" />
+					<find_object_component name="$buildmodule" class="class.buildmodule" object="$createdStation"/>
+					<find_dock_location container="$createdStation" name="$ShiptraderDocks" dockpopulationtype="dockpopulationtype.ships" multiple="true" />
+
+					<do_if value="$buildmodule and $faction == faction.player">
+						<add_units object="$createdStation" category="unitcategory.welder" mk="1" exact="0.3*$Unitcapacity" />  
+						<add_units object="$createdStation" category="unitcategory.transport" mk="1" exact="0.2*$Unitcapacity" />  
+						<add_units object="$createdStation" category="unitcategory.defence" mk="4" exact="0.25*$Unitcapacity" />  
+						<add_units object="$createdStation" category="unitcategory.defence" mk="6" exact="0.25*$Unitcapacity" />  
+					</do_if>
+					<do_elseif value="$faction" exact="faction.player">
+						<add_units object="$createdStation" category="unitcategory.transport" mk="1" exact="0.5*$Unitcapacity" />  
+						<add_units object="$createdStation" category="unitcategory.defence" mk="4" exact="0.25*$Unitcapacity" />  
+						<add_units object="$createdStation" category="unitcategory.defence" mk="6" exact="0.25*$Unitcapacity" chance="if md.$stationengineerai? then 100 else 0" />  
+						<add_units object="$createdStation" category="unitcategory.defence" mk="6" exact="0.20*$Unitcapacity" chance="if md.$stationengineerai? then 0 else 100" />  
+						<add_units object="$createdStation" category="unitcategory.welder" mk="1" exact="0.05*$Unitcapacity" chance="if md.$stationengineerai? then 0 else 100" />  
+					</do_elseif>
+
+					<!-- add missiles for v launcher -->
+					<evaluate_ammo_storage object="$createdStation" type="missile" macros="$macrolist" amounts="$amountlist" />
+					<do_all exact="$macrolist.count" counter="$i">
+						<add_ammo object="$createdStation" macro="$macrolist.{$i}" amount="$amountlist.{$i}" /> 
+					</do_all> 
+
+					<!-- npc/[ player ] difference crew -->			
+					<do_if value="$faction" exact="faction.player">
+						<!-- add NPCs -->		 
+						<find_dock_location name="$Stationdock" container="$createdStation" size="tag.dock_p"  multiple="false" dockpopulationtype="dockpopulationtype.administrative"/>
+						<do_if value="not $Stationdock">
+							<find_dock_location name="$Stationdock" container="$createdStation" size="tag.dock_p"/>
+						</do_if>
+
+						<!-- add engineer -->
+						<create_platform_actor name="$engineer" dockingbay="$Stationdock.component" type="entitytype.engineer">
+							<select race="if ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random" tags="tag.engineer"/>
+							<owner exact="$faction"/>
+							<skills>
+								<skill type="combat" exact="5"/>
+								<skill type="engineering" exact="5"/>
+								<skill type="leadership" exact="5"/>
+								<skill type="management" exact="5"/>
+								<skill type="morale" exact="5"/>
+								<skill type="navigation" exact="5"/>
+								<skill type="science" exact="5"/>
+							</skills>
+						</create_platform_actor>
+						<assign_engineer actor="$engineer" object="$createdStation"/>
+						<!-- npc difference -->			
+						<start_script object="$engineer" name="if md.$stationengineerai? then md.$stationengineerai else 'engineer.ai'"/>
+
+						<!-- add manager -->			
+						<create_platform_actor name="$manager" dockingbay="$Stationdock.component" type="entitytype.manager"> 
+							<select race="if ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random" tags="tag.manager"/>
+							<owner exact="$faction"/>
+							<skills>
+								<skill type="combat" exact="5"/>
+								<skill type="engineering" exact="5"/>
+								<skill type="leadership" exact="5"/>
+								<skill type="management" exact="5"/>
+								<skill type="morale" exact="5"/>
+								<skill type="navigation" exact="5"/>
+								<skill type="science" exact="5"/>
+							</skills>
+						</create_platform_actor>
+						<assign_trade_manager actor="$manager" object="$createdStation"/>
+						<set_actor_account actor="$manager" />
+
+						<do_if value="$createdStation.canbuildships">
+							<start_script object="$manager" name="'trade.shipyard'"/>
+						</do_if>
+						<do_elseif value="$createdStation.canproduceships">
+							<start_script object="$manager" name="'trade.shipyard.small'"/>
+						</do_elseif>
+						<do_elseif value="$createdStation.isplayerowned">
+							<start_script object="$manager" name="'trade.station.player'"/>
+						</do_elseif>
+						<do_else>
+							<start_script object="$manager" name="'trade.station'"/>
+						</do_else>	
+
+						<!-- add defense officer -->			
+						<create_platform_actor name="$defencenpc" dockingbay="$Stationdock.component" type="entitytype.defencecontrol"> 
+							<select race="if ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random" tags="tag.defencecontrol"/>
+							<owner exact="$faction"/>
+							<skills>
+								<skill type="combat" exact="5"/>
+								<skill type="engineering" exact="5"/>
+								<skill type="leadership" exact="5"/>
+								<skill type="management" exact="5"/>
+								<skill type="morale" exact="5"/>
+								<skill type="navigation" exact="5"/>
+								<skill type="science" exact="5"/>
+							</skills>
+						</create_platform_actor>
+						<assign_defence_manager actor="$defencenpc" object="$createdStation"/>
+						<start_script object="$defencenpc" name="if $faction == faction.player then 'fight.station.player' else 'fight.attack.object'" />
+						<set_value name="$defencenpc.$config_attackenemies" exact="true" />
+
+						<!-- add Shiptrader -->
+						<do_if value="$ShiptraderDocks.count">
+							<do_all exact="$ShiptraderDocks.count" counter="$j" >
+								<set_value name="$DockHasShipTrader" exact="false" />
+								<do_all exact="$ShiptraderDocks.{$j}.actors.count" counter="$k" >
+									<do_if value="$ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.shiptrader or $ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.smallshiptrader">
+										<set_remote_commable actor="$ShiptraderDocks.{$j}.actors.{$k}" remote="true" />
+										<set_value name="$DockHasShipTrader" exact="true" />
+									</do_if>
+								</do_all>
+								<do_if value="$DockHasShipTrader" negate="true">
+									<!-- shiptrader / smallshiptrader -->
+									<find_object_component name="$buildmodule" object="$createdStation" class="class.buildmodule" checkoperational="false">
+									  <match_buildsource sequence="$ShiptraderDocks.{$j}.component.sequence" stage="$ShiptraderDocks.{$j}.component.stage" />
+									</find_object_component>
+									<do_if value="$buildmodule">
+										<create_platform_actor name="$Shiptrader" dockingbay="$ShiptraderDocks.{$j}.component" type="entitytype.shiptrader">
+											<select race="race.argon" tags="tag.shiptrader"/>
+											<owner exact="$faction"/>
+										</create_platform_actor>
+									</do_if>
+									<do_else>
+										<create_platform_actor name="$Shiptrader" dockingbay="$ShiptraderDocks.{$j}.component" type="entitytype.smallshiptrader">
+											<select race="race.argon" tags="tag.smallshiptrader"/>
+											<owner exact="$faction"/>
+										</create_platform_actor>
+									</do_else>
+									<set_remote_commable actor="$Shiptrader" remote="true" />
+									<share_actor_account actor="$Shiptrader" otherobject="$manager" chance="if $faction == faction.player then 100 else 0" /> <!-- Share account of Manager -->
+									<set_comm_handler actor="$Shiptrader" customhandler="true" />
+									<remove_value name="$Shiptrader"/>		  
+								</do_if>
+								<remove_value name="$buildmodule"/>		  
+								<remove_value name="$DockHasShipTrader"/>		  
+							</do_all>
+						</do_if>
+						<remove_value name="$defencenpc"/>
+						<remove_value name="$Stationdock"/>
+						<remove_value name="$manager"/>
+						<remove_value name="$engineer"/>
+						<remove_value name="$macrolist"/>
+						<remove_value name="$amountlist"/>
+						<remove_value name="$Unitcapacity"/>
+						<remove_value name="$buildmodule"/>
+						<remove_value name="$ShiptraderDocks"/>		  
+					</do_if>
+					<!-- [ npc ]/player difference crew -->			
+					<do_else>
+						<signal_objects object="player.galaxy" param="'init station'" param2="$createdStation"/>
+					</do_else>
+					<remove_value name="$createdStation"/>
+					<remove_value name="$faction"/>
+				</do_if>
+				<signal_objects object="player.galaxy" param="'check for new owner'" param2="event.param2.zone"/>
+			</actions>
+		</cue>
+	</cues>
+</mdscript>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff>
+	<!--replace sel="//attention[@min='unknown']/actions/do_else[1]/set_value/@exact">100</replace-->
+	<add sel="/aiscript/attention/actions/do_if[@value='not $CurrentElement.exists and this.defensible.hullpercentage ge $hulldamagelimit']" pos="prepend">
+        <end_repair_mass_traffic object="this.defensible" />
+	</add>
+	<add sel="//attention[@min='unknown']/actions/do_if[@value='$repairratefactor == 0']/set_value" pos="after">
+		<do_if value="$Defensible.isclass.ship_l or $Defensible.isclass.ship_xl">
+			<set_value name="$repairratefactor" exact="[this.defensible.units.{unitcategory.welder}.count + this.defensible.availableunits.{unitcategory.marine}.count, 0.1f].max" />
+		</do_if>
+		<do_elseif value="$Defensible.isclass.station">
+			<set_value name="$repairratefactor" exact="[[this.defensible.units.{unitcategory.welder}.count + this.defensible.availableunits.{unitcategory.marine}.count, 2].max, 40].min" />
+		</do_elseif>
+		<do_elseif value="$Defensible.isclass.ship_m or $Defensible.isclass.ship_s">
+			<!-- rate like a mk1 drone -->
+			<set_value name="$repairratefactor" exact="1" />
+		</do_elseif>
+	</add>
+	
+	<add sel="/aiscript/attention/actions/do_if[@value='not @$networkid']/launch_repair_drones" type="@chance" >if $Defensible.boarder then 100 else 0</add> 
+	<add sel="/aiscript/attention/actions/do_if[@value='@$networkid']" type="@chance" >if $Defensible.boarder then 100 else 0</add> 
+
+
+	<!-- prevent hull-reapir-bug -->
+	<add sel="//set_object_hull[@object='$Defensible']" pos="before">
+        <set_value name="$tempCheckHull" exact="($Defensible.hullpercentage)i" />
+	</add>
+	<replace sel="//set_object_hull[@object='$Defensible']/@exact">$addedhullpercentage + $Defensible.hullpercentage</replace>
+	<add sel="//set_object_hull[@object='$Defensible']" pos="after">
+		<signal_objects object="player.galaxy" param="'learned.something'" param2="[this, ware.inv_virtualseminarengineering, 'repair']" />
+		<do_if value="($Defensible.hullpercentage)i" exact="$tempCheckHull">
+			<set_object_hull object="$Defensible" exact="($Defensible.hullpercentage)i + [($addedhullpercentage*2)i, 2].max" />
+		</do_if>
+		<remove_value name="$tempCheckHull" /> 
+	</add>
+</diff>

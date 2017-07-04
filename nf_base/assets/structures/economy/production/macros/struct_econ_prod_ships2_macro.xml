@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Michael (192.168.3.144) at 22.07.2014_19-44-04-->
+<macros>
+  <macro name="struct_econ_prod_ships2_macro" class="production">
+    <component ref="struct_econ_prod_ships" />
+    <properties>
+      <identification name="{20107,3901}" description="{20107,3902}" unique="0" />
+	  <explosiondamage value="100000" />
+      <hull max="3600000" />
+      <production wares="shp_pmc_xen_01 shp_pmc_xen_02 shp_s_torpedo_01 ">
+        <queue>          
+		  <item ware="shp_pmc_xen_01" />
+		  <item ware="shp_pmc_xen_02" />	
+			<item ware="shp_s_torpedo_01" />
+        </queue>
+      </production>
+    </properties>
+    <connections>
+      <connection ref="connection_dock_m01">
+        <macro ref="props_surf_ar_docks_size_m_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m02">
+        <macro ref="props_surf_ar_docks_size_m_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m03">
+        <macro ref="props_surf_ar_docks_size_m_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m04">
+        <macro ref="props_surf_ar_docks_size_m_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m05">
+        <macro ref="props_surf_ar_docks_size_m_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m06">
+        <macro ref="props_surf_ar_docks_size_m_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m07">
+        <macro ref="props_surf_ar_docks_size_m_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m08">
+        <macro ref="props_surf_ar_docks_size_m_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_storage01">
+        <macro ref="storage_station_ship_s_macro" connection="ShipConnection" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

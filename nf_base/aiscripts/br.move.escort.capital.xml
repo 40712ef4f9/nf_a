@@ -1,0 +1,771 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="BR.move.escort.capital" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="8">
+  <!--
+
+  Escort Capital ship
+
+  Movement of a ship escorting a big ship (m, l, xl).
+  This will stay in a group with a cylinder formation while
+  target to escort is operational.
+
+  Movement:
+  1 - Stay in formation
+  2 - Break formation to attack enemy if:
+    2.1 - Leader send a signal
+    2.2 - Leader under attack
+    2.3 - Escort group under attack
+
+  Will return to this formation if:
+  - enemy destroyed
+  - far away from escortee (if exists)
+
+  -->
+  <params>
+    <param name="target" comment="the big ship to escort"/>
+    <param name="timeout" default="-1"/>
+    <param name="formationparam" default="null" comment="Separation between circles that surround the capship target. Default: max of 400m and ship length"/>
+    <param name="formationparam2" default="null" comment="Maximum number of ships per circle. Default 6"/>
+    <!-- <param name="aggressive" default="1.0" comment="If set to true, the escort system will send all ships. Aggressive mode [0.0, 2.0]. Normal level is 1.0"/> -->
+    <param name="defendtarget" default="true" comment="Always defend the target, even if he is attacking the escorting ships"/>
+    <param name="debugoutputchance" default="0"/>
+  </params>
+  <interrupts>
+    <handler ref="AttackBRHandler"/>
+    <handler ref="ScannedHandler"/>
+    <handler ref="TargetInvalidHandler"/>
+
+    <handler>
+      <conditions>
+        <check_any>
+          <!-- Disengage should always apply, regardless of what the squadron members are doing, even if they have not yet joined. -->
+          <event_object_signalled object="this.ship" param="'MICT_Disengage'"/>
+          <check_all>
+            <check_any>
+              <!-- Go should only apply to XL and L ships. Small ships should keep formation. Doesn't matter if they have already joined or not as this means that the squadron's destination has changed. -->
+              <event_object_signalled object="this.ship" param="'MICT_Go'"/>
+              <check_all>
+                <!-- Refuel should only apply to L and XL ships that are in formation with the Squadron Commander. -->
+                <event_object_signalled object="this.ship" param="'MICT_Refuel'"/>
+                <check_value value="$target.pilot.$escortgroup.indexof.{this.ship}"/>
+              </check_all>
+            </check_any>
+            <check_value value="this.ship.isclass.[class.ship_xl, class.ship_l]"/>
+          </check_all>
+        </check_any>
+      </conditions>
+      <actions>
+        <do_if value="event.param" exact="'MICT_Go'">
+          <set_value name="$MICT_squadron_destination" exact="event.param2"/>
+        </do_if>
+        <abort_called_scripts resume="start"/>
+      </actions>
+    </handler>
+
+    <!--handler>
+      <conditions>
+        <event_object_changed_zone object="$target" check="false" />
+        <check_value value="this.commandaction.value == commandaction.attacking" negate="true"/>
+        <check_value value="event.param.istemporaryzone" negate="true" />
+        <check_value value="event.param.isclass.highway" negate="true" />
+        <check_value value="this.ship.distanceto.{$target} gt 20km" />
+      </conditions>
+      <actions>
+        <abort_called_scripts resume="start"/>
+      </actions>
+    </handler-->
+  </interrupts>
+  <init>
+    <!-- Command already set on move.escort <set_command command="command.escort" param="$target"/> -->
+    <set_command_action commandaction="commandaction.flying"/>
+    <set_value name="this.$brattackhandler" exact="true" />
+    <!-- distance to check and abort attacks -->
+    <set_value name="$pursuedistance" exact="5km + $target.size" />
+  </init>
+  <patch sinceversion="7">
+    <set_value name="$pursuedistance" exact="5km + @$target.size" />
+  </patch>
+  <attention min="visible">
+    <actions>
+
+      <label name="start"/>
+
+      <!-- if is big ship (cannot fly in highways) -->
+      <set_value name="$capship" exact="this.ship.isclass.[class.ship_l,class.ship_xl]"/>
+      <set_value name="$MICT_capescort" exact="$target.isclass.[class.ship_l,class.ship_xl]"/>
+
+      <!-- Set cylindrical values -->
+      <set_value name="$nships" exact="-1"/>
+      <set_value name="$separation" exact="$formationparam"/>
+      <set_value name="$nmax" exact="$formationparam2"/>
+      <do_if value="not $separation">
+        <set_value name="$separation" exact="[400m, this.ship.length].max"/>
+      </do_if>
+      <set_value name="$nmax" exact="$formationparam2"/>
+      <do_if value="not $nmax">
+        <set_value name="$nmax" exact="6"/>
+      </do_if>
+
+      <!-- Start -->
+      <wait min="200ms"/>
+
+      <stop_moving object="this.ship" immediate="false"/>
+      <cease_fire object="this.ship"/>
+
+      <do_if value="@$MICT_InFormation">
+        <leave_formation object="this.ship"/>
+        <remove_value name="$MICT_InFormation"/>
+      </do_if>
+
+      <do_if value="$target.isoperational and @$target.pilot" negate="true">
+        <resume label="finish"/>
+      </do_if>
+      <do_if value="$target.pilot.$escortgroup?" negate="true">
+        <create_group groupname="$target.pilot.$escortgroup"/>
+        <add_to_group groupname="$target.pilot.$escortgroup" object="this.ship"/>
+      </do_if>
+
+      <!-- MICT: Allow small ships -->
+      <do_if value="not $target.isclass.[class.ship_s, class.ship_m, class.ship_l, class.ship_xl]">
+        <resume label="finish"/>
+      </do_if>
+
+      <set_value name="$enemy" exact="null"/>
+      <set_value name="$starttime" exact="player.age"/>
+
+      <!-- MICT: If commander is commanded to stop attacking, and attack was initiated by attack command to commander, squad stops attacking as well. 
+        v0.11: except when escorting non-combat ships.  In that case, blow up all hostiles around it. -->
+      <do_if value="$MICT_SquadAttack? 
+              and ($target.primarypurpose == objectpurpose.fight 
+                or $target.macro.ismacro.{macro.units_size_l_dv_kit_new_defence_01_macro}) 
+              and (@$target.pilot.command.value != command.attackenemies) 
+              and (@$target.pilot.command.value != command.attackobject) 
+              and (@$target.pilot.command.value != command.patrol)">
+        <set_value name="this.$goattack" exact="false"/>
+        <set_value name="$enemy" exact="null"/>
+        <remove_value name="$MICT_SquadAttack"/>
+      </do_if>
+
+      <!-- MICT: If commander is refueling, go refuel as well. -->
+      <do_if value="(this.ship.cargo.{ware.fuelcells}.count lt this.ship.cargo.{ware.fuelcells}.max) 
+              and (@$target.pilot.command.value == command.refuel)">
+        <do_if value="@$MICT_InFormation">
+          <leave_formation object="this.ship"/>
+          <remove_value name="$MICT_InFormation"/>
+        </do_if>
+        <remove_from_group group="$target.pilot.$escortgroup" object="this.ship"/>
+        <run_script name="'move.refuel'" sinceversion="6"/>
+        <resume label="start"/>
+      </do_if>
+
+      <!-- If far away/different zone -->
+      <do_if value="$target.isoperational 
+        and (@$MICT_squadron_destination 
+          or ($target.pilot.commandaction.value == commandaction.flyingto 
+            and $target.pilot.commandaction.param.isclass.zone 
+            and $target.pilot.commandaction.param != this.zone) 
+          or ($target.pilot.commandaction.value != commandaction.flyingto 
+            and this.zone != $target.zone))">
+        <debug_text text="'leader in different zone'" chance="$debugoutputchance"/>
+        <do_if value="@$MICT_squadron_destination" negate="true">
+          <do_if value="@$target.pilot.commandaction.value == commandaction.flyingto">
+            <set_value name="$MICT_squadron_destination" exact="$target.pilot.commandaction.param"/>
+          </do_if>
+          <do_else>
+            <set_value name="$MICT_squadron_destination" exact="$target.zone"/>
+          </do_else>
+        </do_if>
+
+        <do_if value="@$MICT_InFormation">
+          <leave_formation object="this.ship"/>
+          <remove_value name="$MICT_InFormation"/>
+        </do_if>
+        <remove_from_group group="$target.pilot.$escortgroup" object="this.ship"/>
+        <!-- MICT: compatibility with carrier mod -->
+        <do_if value="$capship">
+          <run_script name="if @global.$WWX_mmcarrier_is_active then 'move.generic.carrier' else 'move.generic'" sinceversion="5">
+            <param name="destination" value="$MICT_squadron_destination"/>
+            <param name="endintargetzone" value="true"/>
+          </run_script>
+          <run_script name="'move.generic'" chance="0"/>
+        </do_if>
+        <do_elseif value="this.zone != $target.zone">
+          <signal_objects object="this.ship" param="'follow'"/>
+          <wait min="250ms" max="1s" sinceversion="5"/>
+        </do_elseif>
+        <remove_value name="$MICT_squadron_destination"/>
+      </do_if>
+
+      <!-- Create / add to escort group -->
+      <!-- MICT: Added formation stuff from vanilla move.escort.
+        also added leave_formation before all nodes where ship is removed from escort group.
+        MICT_supp2_v0.18: Capital ships should now also move in formation, unless breaking off to attack.  Only ships NOT moving in formation are fighters escorting capital ships to allow for Marvin's carrier-based fighters going on patrol. -->
+      <do_if value="$target.isoperational">
+        <do_if value="$target.pilot.$escortgroup?" negate="true">
+          <debug_text text="'creating escort list'" chance="$debugoutputchance"/>
+          <create_group groupname="$target.pilot.$escortgroup"/>
+        </do_if>
+        <add_to_group groupname="$target.pilot.$escortgroup" object="this.ship"/>
+        <do_if value="$MICT_InFormation? or $MICT_SquadAttack? or this.ship.distanceto.{$target} gt 5km or $target.isboostactive" negate="true">
+          <do_if value="not $capship and $MICT_capescort" negate="true">
+            <!--<do_if value="not @$MICT_formation">-->
+            <do_if value="$capship">
+              <set_value name="$MICT_formation" exact="formationshape.invpointguard"/>
+            </do_if>
+            <do_else>
+              <set_value name="$MICT_formation" exact="formationshape.xshapeforward"/>
+            </do_else>
+            <!--</do_if>-->
+            <do_if value="$capship">
+              <set_value name="$formationparam" exact="[400m + $target.length, 400m + this.ship.length].max"/>
+            </do_if>
+            <do_else>
+              <set_value name="$formationparam" exact="[100m, this.ship.length].max"/>
+            </do_else>
+            <create_formation object="$target" formation="$MICT_formation" param="$formationparam" param2="$formationparam2"/>
+            <join_formation leader="$target" object="this.ship"/>
+            <set_value name="$MICT_InFormation" exact="true"/>
+            <remove_value name="$MICT_formation"/>
+          </do_if>
+        </do_if>
+        <!--<remove_value name="$MICT_capescort"/>-->
+      </do_if>
+
+      <!-- Flag attack -->
+      <set_value name="this.$goattack" exact="false"/>
+
+      <!-- Loop -->
+      <do_while value="$target.isoperational and @$target.pilot">
+        <do_if value="$target.pilot.$escortgroup?" negate="true">
+          <create_group groupname="$target.pilot.$escortgroup"/>
+        </do_if>
+        <run_script name="'move.refuel'" chance="0"/>
+
+        <!-- Calculate Positions -->
+        <do_if value="$nships != $target.pilot.$escortgroup.count and $target.pilot.$escortgroup.count gt 0">
+          <set_value name="$nships" exact="$target.pilot.$escortgroup.count"/>
+
+          <do_if value="$nships ge $nmax">
+            <set_value name="$alpha" exact="2.0*pi / $nmax"/>
+          </do_if>
+          <do_else>
+            <set_value name="$alpha" exact="2.0*pi / $nships"/>
+          </do_else>
+
+          <set_value name="$myindex" exact="$target.pilot.$escortgroup.indexof.{this.ship}"/>
+          <set_value name="$x" exact="($target.width + this.ship.width + 100 + @$capship*500)  * cos($alpha * $myindex)"/>
+          <set_value name="$y" exact="($target.height + this.ship.height + 100 + @$capship*500) * sin($alpha * $myindex)"/>
+          <set_value name="$z" exact="($myindex/$nmax) * $separation - ($nships/$nmax * $separation*0.5)"/>
+        </do_if>
+
+        <run_script name="if @global.$MICT_mmcarrier_is_active then 'move.generic.carrier' else 'move.generic'" chance="0"/>
+        <run_script name="'move.generic'" chance="0"/>
+
+        <!-- MICT: If separated from commander, but in the same zone, jump to within 1km of the commander. -->
+        <do_if value="not $MICT_SquadAttack? and not $target.isboostactive">
+          <do_if value="this.ship.distanceto.{$target} gt this.ship.size + $target.size + 5km">
+            <do_if value="@$MICT_InFormation">
+              <leave_formation object="this.ship"/>
+              <remove_value name="$MICT_InFormation"/>
+            </do_if>
+            <remove_from_group group="$target.pilot.$escortgroup" object="this.ship"/>
+            <do_if value="$capship">
+              <wait min="250ms" max="1s" sinceversion="5"/>
+              <jump object="this.ship" zone="$target.zone" skipcharge="true" ignorefuel="true" commandaction="false" sinceversion="4">
+                <safepos radius="this.ship.size" object="$target" exact="this.ship.size + $target.size + 1km" allowyaxis="true"/>
+                <rotation value="$target.rotation"/>
+              </jump>
+            </do_if>
+            <do_else>
+              <wait min="250ms" max="1s" sinceversion="5"/>
+              <warp object="this.ship" zone="this.zone">
+                <safepos zone="this.zone" radius="this.ship.size" object="$target" max="this.ship.size + $target.size + 1km" allowyaxis="true"/>
+                <rotation value="$target.rotation"/>
+              </warp>
+            </do_else>
+            <resume label="start"/>
+          </do_if>
+
+          <!-- Escort movement -->
+          <!-- MICT: Only if this.ship lags behind by more than 1km.  Otherwise, formation movement should handle it. -->
+          <do_elseif value="$MICT_InFormation?" negate="true">
+            <move_to object="this.ship" destination="$target" flightbehaviour="flightbehaviour.follow" forcesteering="not @$capship" usehighways="not @$capship" forcerotation="true">
+              <position x="$x" y="$y" z="$z"/>
+              <rotation value="$target.rotation"/>
+              <interrupt_after_time time="0s" comment="interrupt the blocking action, but the move continues"/>
+            </move_to>
+            <!--<resume label="start"/>-->
+          </do_elseif>
+        </do_if>
+
+        <!-- Get the attack events -->
+        <wait min="10s" max="20s" sinceversion="3">
+          <interrupt>
+            <conditions>
+              <check_any>
+                <check_all>
+                  <check_any>
+                    <event_object_signalled object="this.ship" param="'MICT_Attack'"/>
+                    <event_object_signalled object="this.ship" param="'attack'" />
+                  </check_any>
+                  <check_value value="$target.isoperational and $target.pilot and event.param2.isoperational and $target.mayattack.{event.param2}" />
+                </check_all>
+                <check_all>
+                  <check_any>
+                    <event_object_attacked object="this.ship"/>
+                    <event_object_attacked object="$target" />
+                    <check_all>
+                      <event_object_enemy_found object="this.ship"/>
+                      <check_value value="(@$target.pilot.command.value == command.attackenemies) or (@$target.pilot.command.value == command.attackobject) or (@$target.pilot.command.value == command.patrol) or (@$target.pilot.command.value == command.protect) or ($target.primarypurpose != objectpurpose.fight)"/>
+                    </check_all>
+                  </check_any>
+                  <check_value value="event.param.isoperational"/>
+                  <check_value value="$target.isoperational and $target.pilot" />
+                  <check_value value="$target != event.param or not $defendtarget" comment="special check for attack (or not) the target" />
+                  <check_value value="this.mayattack.{event.param} or $target.mayattack.{event.param}" />
+                  <check_value value="($target.distanceto.{event.param} le $pursuedistance) and (this.ship.distanceto.{event.param} le $pursuedistance)"/>
+                </check_all>
+                <event_object_changed_zone object="$target" />
+                <event_object_destroyed object="$target" />
+                <event_object_abandoned object="$target"/>
+                <check_all>
+                  <!-- remember that this event is fired AFTER ownership is changed. so ownership checks apply to the new owner. -->
+                  <event_object_changed_owner object="$target"/>
+                  <!-- this will break if a ship is subordinate to
+                  a ship belonging to a different faction,
+                    and that ship uncovers. -->
+                  <check_value value="not $target.coverowner"/>
+                  <check_value value="event.param != this.ship.trueowner"/>
+                </check_all>
+              </check_any>
+            </conditions>
+            <actions>
+              <!-- Reset enemy -->
+              <set_value name="$enemy" exact="null"/>
+
+              <do_if value="event.name == 'event_object_changed_zone' or event.name == 'event_object_destroyed' or event.name == 'event_object_abandoned' or event.name == 'event_object_changed_owner'">
+                <resume label="start" />
+              </do_if>
+              <!-- if this.ship received attack signal, simply set $enemy and attack without calling reinforcements. -->
+              <do_elseif value="(event.name == 'event_object_signalled') and (event.param == 'attack' or event.param == 'MICT_Attack')">
+                <set_value name="$enemy" exact="event.param2"/>
+                <set_value name="this.$goattack" exact="true"/>
+                <remove_from_group group="$target.pilot.$escortgroup" object="this.ship"/>
+                <debug_text text="'This ship, %1 (%2), subordinate of %3, attacking %4 (%5). CONDITION 4.2.2: Squadron reinforcing (response to condition 4.1)'.[this.ship.knownname, this.ship, $target.knownname, $enemy.knownname, $enemy]" chance="$debugoutputchance"/>
+              </do_elseif>
+              <do_elseif value="@$target.pilot.$escortgroup.count and ((event.name == 'event_object_attacked') or (event.name == 'event_object_enemy_found'))">
+                <set_value name="$enemy" exact="event.param"/>
+                <!-- Send 20% of escort ships -->
+                <set_value name="$nsupportships" exact="$target.pilot.$escortgroup.count * 0.2"/>
+                <do_if value="event.name" exact="'event_object_attacked'">
+                  <!--  Me under attack, so attack him -->
+                  <do_if value="event.param3" exact="this.ship">
+                    <debug_text text="'This ship, %1 (%2), subordinate of %3, attacking %4 (%5). CONDITION 2: Squadron was attacked'.[this.ship.knownname, this.ship, $target.knownname, $enemy.knownname, $enemy]" chance="$debugoutputchance"/>
+                    <set_value name="$attackchance" exact="100"/>
+                  </do_if>
+                  <!-- Commander under attack. Each escort ship has 50% chance to attack. -->
+                  <do_elseif value="event.param3" exact="$target">
+                    <debug_text text="'This ship, %1 (%2), subordinate of %3, attacking %4 (%5). CONDITION 3: Leader under attack'.[this.ship.knownname, this.ship, $target.knownname, $enemy.knownname, $enemy]" chance="$debugoutputchance"/>
+                    <set_value name="$attackchance" exact="50"/>
+                  </do_elseif>
+                  <do_else>
+                    <set_value name="$attackchance" exact="0"/>
+                  </do_else>
+                  <do_all chance="$attackchance">
+                    <set_value name="this.$goattack" exact="true"/>
+                    <remove_from_group group="$target.pilot.$escortgroup" object="this.ship"/>
+                  </do_all>
+                  <remove_value name="$attackchance"/>
+                </do_if>
+
+                <!-- Call support ships -->
+                <do_if value="$target.pilot.$escortgroup.count">
+                  <do_all exact="[1, $nsupportships].max" counter="$i">
+                    <do_if value="$target.pilot.$escortgroup.{$i} == this.ship">
+                      <set_value name="this.$goattack" exact="true"/>
+                      <remove_from_group group="$target.pilot.$escortgroup" object="this.ship" />
+                      <debug_text text="'This ship, %1 (%2), subordinate of %3, attacking %4 (%5). CONDITION 4.2.1'.[this.ship.knownname, this.ship, $target.knownname, $enemy.knownname, $enemy]" chance="$debugoutputchance"/>
+                    </do_if>
+                    <do_else>
+                      <signal_objects object="$target.pilot.$escortgroup.{$i}" param="'attack'" param2="$enemy" param3="[true, true]" delay="1ms"/>
+                      <debug_text text="'Requesting %1 (%2), subordinate of %3, to attack %4 (%5). CONDITION 4.1: Requesting reinforcements'.[$target.pilot.$escortgroup.{$i}.knownname, $target.pilot.$escortgroup.{$i}, $target.knownname, $enemy.knownname, $enemy]" chance="$debugoutputchance"/>
+                    </do_else>
+                  </do_all>
+                </do_if>
+                <remove_value name="$nsupportships" />
+              </do_elseif>
+              <do_else>
+                <debug_text text="'squadron attack case unaccounted for. this ship will just stay in formation. event.name: ' + event.name" filter="error"/>
+              </do_else>
+            </actions>
+          </interrupt>
+        </wait>
+
+        <do_if value="$timeout gt 0">
+          <do_if value="player.age gt $starttime + $timeout">
+            <resume label="finish"/>
+          </do_if>
+        </do_if>
+
+        <!-- Go into attack mode-->
+        <do_if value="this.$goattack">
+          <resume label="fight"/>
+        </do_if>
+
+      </do_while>
+
+      <label name="fight"/>
+
+      <do_if value="this.$goattack">
+        <do_if value="$target.isoperational and @$target.pilot and $enemy.isoperational">
+          <do_if value="$target.pilot.$escortgroup?" negate="true">
+            <create_group groupname="$target.pilot.$escortgroup"/>
+          </do_if>
+          <do_if value="not this.mayattack.{$enemy}">
+            <add_relation_boost object="this" otherobject="$enemy" value="this.owner.relation.kill.max" decay="1" delay="10min" silent="true"/>
+          </do_if>
+
+          <do_if value="@$MICT_InFormation">
+            <leave_formation object="this.ship"/>
+            <remove_value name="$MICT_InFormation"/>
+          </do_if>
+          <remove_from_group group="$target.pilot.$escortgroup" object="this.ship"/>
+          <debug_text text="' I will attack you. Index: ' +$myindex " chance="$debugoutputchance"/>
+
+          <run_script name="'fight.attack.object'">
+            <param name="target" value="$enemy"/>
+            <param name="escort" value="$target"/>
+            <param name="pursuetargets" value="true"/>
+            <param name="checkrelation" value="true"/>
+            <param name="pursuedistance" value="$pursuedistance" comment="make sure to be the same distance as max attack range"/>
+            <param name="allowothertargets" value="false"/>
+            <param name="debugoutputchance" value="$debugoutputchance"/>
+          </run_script>
+
+          <remove_value name="$MICT_SquadAttack"/>
+          <remove_value name="this.$goattack"/>
+        </do_if>
+      </do_if>
+
+      <!-- check if this is a jobship at the end of its lifetime -->
+      <do_if value="this.ship.jobexpired or @this.$end_of_work gt player.age">
+        <resume label="finish"/>
+      </do_if>
+
+      <!-- Target destroyed, and no commander -->
+      <do_if value="not $target.isoperational">
+        <do_if value="this.ship.commander.isoperational and (@this.ship.commander.isclass.[class.ship_s, class.ship_m, class.ship_l, class.ship_xl])">
+          <set_value name="$target" exact="this.ship.commander"/>
+          <do_if value="this.$whatido? and this.$params.$target?" >
+            <set_value name="this.$params.$target" exact="$target" />
+            <signal_objects object="this.ship" param="'CM REBOOT'"/>
+          </do_if>
+          <resume label="start"/>
+        </do_if>
+        <do_elseif value="this.ship.isplayerowned">
+          <run_script name="'move.patrol'" sinceversion="4">
+            <param name="range" value="'zone'"/>
+          </run_script>
+        </do_elseif>
+        <do_else>
+          <resume label="finish"/>
+        </do_else>
+      </do_if>
+      <resume label="start" />
+
+      <label name="finish" />
+
+      <!-- Auto destroy -->
+      <run_script name="'move.die'" sinceversion="1" chance="(not this.$whatido? and not this.$escort?)*100">
+        <param name="byjump" value="$capship" />
+        <param name="byhighway" value="not $capship" />
+        <param name="bydock" value="not $capship" />
+        <param name="byidle" value="true" />
+      </run_script>
+
+    </actions>
+  </attention>
+  <attention min="unknown">
+    <actions>
+
+      <wait min="1s" max="3s"/>
+
+      <label name="fight"/>
+      <label name="start"/>
+      <do_if value="not $target.pilot.$escortgroup? and $target.isoperational and $target.pilot">
+        <create_group groupname="$target.pilot.$escortgroup"/>
+        <add_to_group groupname="$target.pilot.$escortgroup" object="this.ship"/>
+      </do_if>
+
+      <!-- MICT: dock orphaned drones. -->
+      <do_if value="this.ship.isclass.drone">
+        <run_script name="'move.dockat.drone'" sinceversion="5">
+          <param name="destination" value="$target"/>
+        </run_script>
+      </do_if>
+
+      <set_value name="$capship" exact="this.ship.isclass.[class.ship_l,class.ship_xl]"/>
+      <set_value name="$MICT_capescort" exact="$target.isclass.[class.ship_l,class.ship_xl]"/>
+
+      <do_if value="@$MICT_InFormation">
+        <leave_formation object="this.ship"/>
+        <remove_value name="$MICT_InFormation"/>
+      </do_if>
+
+      <wait min="1s" max="5s"/>
+
+      <do_if value="not $target.isoperational">
+        <debug_text text="'No valid escortee specified, and no commander found - exiting script'" chance="$debugoutputchance"/>
+        <resume label="finish"/>
+      </do_if>
+
+      <!-- MICT: Break off if:
+        Commander stops attacking,
+        or commander is civilian and
+          acquired target is torn to bits. -->
+      <do_if value="$target.isoperational and $MICT_OOZ_SquadAttack? and (not $MICT_OOZ_enemy? or not $MICT_OOZ_enemy.isoperational)">
+        <remove_value name="$MICT_OOZ_SquadAttack"/>
+        <do_if value="$MICT_OOZ_enemy?">
+          <remove_value name="$MICT_OOZ_enemy"/>
+        </do_if>
+      </do_if>
+
+      <do_if value="$target.isoperational and @$target.pilot.$escortgroup and (@$target.pilot.command.value == command.refuel) and (this.ship.cargo.{ware.fuelcells}.count lt this.ship.cargo.{ware.fuelcells}.max)">
+        <do_if value="@$MICT_InFormation">
+          <leave_formation object="this.ship"/>
+          <remove_value name="$MICT_InFormation"/>
+        </do_if>
+        <remove_from_group group="$target.pilot.$escortgroup" object="this.ship"/>
+        <run_script name="'move.refuel'" sinceversion="5"/>
+        <resume label="start"/>
+      </do_if>
+
+      <!-- Fly there -->
+      <do_if value="$target.isoperational and ((@$target.pilot.commandaction.value == commandaction.flyingto and @$target.pilot.commandaction.param.isclass.zone and @$target.pilot.commandaction.param != this.zone) or this.zone != $target.zone)">
+        <do_if value="@$target.pilot.commandaction.value == commandaction.flyingto">
+          <set_value name="$MICT_squadron_destination" exact="$target.pilot.commandaction.param"/>
+        </do_if>
+        <do_else>
+          <set_value name="$MICT_squadron_destination" exact="$target.zone"/>
+        </do_else>
+
+        <do_if value="@$MICT_InFormation">
+          <leave_formation object="this.ship"/>
+          <remove_value name="$MICT_InFormation"/>
+        </do_if>
+        <remove_from_group group="$target.pilot.$escortgroup" object="this.ship"/>
+        <!-- MICT: compatibility with carrier mod -->
+        <do_if value="$capship">
+          <run_script name="if @global.$MICT_mmcarrier_is_active then 'move.generic.carrier' else 'move.generic'">
+            <param name="destination" value="$MICT_squadron_destination"/>
+            <param name="endintargetzone" value="true"/>
+          </run_script>
+          <run_script name="'move.generic'" chance="0"/>
+          <resume label="start"/>
+        </do_if>
+        <do_elseif value="this.zone != $target.zone">
+          <signal_objects object="this.ship" param="'follow'"/>
+          <wait min="500ms" max="1s" sinceversion="8"/>
+          <resume label="start"/>
+        </do_elseif>
+      </do_if>
+
+      <!-- MICT: Find suitable targets, and attack! 
+        Conditions: Commander is attacking, or
+          Commander is non-combatant, and has less than pristine shields. -->
+      <do_if value="$target.isoperational 
+        and ( this.ship.primarypurpose == objectpurpose.fight 
+          or this.ship.macro.ismacro.{macro.units_size_l_dv_kit_new_defence_01_macro} )
+        and ( [command.attackobject, command.attackenemies, command.patrol].indexof.{@$target.pilot.command.value}
+          or ( $target.primarypurpose != objectpurpose.fight 
+            and not $target.macro.ismacro.{macro.units_size_l_dv_kit_new_defence_01_macro} 
+            and $target.shield lt $target.maxshield ) 
+          or this.race == race.split 
+          or $target.macro.ismacro.[macro.units_size_s_torpedo_bomber_macro, macro.units_size_m_xenon_bomber_01_macro])">
+
+        <!-- MICT: If no target has been designated, find a suitable target. -->
+        <do_if value="not $MICT_OOZ_SquadAttack?">
+          <do_if value="$MICT_OOZ_enemy?">
+            <remove_value name="$MICT_OOZ_enemy"/>
+          </do_if>
+          <create_list name="$MICT_enemies"/>
+          <do_if value="$capship">
+            <find_gravidar_contact name="$MICT_enemies" object="$target" checkoperational="true" mayattack="this.ship" invulnerable="false" indestructible="false" multiple="true">
+              <match_distance object="$target" max="$target.maxradarrange"/>
+              <match class="[class.ship_l, class.ship_xl, class.station]"/>
+            </find_gravidar_contact>
+          </do_if>
+          <do_else>
+            <do_if value="$MICT_capescort">
+              <find_gravidar_contact name="$MICT_enemies" object="$target" checkoperational="true" mayattack="this.ship" invulnerable="false" indestructible="false" multiple="true">
+                <match_distance object="$target" max="$target.maxradarrange"/>
+              </find_gravidar_contact>
+            </do_if>
+            <do_else>
+              <find_gravidar_contact name="$MICT_enemies" object="$target" checkoperational="true" mayattack="this.ship" invulnerable="false" indestructible="false" multiple="true">
+                <match_distance object="$target" max="$target.maxradarrange / 2"/>
+              </find_gravidar_contact>
+            </do_else>
+          </do_else>
+
+          <do_if value="$MICT_enemies.count ge 1">
+            <do_if value="this.ship.maxcombatrange.all ge 8000">
+              <do_all exact="$MICT_enemies.count" counter="$i">
+                <do_if value="$MICT_enemies.{$i}.isoperational and not $MICT_enemies.{$i}.isboostactive">
+                  <do_if value="$MICT_enemies.{$i}.dps.all gt @$MICT_OOZ_enemy.dps.all">
+                    <set_value name="$MICT_OOZ_enemy" exact="$MICT_enemies.{$i}"/>
+                  </do_if>
+                  <do_elseif value="not $MICT_OOZ_enemy?">
+                    <set_value name="$MICT_OOZ_enemy" exact="$MICT_enemies.{$i}"/>
+                  </do_elseif>
+                </do_if>
+              </do_all>
+            </do_if>
+            <do_else>
+              <do_all exact="$MICT_enemies.count" counter="$i">
+                <do_if value="$MICT_enemies.{$i}.isoperational and not $MICT_enemies.{$i}.isboostactive">
+                  <do_if value="@$MICT_OOZ_enemy.distanceto.{$target} gt 0">
+                    <do_if value="$MICT_enemies.{$i}.distanceto.{$target} lt @$MICT_OOZ_enemy.distanceto.{$target}">
+                      <set_value name="$MICT_OOZ_enemy" exact="$MICT_enemies.{$i}"/>
+                    </do_if>
+                  </do_if>
+                  <do_elseif value="not $MICT_OOZ_enemy?">
+                    <set_value name="$MICT_OOZ_enemy" exact="$MICT_enemies.{$i}"/>
+                  </do_elseif>
+                </do_if>
+              </do_all>
+            </do_else>
+          </do_if>
+
+          <do_if value="$MICT_OOZ_enemy?">
+            <set_value name="$MICT_OOZ_SquadAttack" exact="true"/>
+          </do_if>
+          <remove_value name="$MICT_enemies"/>
+        </do_if>
+
+        <!-- MICT: Go blow something up, unless someone beats you to it; in which case, look for something to blow up. -->
+        <do_if value="$MICT_OOZ_SquadAttack? and $MICT_OOZ_enemy? and $MICT_OOZ_enemy.isoperational">
+          <do_if value="@$MICT_InFormation">
+            <leave_formation object="this.ship"/>
+            <remove_value name="$MICT_InFormation"/>
+          </do_if>
+          <remove_from_group group="$target.pilot.$escortgroup" object="this.ship"/>
+          <run_script name="'fight.attack.object'" sinceversion="5">
+            <param name="target" value="$MICT_OOZ_enemy"/>
+            <param name="escort" value="$target"/>
+            <param name="pursuedistance" value="$pursuedistance"/>
+            <param name="allowothertargets" value="false"/>
+            <param name="debugoutputchance" value="$debugoutputchance"/>
+          </run_script>
+          <remove_value name="$MICT_OOZ_SquadAttack"/>
+          <remove_value name="$MICT_OOZ_enemy"/>
+        </do_if>
+
+        <!-- MICT: If someone else beat you to it, then you haven't acquired a target after all. -->
+        <do_elseif value="$MICT_OOZ_SquadAttack? and $MICT_OOZ_enemy? and not $MICT_OOZ_enemy.isoperational">
+          <remove_value name="$MICT_OOZ_SquadAttack"/>
+        </do_elseif>
+      </do_if>
+
+      <!-- Create / add to escort group -->
+      <!-- MICT: Added formation stuff from vanilla move.escort.
+        also added leave_formation before all nodes that where ship is removed from escort group. -->
+      <do_if value="$target.isoperational and not $MICT_OOZ_SquadAttack?">
+        <do_if value="$target.pilot.$escortgroup?" negate="true">
+          <debug_text text="'creating escort list'" chance="$debugoutputchance"/>
+          <create_group groupname="$target.pilot.$escortgroup"/>
+        </do_if>
+        <add_to_group groupname="$target.pilot.$escortgroup" object="this.ship"/>
+        <do_if value="false">
+          <!--<do_if value="$MICT_InFormation? or $MICT_OOZ_SquadAttack? or this.ship.distanceto.{$target} gt 5km" negate="true">-->
+          <do_if value="not $capship and $MICT_capescort" negate="true">
+            <!--<do_if value="not @$MICT_formation">-->
+            <do_if value="$capship">
+              <set_value name="$MICT_formation" exact="formationshape.invpointguard"/>
+            </do_if>
+            <do_else>
+              <set_value name="$MICT_formation" exact="formationshape.xshapeforward"/>
+            </do_else>
+            <!--</do_if>-->
+            <do_if value="$capship">
+              <set_value name="$formationparam" exact="[400m + $target.length, 400m + this.ship.length].max"/>
+            </do_if>
+            <do_else>
+              <set_value name="$formationparam" exact="[100m, this.ship.length].max"/>
+            </do_else>
+            <create_formation object="$target" formation="$MICT_formation" param="$formationparam" param2="$formationparam2"/>
+            <join_formation leader="$target" object="this.ship"/>
+            <set_value name="$MICT_InFormation" exact="true"/>
+            <remove_value name="$MICT_formation"/>
+          </do_if>
+        </do_if>
+        <!--<remove_value name="$MICT_capescort"/>-->
+      </do_if>
+
+      <!-- MICT: If separated from commander, but in the same zone, jump to within 1km of the commander.
+        Warp should be better since it's instantaneous and doesn't block other actions. -->
+      <do_if value="$target.isoperational and not $MICT_OOZ_SquadAttack? and not $target.isboostactive">
+        <do_if value="this.ship.distanceto.{$target} gt this.ship.size + $target.size + 5km">
+          <do_if value="@$MICT_InFormation">
+            <leave_formation object="this.ship"/>
+            <remove_value name="$MICT_InFormation"/>
+          </do_if>
+          <remove_from_group group="$target.pilot.$escortgroup" object="this.ship"/>
+          <wait min="250ms" max="1s" sinceversion="5"/>
+          <warp object="this.ship" zone="this.zone">
+            <safepos zone="this.zone" radius="this.ship.size" object="$target" exact="this.ship.size + $target.size + 1km" allowyaxis="true"/>
+            <rotation value="$target.rotation"/>
+          </warp>
+        </do_if>
+
+        <do_elseif value="$MICT_InFormation?" negate="true">
+          <move_to object="this.ship" destination="$target" sinceversion="1">
+            <position object="$target" min="this.ship.size" max="this.ship.size + $target.size + 1km"/>
+            <rotation value="$target.rotation"/>
+            <interrupt_after_time time="0s" comment="interrupt the blocking action, but the move continues"/>
+          </move_to>
+          <resume label="start"/>
+        </do_elseif>
+      </do_if>
+
+      <!-- check if this is a jobship at the end of its lifetime -->
+      <do_if value="this.ship.jobexpired or @this.$end_of_work gt player.age">
+        <resume label="finish"/>
+      </do_if>
+
+      <!-- Target destroyed, and no commander -->
+      <do_if value="not $target.isoperational">
+        <do_if value="this.ship.commander.isoperational and (@this.ship.commander.isclass.[class.ship_s, class.ship_m, class.ship_l, class.ship_xl])">
+          <set_value name="$target" exact="this.ship.commander"/>
+          <do_if value="this.$whatido? and this.$params.$target?" >
+            <set_value name="this.$params.$target" exact="$target" />
+            <signal_objects object="this.ship" param="'CM REBOOT'"/>
+          </do_if>
+          <resume label="start"/>
+        </do_if>
+        <do_elseif value="this.ship.isplayerowned">
+          <run_script name="'move.patrol'" sinceversion="4">
+            <param name="range" value="'zone'"/>
+          </run_script>
+        </do_elseif>
+        <do_else>
+          <resume label="finish"/>
+        </do_else>
+      </do_if>
+      <resume label="start" />
+
+      <label name="finish" />
+
+      <!-- Auto destroy -->
+      <run_script name="'move.die'" sinceversion="1" chance="(not this.$whatido? and not this.$escort?)*100">
+        <param name="byjump" value="$capship" />
+        <param name="byhighway" value="not $capship" />
+        <param name="bydock" value="not $capship" />
+        <param name="byidle" value="true" />
+      </run_script>
+
+    </actions>
+  </attention>
+  <on_abort>
+    <remove_value name="this.$brattackhandler"/>
+  </on_abort>
+</aiscript>

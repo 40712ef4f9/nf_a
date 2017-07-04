@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Owen (192.168.3.119) at 10.05.2014_16-39-58-->
+<macros>
+  <macro name="buildmodule_ships_heretic_l_macro" class="buildmodule">
+    <component ref="props_surf_ar_buildmodule_l" />
+    <properties>
+      <identification name="{20107,3801}" description="{20107,3802}" unique="0" />
+      <build method="omicron" />
+      <explosiondamage value="100000" />
+      <hull max="6200000" />
+      <effects>
+        <explosion ref="explosion_station_01" />
+        <sefx_hack_disabled ref="hack_deactivated_m" />
+      </effects>
+      <secrecy level="4" />
+      <builder>
+		<macro ref="units_size_l_player_fury_macro" />
+        <macro ref="units_size_l_player_harpy_macro" />
+        <macro ref="units_size_l_hydrogen_collector_macro" />
+        <macro ref="units_size_l_ice_collector_macro" />
+        <macro ref="units_size_l_ions_collector_macro" />
+        <macro ref="units_size_l_ore_collector_macro" />
+      </builder>
+    </properties>
+    <connections>
+      <connection ref="connection_dockingbay01">
+        <macro ref="props_surf_ar_docks_size_l_inv_macro" connection="connection_component01" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

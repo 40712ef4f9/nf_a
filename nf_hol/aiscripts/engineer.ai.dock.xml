@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<aiscript name="engineer.ai.dock" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+  <params>
+    <param name="debugoutputchance" default="0"/>
+    <param name="debugoutputchance2" default="0"/>
+  </params>
+  <interrupts>
+    <handler comment="Engineer hacked">
+      <conditions>
+        <event_object_signalled object="this.object" param="'engineer_hacked'" />
+      </conditions>
+      <actions>
+        <debug_text text="'engineer_hacked'" chance="$debugoutputchance" />
+        <set_value name="this.$hacked" exact="player.age + event.param2" />
+      </actions>
+    </handler>
+  </interrupts>
+  <init>
+    <set_command command="command.repair" />
+    <set_command_action commandaction="commandaction.repairchecking" />
+  </init>
+  <attention min="unknown">
+    <actions>
+      <do_if value="this.combinedskill" max="90">
+		<set_value name="$Skill" exact="[skilltype.leadership, skilltype.navigation, skilltype.combat, skilltype.engineering, skilltype.management, skilltype.morale, skilltype.science]" />
+		<do_all exact="$Skill.count" counter="$k">
+			<do_if value="this.skill.{$Skill.{$k}} le 4">
+				<add_skill entity="this" type="$Skill.{$k}" exact="5 - this.skill.{$Skill.{$k}}" />
+			</do_if>
+		</do_all>
+		<remove_value name="$Skill"/>
+      </do_if>
+
+      <!-- init -->
+      <set_value name="$repairfrequency" exact="10s" />
+      <set_value name="$nextelementcheck" exact="0" />
+      <set_value name="$baserepairrate" exact="50" />
+      <set_value name="$CurrentElement" exact="null"/>
+
+      <label name="checkforrepair" />
+
+      <do_if value="this.defensible.isclass.station">
+        <set_value name="$hulldamagelimit" exact="100" comment="below what percentage hull is a component considered damaged"/>
+      </do_if>
+      <do_else>
+        <set_value name="$hulldamagelimit" exact="60 + (40 * this.combinedskill / 100)" comment="below what percentage hull is a component considered damaged (ship engineer repairs up to a value between 60% and 100%, dependent on skill)"/>
+      </do_else>
+
+	  <!--MICT start-->
+	  <do_if value="not this.$Defensible? or not this.$Defensible.exists or this.$Defensible.iswreck or	this.defensible.hullpercentage lt $hulldamagelimit or this.$Defensible.zone != this.defensible.zone">
+		  <end_repair_mass_traffic object="this.defensible" />
+          <remove_value name="$networkid" />
+		  <set_value name="this.$Defensible" exact="this.defensible"/>
+		  <set_command command="command.repair" />
+	  </do_if>
+	  <!--MICT end-->
+	  
+	  <do_if value="player.age le @this.$hacked">
+        <wait exact="@this.$hacked - player.age" />
+      </do_if>
+
+      <!-- If no elements or main hull to repair -->
+      <do_if value="not $CurrentElement.exists and this.$Defensible.hullpercentage ge $hulldamagelimit">
+		  <!--MICT start-->
+		  <end_repair_mass_traffic object="this.defensible" />
+          <remove_value name="$networkid" />
+		  <set_value name="this.$Defensible" exact="this.defensible"/>
+		  <set_command command="command.repair" />
+		  <wait min="5min" max="10min">
+			  <interrupt>
+				  <conditions>
+					  <check_any>
+						  <event_object_attacked object="this.defensible"/>
+						  <event_object_docked_at container="this.defensible"/>
+					  </check_any>
+				  </conditions>
+				  <actions>
+					  <set_value name="this.$Defensible" exact="this.defensible"/>
+					  <do_if value="event.name == 'event_object_docked_at' and event.param.hullpercentage lt $hulldamagelimit">
+						  <set_value name="this.$Defensible" exact="event.param"/>
+					  </do_if>
+				  </actions>
+			  </interrupt>
+		  </wait>
+		  <do_if value="this.$Defensible == this.defensible and this.defensible.hullpercentage ge $hulldamagelimit-2">
+			  <create_group groupname="$RepairTargets" />
+			  <create_group groupname="$stopgroup" />
+			  <create_list name="$docks"/>
+			  <do_all exact="4" counter="$j">
+				  <find_dock_location container="this.defensible" size="[tag.dock_m, tag.dock_s, tag.dock_l, tag.dock_xl].{$j}" name="$dock" multiple="true"/>
+				  <do_all exact="$dock.count" counter="$i">
+					  <do_if value="$dock.{$i}" list="$docks" negate="true">
+						  <append_to_list name="$docks" exact="$dock.{$i}"/>
+					  </do_if>
+				  </do_all>
+				  <remove_value name="$dock"/>
+			  </do_all>
+			  <do_all exact="$docks.count" counter="$i">
+				  <add_to_group groupname="$RepairTargets" list="$docks.{$i}.component.docked" chance="if $docks.{$i}.component.docked.count then 100 else 0"/>
+			  </do_all>
+			  <remove_value name="$docks"/>
+			  <do_all exact="$RepairTargets.count" counter="$i">
+				  <do_if value="$RepairTargets.{$i}.engineer.exists and $RepairTargets.{$i}.isclass.[class.ship_s, class.ship_m] and $RepairTargets.{$i}.engineer.isclass.npc and $RepairTargets.{$i}.hullpercentage ge 99">
+					  <destroy_object object="$RepairTargets.{$i}.engineer"/>
+				  </do_if>
+				  <do_if value="$RepairTargets.{$i}.engineer.exists">
+					  <add_to_group groupname="$stopgroup" object="$RepairTargets.{$i}" chance="if $stopgroup.list.indexof.{$RepairTargets.{$i}} then 0 else 100" />
+					  <add_to_group groupname="$stopgroup" list="$RepairTargets.{$i}.subordinates" chance="if $RepairTargets.{$i}.subordinates.count then 100 else 0"/>
+				  </do_if>
+			  </do_all>
+			  <do_all exact="$RepairTargets.count" counter="$i">
+				  <do_if value="$RepairTargets.{$i}" list="$stopgroup.list">
+					  <continue />
+				  </do_if>
+				  <do_if value="$RepairTargets.{$i}.hullpercentage ge $hulldamagelimit">
+					  <continue />
+				  </do_if>
+				  <do_if value="this.$Defensible == this.defensible">
+					  <set_value name="this.$Defensible" exact="$RepairTargets.{$i}"/>
+				  </do_if>
+				  <do_elseif value="this.defensible.trueowner == this.$Defensible.owner and this.defensible.trueowner == $RepairTargets.{$i}.owner and $RepairTargets.{$i}.hullpercentage lt @this.$Defensible.hullpercentage">
+					  <set_value name="this.$Defensible" exact="$RepairTargets.{$i}"/>
+				  </do_elseif>
+				  <do_elseif value="this.defensible.trueowner != this.$Defensible.owner and ($RepairTargets.{$i}.hullpercentage lt @this.$Defensible.hullpercentage or this.defensible.trueowner == $RepairTargets.{$i}.owner)">
+					  <set_value name="this.$Defensible" exact="$RepairTargets.{$i}"/>
+				  </do_elseif>
+			  </do_all>
+			  <remove_value name="$RepairTargets"/>
+			  <remove_value name="$stopgroup"/>
+		  </do_if>
+	  </do_if>
+	  <set_command command="command.support" param="this.$Defensible" chance="if this.$Defensible == this.defensible then 0 else 100"/>
+	  <set_command command="command.repair" chance="if this.$Defensible == this.defensible then 100 else 0"/>
+	  <!--MICT end-->
+
+      <debug_text text="'Begin wait'" chance="$debugoutputchance2"/>
+      <wait min="$repairfrequency" max="$repairfrequency + 1s" />
+
+      <!--MICT after coffee break check-->
+      <do_if value="this.$Defensible.iswreck">
+		  <!--nothing gets wrecked under my watch, maybe-->
+		  <do_if value="this.defensible.isclass.[class.ship_l, class.ship_xl] and this.$Defensible.size gt 500m">
+			<restore_object object="this.$Defensible" hull="5" recursive="true" />
+			<set_owner object="this.$Defensible" faction="faction.ownerless" />
+		  </do_if>
+		  <do_else>
+			<resume label="checkforrepair"/>
+		  </do_else>
+      </do_if>
+
+      <do_if value="$CurrentElement.exists">
+        <do_if value="$CurrentElement.iswreck">
+          <!--Do not fix wrecked components where the parent is also a wreck-->
+          <do_if value="not $CurrentElement.parent.iswreck">
+            <resume label="startrepair"/>
+          </do_if>
+        </do_if>
+
+        <do_if value="$CurrentElement.hullpercentage lt $hulldamagelimit">
+          <!--Have a chance to break out if the component is already functional again-->
+          <do_if value="$CurrentElement.isfunctional">
+            <resume label="startrepair" chance="70"/>
+          </do_if>
+          <do_else>
+            <resume label="startrepair"/>
+          </do_else>
+        </do_if>
+      </do_if>
+      <set_value name="$CurrentElement" exact="null"/>
+
+      <!--Find surface elements and put them in the correct lists/groups-->
+      <!--This can be quite expensive so only do it once finished with the $CurrentElement-->
+      <do_if value="player.age" min="$nextelementcheck">
+        <set_value name="$nextelementcheck" min="player.age + 1min" max="player.age + 2min"/>
+        <create_group groupname="$PossibleElements"/>
+        <set_value name="$FindChance" exact="100"/>
+
+        <!--If ship, find engines and jumpdrives - High priority-->
+        <do_if value="this.$Defensible.isclass.ship">
+          <find_object_component chance="$FindChance" groupname="$PossibleElements" object="this.$Defensible" class="[class.jumpdrive, class.engine]" checkoperational="false" multiple="true">
+            <match_any>
+              <match restorable="true" comment="wrecked"/>
+              <match repairable="true" invulnerable="false">
+                <match_hull min="$hulldamagelimit" negate="true" />
+              </match>
+            </match_any>
+          </find_object_component>
+        </do_if>
+        <!--find large, non surface element destructibles-->
+        <find_object_component chance="$FindChance" groupname="$PossibleElements" object="this.$Defensible" class="class.destructible" surfaceelement="false" checkoperational="false" multiple="true">
+          <match class="[class.adsign, class.ship]" checkoperational="false" negate="true"/>
+          <match_macro_children min="1" comment="Does this component have children, use macro so collapsed surface elements also count"/>
+          <match_any>
+            <match restorable="true" comment="wrecked"/>
+            <match repairable="true" invulnerable="false">
+              <match_hull min="$hulldamagelimit" negate="true" />
+            </match>
+          </match_any>
+        </find_object_component>
+        <debug_text text="$PossibleElements.count + ' priority things to repair found'" chance="$debugoutputchance2"/>
+        <do_all exact="$PossibleElements.count" counter="$Counter" chance="$debugoutputchance2">
+          <debug_text text="'Priority Destructible: ' + $PossibleElements.{$Counter} + ' ' + $PossibleElements.{$Counter}.macro.id"/>
+        </do_all>
+        <do_if value="$PossibleElements.count" min="1">
+          <!--If something important was found there is only a small chance of finding something small to fix instead-->
+          <!--TODO: Could be based on Engineer skill-->
+          <set_value name="$FindChance" exact="5"/>
+        </do_if>
+        <!--A chance to find something small to fix. (100% if nothing important was found)-->
+        <find_object_component chance="$FindChance" groupname="$PossibleElements" object="this.$Defensible" class="class.destructible" checkoperational="false" multiple="true">
+          <match class="class.ship" checkoperational="false" negate="true"/>
+          <match_any>
+            <match restorable="true" comment="wrecked"/>
+            <match repairable="true" invulnerable="false">
+              <match_hull min="$hulldamagelimit" negate="true" />
+            </match>
+          </match_any>
+        </find_object_component>
+        <debug_text text="$PossibleElements.count + ' potential things to repair found'" chance="$debugoutputchance2"/>
+
+        <do_if value="$PossibleElements.count" min="1">
+          <set_value name="$MassTrafficTargets" exact="$PossibleElements.list"/>
+          <set_value name="$CurrentElement" exact="$PossibleElements.random"/>
+          <set_value name="$nextelementcheck" exact="0"/>
+          <do_if value="$CurrentElement.iswreck">
+            <debug_text text="'CurrentElement is now the wreck of ' + $CurrentElement + ' ' + $CurrentElement.knownname" chance="$debugoutputchance"/>
+            <set_value name="$BaseRestoreTime" exact="($CurrentElement.size)s"/>
+            <do_if value="$BaseRestoreTime" min="20min">
+              <set_value name="$BaseRestoreTime" exact="20min" comment="cap time for large components"/>
+            </do_if>
+            <do_elseif value="$BaseRestoreTime" max="1min">
+              <set_value name="$BaseRestoreTime" exact="1min" comment="cap time for small components"/>
+            </do_elseif>
+            <debug_text text="'BaseRestoreTime is ' + $BaseRestoreTime" chance="$debugoutputchance"/>
+            <set_value name="$RestoreTime" min="player.age + $BaseRestoreTime" max="player.age + $BaseRestoreTime + 1s"/>
+          </do_if>
+          <do_else>
+            <debug_text text="'CurrentElement is now the damaged ' + $CurrentElement + ' ' + $CurrentElement.knownname" chance="$debugoutputchance"/>
+          </do_else>
+        </do_if>
+        <clear_group group="$PossibleElements"/>
+      </do_if>
+
+      <!--Check if there is nothing to fix-->
+      <do_if value="not $CurrentElement.exists">
+        <do_if value="this.$Defensible.hullpercentage ge $hulldamagelimit">
+          <!--Remove mass traffic. Don't care about damaged summaries-->
+          <debug_text text="this.$Defensible.knownname + ' is ending mass traffic (nothing left to repair)'" chance="$debugoutputchance" />
+          <end_repair_mass_traffic object="this.defensible" />
+          <remove_value name="$networkid" />
+
+          <do_if value="this.$Defensible.summary.numadsigns.wreck
+          + this.$Defensible.summary.numefficiencyupgrades.wreck
+          + this.$Defensible.summary.numshields.wreck
+          + this.$Defensible.summary.numsurfacedestructible.wreck
+          + this.$Defensible.summary.numturrets.wreck" exact="0">
+
+            <!-- set command action to repair checking -->
+            <set_command_action commandaction="commandaction.repairchecking" />
+
+            <resume label="checkforrepair"/>
+          </do_if>
+        </do_if>
+      </do_if>
+
+      <label name="startrepair" />
+      <!-- send out the repair drones -->
+      <do_if value="not @$networkid" chance="0">
+        <do_if value="not $MassTrafficTargets?">
+          <set_value name="$MassTrafficTargets" exact="[this.defensible]" />
+        </do_if>
+        <launch_repair_drones object="this.defensible" target="this.$Defensible" components="$MassTrafficTargets" result="$networkid" />
+        <debug_text text="this.defensible.knownname + ' launched mass traffic - network id: ' + $networkid" chance="$debugoutputchance" />
+        <set_value name="$MassTrafficTargets" exact="[]"/>
+      </do_if>
+
+      <!-- calculate repair speed -->
+      <set_value name="$repairratefactor" exact="0" />
+      <do_if value="@$networkid" chance="0">
+        <find_active_repair_mass_traffic object="this.defensible" result="$networkid" />
+        <get_units_in_mass_traffic masstraffic="$networkid" category="unitcategory.welder" amounts="$unitamounts" />
+
+        <do_if value="$unitamounts">
+          <do_all exact="unitcategory.welder.maxmk" counter="$i">
+            <debug_text text="$unitamounts.{$i} + ' welders mk ' + $i" chance="$debugoutputchance" />
+            <set_value name="$repairratefactor" operation="add" exact="$unitamounts.{$i} * $i" />
+          </do_all>
+          <remove_value name="$unitamounts" />
+        </do_if>
+      </do_if>
+      <do_if value="$repairratefactor == 0">
+        <do_if value="@$networkid">
+          <debug_text text="this.defensible.knownname + ' is ending mass traffic (no more units are flying)'" chance="$debugoutputchance" />
+          <end_repair_mass_traffic object="this.defensible" />
+          <remove_value name="$networkid" />
+        </do_if>
+
+		<set_value name="$repairratefactor" exact="if this.defensible.units.{unitcategory.welder}.count then this.defensible.units.{unitcategory.welder}.count else 10" comment="special repair station get a bonus" />
+      </do_if>
+      <set_value name="$repairratefactor" operation="add" exact="$repairratefactor * this.combinedskill / 25" comment="engineer speeds up repair by up to 400% (meaning a fifth of the normal repair time)" />
+
+      <set_value name="$repairrate" exact="$baserepairrate * $repairratefactor" />
+      <debug_text text="'Repairrate: ' + $repairrate" chance="$debugoutputchance" />
+
+      <!--Fix summary components first-->
+      <!--Currently only attempt to fix one. Only fix those which have an operational parent-->
+      <!--TODO: Balance-->
+      <do_if value="this.$Defensible.attention lt attention.visible">
+        <do_if value="this.$Defensible.summary.numadsigns.wreck" min="1">
+          <set_summarised_adsign_state object="this.$Defensible" state="operational" parentstate="operational" previous="wreck" exact="1"/>
+        </do_if>
+        <do_if value="this.$Defensible.summary.numefficiencyupgrades.wreck" min="1">
+          <set_summarised_efficiencyupgrade_state object="this.$Defensible" state="operational" parentstate="operational" previous="wreck" exact="1"/>
+        </do_if>
+        <do_if value="this.$Defensible.summary.numshields.wreck" min="1">
+          <set_summarised_shield_state object="this.$Defensible" state="operational" parentstate="operational" previous="wreck" exact="1"/>
+        </do_if>
+        <do_if value="this.$Defensible.summary.numsurfacedestructible.wreck" min="1">
+          <set_summarised_surfacedestructible_state object="this.$Defensible" state="operational" parentstate="operational" previous="wreck" exact="1"/>
+        </do_if>
+        <do_if value="this.$Defensible.summary.numturrets.wreck" min="1">
+          <set_summarised_turret_state object="this.$Defensible" state="operational" parentstate="operational" previous="wreck" exact="1"/>
+        </do_if>
+      </do_if>
+
+      <!--Repair Defensible Hull-->
+      <do_if value="not this.$Defensible.isclass.station and this.$Defensible.maxhull ge 1">
+        <do_if value="this.$Defensible.hullpercentage lt $hulldamagelimit" chance="if (this.$Defensible.hullpercentage ge $hulldamagelimit-15 and $CurrentElement.exists) then 0 else 100">
+          <set_value name="$addedhullpercentage" exact="100f * $repairrate / this.$Defensible.maxhull" />
+          <!-- handle the case of the percentage being < 0 -->
+          <do_if value="$addedhullpercentage lt 1">
+            <set_value name="$addedhullpercentage" exact="[1.0, 1.1, 1.2, 1.3, 1.33].random"/>
+          </do_if>
+          <do_if value="$addedhullpercentage" min="1">
+            <!-- set the repair command action -->
+            <set_command_action commandaction="commandaction.repairingto" param="this.$Defensible" />
+            <!-- repair the hull -->
+            <set_object_hull object="this.$Defensible" exact="this.$Defensible.hullpercentage + $addedhullpercentage" />
+            <debug_text text="'repaired main object ' + this.$Defensible + ' ' + this.$Defensible.knownname + ' to hull value ' + this.$Defensible.hull + ' (' + this.$Defensible.hullpercentage + '%)'" chance="$debugoutputchance" />
+            <do_if value="this.$Defensible.hullpercentage ge $hulldamagelimit">
+              <debug_text text="this.$Defensible + ' ' + this.$Defensible.knownname + ' was repaired as much as possible.'" chance="$debugoutputchance"/>
+            </do_if>
+          </do_if>
+        </do_if>
+      </do_if>
+
+      <do_if value="$CurrentElement">
+        <do_if value="$CurrentElement.iswreck">
+          <do_if value="@$RestoreTime" min="1">
+            <do_if value="player.age" min="$RestoreTime">
+              <!--Restore the $CurrentElement and all of its contained components to 1% hull-->
+              <restore_object object="$CurrentElement" hull="1" recursive="true" />
+              <set_value name="$RestoreTime" exact="0"/>
+              <debug_text text="'Restoring ' + $CurrentElement + ' ' + $CurrentElement.knownname" chance="$debugoutputchance"/>
+            </do_if>
+          </do_if>
+          <do_else>
+            <!--Component is wrecked but no restore time is defined. It may have been recently wrecked.-->
+            <set_value name="$CurrentElement" exact="null"/>
+          </do_else>
+        </do_if>
+        <do_else>
+          <do_if value="$CurrentElement.maxhull" min="1">
+            <do_if value="$CurrentElement.hullpercentage ge $hulldamagelimit">
+              <!--Component is as repaired as possible-->
+              <debug_text text="$CurrentElement + ' ' + $CurrentElement.knownname + ' was repaired as much as possible.'" chance="$debugoutputchance"/>
+            </do_if>
+            <do_else>
+              <!--Repair Damaged Component-->
+              <set_value name="$addedhullpercentage" exact="100f * $repairrate / $CurrentElement.maxhull" />
+              <!-- handle the case of the percentage being < 0 -->
+              <do_if value="$addedhullpercentage lt 1">
+                <set_value name="$addedhullpercentage" exact="1"/>
+              </do_if>
+              <do_if value="$addedhullpercentage" min="1">
+                <!-- set the repair command action -->
+                <set_command_action commandaction="commandaction.repairingto" param="$CurrentElement" />
+                <!-- repair the hull -->
+                <set_object_hull object="$CurrentElement" exact="$CurrentElement.hullpercentage + $addedhullpercentage" />
+                <debug_text text="player.age + ' repaired ' + $CurrentElement + ' ' + $CurrentElement.knownname + ' to hull value ' + $CurrentElement.hull + ' (' + $CurrentElement.hullpercentage + '%)'" chance="$debugoutputchance" />
+                <do_if value="$CurrentElement.hullpercentage ge $hulldamagelimit">
+                  <debug_text text="$CurrentElement + ' ' + $CurrentElement.knownname + ' was repaired as much as possible.'" chance="$debugoutputchance"/>
+                </do_if>
+              </do_if>
+            </do_else>
+          </do_if>
+        </do_else>
+      </do_if>
+
+      <resume label="checkforrepair" />
+    </actions>
+  </attention>
+  <on_abort>
+	<remove_value name="this.$Defensible"/>
+  </on_abort>
+</aiscript>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff>
+	<!--add sel="/aiscript/attention[@min='unknown']/actions/label[@name='moveto']" pos="after"-->
+	<add sel="/aiscript/attention[@min='unknown']/actions/do_if[@value='not $destination.exists']" pos="after">
+		<do_if value="$capship and $destination.isclass.zone and this.zone != $destination">
+			<run_script name="if not global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad then 'move.generic' else if this.ship.macro.ismacro.{global.$mmcarriers} then 'move.generic.carrier' else 'move.generic'" >
+			  <param name="destination" value="$destination" />
+			  <param name="endintargetzone" value="true" />
+			</run_script>
+		</do_if>
+	</add>
+</diff>

@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Lino (192.168.3.139) at 30.10.2014_16-09-46-->
+<macros>
+  <macro name="struct_bt_alb_gatedefence_macro" class="station">
+    <component ref="struct_bt_alb_gatedefence" />
+    <properties>
+      <identification name="{2802,2305}" description="{2802,2306}" unique="0" />
+    </properties>
+    <connections>
+      <connection ref="ConnectionFor_props_surf_playerdock_admin_macro">
+        <macro ref="props_surf_playerdock_admin_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_props_surf_playerdock_bar_macro">
+        <build mode="optional" group="storage" sequence="A" stage="1" />
+        <macro ref="props_surf_playerdock_bar_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_props_surf_playerdock_repair_macro">
+        <macro ref="props_surf_playerdock_repair_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_props_tradeoffer_buy_energy">
+        <macro>
+          <component ref="props_tradeoffer_buy_energy" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_props_tradeoffer_sell_energy">
+        <macro>
+          <component ref="props_tradeoffer_sell_energy" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_props_tradeoffer_sell_weapontech">
+        <macro>
+          <component ref="props_tradeoffer_sell_weapontech" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_props_tradeoffer_buy_weapontech">
+        <macro>
+          <component ref="props_tradeoffer_buy_weapontech" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_cw_ar_water_j_connector">
+        <build mode="optional" group="defense" sequence="B" stage="1" />
+        <macro>
+          <component ref="struct_econ_cw_ar_water_j_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_mining_ar_generic_bridge_b_macro">
+        <macro ref="struct_econ_mining_ar_generic_bridge_b_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_mining_ar_generic_bridge_b_macro1">
+        <macro ref="struct_econ_mining_ar_generic_bridge_b_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_mining_ar_generic_bridge_b_macro2">
+        <macro ref="struct_econ_mining_ar_generic_bridge_b_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_mining_ar_generic_bridge_b_macro3">
+        <macro ref="struct_econ_mining_ar_generic_bridge_b_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_mining_ar_generic_bridge_b_macro4">
+        <macro ref="struct_econ_mining_ar_generic_bridge_b_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_mining_ar_generic_bridge_b_macro5">
+        <macro ref="struct_econ_mining_ar_generic_bridge_b_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_mining_ar_generic_bridge_b_macro6">
+        <macro ref="struct_econ_mining_ar_generic_bridge_b_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_mining_ar_generic_bridge_b_macro7">
+        <macro ref="struct_econ_mining_ar_generic_bridge_b_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_mining_ar_generic_bridge_e">
+        <macro>
+          <component ref="struct_econ_mining_ar_generic_bridge_e" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_prod_al_stor_energy_macro">
+        <macro ref="struct_econ_prod_al_stor_energy_macro" connection="space">
+		  <connections>
+			<connection ref="connection_cargobay01">
+			  <macro ref="cargobay_station_unique_02_macro" connection="StorageConnection" />
+			</connection>
+		  </connections>
+		</macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_prod_stor_container_macro">
+        <macro ref="struct_econ_prod_stor_container_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_prod_al_stor_energy_macro1">
+        <build mode="optional" group="storage" sequence="A" stage="1" tags="primary " />
+        <macro ref="struct_econ_prod_al_stor_energy_macro" connection="space">
+		  <connections>
+			<connection ref="connection_cargobay01">
+			  <macro ref="cargobay_station_unique_02_macro" connection="StorageConnection" />
+			</connection>
+		  </connections>
+		</macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro">
+        <macro ref="struct_econ_ref_ar_pmc_dronedock_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_e_macro">
+        <macro ref="struct_econ_ref_ar_pmc_e_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_p_small">
+        <macro>
+          <component ref="struct_econ_ref_ar_pmc_p_small" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_p_small1">
+        <macro>
+          <component ref="struct_econ_ref_ar_pmc_p_small" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_p_small2">
+        <macro>
+          <component ref="struct_econ_ref_ar_pmc_p_small" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_p_small3">
+        <macro>
+          <component ref="struct_econ_ref_ar_pmc_p_small" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_p_small4">
+        <macro>
+          <component ref="struct_econ_ref_ar_pmc_p_small" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_p_small5">
+        <macro>
+          <component ref="struct_econ_ref_ar_pmc_p_small" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_p_small6">
+        <macro>
+          <component ref="struct_econ_ref_ar_pmc_p_small" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_p_small7">
+        <macro>
+          <component ref="struct_econ_ref_ar_pmc_p_small" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_prod_ship_hangar_macro">
+        <macro ref="struct_econ_prod_ship_hangar_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_u_macro">
+        <build mode="optional" group="defense" sequence="B" stage="1" tags="primary " />
+        <macro ref="struct_econ_ref_ar_pmc_u_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro">
+        <macro ref="struct_econ_science_weaponplatform_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro1">
+        <macro ref="struct_econ_science_weaponplatform_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro2">
+        <macro ref="struct_econ_science_weaponplatform_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro3">
+        <macro ref="struct_econ_science_weaponplatform_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro4">
+        <build mode="optional" group="defense" sequence="C" stage="1" tags="primary " />
+        <macro ref="struct_econ_science_weaponplatform_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro5">
+        <build mode="optional" group="defense" sequence="C" stage="1" />
+        <macro ref="struct_econ_science_weaponplatform_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro6">
+        <build mode="optional" group="defense" sequence="C" stage="1" />
+        <macro ref="struct_econ_science_weaponplatform_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro7">
+        <build mode="optional" group="defense" sequence="C" stage="1" />
+        <macro ref="struct_econ_science_weaponplatform_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro8">
+        <build mode="optional" group="defense" sequence="C" stage="1" />
+        <macro ref="struct_econ_science_weaponplatform_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro9">
+        <build mode="optional" group="defense" sequence="C" stage="1" />
+        <macro ref="struct_econ_science_weaponplatform_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro10">
+        <build mode="optional" group="defense" sequence="C" stage="1" />
+        <macro ref="struct_econ_science_weaponplatform_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro11">
+        <build mode="optional" group="defense" sequence="C" stage="1" />
+        <macro ref="struct_econ_science_weaponplatform_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector1">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector10">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector11">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector12">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector13">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector14">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector15">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector16">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector17">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector18">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector19">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector2">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector3">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector4">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector5">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector6">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector7">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector8">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_shipy_connector9">
+        <macro>
+          <component ref="struct_econ_shipy_connector" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="connection_shieldgen_external01">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="space" />
+      </connection>
+      <connection ref="connection_shieldgen_external02">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="space" />
+      </connection>
+      <connection ref="connection_dock_l01">
+        <macro ref="props_surf_ar_docks_size_l_inv_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_l02">
+        <macro ref="props_surf_ar_docks_size_l_inv_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_l03">
+        <macro ref="props_surf_ar_docks_size_l_inv_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_xl01">
+        <macro ref="props_surf_ar_docks_size_xl_inv_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_lxl02">
+        <macro ref="props_surf_ar_docks_size_l_xl_inv_lr_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_lxl03">
+        <macro ref="props_surf_ar_docks_size_l_xl_inv_lr_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_controlroom01">
+        <macro ref="control_room_macro" connection="Connection01" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

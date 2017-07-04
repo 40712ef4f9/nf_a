@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mdscript name="MM_Care" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+
+		<cue name="SectionHandler_MM_Care_pilot" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_next_section section="mmadvcom_main" />
+					<event_conversation_returned_to_section section="mmadvcom_main" />
+					<event_conversation_next_section sectionprefix="mmcare_do" />
+				</check_any>
+				<check_value value="event.object.trueowner" exact="faction.player" />
+				<check_any>
+					<check_value value="event.object.type" exact="entitytype.pilot" />
+					<check_value value="event.object.type" exact="entitytype.commander" />
+				</check_any>
+				<check_value value="event.object.iscontrolentity" />
+				<check_value value="event.object.ship.primarypurpose" exact="objectpurpose.fight" negate="true" />
+				<check_value value="event.object.container.units.{unitcategory.welder}.count" />
+			</conditions>
+			<actions>
+				<do_if value="event.param" exact="'mmcare_do_restore'">
+					<find_gravidar_contact name="$RestoreTargets" object="event.object.container" restorable="true" multiple="true">
+						<match_distance object="event.object.container" max="event.object.container.maxradarrange"/>
+						<match_size min="300m"/>
+					</find_gravidar_contact>
+					<do_if value="$RestoreTargets.count">
+						<set_value name="$todo_options_start" exact="event.param2" />
+						<set_value name="$todo_options_max" exact="$RestoreTargets.count" />
+
+						<do_all exact="6" counter="$i">
+							<do_if value="$i == 6 and ($todo_options_start + 1) le $todo_options_max">
+								<add_player_choice_sub 		text="{2802,1300}.[$todo_options_start, $todo_options_max]" 	position="bottom_right" section="mmcare_do_restore" 		choiceparam="$todo_options_start"/>
+							</do_if>
+							<do_elseif value="$todo_options_start le $todo_options_max">
+								<add_player_choice		text="$RestoreTargets.{$todo_options_start}.macro.name" tooltip="{2802,1330}.[$RestoreTargets.{$todo_options_start}.distanceto.{event.object.container}]" 	position="$i" 		section="mmcare_do_restore_do" choiceparam="$RestoreTargets.{$todo_options_start}"/>
+								<set_value name="$todo_options_start"  operation="add" exact="1" /> 
+							</do_elseif>
+							<do_elseif value="$i == 6">
+								<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+							</do_elseif>
+						</do_all>
+					</do_if>
+					<do_else>
+						<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+					</do_else>
+					<remove_value name="$RestoreTargets"/>
+					<remove_value name="$todo_options_start"/>
+					<remove_value name="$todo_options_max"/>
+				</do_if>
+				<do_elseif value="event.param" exact="'mmcare_do_restore_do'">
+					<set_value name="$Macro" exact="event.param2.macro"/>
+					<set_value name="$Position" exact="event.param2.position"/>
+					<set_value name="$Rotation" exact="event.param2.rotation"/>
+					<destroy_object object="event.param2" explosion="false" />
+					<create_ship name="$Ship" macro="$Macro" zone="event.object.container.zone">
+						<defence actor="null"/>
+						<engineer actor="null"/>
+						<owner exact="faction.ownerless"/>
+						<position value="$Position"/>
+						<rotation value="$Rotation"/>
+					</create_ship>
+					<create_group groupname="$Objects"/>
+					<find_object_component groupname="$Objects" object="$Ship" class="class.destructible" multiple="true" functional="true" integrated="false"/>
+					<do_all exact="$Objects.list.count" counter="$Counter">
+						  <!--set_object_hull object="$Objects.{$Counter}" exact="0"/-->
+						  <destroy_object object="$Objects.list.{$Counter}" explosion="true" chance="($Objects.list.{$Counter} != $Ship and not $Objects.list.{$Counter}.isclass.dockingbay and not $Objects.list.{$Counter}.macro.ismacro.playerdock_capship01_macro)*100"/>
+					</do_all>
+					<!--set_summarised_shield_state object="$Ship" state="wreck" exact="$Ship.summary.numshields.all"/>
+					<set_summarised_surfacedestructible_state object="$Ship" state="wreck" exact="$Ship.summary.numsurfacedestructible.all"/>
+					<set_summarised_turret_state object="$Ship" state="wreck" exact="$Ship.summary.numturrets.all"/-->
+					<set_object_hull object="$Ship" exact="5"/>
+					<remove_value name="$Objects" />
+					<remove_value name="$Macro" />
+					<remove_value name="$Position" />
+					<remove_value name="$Rotation" />
+					<do_if value="event.object.container.isclass.ship">
+						<remove_from_player_squad object="event.object.container" />
+						<start_script name="'move.patrol.care'" object="event.object.container.pilot">
+							<param name="patrolobject" value="event.param2" />
+						</start_script>
+					</do_if>
+					<do_if value="global.$mmcarriers_xl? and event.object.container.macro.ismacro.{global.$mmcarriers_xl}">
+						<create_group groupname="$docks" />
+						<do_all exact="2" counter="$j">
+							<find_dock_location container="event.object.container" size="[tag.dock_xl, tag.dock_l].{$j}" name="$dock" multiple="true"/>
+							<do_all exact="$dock.count" counter="$i">
+								<do_if value="$docks.indexof.{$dock.{$i}.component} == 0 and not ($dock.{$i}.component.external and $dock.{$i}.component.docked.count)">
+									<add_to_group groupname="$docks" object="$dock.{$i}.component" />
+								</do_if>
+								<do_else>
+									<continue />
+								</do_else>
+							</do_all>
+							<remove_value name="$dock"/>
+						</do_all>
+						<add_player_choice text="{2802,8200}" position="top_left" section="mmca_salvage" choiceparam="[null, null, $Ship]" comment="Dock Ships" selectable="$docks.count" />
+						<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+					</do_if>
+					<remove_value name="$Ship" />
+				</do_elseif>
+				<do_elseif value="['mmcare_do_care', 'mmcare_do_pos', 'mmcare_do_pos_plus'].indexof.{event.param} and event.object.ship.primarypurpose == objectpurpose.build and @event.object.ship.buildanchor">
+					<do_if value="event.object.container.engineer.exists and not event.object.container.engineer.$Defensible?">
+						<start_script object="event.object.container.engineer" name="'engineer.ai.plus'"/>
+					</do_if>
+					<do_elseif value="event.object.container.engineer.exists">
+						<start_script object="event.object.container.engineer" name="'engineer.ai'"/>
+					</do_elseif>
+				</do_elseif>
+				<do_elseif value="event.param" list="['mmcare_do_pos', 'mmcare_do_pos_plus']">
+					<remove_from_player_squad object="event.object.container" />
+					<remove_object_commander object="event.object.container"/>
+					<start_script name="'move.patrol.care'" object="event.object.container.pilot">
+						<param name="range" value="if event.param2.{3}.isclass.zone then 'zone' else if event.param2.{3}.isclass.cluster then 'cluster' else 'sector'" />
+						<param name="patrolobject" value="event.param2.{3}" />
+						<param name="position" value="if event.param2.{4}? then position.[event.param2.{4}.{1}, event.param2.{4}.{2}, event.param2.{4}.{3}] else null" />
+						<param name="ownstations" value="if event.param == 'mmcare_do_pos_plus' then true else false" />
+					</start_script>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmcare_do_care'">
+					<do_if value="event.object.container.isclass.[class.ship_l, class.ship_xl]">
+						<find_gravidar_contact name="$RestoreTargets" object="event.object.container" restorable="true" multiple="true">
+							<match_distance object="event.object.container" max="event.object.container.maxradarrange"/>
+							<match_size min="300m"/>
+						</find_gravidar_contact>
+						<add_player_choice text="{2802,1305}" position="top_right" section="mmcare_do_restore" selectable="$RestoreTargets.count gt 0" choiceparam="1" />
+						<remove_value name="$RestoreTargets"/>
+					</do_if>
+					<add_player_choice text="{2802,1310}" section="gOrders_advancedflytopos" tooltip="{2802,1311}" comment="Fly to position" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectposition', ['mmcare_do_pos']]"/>
+					<add_player_choice text="{2802,1315}" section="gOrders_advancedflytopos" tooltip="{2802,1316}" comment="Fly to position" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectposition', ['mmcare_do_pos_plus']]"/>
+				</do_elseif>
+				<do_else>
+					<do_if value="event.object.ship.primarypurpose == objectpurpose.build and @event.object.ship.buildanchor">
+						<add_player_choice_sub text="{2802,1301}" section="mmcare_do_care" choiceparam="1" immediate="event.object.container.engineer.$Defensible?" selectable="event.object.container.engineer.exists" />
+					</do_if>
+					<do_else>
+						<add_player_choice_sub text="{2802,1301}" section="mmcare_do_care" choiceparam="1"  />
+					</do_else>
+				</do_else>
+			</actions>
+		</cue>
+		<cue name="MM_Care_CheckCarriers" instantiate="true">
+			<conditions>
+			  <check_any>
+				  <event_cue_signalled cue="md.Setup.GameStart"/>
+				  <event_game_loaded/>
+			  </check_any>
+			</conditions>
+			<delay max="6s"/>
+			<actions>
+				<set_value name="global.$mmcare_mmcarrier_is_active" exact="false"/>
+				<do_if value="@md.$mmcarrierversion" min="142">
+					<do_if value="md.$mmcarrier_on ge player.age - 10s">
+						<set_value name="global.$mmcare_mmcarrier_is_active" exact="true"/>
+					</do_if>
+				</do_if>
+			</actions>
+		</cue>
+		<cue name="MM_Care_AdvCom_work" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_conversation_next_section sectionprefix="mmadvcom_"/>
+					<event_conversation_returned_to_section sectionprefix="mmadvcom_" />
+				</check_any>
+				<check_value value="md.$mm_advcom" exact="'care'" />
+			</conditions>
+			<actions>
+
+				<do_if value="event.param == 'mmadvcom_main'">
+					<add_player_choice 		text="{1002,12025}" 	position="bottom_right" section="mmadvcom_next" />
+				</do_if>
+				<do_elseif value="event.param == 'mmadvcom_next'">
+					<!--add_player_choice 		text="{1002,12025}" 	position="bottom_right" section="mmadvcom_last" />
+				</do_elseif>
+				<do_elseif value="event.param == 'mmadvcom_last'"-->
+					<add_player_choice_sub text="{1002,1051}" tooltip="{1026, 20006}" section="gMain_object" position="right" choiceparam="[0, 0, event.object.ship]" comment="Show Ship Details" />
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+				</do_elseif>
+
+			</actions>
+		</cue>	
+		<cue name="MM_Care_AdvCom_init" instantiate="true">
+			<conditions>
+			  <check_any>
+				  <event_cue_signalled cue="md.Setup.GameStart"/>
+				  <event_game_loaded/>
+			  </check_any>
+			</conditions>
+			<delay max="500ms"/>
+			<actions>
+				<set_value name="md.$mm_advcom" exact="'care'"/>
+			</actions>
+		</cue>
+	</cues>
+</mdscript>

@@ -1,0 +1,1271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: lino (192.168.3.142) at 10.12.2014_10-09-51-->
+<macros>
+  <macro name="units_size_xl_capital_destroyer_1_mk2_macro" class="ship_xl">
+    <component ref="units_size_xl_capital_destroyer_1_mk2" />
+    <properties>
+      <identification name="{20101,4111}" description="{20101,4102}" mapicon="shipicon_carrier_xl" />
+      <explosiondamage value="200000" />
+      <hull max="8800000" />
+      <effects>
+        <explosion ref="capital_explosion" />
+        <jumpin ref="jump_jumpin_xl" />
+        <jumpout ref="jump_jumpout_xl" />
+      </effects>
+      <secrecy level="1" />
+      <purpose primary="fight" />
+    </properties>
+    <connections>
+      <connection ref="ConnectionFor_unit_kit_xl_ar_doors_f_01">
+        <macro>
+          <component ref="unit_kit_xl_ar_doors_f_01" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro">
+		  <macro>
+			<component ref="struct_econ_science_weaponplatform_s" connection="space" />
+			<connections>
+				<connection ref="connection_shieldgen01">
+					<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+				</connection>
+				<connection ref="connection_shieldgen02">
+					<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+				</connection>
+				<connection ref="connection_shieldgen03">
+					<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+				</connection>
+				<connection ref="connection_shieldgen04">
+					<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+				</connection>
+				<connection ref="connection_turret_big01">
+					<macro ref="turret_large_bb_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_big02">
+					<macro ref="turret_large_bb_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_medium_pe01">
+					<macro ref="turret_medium_pe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_medium_pe02">
+					<macro ref="turret_medium_pe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_medium_pe03">
+					<macro ref="turret_medium_pe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_medium_pe04">
+					<macro ref="turret_medium_pe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg01">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg02">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg03">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg04">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg05">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg06">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg07">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg08">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg09">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg10">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg11">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg12">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg13">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg14">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg15">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg16">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+			</connections>
+		</macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro2">
+		  <macro>
+			<component ref="struct_econ_science_weaponplatform_s" connection="space" />
+			<connections>
+				<connection ref="connection_shieldgen01">
+					<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+				</connection>
+				<connection ref="connection_shieldgen02">
+					<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+				</connection>
+				<connection ref="connection_shieldgen03">
+					<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+				</connection>
+				<connection ref="connection_shieldgen04">
+					<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+				</connection>
+				<connection ref="connection_turret_big01">
+					<macro ref="turret_large_bb_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_big02">
+					<macro ref="turret_large_bb_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_medium_pe01">
+					<macro ref="turret_medium_pe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_medium_pe02">
+					<macro ref="turret_medium_pe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_medium_pe03">
+					<macro ref="turret_medium_pe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_medium_pe04">
+					<macro ref="turret_medium_pe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg01">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg02">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg03">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg04">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg05">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg06">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg07">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg08">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg09">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg10">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg11">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg12">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg13">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg14">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg15">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg16">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+			</connections>
+		</macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro3">
+		  <macro>
+			<component ref="struct_econ_science_weaponplatform_s" connection="space" />
+			<connections>
+				<connection ref="connection_shieldgen01">
+					<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+				</connection>
+				<connection ref="connection_shieldgen02">
+					<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+				</connection>
+				<connection ref="connection_shieldgen03">
+					<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+				</connection>
+				<connection ref="connection_shieldgen04">
+					<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+				</connection>
+				<connection ref="connection_turret_big01">
+					<macro ref="turret_large_bb_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_big02">
+					<macro ref="turret_large_bb_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_medium_pe01">
+					<macro ref="turret_medium_pe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_medium_pe02">
+					<macro ref="turret_medium_pe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_medium_pe03">
+					<macro ref="turret_medium_pe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_medium_pe04">
+					<macro ref="turret_medium_pe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg01">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg02">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg03">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg04">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg05">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg06">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg07">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg08">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg09">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg10">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg11">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg12">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg13">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg14">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg15">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg16">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+			</connections>
+		</macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro4">
+		  <macro>
+			<component ref="struct_econ_science_weaponplatform_s" connection="space" />
+			<connections>
+				<connection ref="connection_shieldgen01">
+					<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+				</connection>
+				<connection ref="connection_shieldgen02">
+					<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+				</connection>
+				<connection ref="connection_shieldgen03">
+					<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+				</connection>
+				<connection ref="connection_shieldgen04">
+					<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+				</connection>
+				<connection ref="connection_turret_big01">
+					<macro ref="turret_large_bb_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_big02">
+					<macro ref="turret_large_bb_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_medium_pe01">
+					<macro ref="turret_medium_pe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_medium_pe02">
+					<macro ref="turret_medium_pe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_medium_pe03">
+					<macro ref="turret_medium_pe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_medium_pe04">
+					<macro ref="turret_medium_pe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg01">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg02">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg03">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg04">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg05">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg06">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg07">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg08">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg09">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg10">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg11">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg12">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg13">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg14">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg15">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+				<connection ref="connection_turret_small_mg16">
+					<macro ref="turret_medium_xe_macro" connection="connection_component01" />
+				</connection>
+			</connections>
+		</macro>
+      </connection>
+      <connection ref="ConnectionFor_unit_kit_xl_ar_pod_l_01">
+        <macro>
+          <component ref="unit_kit_xl_ar_pod_l_01" connection="space" />
+          <connections>
+            <connection ref="connection_engine01">
+              <macro ref="engine_size_xl_capital_destroyer_01_macro" connection="Connection01" />
+            </connection>
+            <connection ref="connection_shieldgen01">
+              <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+            </connection>
+            <connection ref="connection_shieldgen02">
+              <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+            </connection>
+            <connection ref="connection_turret_medium_pe01">
+              <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_medium_pe02">
+              <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_medium_pe03">
+              <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_medium_pe04">
+              <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg01">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg02">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg03">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg04">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg05">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg06">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg07">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg08">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg09">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg10">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg11">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_unit_kit_xl_ar_pod_r_01">
+        <macro>
+          <component ref="unit_kit_xl_ar_pod_r_01" connection="space" />
+          <connections>
+            <connection ref="connection_engine01">
+              <macro ref="engine_size_xl_capital_destroyer_01_macro" connection="Connection01" />
+            </connection>
+            <connection ref="connection_shieldgen01">
+              <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+            </connection>
+            <connection ref="connection_shieldgen02">
+              <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+            </connection>
+            <connection ref="connection_turret_medium_pe01">
+              <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_medium_pe02">
+              <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_medium_pe03">
+              <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_medium_pe04">
+              <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg01">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg02">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg03">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg04">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg05">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg06">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg07">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg08">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg09">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg10">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+            <connection ref="connection_turret_small_mg11">
+              <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="connection_cockpit01">
+        <macro ref="cockpit_bridge_size_xl_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small01">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small02">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small03">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small04">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small05">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small06">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small07">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small08">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small09">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small10">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small100">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small101">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small102">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small103">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small104">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small105">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small106">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small107">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small108">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small109">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small11">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small110">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small111">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small112">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small113">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small114">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small115">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small116">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small117">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small118">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small119">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small12">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small120">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small121">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small122">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small123">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small124">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small125">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small126">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small127">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small128">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small129">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small13">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small130">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small131">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small132">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small133">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small134">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small135">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small136">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small137">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small138">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small139">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small14">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small140">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small141">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small142">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small143">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small144">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small15">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small16">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small17">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small18">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small19">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small20">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small21">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small22">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small23">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small24">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small25">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small26">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small27">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small28">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small29">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small30">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small31">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small32">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small33">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small34">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small35">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small36">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small37">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small38">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small39">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small40">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small41">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small42">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small43">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small44">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small45">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small46">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small47">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small48">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small49">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small50">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small51">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small52">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small53">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small54">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small55">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small56">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small57">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small58">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small59">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small60">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small61">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small62">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small63">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small64">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small65">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small66">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small67">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small68">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small69">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small70">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small71">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small72">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small73">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small74">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small75">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small76">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small77">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small78">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small79">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small80">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small81">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small82">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small83">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small84">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small85">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small86">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small87">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small88">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small89">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small90">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small91">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small92">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small93">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small94">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small95">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small96">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small97">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small98">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_destructible_small99">
+        <macro ref="props_surf_ar_explosive_tank_2_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m01">
+        <macro ref="props_surf_ar_docks_size_m_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m02">
+        <macro ref="props_surf_ar_docks_size_m_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m03">
+        <macro ref="props_surf_ar_docks_size_m_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m04">
+        <macro ref="props_surf_ar_docks_size_m_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_p01">
+        <macro ref="playerdock_capship01_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_s01">
+        <macro ref="props_surf_ar_docks_size_s_floor_macro" connection="Connection_component" />
+      </connection>
+      <connection ref="connection_dock_s02">
+        <macro ref="props_surf_ar_docks_size_s_floor_macro" connection="Connection_component" />
+      </connection>
+      <connection ref="connection_dock_s03">
+        <macro ref="props_surf_ar_docks_size_s_floor_macro" connection="Connection_component" />
+      </connection>
+      <connection ref="connection_dock_s04">
+        <macro ref="props_surf_ar_docks_size_s_floor_macro" connection="Connection_component" />
+      </connection>
+      <connection ref="connection_engine01">
+        <macro ref="engine_size_xl_capital_destroyer_01_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_engine02">
+        <macro ref="engine_size_xl_capital_destroyer_01_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_jumpdrive01">
+        <macro ref="props_surf_ar_jumpdrive_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_radar_external01">
+        <macro ref="radar_ship_xl_military_01_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_radar_external02">
+        <macro ref="radar_ship_xl_military_01_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_radar_external03">
+        <macro ref="radar_ship_xl_military_01_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_radar_fallback01">
+        <macro ref="radar_ship_xl_fallback_01_macro" connection="ship" />
+      </connection>
+      <connection ref="connection_shieldgen01">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen02">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen03">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen04">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen05">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen06">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen07">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen08">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen09">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen10">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen11">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen12">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen13">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen14">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen15">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen16">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen17">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen18">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen19">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen20">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen21">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external01">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external02">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external03">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external04">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external05">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external06">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external07">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external08">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_storage01">
+        <macro ref="storage_ship_xl_fuel_01_macro" connection="ShipConnection" />
+      </connection>
+      <connection ref="connection_turret_medium_pe01">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe02">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe03">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe04">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe05">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe06">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe07">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe08">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe09">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe10">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe11">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe12">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe13">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe14">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_missile_df01">
+        <macro ref="turret_missile_df_macro" connection="turret_connection" />
+      </connection>
+      <connection ref="connection_turret_missile_df02">
+        <macro ref="turret_missile_df_macro" connection="turret_connection" />
+      </connection>
+      <connection ref="connection_turret_missile_df03">
+        <macro ref="turret_missile_df_macro" connection="turret_connection" />
+      </connection>
+      <connection ref="connection_turret_missile_df04">
+        <macro ref="turret_missile_df_macro" connection="turret_connection" />
+      </connection>
+      <connection ref="connection_turret_missile_df05">
+        <macro ref="turret_missile_df_macro" connection="turret_connection" />
+      </connection>
+      <connection ref="connection_turret_missile_sm01">
+        <macro ref="turret_missile_sm_macro" connection="turret_connection" />
+      </connection>
+      <connection ref="connection_turret_small_mg01">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg02">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg03">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg04">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg05">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg06">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg07">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg08">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg09">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg10">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg11">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg12">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg13">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg14">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg15">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg16">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg17">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg18">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg19">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg20">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg21">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg22">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg23">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg24">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg25">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg26">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg27">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg28">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg29">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg30">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg31">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg32">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg33">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg34">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg01">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg02">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg03">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg04">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg05">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg06">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg07">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg08">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg09">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg10">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg11">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg12">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg13">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg14">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg15">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_sg16">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

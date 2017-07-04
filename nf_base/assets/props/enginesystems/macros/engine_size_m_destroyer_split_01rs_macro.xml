@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Benedikt (192.168.3.115) at 22.05.2013_16-48-06-->
+<macros>
+  <macro name="engine_size_m_destroyer_split_01rs_macro" class="engine">
+    <component ref="props_enginesystems_engine_m" />
+    <properties>
+      <identification name="{20104,1201}" description="{20104,1202}" />
+      <acceleration forward="14" reverse="14" strafe="7" pitch="0.6" yaw="0.6" roll="0.3" />
+      <angular roll="20" pitch="60" />
+      <speed forward="99" reverse="-22" strafe="28" pitch="6" yaw="6" roll="3" />
+      <hull max="60000" threshold="0.25" integrated="0" />
+      <effects>
+        <explosion ref="explosion_engine_m" />
+        <sefx_shield ref="sefx_shield_m_01" />
+      </effects>
+      <efficiency>
+        <threshold threshold="0.75" value="1" />
+        <threshold threshold="0.25" value="0.25" />
+      </efficiency>
+      <sounds>
+        <ambient ref="engineambient_large" />
+      </sounds>
+    </properties>
+    <connections>
+      <connection ref="connection_booster01">
+        <macro ref="enginebooster_size_m_01_macro" connection="engine" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

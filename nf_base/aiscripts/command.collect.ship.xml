@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="command.collect.ship" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" priority="2" version="1" >
+  <!--
+  Wrapper script for player cargo collect mode
+  by Adrian
+  -->
+  <params>
+    <param name="target" default="null" />
+    <param name="destination" default="this.ship" />
+    <param name="dockingslot" default="null" />
+    <param name="debugchance" default="0"/>
+  </params>
+  <init>
+    <set_command command="command.support" param="player.primaryship" />
+  </init>
+  <attention min="unknown">
+    <actions>
+
+      <set_value name="$debugchance" exact="0" />
+
+      <set_value name="$bigship" exact="this.ship.isclass.ship_xl or this.ship.isclass.ship_l" />
+
+      <!-- Label to allow us to repeat indefinitely -->
+      <label name="start" />
+      
+      <!-- command action for waiting time -->
+      <set_command_action commandaction="commandaction.calculating" />
+
+      <do_if value="not $target.exists">
+        <return />
+      </do_if>
+      <set_command command="command.support" param="$target" />
+
+      <!-- recall drones -->
+      <run_script name="'lib.recall.drones'" />      
+      
+      <run_script name="'move.undock'" />
+
+      <do_if value="$target.zone.isclass.highway">
+        <wait exact="3s" />
+        <resume label="start" />
+      </do_if>
+
+      <!-- Warp to different zone -->
+      <label name="warp" />
+
+      <do_if value="this.ship.zone != $target.zone">
+        <!-- TODO @Owen add check if jumping is actually possible ! -->
+        <wait exact="10s"/>
+        <do_if value="$target.zone.isclass.highway">
+          <resume label="start" />
+        </do_if>
+        <run_script name="'move.generic'">
+          <param name="destination" value="$target"/>
+          <param name="forcesteering" value="not $bigship" />
+          <param name="endintargetzone" value="true" />
+          <param name="debugchance" value="$debugchance"/>
+        </run_script>
+        <wait exact="3s" />
+      </do_if>
+
+      <!-- ...and go there! -->
+      <label name="move" />
+      <do_if value="not $target.exists">
+        <return />
+      </do_if>
+      
+      <do_if value="$bigship">
+        <!-- go close to player or wait-->
+        <do_if value="this.ship.distanceto.{$target}" min="1km + this.ship.size">
+          <get_safe_pos object="$target" zone="$target.zone" radius="this.ship.size" direction="quadrant.up" direction2="quadrant.front" result="$safepos" allowyaxis="true" ignored="this.ship" />
+          <!-- Pick a target point near the object we need to follow -->
+          <move_to object="this.ship" destination="$target.zone" usehighways="not $bigship" forceposition="true" forcesteering="not $bigship" finishonapproach="true" sinceversion="1" >
+            <position value="$safepos" />
+			<rotation value="$target.rotation" />
+            <!--interrupt_after_time time="10s" /-->
+          </move_to>
+        </do_if>
+        <do_else>
+          <stop_moving object="this.ship" />
+          <wait exact="1s" />
+        </do_else>
+
+      </do_if>
+
+	  <stop_moving object="this.ship" />
+	  <wait exact="8s" />
+      <!-- check if there is a suitable dock at the destination at all -->
+      <do_if value="$dockingslot">
+        <do_if value="$destination.exists">
+          <do_if value="$dockingslot.component.container != $destination">
+            <assert value="false" text="'The dockslots container ' + $dockingslot.component.container.knownname + ' is different to $destination: ' + $destination.knownname" break="1"/>
+            <set_value name="$destination" exact="$dockingslot.component.container"/>
+          </do_if>
+        </do_if>
+        <do_else>
+          <set_value name="$destination" exact="$dockingslot.component.container"/>
+        </do_else>
+      </do_if>
+      <do_else>
+        <find_dock_location container="$destination" name="$dockingslot" size="$target.docksize"/>
+      </do_else>
+
+      <do_if value="$dockingslot == null">
+        <debug_text text="'could not find valid dockingslot for \'%1\' at destination \'%2\'(%3) - %4!'.[$target.macro.id, $destination.macro.id, $destination, this.cluster.knownname]" chance="$debugchance" />
+        <resume label="endofdocking" />
+      </do_if>
+
+      <check_object result="$result" object="$destination">
+        <match_relation object="$target" relation="kill" comparison="not"/>
+      </check_object>
+      <do_if value="not $result">
+        <debug_text text="'The destination will not allow ship to dock due to relations'" chance="$debugchance" />
+        <resume label="endofdocking" />
+      </do_if>
+      <remove_value name="$result"/>
+
+      <!-- check if we are currently docked / parked -->
+      <do_if value="$target.dockslot != null or $target.docklink or $target.parkedat">
+        <do_if value="$target.container" exact="$destination">
+          <debug_text text="'we are already docked at our destination!'" chance="$debugchance" />
+          <resume label="endofdocking" />
+        </do_if>
+      </do_if>
+
+      <!-- leave formation (if there is any) as that would block our movement -->
+      <leave_formation object="$target" />
+
+      <do_if value="not $dockingslot.component.isoperational or ($dockingslot.component.external and $dockingslot.component.docked.count)">
+        <debug_text text="'dockingslot was lost. look for new one of size ' + $target.docksize + ' on ' + $destination" chance="$debugchance" />
+        <find_dock_location name="$dockingslot" container="$destination" size="$target.docksize" />
+        <do_if value="not $dockingslot or ($dockingslot.component.external and $dockingslot.component.docked.count)" >
+          <debug_text text="'hm, now apparently the dock location cannot be found, HELP!'" chance="$debugchance" />
+          <resume label="endofdocking" />
+        </do_if>
+        <debug_text text="'Found new dock slot found: ' + $dockingslot.component" chance="$debugchance" />
+      </do_if>
+
+      <!-- ok, everything checks out, now start the docking procedure and request approach path -->
+      <debug_text text="'request docking (queued)'" chance="$debugchance" />
+      <request_docking ship="$target" dock="$dockingslot" queued="1" result="$success" />
+      <do_while value="$success" exact="0">        
+        <wait min="2s" max="10s" />
+        <do_if value="not $dockingslot.component.isoperational">
+          <debug_text text="'dockingslot has become invalid while waiting for docking clearance'" chance="$debugchance" />
+          <resume label="endofdocking" />          
+        </do_if>
+        <!-- TODO: this is where we would either move to waiting position or go into a holding pattern -->
+        <request_docking ship="$target" dock="$dockingslot" queued="1" result="$success" />
+        <do_if value="not $success">
+          <do_if value="not $queuestarttime?">
+            <set_value name="$queuestarttime" exact="player.age" />
+            <set_value name="$maxtime" exact="5min" />
+          </do_if>
+          <do_if value="(player.age - $queuestarttime) gt $maxtime">
+            <debug_text text="'been waiting for more than %1s to get docking clearance, aborting'.[$maxtime]" chance="$debugchance" />
+            <resume label="endofdocking" />
+          </do_if>
+        </do_if>
+      </do_while>
+
+      <!-- ok, got a clear approach path -->
+      <debug_text text="'request docking, open doors'" chance="$debugchance" />
+      <request_docking ship="$target" dock="$dockingslot" result="$success" />
+      <do_while value="$success" exact="0">
+        <do_if value="not $dockingslot.component.isoperational">
+          <do_if value="$target.docklink">
+            <!-- we should have a docklink because the queued request above must have succeeded for us to be in here, force-disconnect that to avoid stale connections -->
+            <undock ship="$target" />
+          </do_if>
+          <debug_text text="'dockingslot has become invalid during docking'" chance="$debugchance" />
+          <resume label="endofdocking" />
+        </do_if>
+        <request_docking ship="$target" dock="$dockingslot" result="$success" />
+        <do_if value="not $success">
+          <do_if value="not $queuestarttime?">
+            <set_value name="$queuestarttime" exact="player.age" />
+            <set_value name="$maxtime" exact="30min" />
+            <do_if value="$target.isclass.ship_xl or $target.isclass.ship_l">
+              <set_value name="$maxtime" exact="3h" />
+            </do_if>
+          </do_if>
+          <do_if value="(player.age - $queuestarttime) gt $maxtime">
+            <do_if value="$target.docklink">
+              <debug_text text="'been waiting for more than %1s to get final docking clearance, aborting and disconnecting'.[$maxtime]" chance="$debugchance" />
+              <!-- we should have a docklink because the queued request above must have succeeded for us to be in here, force-disconnect that to avoid stale connections -->
+              <undock ship="$target" />
+            </do_if>
+            <resume label="endofdocking" />
+          </do_if>
+        </do_if>
+      </do_while>
+
+      <disable_collisions_between object="$target" target="$destination" />
+<!--
+      <debug_text text="'move_docking'" chance="$debugchance" />
+      <do_if value="$precisiondocking">
+        <move_docking object="$target" dock="$dockingslot" abortpath="false" />
+      </do_if>
+      <do_else>
+        <move_to object="$target" destination="$dockingslot.component" finishonapproach="1" flightbehaviour="flightbehaviour.dock"/>
+      </do_else>
+-->
+	  <warp object="$target" zone="$destination.zone">
+	   <position object="$dockingslot.component" /><!-- object="$destination" y="-700m" -->
+	   <rotation value="$destination.rotation" />
+	  </warp>
+	  <wait min="1s" max="2s" />
+
+      <do_if value="not $dockingslot.component.isoperational">
+        <do_if value="$target.docklink">
+          <!-- we should have a docklink because the queued request above must have succeeded for us to be in here, force-disconnect that to avoid stale connections -->
+          <undock ship="$target" />
+        </do_if>
+        <debug_text text="'dockingslot has become invalid during final approach to the dock'" chance="$debugchance" />
+        <clear_collision_filter object="$target" />
+        <resume label="endofdocking" />
+      </do_if>      
+      
+      <do_if value="not $dockingslot.component.external">
+        <close_dockingbay_doors dock="$dockingslot" />
+        <!-- wait for the doors to close! -->
+        <wait exact="5s" />
+      </do_if>
+      <debug_text text="'dock!'" chance="$debugchance" />
+      <dock ship="$target" />
+
+      <do_if value="$target.dockslot == null">
+        <debug_text text="'move.dockat returns true but we are not docked!'" chance="$debugchance" />
+      </do_if>
+
+      <label name="endofdocking" />
+      <do_if value="$target.trueowner == faction.ownerless and $target.dockslot">
+        <set_owner object="$target" faction="this.ship.trueowner" overridenpc="true"/>
+      </do_if>
+
+      <wait exact="1s" />
+
+    </actions>
+  </attention>
+</aiscript>

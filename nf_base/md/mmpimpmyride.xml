@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mdscript name="MM_Pimpmyride" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+		<cue name="MM_Pimpmyride_init">
+			<conditions>
+				<check_any>
+					<event_cue_signalled cue="md.Setup.GameStart"/>
+					<event_game_loaded />
+				</check_any>
+			</conditions>
+			<actions>
+				<do_if value="md.$mmpimpmyride?" negate="true">
+					<set_value name="md.$mmpimpmyride" exact="table[ $basemacros=[] ]"/>
+				</do_if>
+			</actions>
+		</cue>
+
+		<cue name="MMPMR_kill" instantiate="true" namespace="this">
+			<conditions>
+				<event_cue_signalled/>
+			</conditions>
+			<delay min="30s" max="60s"/>
+			<actions>
+				<do_if value="event.param.isclass.ship">
+					<set_owner object="event.param" faction="faction.neutral" overridenpc="true"/>
+					<destroy_object object="event.param"  explosion="false"/>
+				</do_if>
+			</actions>
+		</cue>
+
+		<cue name="MMPMR_do_transfer" instantiate="true" namespace="this">
+			<conditions>
+				<event_object_signalled object="player.computer" param="'DO.Transfer'" />
+			</conditions>
+			<actions>
+				<do_if value="event.param2.{1}.isclass.ship">
+					<set_value name="$Station" exact="event.param2.{3}"/>
+					<set_value name="$newmacro" exact="event.param2.{2}"/>
+					<set_value name="$Ship" exact="event.param2.{1}"/>
+					<find_dock_location container="$Station" size="$newmacro.docksize" name="$dock" />
+
+					<do_if value="$newmacro.isclass.[class.ship_s,class.ship_m] and $Station and $dock">
+						<create_ship name="$createdship"  zone="$Station.zone" dock="if $Ship.dockslot and $newmacro.docksize == $Ship.docksize then $Ship.dockslot.component else $Station" macro="$newmacro">
+							<pilot actor="null"/>
+							<owner exact="$Ship.pilot.trueowner"/>
+						</create_ship>
+					</do_if>
+					<do_elseif value="$newmacro.isclass.[class.ship_s,class.ship_m]">
+						<create_ship name="$createdship"  zone="$Ship.zone" macro="$newmacro">
+							<pilot actor="null"/>
+							<owner exact="$Ship.pilot.trueowner"/>
+							<safepos object="$Ship" max="2km"/>
+						</create_ship>
+					</do_elseif>
+					<do_else>
+						<create_ship name="$createdship"  zone="$Ship.zone" macro="$newmacro">
+							<pilot actor="null"/>
+							<defence actor="null"/>
+							<engineer actor="null"/>
+							<owner exact="$Ship.pilot.trueowner"/>
+							<safepos object="$Ship" max="2km"/>
+						</create_ship>
+					</do_else>
+
+					<create_ai_unit object="$createdship" />
+					<do_if value="$Ship.commander">
+						<set_object_commander object="$createdship" commander="$Ship.commander" />
+					</do_if>
+				
+					<do_if value="$Ship.pilot">
+						<set_value name="$doEntity" exact="$Ship.pilot"/>
+						<dismiss_control_entity actor="$doEntity" object="$Ship"/>
+						<abort_scripts entity="$doEntity"/>
+						
+						<add_actor_to_room actor="$doEntity" object="$createdship" />
+						<assign_pilot actor="$doEntity" object="$createdship" />
+						<start_script object="$doEntity" name="'player.default'"/>
+						<remove_value name="$doEntity"/>
+					</do_if>
+					<do_elseif value="$Ship.defencenpc">
+						<set_value name="$doEntity" exact="$Ship.defencenpc"/>
+						<dismiss_control_entity actor="$doEntity" object="$Ship"/>
+						<abort_scripts entity="$doEntity"/>
+						
+						<add_actor_to_room actor="$doEntity" object="$createdship" />
+						<assign_defence_manager actor="$doEntity" object="$createdship" />
+						<start_script object="$doEntity" name="'fight.defend.capital'"/>
+						<remove_value name="$doEntity"/>
+					</do_elseif>
+					<do_elseif value="$Ship.engineer">
+						<set_value name="$doEntity" exact="$Ship.engineer"/>
+						<dismiss_control_entity actor="$doEntity" object="$Ship"/>
+						<abort_scripts entity="$doEntity"/>
+						
+						<add_actor_to_room actor="$doEntity" object="$createdship" />
+						<assign_engineer actor="$doEntity" object="$createdship" />
+						<start_script object="$doEntity" name="'engineer.ai'"/>
+						<remove_value name="$doEntity"/>
+					</do_elseif>
+					<do_elseif value="$Ship.architect">
+						<set_value name="$doEntity" exact="$Ship.architect"/>
+						<dismiss_control_entity actor="$doEntity" object="$Ship"/>
+						<abort_scripts entity="$doEntity"/>
+						
+						<add_actor_to_room actor="$doEntity" object="$createdship" />
+						<assign_architect actor="$doEntity" object="$createdship" />
+						<remove_value name="$doEntity"/>
+					</do_elseif>
+					<do_elseif value="$Ship.boardingnpc">
+						<set_value name="$doEntity" exact="$Ship.boardingnpc"/>
+						<dismiss_control_entity actor="$doEntity" object="$Ship"/>
+						<abort_scripts entity="$doEntity"/>
+						
+						<add_actor_to_room actor="$doEntity" object="$createdship" />
+						<assign_boarding_commander actor="$doEntity" object="$createdship" />
+					</do_elseif>
+					<remove_value name="$doEntity"/>
+
+					<do_all exact="$Ship.subordinates.count" counter="$j">
+						<do_if value="$Ship.subordinates.{$j}.isclass.[class.ship_xs]">
+						  <set_owner object="$Ship.subordinates.{$j}" faction="faction.ownerless" />
+						  <signal_cue_instantly cue="MMPMR_kill" param="$Ship.subordinates.{$j}"/>
+						</do_if>
+						<do_else>
+						  <start_script object="$Ship.subordinates.{$j}.pilot" name="'move.escort'">
+							<param name="target" value="$createdship" />
+						  </start_script>
+						</do_else>
+					</do_all>
+					
+					<set_owner object="$Ship" faction="faction.ownerless" />
+
+					<do_if value="stat.nf_ships_specialmodification?">
+						<set_value name="stat.nf_ships_specialmodification" operation="add" />
+					</do_if>
+
+					<signal_cue_instantly cue="MMPMR_kill" param="$Ship"/>
+
+					<remove_value name="$Entities"/>
+					<remove_value name="$createdship"/>
+
+					<remove_value name="$Ship"/>
+					<remove_value name="$newmacro"/>
+					<remove_value name="$dock"/>
+					<remove_value name="$Station"/>
+				</do_if>
+			</actions>
+		</cue>
+
+		<cue name="MMPMR_base" instantiate="true" >
+			<conditions>
+				<check_any>
+					<!--event_conversation_started conversation="cSmallshiptrader_modifyship" /-->
+					<event_conversation_next_section section="cSmallshiptrader_modifyship" />
+					<event_conversation_returned_to_section section="cSmallshiptrader_modifyship" />
+				</check_any>
+				<!--check_value value="event.param2.canproduceships" /-->
+			</conditions>
+			<actions>
+				<set_value name="$text" exact="''" />
+				<create_list name="$text_helper"/>
+				<do_all exact="md.$mmpimpmyride.$basemacros.count" counter="$i" >
+					<do_if value="$i == 1">
+						<set_value name="$text" exact="{2802,2502}" operation="add" />
+					</do_if>
+
+					<set_value name="$tmp" exact="'%1'.[if md.$mmpimpmyride.$basemacros.{$i}.name then md.$mmpimpmyride.$basemacros.{$i}.name else md.$mmpimpmyride.$basemacros.{$i}.id]" />
+
+					<do_if value="$text_helper.indexof.{$tmp} == 0">
+						<do_if value="$i gt 1">
+							<set_value name="$text" exact="', '" operation="add" />
+						</do_if>
+						<set_value name="$text" exact="$tmp" operation="add" />
+						<append_to_list name="$text_helper" exact="$tmp" />
+					</do_if>
+					<remove_value name="$tmp"/>
+
+				</do_all>
+				<add_player_choice_sub text="{2802,2501}" position="top_right" tooltip="$text" selectable="md.$mmpimpmyride.keys.list.count gt 1 and player.primaryship.subordinates.count" section="mmpmr_modify" />
+				<remove_value name="$text"/>
+				<remove_value name="$text_helper"/>
+			</actions>
+		</cue>
+
+
+		<!--  options submenu  -->
+		<cue name="MMPMR_work" instantiate="true" >
+			<conditions>
+				<check_any>
+					<!--event_conversation_started conversation="mmpmr_modify" /-->
+					<event_conversation_returned_to_section section="mmpmr_modify" />
+					<event_conversation_next_section sectionprefix="mmpmr_modify"/>
+				</check_any>
+			</conditions>
+			<actions>
+				<set_value name="$Station" exact="event.object.container" />
+				<set_value name="$Ship" exact="player.primaryship" />
+
+				<do_if value="event.param == 'mmpmr_modify'">
+
+					<create_list name="$ship_macros"/>
+
+					<do_all exact="$Ship.subordinates.count" counter="$i" >
+						<do_if value="$Ship.subordinates.{$i}.macro" list="$ship_macros" negate="true">
+							<append_to_list name="$ship_macros" exact="$Ship.subordinates.{$i}.macro" />
+						</do_if>
+					</do_all>
+
+					<do_all exact="$ship_macros.count" counter="$i" reverse="true">
+						<do_if value="$ship_macros.{$i}" list="md.$mmpimpmyride.$basemacros" negate="true">
+							<remove_value name="$ship_macros.{$i}"/>
+						</do_if>
+					</do_all>
+
+					<do_if value="$ship_macros.count">
+						<do_all exact="[$ship_macros.count, 5].min" counter="$i">
+							<create_list name="$Ships"/>
+							<do_all exact="$Ship.subordinates.count" counter="$j" >
+								<do_if value="$Ship.subordinates.{$j}.macro.ismacro.{$ship_macros.{$i}}">
+									<do_if value="$Ship.subordinates.{$j}.zone == $Ship.zone and $Ship.subordinates.{$j}.dockslot == null">
+										<append_to_list name="$Ships" exact="$Ship.subordinates.{$j}" />
+									</do_if>
+								</do_if>
+							</do_all>
+							<add_player_choice text="{2802,2505}.[if $ship_macros.{$i}.name then $ship_macros.{$i}.name else $ship_macros.{$i}.id, $Ships.count]" section="mmpmr_modify_step2" selectable="$Ships.count" choiceparam="[$ship_macros.{$i}, null, null, $Ships.clone]" comment="Select Shiptype" />
+							<remove_value name="$Ships"/>
+						</do_all>
+
+						<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+					</do_if>
+					<do_else>
+						<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+					</do_else>
+
+					<remove_value name="$ship_macros"/>
+				</do_if>
+				<do_elseif value="event.param == 'mmpmr_modify_step2'">
+
+					<set_value name="$basemacro" exact="null" />
+					<set_value name="$Ships" exact="[]" />
+					<do_if value="event.param2.{1}? and typeof event.param2.{1} == datatype.macro">
+						<set_value name="$basemacro" exact="event.param2.{1}" />
+					</do_if>
+					<do_if value="event.param2.{4}? and typeof event.param2.{4} == datatype.list">
+						<set_value name="$Ships" exact="event.param2.{4}" />
+					</do_if>
+
+					<do_if value="$Ships.count and $basemacro">
+						<set_value name="$basevalue" exact="0Cr" />
+	
+						<do_all exact="$Ships.count" counter="$i" reverse="true">
+							<do_if value="$Ships.{$i}.macro" exact="$basemacro">
+								<set_value name="$basevalue" exact="$Ships.{$i}.value" operation="add" />
+							</do_if>
+							<do_else>
+								<remove_value name="$Ships.{$i}"/>
+							</do_else>
+						</do_all>
+	
+						<do_all exact="[md.$mmpimpmyride.{'$%1'.[$basemacro.id]}.count,5].min" counter="$i" >
+							<set_value name="$temp" exact="0Cr" />
+							<set_value name="$temp" exact="if md.$mmpimpmyride.{'$%1'.[$basemacro.id]}.{$i}.ware.maxprice then md.$mmpimpmyride.{'$%1'.[$basemacro.id]}.{$i}.ware.maxprice * $Ships.count else $basemacro.ware.maxprice * $Ships.count" operation="add"/>
+							<set_value name="$temp" exact="$basevalue" operation="subtract" chance="if $temp gt $basevalue then 100 else 0"/>
+							<add_player_choice text="{2802,2507}.[if md.$mmpimpmyride.{'$%1'.[$basemacro.id]}.{$i}.name then md.$mmpimpmyride.{'$%1'.[$basemacro.id]}.{$i}.name else md.$mmpimpmyride.{'$%1'.[$basemacro.id]}.{$i}.id]" tooltip="{2802,2509}.[$temp.formatted.default]" section="mmpmr_modify_step3" selectable="player.entity.money ge $temp and $Ships.count" choiceparam="[$basemacro, md.$mmpimpmyride.{'$%1'.[$basemacro.id]}.{$i}, $temp, $Ships.clone]" comment="Select Shiptype" />
+							<remove_value name="$temp"/>
+						</do_all>
+						<remove_value name="$basevalue"/>
+					</do_if>
+
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+
+					<remove_value name="$Ships"/>
+					<remove_value name="$basemacro"/>
+					<remove_value name="$basevalue"/>
+				</do_elseif>
+				<do_elseif value="event.param == 'mmpmr_modify_step3'">
+
+					<set_value name="$basemacro" exact="null" />
+					<set_value name="$newmacro" exact="null" />
+					<set_value name="$costs" exact="0Cr" />
+					<set_value name="$Ships" exact="[]" />
+					<do_if value="event.param2.{1}? and typeof event.param2.{1} == datatype.macro">
+						<set_value name="$basemacro" exact="event.param2.{1}" />
+					</do_if>
+					<do_if value="event.param2.{2}? and typeof event.param2.{2} == datatype.macro">
+						<set_value name="$newmacro" exact="event.param2.{2}" />
+					</do_if>
+					<do_if value="event.param2.{3}? and typeof event.param2.{3} == datatype.money">
+						<set_value name="$costs" exact="event.param2.{3}" />
+					</do_if>
+					<do_if value="event.param2.{4}? and typeof event.param2.{4} == datatype.list">
+						<set_value name="$Ships" exact="event.param2.{4}" />
+					</do_if>
+			
+					<do_if value="$basemacro and $newmacro and $costs and $Ships.count">
+						<transfer_money from="player.entity" to="event.object" amount="$costs" />
+
+						<do_all exact="$Ships.count" counter="$i" reverse="true">
+							<start_script object="$Ships.{$i}.pilot" name="'move.changemyride'">
+							  <param name="target" value="$Station" />
+							  <param name="macro" value="$newmacro" />
+							</start_script>
+
+							<set_owner object="$Ships.{$i}" faction="faction.neutral" />
+						</do_all>
+					</do_if>
+					
+					<write_to_logbook category="squad" text="{2802,2503}.[$Ships.count, $basemacro.name, $newmacro.name, $costs.formatted.default]" queued="false"/>
+					
+					<remove_value name="$costs"/>
+					<remove_value name="$Ships"/>
+					<remove_value name="$basemacro"/>
+					<remove_value name="$newmacro"/>
+				</do_elseif>
+
+				<remove_value name="$Ship"/>
+				<remove_value name="$Station"/>
+			</actions>
+		</cue>
+	</cues>
+</mdscript>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="//library[@name='MMCData_config']/actions/do_if[@value=&quot;'xen'&quot;]/do_if[@value=&quot;'shippart'&quot;]">
+						<append_to_list name="$temp_build" exact="macro.{['xenon_asteroid_01_base_01_macro'].{1}}" chance="(md.$DLC2_Clusters? and md.$DLC2_Clusters.count)*100"/>
+	</add>
+</diff>

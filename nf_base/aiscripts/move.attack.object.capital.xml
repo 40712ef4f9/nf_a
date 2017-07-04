@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="//do_while/do_if[@exact='quadrant.front']" pos="before">
+		<set_value name="$move_to_chance" exact="100" />
+		<set_value name="$do_jump_chance" exact="0" />
+		<set_value name="$posY_important" exact="0" />
+		<set_value name="$skipcharge" exact="false" />
+		<set_value name="$ignorefuel" exact="false" />
+		<set_value name="$waitX" exact="player.age + 2s" />
+        <do_if value="$noBoost?">
+          <set_value name="$boost"/>
+		  <remove_value name="$noBoost" />
+        </do_if>
+	</add>
+	<add sel="//do_while/set_value[@name='$aimthreshold_min']" pos="before">
+		<do_if value="$target.isclass.station">
+			<set_value name="$aimthreshold_max" exact="[18000m, (this.ship.maxcombatrange.all + this.ship.length / 2) ].min" />
+			<do_if value="this.ship.maxcombatrange.all gt this.ship.maxcombatrange.turrets">
+				<set_value name="$aimthreshold_max" exact="[$aimthreshold_max, this.ship.maxcombatrange.primary ].min" chance="if this.ship.maxcombatrange.primary and this.ship.maxcombatrange.secondary lt this.ship.maxcombatrange.primary then 100 else 0"/>
+				<set_value name="$aimthreshold_max" exact="[$aimthreshold_max, this.ship.maxcombatrange.secondary ].min" chance="if this.ship.maxcombatrange.secondary and this.ship.maxcombatrange.primary lt this.ship.maxcombatrange.secondary then 100 else 0"/>
+			</do_if>
+			<do_else>
+				<set_value name="$aimthreshold_max" exact="[$aimthreshold_max, this.ship.maxcombatrange.turrets ].min" chance="if this.ship.maxcombatrange.turrets then 100 else 0"/>
+			</do_else>
+			<set_value name="$aimthreshold_max" exact="$aimthreshold_max * 0.93f" />
+		</do_if>
+		<do_elseif value="$aimthreshold_max gt 20km">
+			<set_value name="$aimthreshold_max" exact="[18000m, $aimthreshold_max].min" />
+		</do_elseif>
+	</add>
+
+	<add sel="//do_while/do_if[@value='$isstation']" pos="before">
+		<do_if value="not $issmall and this.ship.macro.ismacro.{global.$MICT_LR_Ships} and this.ship.distanceto.{$target} gt 3km" >
+			<do_if value="this.ship.pilot.$priotarget? and this.ship.pilot.$priotarget.exists">
+				<set_value name="$shoot_at_now" exact="this.ship.pilot.$priotarget" />
+			</do_if>
+			<do_else>
+				<set_value name="$shoot_at_now" exact="$target" />
+			</do_else>
+			<set_value name="$TargetDistance" exact="this.ship.distanceto.{$shoot_at_now}" />
+			
+			<check_line_of_sight name="$result" object="this.ship" target="$shoot_at_now" />
+
+			<do_if value="not $result or $TargetDistance gt $movedist_max or $TargetDistance le $aimthreshold_min or ($TargetDistance le $movedist_min and this.ship.hullpercentage gt 30)" >
+				<do_if value="not $result and not $posrun?">
+					<set_value name="$posrun" exact="3" />
+				</do_if>
+				<do_elseif value="not $result and $posrun?">
+					<set_value name="$posrun" operation="subtract"/>
+				</do_elseif>
+				<do_elseif value="$result">
+					<remove_value name="$posrun" />
+				</do_elseif>
+				<get_safe_pos result="$pos" object="$shoot_at_now" min="$aimthreshold_min" max="$aimthreshold_max" radius="this.ship.size/2.0" zone="this.zone" ignored="this.ship"/>
+				<set_value name="$TMPdist" exact="this.ship.distanceto.{$pos}" />
+				<!-- get parametric equation for the line between the points where this ship and its target are located  <x,y,z> = t(Q - P) + P -->
+				<set_value name="$Tparameter" exact="$movedist_max / $TargetDistance" />
+				<create_list name="$posTMP" />				
+				<set_value name="$pos_TMP" exact="position.[($Tparameter * ($shoot_at_now.position.x - this.ship.position.x)) + this.ship.position.x, ($Tparameter * ($shoot_at_now.position.y - this.ship.position.y)) + this.ship.position.y, ($Tparameter * ($shoot_at_now.position.z - this.ship.position.z)) + this.ship.position.z]" />
+				<append_to_list name="$posTMP" exact="$pos_TMP" chance="($shoot_at_now.distanceto.{$pos_TMP} le $aimthreshold_max) *100"/>
+				<set_value name="$pos_TMP" exact="position.[($Tparameter * ($shoot_at_now.position.x - this.ship.position.x)) - this.ship.position.x, ($Tparameter * ($shoot_at_now.position.y - this.ship.position.y)) + this.ship.position.y, ($Tparameter * ($shoot_at_now.position.z - this.ship.position.z)) + this.ship.position.z]" />
+				<append_to_list name="$posTMP" exact="$pos_TMP" chance="($shoot_at_now.distanceto.{$pos_TMP} le $aimthreshold_max) *100"/>
+				<set_value name="$pos_TMP" exact="position.[($Tparameter * ($shoot_at_now.position.x - this.ship.position.x)) + this.ship.position.x, ($Tparameter * ($shoot_at_now.position.y - this.ship.position.y)) - this.ship.position.y, ($Tparameter * ($shoot_at_now.position.z - this.ship.position.z)) + this.ship.position.z]" />
+				<append_to_list name="$posTMP" exact="$pos_TMP" chance="($shoot_at_now.distanceto.{$pos_TMP} le $aimthreshold_max) *100"/>
+				<set_value name="$pos_TMP" exact="position.[($Tparameter * ($shoot_at_now.position.x - this.ship.position.x)) - this.ship.position.x, ($Tparameter * ($shoot_at_now.position.y - this.ship.position.y)) - this.ship.position.y, ($Tparameter * ($shoot_at_now.position.z - this.ship.position.z)) + this.ship.position.z]" />
+				<append_to_list name="$posTMP" exact="$pos_TMP" chance="($shoot_at_now.distanceto.{$pos_TMP} le $aimthreshold_max) *100"/>
+				<set_value name="$pos_TMP" exact="position.[($Tparameter * ($shoot_at_now.position.x - this.ship.position.x)) + this.ship.position.x, ($Tparameter * ($shoot_at_now.position.y - this.ship.position.y)) + this.ship.position.y, this.ship.position.z - [($Tparameter * ($shoot_at_now.position.z - this.ship.position.z)), 1m].max /2]" />
+				<append_to_list name="$posTMP" exact="$pos_TMP" chance="($shoot_at_now.distanceto.{$pos_TMP} le $aimthreshold_max) *100"/>
+				<set_value name="$pos_TMP" exact="position.[($Tparameter * ($shoot_at_now.position.x - this.ship.position.x)) - this.ship.position.x, ($Tparameter * ($shoot_at_now.position.y - this.ship.position.y)) + this.ship.position.y, this.ship.position.z - [($Tparameter * ($shoot_at_now.position.z - this.ship.position.z)), 1m].max /2]" />
+				<append_to_list name="$posTMP" exact="$pos_TMP" chance="($shoot_at_now.distanceto.{$pos_TMP} le $aimthreshold_max) *100"/>
+				<set_value name="$pos_TMP" exact="position.[($Tparameter * ($shoot_at_now.position.x - this.ship.position.x)) + this.ship.position.x, ($Tparameter * ($shoot_at_now.position.y - this.ship.position.y)) - this.ship.position.y, this.ship.position.z - [($Tparameter * ($shoot_at_now.position.z - this.ship.position.z)), 1m].max /2]" />
+				<append_to_list name="$posTMP" exact="$pos_TMP" chance="($shoot_at_now.distanceto.{$pos_TMP} le $aimthreshold_max) *100"/>
+				<set_value name="$pos_TMP" exact="position.[($Tparameter * ($shoot_at_now.position.x - this.ship.position.x)) - this.ship.position.x, ($Tparameter * ($shoot_at_now.position.y - this.ship.position.y)) - this.ship.position.y, this.ship.position.z - [($Tparameter * ($shoot_at_now.position.z - this.ship.position.z)), 1m].max /2]" />
+				<append_to_list name="$posTMP" exact="$pos_TMP" chance="($shoot_at_now.distanceto.{$pos_TMP} le $aimthreshold_max) *100"/>
+				<do_if value="$posrun? and $posrun le 0">
+					<append_to_list name="$posTMP" exact="$pos" />
+					<do_all exact="[$posTMP.count, 3].min">
+						<set_value name="$posTMP2" exact="$posTMP.random" />
+						<do_if value="typeof @$posTMP2 == datatype.position">
+							<set_value name="$pos" exact="$posTMP2" />
+						</do_if>
+					</do_all>
+					<remove_value name="$posTMP2" />
+					<set_value name="$posrun" exact="1" />
+				</do_if>
+				<do_else>
+					<do_all exact="$posTMP.count" counter="$d">
+						<do_if value="typeof @$posTMP.{$d} == datatype.position and $TargetDistance le $movedist_min and $shoot_at_now.distanceto.{$posTMP.{$d}} gt $TMPdist">
+							<set_value name="$pos" exact="$posTMP.{$d}" />
+							<set_value name="$TMPdist" exact="$shoot_at_now.distanceto.{$pos}" />
+						</do_if>
+						<do_elseif value="typeof @$posTMP.{$d} == datatype.position and $TargetDistance gt $movedist_min and this.ship.distanceto.{$posTMP.{$d}} lt $TMPdist">
+							<set_value name="$pos" exact="$posTMP.{$d}" />
+							<set_value name="$TMPdist" exact="this.ship.distanceto.{$pos}" />
+						</do_elseif>
+					</do_all>
+				</do_else>
+				<do_if value="$posTMP.count">
+					<get_safe_pos result="$savepos" value="$pos" zone="this.zone" radius="this.ship.size/2.0" ignored="this.ship" />
+					<set_value name="$pos" exact="$savepos" chance="($shoot_at_now.distanceto.{$savepos} le $aimthreshold_max) *100"/>
+					<remove_value name="$savepos" />
+				</do_if>
+				<remove_value name="$posTMP" />
+				<remove_value name="$TMPdist" />
+				
+
+				<set_value name="$waitX" exact="player.age + 1s"/>
+				<set_value name="$posY_important" exact="100" />
+				<remove_value name="$Tparameter" />
+				<remove_value name="$result" />
+			</do_if>
+			<do_else>
+				<remove_value name="$posrun" />
+				<create_position name="$pos" object="this.ship" z="250m" />
+				<!--get_safe_pos result="$pos" object="this.ship" min="0" max="1km" radius="this.ship.size/2.0" zone="this.zone" ignored="this.ship"/-->
+				<move_to object="this.ship" destination="this.ship.zone" chance="0">
+					<interrupt_after_time time="0" />
+				</move_to>
+				<set_value name="$waitX" exact="player.age + 5s"/>
+				<set_value name="$posY_important" exact="100" />
+				<do_if value="$boost?">
+					<set_value name="$noBoost"/>
+					<remove_value name="$boost" />
+				</do_if>
+			</do_else>
+
+			<create_orientation name="$rotation" refobject="$shoot_at_now" orientation="look_at">
+				<position value="$pos" space="this.ship.zone" />
+			</create_orientation>
+			<remove_value name="$shoot_at_now" />
+			<remove_value name="$TargetDistance" />
+		</do_if>
+		<do_if value="this.combinedskill ge 80 and this.ship.distanceto.[this.ship.zone, $pos] gt (20km + this.ship.size) and not ($target.isclass.ship and $target.isboostactive)" chance="if $move_to_chance? then $move_to_chance else 0">
+			<do_if value="$last_jump?" negate="true">
+				<set_value name="$last_jump" exact="player.age -242s" />
+			</do_if>
+			<do_if value="$jumpdrive? and $jumpdrive.isfunctional" negate="true">
+				<find_object_component name="$jumpdrive" object="this.ship" class="class.jumpdrive" checkoperational="true"/>
+			</do_if>
+
+			<do_if value="$jumpdrive? and $jumpdrive.cooldowntimeleft le 0 and this.combinedskill ge 90" chance="if $last_jump lt player.age-240s then this.combinedskill else 0">
+				<set_value name="$do_jump_chance" exact="100" />
+				<set_value name="$skipcharge" exact="true" />
+				<set_value name="$ignorefuel" exact="true" />
+				<set_value name="$move_to_chance" exact="0" />
+				<set_value name="$last_jump" exact="player.age" />
+				<set_value name="$waitX" exact="player.age + 5s"/>
+				<do_if value="$posY_important" negate="true">
+					<create_orientation name="$rotation" refobject="$target" orientation="look_at">
+						<position value="$pos" space="this.ship.zone" />
+					</create_orientation>
+					<set_value name="$posY_important" exact="100" />
+				</do_if>
+			</do_if>
+		</do_if>
+	</add>
+	<add sel="//do_while/move_to[1]" pos="before">
+		<set_value name="$posY" exact="$pos.y" chance="if $posY_important? then $posY_important else 0" />
+	</add>
+	<add sel="//do_while/move_to[1]" type="@chance" >if $move_to_chance? then $move_to_chance else 100</add>
+	<replace sel="//do_while/move_to/@boost">if not $noBoost? and this.combinedskill ge 80 and (this.ship.distanceto.[this.ship.zone, position.[$pos.x, $posY, $pos.z]] gt $movedist_max) then true else false</replace>
+	<add sel="//do_while/move_to[1]" pos="after">
+		<jump object="this.ship" zone="this.zone" skipcharge="$skipcharge" ignorefuel="$ignorefuel" chance="if $do_jump_chance? then $do_jump_chance else 0">
+		  <safepos value="position.[$pos.x, $posY, $pos.z]" radius="this.ship.size * 0.6f" allowyaxis="false"/>
+		  <rotation value="$rotation" />
+		</jump>
+	</add>
+	<replace sel="//do_while/wait/@exact">if $waitX? then [1s, $waitX - player.age].max else 1s</replace>
+	<replace sel="//do_while/wait/@chance">if not @$do_jump_chance or @$waitX gt player.age then 100 else 0</replace>
+	<add sel="//do_while" pos="after">
+	  <signal_objects object="player.galaxy" param="'learned.something'" param2="[this, ware.inv_virtualseminarnavigation, 'fight']" />
+	</add>
+</diff>

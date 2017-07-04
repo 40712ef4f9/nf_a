@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="//cue[@name='LSJobs']/actions/set_job_active[@job=&quot;'split_trader_bulk_liquid_large'&quot;]" type="@chance" >0</add>
+	<add sel="(//cue[@name='LSJobs']/actions/set_job_active[@job=&quot;'split_trader_container_energy_large'&quot;])[1]" type="@chance" >0</add>
+	<add sel="(//cue[@name='LSJobs']/actions/set_job_active[@job=&quot;'split_trader_container_energy_large'&quot;])[2]" type="@chance" >0</add>
+	<add sel="//cue[@name='LSJobs']/actions/set_job_active[@job=&quot;'split_miner_ice_large'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='LSJobs']/actions/set_job_active[@job=&quot;'split_patrol_lsa01'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='LSJobs']/actions/set_job_active[@job=&quot;'split_frigate_lsa01'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='LSJobs']/actions/set_job_active[@job=&quot;'split_destroyer_lsa01'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='LSJobs']/actions/set_job_active[@job=&quot;'split_destroyer_zone_lsa01'&quot;]" type="@chance" >0</add>
+<!--	
+	<add sel="//cue[@name='LSJobs']/actions/set_job_active[@job=&quot;'arg_fighter_patrol_maelstrom'&quot;]" type="@chance" >0</add>
+	<add sel="//cue[@name='LSJobs']/actions/set_job_active[@job=&quot;'ls_trader_guest_ryak_large'&quot;]" type="@chance" >0</add>
+-->
+</diff>

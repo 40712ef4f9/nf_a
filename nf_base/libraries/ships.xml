@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<replace sel="/ships/ship[@id='arg_destroyer']/@group">arg_destroyer_sp</replace>  
+
+	<replace sel="/ships/ship[@id='omicron_miner_ice_large']/@macro">units_size_xl_cs_omicron_ship_04_mk2_macro</replace>  
+	<replace sel="/ships/ship[@id='omicron_miner_mineral_large']/@group">omicron_miner_minerals_large</replace>  
+	<add sel="/ships">
+		<ship id="nf_dummy_ol_xl" group="nf_omicron_xl">
+			<category tags="[omicron, military]" faction="[argongovernment, sonraenergy, aquarius, jonferson, frantonpharma, chow, familyryak, hereticvanguards]" size="ship_xl"/>
+			<pilot ref="fighter_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<units>
+				<unit category="defence" mk="1" min="50" max="70"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+				<unit category="transport" mk="1" min="10" max="20"/>
+			</units>
+			<drop ref="ship_large_military"/>
+		</ship>
+		<ship id="nf_dummy_ol_l" group="nf_omicron_l">
+			<category tags="[omicron, military]" faction="[argongovernment, sonraenergy, aquarius, jonferson, frantonpharma, chow, familyryak, hereticvanguards]" size="ship_l"/>
+			<pilot ref="fighter_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<units>
+				<unit category="defence" mk="1" min="50" max="70"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+				<unit category="transport" mk="1" min="10" max="20"/>
+			</units>
+			<drop ref="ship_large_military"/>
+		</ship>
+
+		<ship id="nf_dummy_al_xl" group="nf_albion_xl">
+			<category tags="[albion, military]" faction="[heartofalbion, canteran, plutarch, wholesomefoods, beryll, nolimits, leddaindustrial, albionenergy, sovereignsyndicate, reivers]" size="ship_xl"/>
+			<pilot ref="fighter_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<units>
+				<unit category="defence" mk="1" min="50" max="70"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+				<unit category="transport" mk="1" min="10" max="20"/>
+			</units>
+			<drop ref="ship_large_military"/>
+		</ship>
+
+		<ship id="nf_dummy_al_l" group="nf_albion_l">
+			<category tags="[albion, military]" faction="[heartofalbion, canteran, plutarch, wholesomefoods, beryll, nolimits, leddaindustrial, albionenergy, sovereignsyndicate, reivers]" size="ship_l"/>
+			<pilot ref="fighter_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<units>
+				<unit category="defence" mk="1" min="50" max="70"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+				<unit category="transport" mk="1" min="10" max="20"/>
+			</units>
+			<drop ref="ship_large_military"/>
+		</ship>
+		<ship id="nf_dummy_m" macro="units_size_m_pmc_xen_02_macro">
+			<category tags="[fighter, military]" faction="[heartofalbion, canteran, plutarch, wholesomefoods, beryll, nolimits, leddaindustrial, albionenergy, sovereignsyndicate, reivers, argongovernment, sonraenergy, aquarius, jonferson, frantonpharma, chow, familyryak, hereticvanguards]" size="ship_m"/>
+			<pilot ref="fighter_albion_random"/>
+			<drop ref="ship_small_military"/>
+		</ship>
+		<ship id="nf_dummy_s" macro="units_size_s_pmc_xen_01_macro">
+			<category tags="[fighter, military]" faction="[heartofalbion, canteran, plutarch, wholesomefoods, beryll, nolimits, leddaindustrial, albionenergy, sovereignsyndicate, reivers, argongovernment, sonraenergy, aquarius, jonferson, frantonpharma, chow, familyryak, hereticvanguards]" size="ship_s"/>
+			<pilot ref="fighter_albion_random"/>
+			<drop ref="ship_small_military"/>
+		</ship>
+
+		<ship id="goner_prayer_04_p" macro="units_size_s_ship_04_p_macro">
+			<category tags="[albion, devries, omicron]" faction="[acmecorp]" size="ship_s"/>
+			<pilot ref="trader_albion_random"/>
+			<drop ref="ship_medium_civilian"/>
+		</ship>
+
+
+		<ship id="arg_carrier_sp" macro="units_size_xl_cs_omicron_ship_02_xc_macro">
+			<category tags="[omicron, military, carrier, mission]" faction="[argongovernment]" size="ship_xl"/>
+			<owner exact="argongovernment" overridenpc="true"/>
+			<pilot>
+				<select faction="argongovernment" tags="commander"/>
+			</pilot>
+			<defence>
+				<select faction="argongovernment" tags="defencecontrol"/>
+			</defence>
+			<engineer>
+				<select faction="argongovernment" tags="engineer"/>
+			</engineer>
+			<units>
+				<unit category="attack" mk="1" min="30" max="40"/>
+				<unit category="defence" mk="1" min="20" max="30"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+			</units>
+			<drop ref="ship_large_military"/>
+		</ship>
+		<ship id="arg_carrier_s_sp" macro="units_size_xl_cs_omicron_ship_02_mk5_macro">
+			<category tags="[omicron, military, carrier, mission]" faction="[argongovernment]" size="ship_xl"/>
+			<owner exact="argongovernment" overridenpc="true"/>
+			<pilot>
+				<select faction="argongovernment" tags="commander"/>
+			</pilot>
+			<defence>
+				<select faction="argongovernment" tags="defencecontrol"/>
+			</defence>
+			<engineer>
+				<select faction="argongovernment" tags="engineer"/>
+			</engineer>
+			<units>
+				<unit category="defence" mk="1" min="50" max="150"/>
+				<unit category="defence" mk="3" min="50" max="150"/>
+				<unit category="defence" mk="2" min="50" max="100"/>
+				<unit category="defence" mk="5" min="50" max="100"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+			</units>
+			<drop ref="ship_large_military"/>
+		</ship>
+		<ship id="arg_repairship" macro="units_size_xl_cs_omicron_repairship_02_macro">
+			<category tags="[omicron, maelstrom, carrier, mission]" faction="[argongovernment]" size="ship_xl"/>
+			<owner exact="argongovernment" overridenpc="true"/>
+			<pilot>
+				<select faction="argongovernment" tags="commander"/>
+			</pilot>
+			<defence>
+				<select faction="argongovernment" tags="defencecontrol"/>
+			</defence>
+			<engineer>
+				<select faction="argongovernment" tags="engineer"/>
+			</engineer>
+			<units>
+				<unit category="defence" mk="1" min="50" max="70"/>
+				<unit category="defence" mk="3" min="50" max="70"/>
+				<unit category="defence" mk="2" min="50" max="30"/>
+				<unit category="defence" mk="5" min="50" max="40"/>
+				<unit category="welder" mk="1" min="30" max="50"/>
+				<unit category="transport" mk="1" min="10" max="20"/>
+			</units>
+			<drop ref="ship_large_military"/>
+		</ship>
+		<ship id="pmc_repairship" macro="units_size_l_kit_repairship_macro">
+			<category tags="[albion, devries, carrier, mission]" faction="[heartofalbion, plutarch]" size="ship_xl"/>
+			<pilot ref="fighter_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<units>
+				<unit category="defence" mk="1" min="50" max="70"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+				<unit category="transport" mk="1" min="10" max="20"/>
+			</units>
+			<drop ref="ship_large_military"/>
+		</ship>
+	</add> 
+	<add sel="/ships/ship[@id='rya_destroyer']">
+		<units>
+		  <unit category="defence" mk="3" min="10" max="20"/>
+		  <unit category="defence" mk="1" min="10" max="20"/>
+		  <unit category="welder" mk="1" min="10" max="20"/>
+		  <unit category="transport" mk="1" min="10" max="20"/>
+		</units>
+	</add> 
+	<remove sel="/ships/ship[@id='rya_destroyer']/@macro"/>
+	<add sel="/ships/ship[@id='rya_destroyer']" type="@group" >mmrya_destroyer</add>
+	<add sel="/ships">
+		<ship id="ship_technical_care_med_al" group="technical_care_med">
+			<category tags="[miner]" faction="[leddaindustrial]" size="ship_m"/>
+			<pilot ref="trader_albion_random"/>
+			<units>
+				<unit category="welder" mk="1" exact="3"/>
+			</units>
+			<drop ref="ship_medium_civilian"/>
+		</ship>
+		<ship id="ship_technical_care_med_ol" group="technical_care_med">
+			<category tags="[omicron, miner]" faction="[jonferson]" size="ship_m"/>
+			<pilot ref="trader_omicron_lyrae_random"/>
+			<units>
+				<unit category="welder" mk="1" exact="3"/>
+			</units>
+			<drop ref="ship_medium_civilian"/>
+		</ship>
+
+		<ship id="ship_technical_care_large_al" macro="units_size_l_kit_container_03_macro">
+			<category tags="[albion, freighter, container]" faction="[leddaindustrial]" size="ship_l"/>
+			<pilot ref="trader_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<cargo>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="80" max="90"/>
+				</wares>
+			</cargo>
+			<units>
+				<unit category="defence" mk="3" min="18" max="27"/>
+				<unit category="transport" mk="1" min="5" max="10"/>
+				<unit category="welder" mk="1" min="90" max="100"/>
+			</units>
+			<drop ref="ship_large_civilian"/>
+		</ship>
+		<ship id="ship_technical_care_large_ol" macro="units_size_l_ice_collector_macro">
+			<category tags="[omicron, miner]" faction="[jonferson]" size="ship_l"/>
+			<pilot ref="trader_omicron_lyrae_random"/>
+			<defence ref="fighter_omicron_lyrae_random"/>
+			<engineer ref="engineer_omicron_lyrae_random"/>
+			<cargo>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="80" max="90"/>
+				</wares>
+			</cargo>
+			<units>
+				<unit category="welder" mk="1" exact="150"/>
+				<unit category="defence" mk="3" min="18" max="27"/>
+				<unit category="transport" mk="1" min="10" max="20"/>
+			</units>
+			<drop ref="ship_large_civilian"/>
+		</ship>
+	</add> 
+  <add sel="/ships">
+  
+  <!-- MAELSTROM MASS TRAFFIC -->
+  <ship id="masstraffic_maelstrom_civilian" group="masstraffic_omicron_universal">
+    <owner exact="hereticvanguards" overridenpc="true"/>
+    <pilot>
+      <select faction="hereticvanguards" tags="[maelstrom, masstraffic]"/>
+    </pilot>
+    <inventory>
+      <wares basket="inv_masstraffic_agricultural" multiple="true" chance="20">
+        <fillvalue min="3000" max="5000"/>
+      </wares>
+      <wares basket="inv_masstraffic_food" multiple="true" chance="30">
+        <fillvalue min="4000" max="8000"/>
+      </wares>
+      <wares basket="inv_masstraffic_minerals" multiple="true" chance="20">
+        <fillvalue min="3000" max="6000"/>
+      </wares>
+      <wares basket="inv_masstraffic_tech_advanced" multiple="true" chance="10">
+        <fillvalue min="6000" max="9000"/>
+      </wares>
+      <wares basket="inv_masstraffic_tech_basic" multiple="true" chance="20">
+        <fillvalue min="3000" max="9000"/>
+      </wares>
+    </inventory>
+    <drop ref="masstraffic_civilian"/>
+  </ship>
+  <ship id="masstraffic_maelstrom_smuggler" group="masstraffic_omicron_universal">
+    <owner exact="hereticvanguards" overridenpc="true"/>
+    <pilot>
+      <select faction="hereticvanguards" tags="[maelstrom, masstraffic]"/>
+    </pilot>
+    <inventory>
+      <wares basket="inv_illegal_drugs" multiple="true" chance="20">
+        <fillvalue min="40000" max="80000"/>
+      </wares>
+      <wares basket="inv_illegal_intoxicants" multiple="true" chance="30">
+        <fillvalue min="30000" max="60000"/>
+      </wares>
+      <wares basket="inv_illegal_lifeforms" multiple="true" chance="10">
+        <fillvalue min="40000" max="80000"/>
+      </wares>
+      <wares basket="inv_illegal_papers" multiple="true" chance="10">
+        <fillvalue min="30000" max="60000"/>
+      </wares>
+      <wares basket="inv_illegal_tech" multiple="true" chance="10">
+        <fillvalue min="40000" max="80000"/>
+      </wares>
+      <wares basket="inv_illegal_waste" multiple="true" chance="20">
+        <fillvalue min="10000" max="20000"/>
+      </wares>
+    </inventory>
+    <drop ref="masstraffic_civilian"/>
+  </ship>
+  <ship id="masstraffic_maelstrom_criminal" group="masstraffic_omicron_universal">
+    <owner exact="hereticvanguards" overridenpc="true"/>
+    <pilot>
+      <select faction="hereticvanguards" tags="[maelstrom, masstraffic]"/>
+    </pilot>
+    <inventory>
+      <wares basket="inv_illegal_drugs" multiple="true" chance="20">
+        <fillvalue min="40000" max="80000"/>
+      </wares>
+      <wares basket="inv_illegal_intoxicants" multiple="true" chance="10">
+        <fillvalue min="30000" max="60000"/>
+      </wares>
+      <wares basket="inv_illegal_lifeforms" multiple="true" chance="20">
+        <fillvalue min="40000" max="80000"/>
+      </wares>
+      <wares basket="inv_illegal_papers" multiple="true" chance="20">
+        <fillvalue min="30000" max="60000"/>
+      </wares>
+      <wares basket="inv_illegal_tech" multiple="true" chance="20">
+        <fillvalue min="40000" max="80000"/>
+      </wares>
+      <wares basket="inv_illegal_waste" multiple="true" chance="10">
+        <fillvalue min="10000" max="20000"/>
+      </wares>
+    </inventory>
+    <drop ref="masstraffic_civilian"/>
+  </ship>
+  
+  
+        
+  </add>
+</diff>

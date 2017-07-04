@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="/mdscript/cues/cue[@name='SectionHandler_Broadcast']/actions/do_elseif[@value=&quot;event.param == 'gOrders_broadcast_flyto'&quot;]">
+          <add_player_choice_sub text="{2802,8210} + ' (' + $count + ')'" position="top_left" section="gOrders_broadcast_map" comment="Dock at" choiceparam="[0, 0, 'zone', player.primaryship.zone, null, null, 'selectplayerobject', ['gOrders_broadcast_dock_at', null, null, false, false, false, false, true]]" selectable="$count gt 0" chance="if $count gt 0 then 100 else 0"/>
+          <add_player_choice_sub text="{2802,8212}" position="top_left" section="gOrders_broadcast_undock" comment="undock" selectable="static.$subordinates.count gt 0" chance="if $count == 0 and static.$subordinates.count then 100 else 0"/>
+	</add>
+
+	<add sel="/mdscript/cues/cue[@name='SectionHandler_Broadcast']/actions/do_else/do_elseif[@value=&quot;event.param == 'gOrders_broadcast_assign_commanderselected'&quot;]" pos="after">
+          <do_elseif value="event.param == 'gOrders_broadcast_dock_at'">
+            <set_value name="$condition" exact="1" />
+          </do_elseif>
+	</add>
+	<add sel="/mdscript/cues/cue[@name='SectionHandler_Broadcast']/actions/do_else/do_if[@value='$count gt 0']/do_elseif[@value=&quot;event.param == 'gOrders_broadcast_advancedwithdrawbattle'&quot;]" pos="after">
+            <do_elseif value="event.param == 'gOrders_broadcast_dock_at'">
+              <signal_objects group="$BroadcastShips" param="'dock at'" param2="event.param2.{3}" delay="200ms" />
+            </do_elseif>
+            <do_elseif value="event.param == 'gOrders_broadcast_undock'">
+              <signal_objects group="static.$subordinates" param="'undock'" delay="200ms" />
+            </do_elseif>
+	</add>
+</diff>

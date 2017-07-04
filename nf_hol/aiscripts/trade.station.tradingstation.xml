@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<diff>
+	<add sel="/aiscript/attention[@min='unknown']/actions/do_elseif[@value='this.station.macro.ismacro.struct_bt_alb_warehouse_macro']" pos="after">
+		<do_elseif value="this.station.macro.ismacro.struct_bt_hol_dock_pir_macro">
+			<add_tradeware ware="ware.medicalsupplies" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+			<add_tradeware ware="ware.narcotics" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+			<add_tradeware ware="ware.bioopticwiring" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+			<add_tradeware ware="ware.bioelectricneurongel" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+			<add_tradeware ware="ware.fuelcells" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+			<add_tradeware ware="ware.antimattercells" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+			<add_tradeware ware="ware.ioncells" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+			<add_tradeware ware="ware.plasmacells" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+			<add_tradeware ware="ware.spacefuel" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+			<add_tradeware ware="ware.spaceweed" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+			<add_default_production_wares object="this.station" lowerlimit="40" upperlimit="60"/>
+		</do_elseif>
+	</add>
+</diff>

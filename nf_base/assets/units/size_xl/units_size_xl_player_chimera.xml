@@ -1,0 +1,314 @@
+<?xml version="1.0"?>
+<!--Combat Lancer-->
+<components>
+	<component name="units_size_xl_player_chimera" class="ship_l">
+		<source geometry="assets\units\size_xl\units_size_xl_cs_omicron_ship_02_data"/>
+		<layers>
+			<layer>
+				<waypoints>
+					<waypoint name="XU_Waypoint24" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="834.4404" y="-16.11946" z="584.5528">
+						<links>
+							<link ref="XU_Waypoint23"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint23" tags="typenormal sizeLevel1 dynamicmasstraffic " x="684.4404" y="-16.11946" z="584.5527">
+						<links>
+							<link ref="XU_Waypoint20"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint22" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="834.4404" y="-16.11946" z="611.5528">
+						<links>
+							<link ref="XU_Waypoint21"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint21" tags="typenormal sizeLevel1 dynamicmasstraffic " x="684.4404" y="-16.11946" z="611.5527">
+						<links>
+							<link ref="XU_Waypoint20"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint20" tags="typenormal sizeLevel1 dynamicmasstraffic " x="634.4403" y="1.005539" z="615.1778">
+						<links>
+							<link ref="XU_Waypoint19"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint19" tags="sizeLevel1 typedock end dynamicmasstraffic " x="402.937" y="1.005546" z="615.1777">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint18" tags="typenormal sizeLevel1 dynamicmasstraffic " x="684.4402" y="18.13054" z="584.5527">
+						<links>
+							<link ref="XU_Waypoint17"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint17" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="834.4402" y="18.13054" z="584.5527">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint16" tags="typenormal sizeLevel1 dynamicmasstraffic " x="684.4402" y="18.13054" z="611.5527">
+						<links>
+							<link ref="XU_Waypoint15"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint15" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="834.4402" y="18.13054" z="611.5527">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint14" tags="sizeLevel1 typedock start dynamicmasstraffic " x="402.937" y="1.005545" z="580.9277">
+						<links>
+							<link ref="XU_Waypoint13"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint13" tags="typenormal sizeLevel1 dynamicmasstraffic " x="634.4404" y="1.005538" z="580.9278">
+						<links>
+							<link ref="XU_Waypoint16"/>
+							<link ref="XU_Waypoint18"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint12" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-636.9214" y="1.005546" z="615.1777">
+						<links>
+							<link ref="XU_Waypoint07"/>
+							<link ref="XU_Waypoint09"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint11" tags="sizeLevel1 typedock start dynamicmasstraffic " x="-405.4179" y="1.005533" z="615.1777">
+						<links>
+							<link ref="XU_Waypoint12"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint06" tags="sizeLevel1 typedock end dynamicmasstraffic " x="-405.4179" y="1.005534" z="580.9277">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint05" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-636.9213" y="1.005547" z="580.9277">
+						<links>
+							<link ref="XU_Waypoint06"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint10" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-836.9213" y="18.13054" z="584.5527">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint09" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-686.9213" y="18.13054" z="584.5527">
+						<links>
+							<link ref="XU_Waypoint10"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint08" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-836.9211" y="18.13054" z="611.5527">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint07" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-686.9211" y="18.13054" z="611.5527">
+						<links>
+							<link ref="XU_Waypoint08"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint04" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-686.9214" y="-16.11946" z="584.5527">
+						<links>
+							<link ref="XU_Waypoint05"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint03" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-836.9214" y="-16.11946" z="584.5527">
+						<links>
+							<link ref="XU_Waypoint04"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint02" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-686.9214" y="-16.11946" z="611.5527">
+						<links>
+							<link ref="XU_Waypoint05"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint01" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-836.9214" y="-16.11946" z="611.5527">
+						<links>
+							<link ref="XU_Waypoint02"/>
+						</links>
+					</waypoint>
+				</waypoints>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="ship">
+				<offset/>
+			</connection>
+			<connection name="Connection01" tags="part nocollision  ">
+				<offset/>
+				<parts>
+					<part name="part_dummy" wreck="part_dummy_wreck">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="lensflares.vertexcolor_basis"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="10" y="0" z="10"/>
+							<center x="0" y="0" z="0"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection02" tags="part  ">
+				<offset/>
+				<parts/>
+			</connection>
+			<connection name="connection_storage01" tags="storage ">
+				<offset/>
+			</connection>
+      <!--Back Section-->
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_side_a" tags="destructible">
+				<offset>
+					<position x="0" y="-11.5" z="-454"/>
+					<quaternion qx="-0.7071067811865476" qy="0.7071067811865475" qz="0" qw="0"/>
+				</offset>
+			</connection>
+      <!--Front Section-->
+			<connection name="ConnectionFor_units_size_xl_cs_omicron_front_a" tags="destructible">
+				<offset>
+					<position x="0" y="50" z="800"/>
+          <quaternion qx="0" qy="0" qz="-0.7071067811865475" qw="0.7071067811865476"/>
+				</offset>
+			</connection>
+      <!--Bottom Section-->
+      <!--units_size_xl_cs_omicron_front_b-->
+      <!--<connection name="ConnectionFor_units_size_xl_cs_omicron_front_b" tags="destructible">
+        <offset>
+          <position x="-0.9" y="-255" z="10" />
+          <quaternion qx="0" qy="0" qz="0.707" qw="0.707"/>
+        </offset>
+      </connection>-->
+      <!--units_size_xl_cs_omicron_front_c-->
+      <!----><connection name="ConnectionFor_units_size_xl_cs_omicron_front_c" tags="destructible">
+        <offset>
+          <position x="-0.9" y="-255" z="10" />
+        </offset>
+      </connection>
+      <!--Jumpdrive-->
+      <connection name="connection_jumpdrive01" group="group01" tags="jumpdrive">
+        <offset>
+          <!--position x="0" y="-270" z="-825" /-->
+          <position x="0" y="166" z="-29" />
+          <!--quarternion qx="1" qy="0" qz="0" qw="0"/-->
+        </offset>
+      </connection>
+      <connection name="connection_shieldgen01" group="group01 " tags="shieldgenerator ">
+        <offset>
+          <position x="0" y="225" z="-25"/>
+          <quaternion qx="0" qy="0" qz="1" qw="0"/>
+        </offset>
+      </connection>
+      <connection name="connection_shieldgen02" group="group01 " tags="shieldgenerator ">
+        <offset>
+          <position x="0" y="225" z="-80"/>
+          <quaternion qx="0" qy="0" qz="1" qw="0"/>
+        </offset>
+      </connection>
+      <!--Engines-->
+      <connection name="connection_engine_xl_01" group="group02" tags="engine">
+        <offset>
+          <position x="0" y="101" z="-776"/>
+        </offset>
+      </connection>
+      <connection name="connection_engine_xl_02" group="group02" tags="engine">
+        <offset>
+          <position x="0" y="-174" z="-908"/>
+        </offset>
+      </connection>
+      <connection name="connection_engine_l_01" group="group02" tags="engine">
+        <offset>
+          <position x="0" y="2" z="-913"/>
+        </offset>
+      </connection>
+      <connection name="connection_engine_l_02" group="group02" tags="engine">
+        <offset>
+          <position x="0" y="-65" z="-913"/>
+        </offset>
+      </connection>
+      <connection name="connection_engine_l_03" group="group02" tags="engine">
+        <offset>
+          <position x="0" y="-315" z="-620"/>
+        </offset>
+      </connection>
+      <connection name="connection_shieldgen03" group="group02 " tags="shieldgenerator ">
+        <offset>
+          <position x="0" y="42" z="-820"/>
+          <quaternion qx="0" qy="0" qz="1" qw="0"/>
+        </offset>
+      </connection>
+      <connection name="connection_shieldgen04" group="group02 " tags="shieldgenerator ">
+        <offset>
+          <position x="0" y="-123" z="-893"/>
+          <quaternion qx="0.5" qy="0.5" qz="0.5" qw="0.5"/>
+        </offset>
+      </connection>
+      <connection name="connection_shieldgen05" group="group02 " tags="shieldgenerator ">
+        <offset>
+          <position x="0" y="-250" z="-667.5"/>
+          <quaternion qx="0.707" qy="0" qz="0" qw="0.707"/>
+        </offset>
+      </connection>
+      <!--Radar-->
+      <connection name="connection_radar_external01" group="group03" tags="radar external">
+        <offset>
+          <position x="0" y="-273" z="541" />
+        </offset>
+      </connection>
+      <connection name="connection_radar_fallback01" tags="radar ">
+				<offset/>
+			</connection>
+      <!--Capital Shields-->
+      <!--MK3 Shield Hardpoints Start-->
+      <!--<connection name="connection_shieldgen_external01" tags="shieldgenerator external ">
+        <offset>
+          <position x="15" y="282" z="-154"/>
+          <quaternion qx="0.5" qy="0.5" qz="-0.5" qw="0.5"/>
+        </offset>
+      </connection>
+      <connection name="connection_shieldgen_external02" tags="shieldgenerator external ">
+        <offset>
+          <position x="-15" y="282" z="-166.4"/>
+          <quaternion qx="0.5" qy="-0.5" qz="0.5" qw="0.5"/>
+        </offset>
+      </connection>
+      <connection name="connection_shieldgen_external03" tags="shieldgenerator external ">
+        <offset>
+          <position x="-7.2" y="-320" z="100"/>
+        </offset>
+      </connection>-->
+      <!--MK3 Shield Hardpoints Finish-->
+      <!--MK2 Shield Hardpoints Start-->
+      <connection name="connection_shieldgen_external01" tags="shieldgenerator external ">
+        <offset>
+           <position x="-65" y="10" z="-160"/>
+          <quaternion qx="0.5" qy="0.5" qz="-0.5" qw="0.5"/>
+        </offset>
+      </connection>
+      <connection name="connection_shieldgen_external02" tags="shieldgenerator external ">
+        <offset>
+          <position x="65" y="-10" z="-160"/>
+          <quaternion qx="-0.5" qy="0.5" qz="0.5" qw="0.5"/>
+        </offset>
+      </connection>
+      <connection name="connection_shieldgen_external03" tags="shieldgenerator external">
+        <offset>
+          <position x="0" y="-81" z="340" />
+        </offset>
+      </connection>
+      <!--MK2 Shield Hardpoints Finish-->
+      <!--Player Dock and Drone Dock-->
+      <connection name="connection_dock_s01" group="group01" tags="dock_s">
+        <offset>
+          <position x="0" y="182.5" z="-400"/>
+          <quaternion qx="-0" qy="0.707" qz="0.707" qw="-0"/>
+        </offset>
+      </connection>
+      <connection name="connection_dock_p01" tags="dock_p">
+        <offset>
+          <position x="0" y="-220" z="140"/>
+        </offset>
+      </connection>
+      <!--The Bridge-->
+      <connection name="connection_cockpit01" tags="cockpit cockpit_visible">
+        <offset>
+          <position x="0" y="-220" z="120"/>
+        </offset>
+      </connection>
+		</connections>
+	</component>
+</components>

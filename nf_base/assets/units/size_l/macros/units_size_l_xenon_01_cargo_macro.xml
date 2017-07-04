@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Simon (192.168.3.112) at 19.11.2014_15-23-51-->
+<macros>
+  <macro name="units_size_l_xenon_01_cargo_macro" class="ship_l">
+    <component ref="units_size_l_xenon_01_green" />
+    <properties>
+      <identification name="{20101,7105}" description="{20101,7102}" unique="0" mapicon="shipicon_freighter_l" />
+      <weapons>
+        <slot ref="connection_weapon_small_m01" />
+        <slot ref="connection_weapon_small_m02" />
+        <slot ref="connection_weapon_small_m03" />
+        <slot ref="connection_weapon_small_m04" />
+        <slot ref="connection_weapon_small_m05" />
+        <slot ref="connection_weapon_small_m06" />
+        <slot ref="connection_weapon_small_m07" />
+        <slot ref="connection_weapon_small_m08" />
+      </weapons>
+      <explosiondamage value="100000" />
+      <hull max="2900000" />
+      <effects>
+        <explosion ref="capital_explosion" />
+        <jumpin ref="jump_jumpin_xl" />
+        <jumpout ref="jump_jumpout_xl" />
+      </effects>
+      <secrecy level="6" />
+      <purpose primary="fight" />
+    </properties>
+    <connections>
+      <connection ref="connection_cockpit01">
+        <macro ref="unit_combat_ar_cockpit_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_engine01">
+        <macro ref="engine_size_xl_xenon_01_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_engine02">
+        <macro ref="engine_size_xl_xenon_01_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_jumpdrive01">
+        <macro ref="props_surf_ar_jumpdrive_l_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_radar_external01">
+        <macro ref="radar_ship_l_military_01_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_radar_fallback01">
+        <macro ref="radar_ship_l_fallback_01_macro" connection="ship" />
+      </connection>
+      <connection ref="connection_shieldgen01">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen02">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen03">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen04">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen05">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen06">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen07">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen08">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen09">
+        <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external01">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external02">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external03">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external04">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_storage01">
+        <macro ref="storage_ship_l_fuel_01_macro" connection="ShipConnection" />
+      </connection>
+      <connection ref="connection_storage02">
+        <macro ref="storage_ship_xl_universal_03_macro" connection="ShipConnection" />
+      </connection>
+      <connection ref="connection_turret_medium_xe01">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_xe02">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_xe03">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_xe04">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_xe05">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_xe06">
+        <macro ref="turret_medium_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe01">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe02">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe03">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe04">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe05">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe06">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_xe07">
+        <macro ref="turret_small_xe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_p01">
+        <macro ref="playerdock_capship01_macro" connection="connection_component01" />
+      </connection>
+
+      <connection ref="connection_dock_s01">
+        <macro ref="props_surf_ar_docks_size_s_floor_macro" connection="Connection_component" />
+      </connection>
+
+      <connection ref="connection_weapon_small_m01">
+        <macro ref="missilelauncher_invisible_guided_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_weapon_small_m02">
+        <macro ref="missilelauncher_invisible_guided_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_weapon_small_m03">
+        <macro ref="missilelauncher_invisible_guided_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_weapon_small_m04">
+        <macro ref="missilelauncher_invisible_guided_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_weapon_small_m05">
+        <macro ref="missilelauncher_invisible_guided_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_weapon_small_m06">
+        <macro ref="missilelauncher_invisible_guided_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_weapon_small_m07">
+        <macro ref="missilelauncher_invisible_guided_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_weapon_small_m08">
+        <macro ref="missilelauncher_invisible_guided_mk1_macro" connection="connection_component01" />
+      </connection>
+
+    </connections>
+  </macro>
+</macros>

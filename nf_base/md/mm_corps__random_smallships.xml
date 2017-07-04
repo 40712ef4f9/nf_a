@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdscript name="MM_Corps__random_smallships" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+  <cues>
+    <cue name="Base_Init" instantiate="true" namespace="this">
+      <conditions>
+        <event_object_signalled object="player.galaxy" param="'MMP_INIT_SMALL'" />
+      </conditions>
+	  <delay exact="1s" />
+      <actions>
+        <do_if value="event.param2?" negate="true">
+          <debug_text text="'ERROR event.param2 missing'" filter="error" chance="0" />
+        </do_if>
+		<do_elseif value="event.param2.{1}.pilot.$end_of_work? and event.param2.{1}.pilot.$end_of_work lt player.age">
+		  <signal_objects object="event.param2.{1}" param="'GO ON DIE'" />
+		</do_elseif>
+		<do_elseif value="global.$factionCEOs? and global.$factionCEOs.{'$' + event.param2.{2}.owner.id}?">
+		  <set_owner object="event.param2.{1}.pilot" faction="faction.friend" />
+		  <set_owner object="event.param2.{1}" faction="faction.friend" />
+		  <remove_actor_account actor="event.param2.{1}.pilot" transfer="if $Object.trueowner == faction.player then true else false"/>
+	  
+		  <transfer_money from="event.param2.{1}.pilot" to="event.param2.{2}.tradenpc" amount="[event.param2.{1}.macro.ware.minprice, event.param2.{1}.value].max" />
+<!--
+		  <signal_objects object="global.$factionCEOs.{'$' + event.param2.{1}.owner.id}" param="'INIT SHIP'" param2="[event.param2.{1}, event.param2.{2}, [event.param2.{1}.macro.ware.maxprice, event.param2.{1}.value].max]" />
+-->		  
+		  <signal_objects object="event.param2.{1}" param="'GO ON DIE'" />
+		</do_elseif>
+		<do_elseif value="event.param2.{1}.trueowner == faction.player or event.param2.{2}.trueowner == faction.player" negate="true">
+		  <signal_objects object="event.param2.{1}" param="'GO ON DIE'" />
+		</do_elseif>
+        <do_else>
+          <set_value name="$Ship" exact="event.param2.{1}"/>
+          <set_value name="$Station" exact="event.param2.{2}"/>
+          <set_value name="$actor" exact="$Station.tradenpc"/>
+          <set_value name="$newfaction" exact="if event.param2.{3}? and typeof event.param2.{3} == datatype.faction then event.param2.{3} else false"/>
+
+          <do_if value="$newfaction" negate="true">
+            <create_list name="$customerfactions"/>
+            <do_if value="$Ship.isplayerowned or $Station.isplayerowned">
+			  <do_all exact="3" counter="$r">
+				<find_station name="$otherstations" space="[$Station.zone,$Station.sector,$Station.cluster].{$r}" multiple="true" >
+				  <match owner="faction.enemy" negate="true"/>
+				  <match owner="faction.criminal" negate="true"/>
+				  <match owner="faction.smuggler" negate="true"/>
+				  <match owner="faction.neutral" negate="true"/>
+				  <match owner="faction.ownerless" negate="true"/>
+				  <match owner="faction.player" negate="true"/>
+				  <match owner="faction.friend" negate="true"/>
+				  <match owner="$Station.owner" negate="true"/>
+				  <match_relation faction="$Station.owner" relation="neutral" comparison="ge" />
+				</find_station>
+				<do_all exact="$otherstations.count" counter="$j">
+				  <do_if value="$customerfactions.indexof.{$otherstations.{$j}.owner}" negate="true">
+					<append_to_list name="$customerfactions" exact="$otherstations.{$j}.owner"/>
+				  </do_if>
+				</do_all>
+				<do_if value="$customerfactions.count">
+				  <break />
+				</do_if>
+			  </do_all>
+			  <remove_value name="$otherstations" />
+
+			  <do_if value="$customerfactions.count" negate="true">
+				<set_value name="$customerfactions_x" exact="[ faction.albionenergy, faction.beryll, faction.heartofalbion, faction.leddaindustrial, faction.nolimits, faction.plutarch, faction.wholesomefoods, faction.aquarius, faction.argongovernment, faction.familyryak, faction.chow, faction.frantonpharma, faction.jonferson, faction.canteran ]" />
+				<do_all exact="$customerfactions_x.count" counter="$j">
+				  <do_if value="$customerfactions_x.{$j}.relationto.{$Station.owner} ge -0.01">
+					<do_if value="$customerfactions.indexof.{$customerfactions_x.{$j}}" negate="true">
+					  <append_to_list name="$customerfactions" exact="$customerfactions_x.{$j}"/>
+					</do_if>
+				  </do_if>
+				</do_all>
+				<remove_value name="$customerfactions_x" />
+			  </do_if>
+
+			  <do_if value="$customerfactions.count">
+				<set_value name="$newfaction" exact="$customerfactions.random" />
+			  </do_if>
+			  <do_else>
+				<set_value name="$newfaction" exact="faction.friend" />
+			  </do_else>
+			  <remove_value name="$customerfactions" />
+            </do_if>
+          </do_if>
+
+		  <do_if value="typeof $newfaction == datatype.faction and $Ship.exists and $Station.exists and $Ship.trueowner == $Station.trueowner">
+			  <set_value name="$soldship2" exact="$Ship"/>
+			  <include_actions ref="md.NPC_Shiptrader_Small_Pl.SellShipActions" />
+	  
+			  <transfer_money from="$Ship.pilot" to="$actor" amount="[$Ship.macro.ware.minprice, $Ship.value].max" />
+		  </do_if>
+		  <do_else>
+			<signal_objects object="event.param2.{1}" param="'GO ON DIE'" />
+		  </do_else>
+
+        </do_else>
+        <remove_value name="$customer_faction"/>
+        <remove_value name="$newfaction"/>
+        <remove_value name="$soldship2"/>
+        <remove_value name="$Station"/>
+        <remove_value name="$actor"/>
+        <remove_value name="$Ship"/>
+      </actions>
+    </cue>
+  </cues>
+</mdscript>

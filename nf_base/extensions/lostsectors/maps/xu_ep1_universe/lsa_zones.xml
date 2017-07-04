@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone1_macro']/connections/connection[@ref='buildcon1']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone1_macro']/connections/connection[@ref='buildcon2']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone1_macro']/connections/connection[@ref='buildcon3']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone1_macro']/connections/connection[@name='struct_bt_alb_fuelstation_macro']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone1_macro']/connections/connection[@name='struct_bt_dv_water_destillery_macro']" silent="1"/>
+	<add sel="//macro[@name='tzonecluster_LSA_Sector01_Zone1_macro']/connections">
+		<connection ref="buildcon1">
+			<offset>
+				<position x="16000" y="8000" z="28000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon2">
+			<offset>
+				<position x="-31000" y="-13000" z="-14000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon3">
+			<offset>
+				<position x="35000" y="29000" z="9000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc1">
+			<offset>
+				<position x="13000" y="16000" z="-37000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc2">
+			<offset>
+				<position x="-5000" y="7000" z="-33000" />
+			</offset>
+		</connection>	
+		<connection ref="buildconnpc3">
+			<offset>
+				<position x="-9000" y="-6000" z="-29000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc4">
+			<offset>
+				<position x="-10000" y="-14000" z="23000" />
+			</offset>
+		</connection>
+	</add>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone2_macro']/connections/connection[@ref='buildcon1']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone2_macro']/connections/connection[@ref='buildcon2']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone2_macro']/connections/connection[@ref='buildcon3']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone2_macro']/connections/connection[@name='struct_bt_sp_chelt_ranch_macro']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone2_macro']/connections/connection[@name='struct_bt_sp_chelt_ranch_macro1']" silent="1"/>
+	<add sel="//macro[@name='tzonecluster_LSA_Sector01_Zone2_macro']/connections">
+		<connection ref="buildcon1">
+			<offset>
+				<position x="16000" y="8000" z="28000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon2">
+			<offset>
+				<position x="-31000" y="-13000" z="-14000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon3">
+			<offset>
+				<position x="35000" y="29000" z="9000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc1">
+			<offset>
+				<position x="13000" y="16000" z="-37000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc2">
+			<offset>
+				<position x="-5000" y="7000" z="-33000" />
+			</offset>
+		</connection>	
+		<connection ref="buildconnpc3">
+			<offset>
+				<position x="-9000" y="-6000" z="-29000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc4">
+			<offset>
+				<position x="-10000" y="-14000" z="23000" />
+			</offset>
+		</connection>
+	</add>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone3_macro']/connections/connection[@ref='buildcon1']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone3_macro']/connections/connection[@ref='buildcon2']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone3_macro']/connections/connection[@ref='buildcon3']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone3_macro']/connections/connection[@ref='buildcon4']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone3_macro']/connections/connection[@name='struct_bt_mls_shipyard_macro']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone3_macro']/connections/connection[@name='struct_split_colony_station_xl_macro']" silent="1"/>
+	<add sel="//macro[@name='tzonecluster_LSA_Sector01_Zone3_macro']/connections">
+		<connection ref="buildcon1">
+			<offset>
+				<position x="16000" y="8000" z="28000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon2">
+			<offset>
+				<position x="-31000" y="-13000" z="-14000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon3">
+			<offset>
+				<position x="35000" y="29000" z="9000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc1">
+			<offset>
+				<position x="13000" y="16000" z="-37000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc2">
+			<offset>
+				<position x="-5000" y="7000" z="-33000" />
+			</offset>
+		</connection>	
+		<connection ref="buildconnpc3">
+			<offset>
+				<position x="-9000" y="-6000" z="-29000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc4">
+			<offset>
+				<position x="-10000" y="-14000" z="23000" />
+			</offset>
+		</connection>
+	</add>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone4_macro']/connections/connection[@ref='buildcon1']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone4_macro']/connections/connection[@ref='buildcon2']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone4_macro']/connections/connection[@ref='buildcon3']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone4_macro']/connections/connection[@name='struct_bt_dv_solar_power_plant_macro']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone4_macro']/connections/connection[@name='struct_bt_dv_solar_power_plant_macro1']" silent="1"/>
+	<add sel="//macro[@name='tzonecluster_LSA_Sector01_Zone4_macro']/connections">
+		<connection ref="buildcon1">
+			<offset>
+				<position x="16000" y="8000" z="28000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon2">
+			<offset>
+				<position x="-31000" y="-13000" z="-14000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon3">
+			<offset>
+				<position x="35000" y="29000" z="9000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc1">
+			<offset>
+				<position x="13000" y="16000" z="-37000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc2">
+			<offset>
+				<position x="-5000" y="7000" z="-33000" />
+			</offset>
+		</connection>	
+		<connection ref="buildconnpc3">
+			<offset>
+				<position x="-9000" y="-6000" z="-29000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc4">
+			<offset>
+				<position x="-10000" y="-14000" z="23000" />
+			</offset>
+		</connection>
+	</add>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone5_macro']/connections/connection[@ref='buildcon1']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone5_macro']/connections/connection[@ref='buildcon2']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone5_macro']/connections/connection[@name='struct_split_colony_station_s_macro']" silent="1"/>
+	<add sel="//macro[@name='tzonecluster_LSA_Sector01_Zone5_macro']/connections">
+		<connection ref="buildcon1">
+			<offset>
+				<position x="16000" y="8000" z="28000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon2">
+			<offset>
+				<position x="-31000" y="-13000" z="-14000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon3">
+			<offset>
+				<position x="35000" y="29000" z="9000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc1">
+			<offset>
+				<position x="13000" y="16000" z="-37000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc2">
+			<offset>
+				<position x="-5000" y="7000" z="-33000" />
+			</offset>
+		</connection>	
+		<connection ref="buildconnpc3">
+			<offset>
+				<position x="-9000" y="-6000" z="-29000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc4">
+			<offset>
+				<position x="-10000" y="-14000" z="23000" />
+			</offset>
+		</connection>
+	</add>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone9_macro']/connections/connection[@ref='buildcon1']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone9_macro']/connections/connection[@ref='buildcon2']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone9_macro']/connections/connection[@ref='buildcon3']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone9_macro']/connections/connection[@name='struct_split_colony_station_s_macro']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone9_macro']/connections/connection[@name='struct_split_colony_station_s_macro1']" silent="1"/>
+	<add sel="//macro[@name='tzonecluster_LSA_Sector01_Zone9_macro']/connections">
+		<connection ref="buildcon1">
+			<offset>
+				<position x="16000" y="8000" z="28000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon2">
+			<offset>
+				<position x="-31000" y="-13000" z="-14000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon3">
+			<offset>
+				<position x="35000" y="29000" z="9000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc1">
+			<offset>
+				<position x="13000" y="16000" z="-37000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc2">
+			<offset>
+				<position x="-5000" y="7000" z="-33000" />
+			</offset>
+		</connection>	
+		<connection ref="buildconnpc3">
+			<offset>
+				<position x="-9000" y="-6000" z="-29000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc4">
+			<offset>
+				<position x="-10000" y="-14000" z="23000" />
+			</offset>
+		</connection>
+	</add>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone6_macro']/connections/connection[@name='struct_econ_cw_generic_ar_water_L_macro']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone6_macro']/connections/connection[@name='struct_econ_cw_generic_ar_water_M_macro01']" silent="1"/>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone6_macro']/connections/connection[@name='struct_econ_cw_generic_ar_water_XL_macro']" silent="1"/>
+	<add sel="//macro[@name='tzonecluster_LSA_Sector01_Zone6_macro']/connections">
+		<connection ref="buildcon1">
+			<offset>
+				<position x="16000" y="8000" z="28000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon2">
+			<offset>
+				<position x="-31000" y="-13000" z="-14000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon3">
+			<offset>
+				<position x="35000" y="29000" z="9000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc1">
+			<offset>
+				<position x="13000" y="16000" z="-37000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc2">
+			<offset>
+				<position x="-5000" y="7000" z="-33000" />
+			</offset>
+		</connection>	
+		<connection ref="buildconnpc3">
+			<offset>
+				<position x="-9000" y="-6000" z="-29000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc4">
+			<offset>
+				<position x="-10000" y="-14000" z="23000" />
+			</offset>
+		</connection>
+	</add>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone7_macro']/connections/connection[@name='struct_bt_mls_pirate_outpost_01_macro']" silent="1"/>
+	<add sel="//macro[@name='tzonecluster_LSA_Sector01_Zone7_macro']/connections">
+		<connection ref="buildcon1">
+			<offset>
+				<position x="16000" y="8000" z="28000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon2">
+			<offset>
+				<position x="-31000" y="-13000" z="-14000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon3">
+			<offset>
+				<position x="35000" y="29000" z="9000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc1">
+			<offset>
+				<position x="13000" y="16000" z="-37000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc2">
+			<offset>
+				<position x="-5000" y="7000" z="-33000" />
+			</offset>
+		</connection>	
+		<connection ref="buildconnpc3">
+			<offset>
+				<position x="-9000" y="-6000" z="-29000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc4">
+			<offset>
+				<position x="-10000" y="-14000" z="23000" />
+			</offset>
+		</connection>
+	</add>
+	<remove sel="//macro[@name='tzonecluster_LSA_Sector01_Zone8_macro']/connections/connection[@name='struct_split_colony_station_s_macro']" silent="1"/>
+	<add sel="//macro[@name='tzonecluster_LSA_Sector01_Zone8_macro']/connections">
+		<connection ref="buildcon1">
+			<offset>
+				<position x="16000" y="8000" z="28000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon2">
+			<offset>
+				<position x="-31000" y="-13000" z="-14000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon3">
+			<offset>
+				<position x="35000" y="29000" z="9000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc1">
+			<offset>
+				<position x="13000" y="16000" z="-37000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc2">
+			<offset>
+				<position x="-5000" y="7000" z="-33000" />
+			</offset>
+		</connection>	
+		<connection ref="buildconnpc3">
+			<offset>
+				<position x="-9000" y="-6000" z="-29000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc4">
+			<offset>
+				<position x="-10000" y="-14000" z="23000" />
+			</offset>
+		</connection>
+	</add>
+</diff>

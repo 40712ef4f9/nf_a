@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff>
+  <replace sel="//cue[@name='Part_1']/actions/create_ship[@macro='units_size_xl_capital_destroyer_1_macro']/@macro">units_size_xl_cs_omicron_ship_02_mk5_macro</replace>
+  <replace sel="//cue[@name='Part_3']/actions/do_else/create_ship[@macro='units_size_xl_capital_destroyer_1_macro']/@macro">units_size_xl_cs_omicron_ship_02_mk5_macro</replace>
+  <replace sel="//cue[@name='Part_4_Shortcut']/actions/create_ship[@macro='units_size_xl_capital_destroyer_1_macro']/@macro">units_size_xl_cs_omicron_ship_02_mk5_macro</replace>
+  <replace sel="//cue[@name='Part_5_Shortcut']/actions/do_if/create_ship[@macro='units_size_xl_capital_destroyer_1_macro']/@macro">units_size_xl_cs_omicron_ship_02_mk5_macro</replace>
+  <replace sel="//cue[@name='Part_6_Shortcut']/actions/do_if/create_ship[@macro='units_size_xl_capital_destroyer_1_macro']/@macro">units_size_xl_cs_omicron_ship_02_mk5_macro</replace>
+  <replace sel="//cue[@name='Part_7_Shortcut']/actions/do_if/create_ship[@macro='units_size_xl_capital_destroyer_1_macro']/@macro">units_size_xl_cs_omicron_ship_02_mk5_macro</replace>
+  <replace sel="//cue[@name='Part_8_Shortcut']/actions/do_if/create_ship[@macro='units_size_xl_capital_destroyer_1_macro']/@macro">units_size_xl_cs_omicron_ship_02_mk5_macro</replace>
+
+  <replace sel="//start_script[@name=&quot;'fight.attack.object.capital'&quot;]/@name">'fight.defend.capital'</replace>
+
+  <add sel="(//create_ship)[1]" type="@mission" >true</add>
+  <add sel="(//create_ship)[2]" type="@mission" >true</add>
+  <add sel="(//create_ship)[3]" type="@mission" >true</add>
+  <add sel="(//create_ship)[4]" type="@mission" >true</add>
+  <add sel="(//create_ship)[5]" type="@mission" >true</add>
+  <add sel="(//create_ship)[6]" type="@mission" >true</add>
+  <add sel="(//create_ship)[7]" type="@mission" >true</add>
+  <add sel="(//create_ship)[8]" type="@mission" >true</add>
+  <add sel="(//create_ship)[9]" type="@mission" >true</add>
+  <add sel="(//create_ship)[10]" type="@mission" >true</add>
+  <add sel="(//create_ship)[11]" type="@mission" >true</add>
+  <add sel="(//create_ship)[12]" type="@mission" >true</add>
+  <add sel="(//create_ship)[13]" type="@mission" >true</add>
+  <add sel="(//create_ship)[14]" type="@mission" >true</add>
+  <add sel="(//create_ship)[15]" type="@mission" >true</add>
+  <add sel="(//create_ship)[16]" type="@mission" >true</add>
+  <add sel="(//create_ship)[17]" type="@mission" >true</add>
+  <add sel="(//create_ship)[18]" type="@mission" >true</add>
+  <add sel="(//create_ship)[19]" type="@mission" >true</add>
+  <add sel="(//create_ship)[20]" type="@mission" >true</add>
+  <add sel="(//create_ship)[21]" type="@mission" >true</add>
+  <add sel="(//create_ship)[22]" type="@mission" >true</add>
+  <add sel="(//create_ship)[23]" type="@mission" >true</add>
+  <add sel="(//create_ship)[24]" type="@mission" >true</add>
+  <add sel="(//create_ship)[25]" type="@mission" >true</add>
+  <add sel="(//create_ship)[26]" type="@mission" >true</add>
+  <add sel="(//create_ship)[27]" type="@mission" >true</add>
+  <add sel="(//create_ship)[28]" type="@mission" >true</add>
+  <add sel="(//create_ship)[29]" type="@mission" >true</add>
+  <add sel="(//create_ship)[30]" type="@mission" >true</add>
+  <add sel="(//create_ship)[31]" type="@mission" >true</add>
+  <add sel="(//create_ship)[32]" type="@mission" >true</add>
+  <add sel="(//create_ship)[33]" type="@mission" >true</add>
+
+
+  <add sel="//library[@name='Chapter_Init']/actions/find_zone[@macro='macro.tzonecluster_a_sector02_zone108_macro']" pos="after" >
+	<do_if value="$MS_BlurredReflection__SplitZone">
+		<find_station name="$Lost_Colony" macro="macro.landmarks_unique_split_lostcolony_macro" space="$MS_BlurredReflection__SplitZone" />
+		
+		<do_if value="$Lost_Colony and $Lost_Colony.owner != faction.familyryak">
+			<destroy_object object="$Lost_Colony" explosion="false"/>
+		</do_if>
+		<do_if value="$Lost_Colony? and $Lost_Colony.exists" negate="true">
+			<set_value name="$BuildZone" exact="$MS_BlurredReflection__SplitZone" />
+			<set_value name="$faction" exact="faction.familyryak" />
+			<set_value name="$Macro" exact="macro.landmarks_unique_split_lostcolony_macro" />
+			<set_value name="$noInit"/>
+			<include_actions ref="md.MM_Corps__Data.MMCData_create_station" />
+		</do_if>
+		<remove_value name="$Lost_Colony"/>
+	</do_if>
+  </add>
+</diff>

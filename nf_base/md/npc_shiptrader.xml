@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff>
+  <add sel="/mdscript[@name='NPC_Shiptrader']/cues/cue[@name='Base']/conditions">
+    <check_value value="event.param.isplayerowned" negate="true"/>
+  </add>
+
+  <replace sel="/mdscript[@name='NPC_Shiptrader']/cues/cue/cues/cue[@name='ActorDestructed']/actions/do_if[@value='$ship']/@value">$ship? and $ship</replace>
+
+  <replace sel="/mdscript[@name='NPC_Shiptrader']/cues/cue/cues/library[@name='SellShipActions']/actions/do_if/start_script">
+    <include_actions ref="md.NPC_Shiptrader_Pl.SellShipActions_Jobs" />
+  </replace>
+  <replace sel="/mdscript[@name='NPC_Shiptrader']/cues/cue/cues/library[@name='SellShipActions']/actions/do_else/do_if/do_if/start_script">
+    <include_actions ref="md.NPC_Shiptrader_Pl.SellShipActions_Jobs" />
+  </replace>
+
+  <add sel="/mdscript[@name='NPC_Shiptrader']/cues/cue/cues/cue[@name='SectionHandler']/actions/do_elseif/do_if/add_player_choice[@section='cArch_sellshipconfirmed']" type="@selectable">$actor.money gt 50000000Cr and $actor.money gt $soldshipprice</add>
+  <add sel="/mdscript[@name='NPC_Shiptrader']/cues/cue/cues/cue[@name='SectionHandler']/actions/do_elseif/do_else/add_player_choice[@section='cArch_sellshipconfirmed']" type="@selectable">$actor.money gt 50000000Cr and $actor.money gt $soldshipprice</add>
+
+  <remove sel="//cue[@name='BuildFinished']/actions/do_if[@value='not $upgrade? and not $component?']/create_cue_actor[1]" />
+  <remove sel="//cue[@name='BuildFinished']/actions/do_if[@value='not $upgrade? and not $component?']/find_dock_location[1]" />
+  <remove sel="//cue[@name='BuildFinished']/actions/do_if[@value='not $upgrade? and not $component?']/add_actor_to_platform[1]" />
+  <remove sel="//cue[@name='BuildFinished']/actions/do_if[@value='not $upgrade? and not $component?']/set_owner[1]" />
+  <remove sel="//cue[@name='BuildFinished']/actions/do_if[@value='not $upgrade? and not $component?']/assign_pilot[1]" />
+  <remove sel="//cue[@name='BuildFinished']/actions/do_if[@value='not $upgrade? and not $component?']/create_ai_unit[1]" />
+  <remove sel="//cue[@name='BuildFinished']/actions/do_if[@value='not $upgrade? and not $component?']/do_else[1]" />
+  <remove sel="//cue[@name='BuildFinished']/actions/do_if[@value='not $upgrade? and not $component?']/do_if[1]" />
+  <add    sel="//cue[@name='BuildFinished']/actions/do_if[@value='not $upgrade? and not $component?']/do_if[@value='$droneplan']" pos="before">
+    <set_value name="$Object" exact="$ship" />
+    <set_value name="$crewOnly" />
+    <set_value name="$faction" exact="faction.player"/>
+    <include_actions ref="md.MM_Corps__Data.MMCData_activate_ship" />
+	<remove_value name="$Object"/>
+  </add>
+
+  <add sel="//add_player_choice_sub[@section='g_askforway']" type="@chance" >0</add>
+  <add sel="//add_player_choice_sub[@section='g_askforway']" pos="after">
+    <!--add_player_choice_sub text="'Order / Copy a ship'" tooltip="Select a existing ship for COPY them, or ORDER a ship at default setup" comment="Clone a vessel" position="top_right" section="cArch_selectsomething" choiceparam="[0, 0, 'zone', event.object.container.zone, null, null, 'selectplayerobject', ['cArch_buildclone', null, null, true, false, true, false, true]]" chance="if event.object.container.isplayerowned then 100 else 0" /-->
+    <add_player_choice_sub text="'Special Workshop'" position="top_right" section="cArch_buildclone_menue"  />
+  </add>
+  <add sel="/mdscript[@name='NPC_Shiptrader']/cues/cue[@name='Base']/cues/cue[@name='SectionHandler']/actions/do_elseif[@value=&quot;event.param == 'cArch_repairslider'&quot;]" pos="after">
+    <do_elseif value="event.param == 'cArch_selectsomething'">
+      <open_conversation_menu menu="MapMenu" param="event.param2" param2="event.param3" />
+      <add_conversation_view view="closeupdetailmonitor" />
+    </do_elseif>
+	<do_elseif value="event.param == 'cArch_buildclone_order'">
+	  <signal_objects object="$actor.container" param="'SHIPORDER'" param2="[event.param2, faction.player, player.entity]" />
+	</do_elseif>
+	<do_elseif value="event.param == 'cArch_buildclone_menue'">
+		 <add_player_choice_sub text="'Order / Copy a ship'" tooltip="'Select a existing ship for COPY them, or ORDER a ship at default setup'" comment="Clone a vessel" position="top_right" section="cArch_selectsomething" choiceparam="[0, 0, 'zone', event.object.container.zone, null, null, 'selectplayerobject', ['cArch_buildclone', null, null, true, false, true, false, true]]" />
+
+		<include_actions ref="md.NPC_Shiptrader_Pl.QueueListTooltipText" />
+
+		<add_player_choice text="'%1 Queue'.[$actor.container.name]" selectable="false" section="cArch_buildclone_menue" tooltip="$tooltipText" />
+		<remove_value name="$tooltipText"/>
+		<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+	</do_elseif>
+  </add>
+  <add sel="/mdscript[@name='NPC_Shiptrader']/cues/cue[@name='Base']/cues/cue[@name='SectionHandler']/actions/do_elseif[@value=&quot;event.param == 'cArch_repairslider'&quot;]" pos="after">
+    <do_elseif value="event.param == 'cArch_buildclone' and event.param2.{3}? and event.param2.{3}.exists">
+	  <add_player_choice text="'Build [%1]'.[event.param2.{3}.macro.name]" selectable="not $actor.$shiptrader_isbusy and $BuildModule.buildmacros.{1}.class == event.param2.{3}.class" comment="build a vessel" section="cArch_selectUpgradesMenu" choiceparam="[ 0, 0, $actor, $BuildModule, null, event.param2.{3}.macro.id, '', 0, 1, $WareList ]" />
+
+	  <include_actions ref="md.NPC_Shiptrader_Pl.QueueListTooltipText" />
+
+	  <add_player_choice text="'Order [%1]'.[event.param2.{3}.macro.name]" selectable="@event.param2.{3}.macro.ware.maxprice lt player.money and (not $actor.container.tradenpc.$orders? or $actor.container.tradenpc.$orders.count lt 6)" comment="order a vessel" section="cArch_buildclone_order" choiceparam="event.param2.{3}.macro" tooltip="$tooltipText" />
+	  <remove_value name="$tooltipText"/>
+      <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+    </do_elseif>
+  </add>
+</diff>

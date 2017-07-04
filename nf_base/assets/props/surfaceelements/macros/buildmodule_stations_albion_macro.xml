@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <add sel="/macros/macro[@name='buildmodule_stations_albion_macro']/properties/builder">
+<!-- New Shipyard -->
+    <macro ref="struct_bt_alb_shipyard_2_macro" />
+    <!-- Small Shipyard -->
+    <macro ref="struct_bt_alb_small_ships_yard_macro" />	
+	<macro ref="struct_bt_alb_small_ships_complex_macro" />
+	<macro ref="struct_econ_weapon_ar_defence_pl_macro" />
+	
+			
+  </add>
+</diff>

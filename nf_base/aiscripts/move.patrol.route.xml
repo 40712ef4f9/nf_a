@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff>
+    <replace sel="/aiscript/attention/actions/do_if[@value='$destination.sector != this.sector']/run_script/@name">if not global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad then 'move.generic' else if this.ship.macro.ismacro.{global.$mmcarriers} then 'move.generic.carrier' else 'move.generic'</replace>
+	<replace sel="//run_script[@name=&quot;'move.seekenemies'&quot;]/@name">'move.seekenemies.zone'</replace>	
+	
+	<!-- TODO: add return to shipsjobs based on this.$params.$resetConf -->
+	<add sel="/aiscript/interrupts">
+		<handler>
+			<conditions>
+				<event_object_signalled object="this.ship" param="'help requested'" />
+				<check_value value="not $nextReaction? or $nextReaction lt player.age" />
+				<check_value value="this.ship.sector == event.param2.sector" />
+				<check_value value="this.command.value == command.patrol" />
+				<check_any>
+					<check_value value="this.ship.trueowner == event.param2.owner" chance="this.combinedskill"/>
+					<check_all>
+						<check_value value="this.ship.trueowner and event.param2.owner"/>
+						<check_any>
+							<check_value value="this.ship.trueowner.hasrelation.friend.{event.param2.owner}" chance="[20, this.combinedskill].max / 4" />
+							<check_value value="this.ship.trueowner.hasrelation.member.{event.param2.owner}" chance="[40, this.combinedskill].max / 2" />
+						</check_any>
+					</check_all>
+				</check_any>
+			</conditions>
+			<delay min="500ms" max="2s"/>
+			<actions>
+				<set_value name="$nextReaction" exact="player.age+10min" />
+				<set_value name="$destination" exact="event.param2.zone" />
+				<debug_text text="this.ship.knownname + ' ' + this.ship.sector.name + ' ' + event.param2.zone.name" filter="error" chance="0" />
+				<abort_called_scripts resume="patrol" />
+			</actions>
+		</handler>
+		<handler>
+			<conditions>
+				<event_object_changed_zone object="this.ship" />
+				<check_value value="this.ship.zone.isclass.highway" negate="true"/>
+			</conditions>
+			<actions>
+				<signal_objects object="this.ship.sector" param="'help offered'" param2="this.ship" />
+			</actions>
+		</handler>
+	</add>
+	<add sel="/aiscript">
+		<on_abort>
+			<signal_objects object="this.ship.sector" param="'help removed'" param2="this.ship" />
+		</on_abort>
+	</add>
+	<add sel="//label[@name='find_destination']" pos="after">
+        <do_if value="this.$params.$resetConf? and this.$params.$resetConf lt player.age">
+          <return/>
+        </do_if>
+	</add>
+</diff>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mdscript name="NF_TaxStations" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="D:\games\Steam\steamapps\common\X Rebirth\MODS_JSGME\libraries\md.xsd">
+<cues>
+	<cue name="Tax_Stations" instantiate="true" checktime="player.age + 30min" checkinterval="30min">
+		<conditions>
+			<check_value value="global.$nfconfig.$Check" />
+			<check_value value="global.$nfconfig.$taxStationsPL"/>
+		</conditions>
+		<actions>
+			<debug_text text="'Start'" />
+			<set_value name="$TotalTax" exact="0"/>
+			<find_station name="$Stations" space="player.galaxy" functional="true" multiple="true" >
+				<match_relation faction="faction.player" relation="enemy" negate="true"/>
+				<match macro="macro.struct_bt_alb_outpost_macro" negate="true"/>
+				<match macro="macro.struct_at_xen_xenon_outpost_macro" negate="true"/>
+			</find_station>	
+			<do_all exact="$Stations.count" counter="$i" >
+				<do_if value="$Stations.{$i}.zone.isplayerowned or ($Stations.{$i}.owner == faction.player and ['plutarch','canteran','xenon','heartofalbion','argongovernment','sovereignsyndicate','reivers','hereticvanguards','teladi','familyryak'].indexof.{@$Stations.{$i}.zone.owner.id} == 0)" negate="true">
+					<continue />
+				</do_if>
+
+				<find_dock_location name="$DockingBay" container="$Stations.{$i}" freemissionactorslot="true" multiple="true" />
+				<do_all exact="$DockingBay.count" counter="$j" >
+						<set_value name="$randNPC" min="5" max="$DockingBay.{$j}.numfreeactorslots"/>						
+						<find_dock_location name="$DockingBay" container="$Stations.{$i}" multiple="true" />
+						<set_value name="$TotalTax" exact="($DockingBay.count * $randNPC * 1000Cr)" operation="add"/>
+				</do_all>
+				<remove_value name="$DockingBay"/>
+			</do_all>
+			<remove_value name="$Stations"/>
+
+			<do_if value="$TotalTax gt 0">
+				<set_value name="$PreviousPlayerMoney" exact="player.money "/>
+				<reward_player money="$TotalTax" />
+				<show_notification caption="{1015,40}.[$TotalTax.formatted.default]" icon="achievement_money_up" queued="true" sound="ui_mon_eve_money_up" />
+				<write_to_logbook category="general" text="{40002,59}.[$TotalTax.formatted.default, $PreviousPlayerMoney.formatted.default, player.money.formatted.default]"/>
+			</do_if>
+			<remove_value name="$PreviousPlayerMoney"/>
+			<remove_value name="$TotalTax"/>
+			<debug_text text="'end'" />
+       </actions>
+	</cue>
+
+	<cue name="NPC_Expenses" instantiate="true" checktime="player.age + 30min" checkinterval="60min">
+		<conditions>
+			<check_value value="global.$nfconfig.$Check" />
+			<check_value value="global.$nfconfig.$npcExpensesPL"/>
+		</conditions>
+		<actions>
+			<debug_text text="'Start'" />
+			<!-- This cue here is all about salaries -->
+			<!--<set_value name="$Specialists" exact="[entitytype.specialistagriculture, entitytype.specialistpowerstorage, entitytype.specialistfood, entitytype.specialistchemical, entitytype.specialistprecision, entitytype.specialistweapons, entitytype.specialistpharmaceuticals, entitytype.specialistmetals, entitytype.specialistgeophysics, entitytype.specialistsurfacesystems, entitytype.specialistpowersupply, entitytype.specialistaquatics]"/>-->
+			<set_value name="$Salary" exact="0"/>
+			<!--< stations: defence, trademanager, engineer(mod) and specialists >-->
+			<find_station name="$Stations" space="player.galaxy" owner="faction.player" functional="true" multiple="true" >
+				<match macro="macro.struct_bt_alb_outpost_macro" negate="true"/>
+				<match macro="macro.struct_at_xen_xenon_outpost_macro" negate="true"/>
+			</find_station>	
+			<do_all exact="$Stations.count" counter="$i" >
+				<do_if value="@$Stations.{$i}.defencenpc">
+					<set_value name="$Salary" exact="$Stations.{$i}.defencenpc.combinedskill * 100 + 10000Cr" operation="add"/>
+				</do_if>
+				<do_if value="@$Stations.{$i}.engineer">
+					<set_value name="$Salary" exact="$Stations.{$i}.engineer.combinedskill * 100 + 10000Cr" operation="add"/>
+				</do_if>
+				<do_if value="@$Stations.{$i}.tradenpc">
+					<set_value name="$Salary" exact="$Stations.{$i}.tradenpc.combinedskill * 100 + 10000Cr" operation="add"/>
+				</do_if>
+
+				<find_object_component name="$npcs" object="$Stations.{$i}" class="class.npc"  multiple="true"/>
+				<do_all exact="$npcs.count" counter="$j" >
+					<do_if value="$npcs.{$j}.isplayerowned and $npcs.{$j}.isspecialist">
+						<set_value name="$Salary" exact="$npcs.{$j}.combinedskill * 100 + 50000Cr" operation="add"/>
+					</do_if>
+				</do_all>
+				<remove_value name="$npcs"/>
+
+			</do_all>
+			<remove_value name="$Stations"/>
+			<!--< small ships: pilots only >-->
+			<find_ship name="$PlayerSmallShips" functional="true" space="player.galaxy" class="[class.ship_s, class.ship_m]" owner="faction.player" multiple="true"/>
+			<set_value name="$Salary" exact="$PlayerSmallShips.count * 3000Cr" operation="add"/>
+			<remove_value name="$PlayerSmallShips"/>
+			<!--< capships: commander, defence, engineer, architect(CV) >-->		
+			<find_ship name="$PlayerCapShips" functional="true" space="player.galaxy" class="[class.ship_l, class.ship_xl]" owner="faction.player" multiple="true"/>
+			<do_all exact="$PlayerCapShips.count" counter="$i" >
+				<do_if value="@$PlayerCapShips.{$i}.defencenpc">
+					<set_value name="$Salary" exact="$PlayerCapShips.{$i}.defencenpc.combinedskill * 100 + 10000Cr" operation="add"/>
+				</do_if>
+				<do_if value="@$PlayerCapShips.{$i}.engineer">
+					<set_value name="$Salary" exact="$PlayerCapShips.{$i}.engineer.combinedskill * 100 + 10000Cr" operation="add"/>
+				</do_if>
+				<do_if value="@$PlayerCapShips.{$i}.architect">
+					<set_value name="$Salary" exact="$PlayerCapShips.{$i}.architect.combinedskill * 100 + 20000Cr" operation="add"/>
+				</do_if>
+
+				<do_if value="$PlayerCapShips.{$i}.pilot">
+					<set_value name="$Salary" exact="$PlayerCapShips.{$i}.pilot.combinedskill * 100 + 15000Cr" operation="add"/>
+				</do_if>
+				<do_if value="$PlayerCapShips.{$i}.boardingnpc">
+					<set_value name="$Salary" exact="$PlayerCapShips.{$i}.boardingnpc.combinedskill * 100 + 20000Cr" operation="add"/>
+				</do_if>
+				<do_if value="$PlayerCapShips.{$i}.units.{unitcategory.marine}.count">
+					<set_value name="$Salary" exact="$PlayerCapShips.{$i}.units.{unitcategory.marine}.count * 500Cr" operation="add"/>
+				</do_if>
+			</do_all>
+			<remove_value name="$PlayerCapShips"/>
+
+			<do_if value="$Salary gt 0">
+				<set_value name="$PreviousPlayerMoney" exact="player.money "/>
+				<set_value name="$money" exact="$Salary"/>
+				<do_if value="(player.money - $Salary) lt 0">							
+					<set_value name="$money" exact="player.money"/>
+					<reward_player money="player.money*-1" />
+				</do_if>
+				<do_else>
+					<reward_player money="$Salary*-1" />
+				</do_else>
+				<!--<write_to_logbook category="general" text="'=== Salaries Payment === \n Total Salary Paid %1 \n Actual player money %2 \n Player final account %3.'.[$Salary/1Cr, $PreviousPlayerMoney/1Cr, player.money/1Cr]"/>-->
+				<write_to_logbook category="general" text="{40002,60}.[$Salary.formatted.default, $PreviousPlayerMoney.formatted.default, player.money.formatted.default]"/>
+
+				<substitute_text text="$message" source="{1015,7}">
+				  <replace string="'$MONEY$'" with="$money.formatted.default" />
+				  <replace string="'$MONEY2$'" with="player.money.formatted.default" />
+				</substitute_text>
+				<show_notification caption="{1015,6}"
+								   details="[$message]"
+								   icon="achievement_money_down"
+								   queued="true"
+								   sound="ui_mon_eve_money_down"
+				/>
+			</do_if>
+			<remove_value name="$Salary"/>
+			<remove_value name="$money"/>
+			<remove_value name="$message"/>
+			<remove_value name="$PreviousPlayerMoney"/>
+			<debug_text text="'end'" />
+       </actions>
+	</cue>		
+</cues>
+</mdscript>

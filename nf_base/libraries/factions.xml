@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+<replace sel="//faction[@id='sovereignsyndicate']">
+  <faction id="sovereignsyndicate" name="{20203,2401}" description="{20203,2402}" shortname="{20203,2403}" primaryrace="argon" behaviourset="default" known="1">
+    <icon active="faction_sovereignsyndicate" inactive="faction_sovereignsyndicate" />
+    <relations>
+      <relation faction="albionenergy" relation="0.0" />
+      <relation faction="aquarius" relation="0.0" />
+      <relation faction="argongovernment" relation="-0.5" />
+      <relation faction="beryll" relation="0.0" />
+      <relation faction="canteran" relation="-0.5" />
+      <relation faction="chow" relation="0.0" />
+      <relation faction="civilian" relation="0.0" />
+      <relation faction="criminal" relation="0.0" />
+      <relation faction="enemy" relation="-0.5" />
+      <relation faction="familyryak" relation="-0.5" />
+      <relation faction="fijiargnu" relation="-0.5" />
+      <relation faction="frantonpharma" relation="0.0" />
+      <relation faction="friend" relation="0.5" />
+      <relation faction="heartofalbion" relation="-0.5" />
+      <relation faction="hereticvanguards" relation="-0.5" />
+      <relation faction="jonferson" relation="0.0" />
+      <relation faction="leddaindustrial" relation="0.0" />
+      <relation faction="nolimits" relation="0.5" />
+      <relation faction="player" relation="0.0" />
+      <relation faction="plutarch" relation="-0.5" />
+      <relation faction="reivers" relation="0.0" />
+      <relation faction="smuggler" relation="0.0" />
+      <relation faction="sonraenergy" relation="0.0" />
+      <relation faction="wholesomefoods" relation="0.0" />
+      <relation faction="xenon" relation="-0.5" />
+    </relations>
+  </faction>
+ </replace>
+ <replace sel="/factions/faction[@id='albionenergy']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='aquarius']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='beryll']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='chow']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='civilian']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='criminal']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='frantonpharma']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='jonferson']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='leddaindustrial']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='player']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='reivers']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='smuggler']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='sonraenergy']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='wholesomefoods']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+
+ <replace sel="//faction[@id='hereticvanguards']">
+  <faction id="hereticvanguards" name="{20203,2501}" description="{20203,2502}" shortname="{20203,2503}" primaryrace="argon" behaviourset="default" known="1">
+    <icon active="faction_hereticvanguards" inactive="faction_hereticvanguards" />
+    <relations>
+      <relation faction="albionenergy" relation="0.0" />
+      <relation faction="aquarius" relation="0.0" />
+      <relation faction="argongovernment" relation="-0.5" />
+      <relation faction="beryll" relation="0.0" />
+      <relation faction="canteran" relation="-0.5" />
+      <relation faction="chow" relation="0.0" />
+      <relation faction="civilian" relation="0.0" />
+      <relation faction="criminal" relation="0.0" />
+      <relation faction="enemy" relation="-0.5" />
+      <relation faction="familyryak" relation="-0.5" />
+      <relation faction="fijiargnu" relation="-0.5" />
+      <relation faction="frantonpharma" relation="0.0" />
+      <relation faction="friend" relation="0.5" />
+      <relation faction="heartofalbion" relation="0.0" />
+      <relation faction="jonferson" relation="0.0" />
+      <relation faction="leddaindustrial" relation="0.0" />
+      <relation faction="nolimits" relation="0.0" />
+      <relation faction="player" relation="0.0" />
+      <relation faction="plutarch" relation="-0.5" />
+      <relation faction="reivers" relation="-0.5" />
+      <relation faction="smuggler" relation="-0.5" />
+      <relation faction="sonraenergy" relation="0.0" />
+      <relation faction="sovereignsyndicate" relation="-0.5" />
+      <relation faction="wholesomefoods" relation="0.0" />
+      <relation faction="xenon" relation="-0.5" />
+    </relations>
+  </faction>
+ </replace>
+ <replace sel="/factions/faction[@id='albionenergy']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='aquarius']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='beryll']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='chow']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='civilian']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='criminal']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='frantonpharma']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='heartofalbion']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='jonferson']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='leddaindustrial']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='nolimits']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='player']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='sonraenergy']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='wholesomefoods']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+
+  <add sel="/factions">
+    <faction id="acmecorp" name="ACME Corp" description="A Company that Make Everything" shortname="ACME" primaryrace="argon" behaviourset="default" known="1">
+      <relations locked="1">
+        <relation faction="albionenergy" relation="-0.008" />
+        <relation faction="aquarius" relation="-0.008" />
+        <relation faction="argongovernment" relation="-0.008" />
+        <relation faction="atlas" relation="-0.008" />
+        <relation faction="beryll" relation="-0.008" />
+        <relation faction="canteran" relation="-0.008" />
+        <relation faction="chow" relation="-0.008" />
+        <relation faction="civilian" relation="-0.008" />
+        <relation faction="criminal" relation="-0.008" />
+        <relation faction="enemy" relation="-0.5" />
+        <relation faction="familyryak" relation="-0.008" />
+        <relation faction="fijiargnu" relation="-0.008" />
+        <relation faction="frantonpharma" relation="-0.008" />
+        <relation faction="friend" relation="0.5" />
+        <relation faction="heartofalbion" relation="-0.008" />
+        <relation faction="hereticvanguards" relation="-0.008" />
+        <relation faction="jonferson" relation="-0.008" />
+        <relation faction="khaak" relation="-0.5" />
+        <relation faction="leddaindustrial" relation="-0.008" />
+        <relation faction="nolimits" relation="-0.008" />
+        <relation faction="player" relation="-0.008" />
+        <relation faction="plutarch" relation="-0.008" />
+        <relation faction="reivers" relation="-0.008" />
+        <relation faction="smuggler" relation="-0.008" />
+        <relation faction="sonraenergy" relation="-0.008" />
+        <relation faction="sovereignsyndicate" relation="-0.008" />
+        <relation faction="teladi" relation="-0.008" />
+        <relation faction="teladidrugrunner" relation="-0.008" />
+        <relation faction="teladigunrunner" relation="-0.008" />
+        <relation faction="terracorp" relation="-0.008" />
+        <relation faction="terran" relation="-0.008" />
+        <relation faction="wholesomefoods" relation="-0.008" />
+        <relation faction="xenon" relation="-0.008" />
+      </relations>
+    </faction>
+  </add>
+  <add sel="/factions/faction[@id='albionenergy']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='aquarius']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='argongovernment']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='atlas']/relations" silent="1">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='beryll']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='canteran']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='chow']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='civilian']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='criminal']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='enemy']/relations">
+    <relation faction="acmecorp" relation="-0.5" />
+  </add>
+  <add sel="/factions/faction[@id='familyryak']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='fijiargnu']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='frantonpharma']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='friend']/relations">
+    <relation faction="acmecorp" relation="0.5" />
+  </add>
+  <add sel="/factions/faction[@id='heartofalbion']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='hereticvanguards']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='jonferson']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='khaak']/relations" silent="1">
+    <relation faction="acmecorp" relation="-0.5" />
+  </add>
+  <add sel="/factions/faction[@id='leddaindustrial']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='nolimits']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='player']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='plutarch']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='reivers']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='smuggler']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='sonraenergy']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='sovereignsyndicate']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='standard']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='teladi']/relations" silent="1">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='teladidrugrunner']/relations" silent="1">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='teladigunrunner']/relations" silent="1">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='terracorp']/relations" silent="1">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='terran']/relations" silent="1">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='wholesomefoods']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='xenon']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+
+  <add sel="/factions">
+    <faction id="deepwater" name="Deepwater" description="Mercenaries probably founded by Borons ^^" shortname="DW" primaryrace="argon" behaviourset="default" known="1">
+      <relations locked="1">
+        <relation faction="albionenergy" relation="-0.008" />
+        <relation faction="aquarius" relation="-0.008" />
+        <relation faction="argongovernment" relation="-0.008" />
+        <relation faction="atlas" relation="-0.008" />
+        <relation faction="beryll" relation="-0.008" />
+        <relation faction="canteran" relation="-0.008" />
+        <relation faction="chow" relation="-0.008" />
+        <relation faction="civilian" relation="-0.008" />
+        <relation faction="criminal" relation="-0.008" />
+        <relation faction="enemy" relation="-0.5" />
+        <relation faction="familyryak" relation="-0.008" />
+        <relation faction="fijiargnu" relation="-0.008" />
+        <relation faction="frantonpharma" relation="-0.008" />
+        <relation faction="friend" relation="0.5" />
+        <relation faction="heartofalbion" relation="-0.008" />
+        <relation faction="hereticvanguards" relation="-0.008" />
+        <relation faction="jonferson" relation="-0.008" />
+        <relation faction="khaak" relation="-0.5" />
+        <relation faction="leddaindustrial" relation="-0.008" />
+        <relation faction="nolimits" relation="-0.008" />
+        <relation faction="player" relation="-0.008" />
+        <relation faction="plutarch" relation="-0.008" />
+        <relation faction="reivers" relation="-0.008" />
+        <relation faction="smuggler" relation="-0.008" />
+        <relation faction="sonraenergy" relation="-0.008" />
+        <relation faction="sovereignsyndicate" relation="-0.008" />
+        <relation faction="teladi" relation="-0.008" />
+        <relation faction="teladidrugrunner" relation="-0.008" />
+        <relation faction="teladigunrunner" relation="-0.008" />
+        <relation faction="terracorp" relation="-0.008" />
+        <relation faction="terran" relation="-0.008" />
+        <relation faction="wholesomefoods" relation="-0.008" />
+        <relation faction="xenon" relation="-0.008" />
+      </relations>
+    </faction>
+  </add>
+  <add sel="/factions/faction[@id='albionenergy']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='aquarius']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='argongovernment']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='atlas']/relations" silent="1">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='beryll']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='canteran']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='chow']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='civilian']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='criminal']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='enemy']/relations">
+    <relation faction="deepwater" relation="-0.5" />
+  </add>
+  <add sel="/factions/faction[@id='familyryak']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='fijiargnu']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='frantonpharma']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='friend']/relations">
+    <relation faction="deepwater" relation="0.5" />
+  </add>
+  <add sel="/factions/faction[@id='heartofalbion']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='hereticvanguards']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='jonferson']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='khaak']/relations" silent="1">
+    <relation faction="deepwater" relation="-0.5" />
+  </add>
+  <add sel="/factions/faction[@id='leddaindustrial']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='nolimits']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='player']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='plutarch']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='reivers']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='smuggler']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='sonraenergy']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='sovereignsyndicate']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='standard']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='teladi']/relations" silent="1">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='teladidrugrunner']/relations" silent="1">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='teladigunrunner']/relations" silent="1">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='terracorp']/relations" silent="1">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='terran']/relations" silent="1">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='wholesomefoods']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='xenon']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+</diff>

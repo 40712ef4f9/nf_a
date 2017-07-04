@@ -1,0 +1,431 @@
+<?xml version="1.0"?>
+<components>
+	<component name="struct_econ_weapon_ar_defence_pl" class="station">
+		<source geometry="assets\structures\Economy\weapon\generic\\struct_econ_weapon_ar_defence_data"/>
+		<layers>
+			<layer>
+				<waypoints>
+					<waypoint name="XU_Waypoint54" tags="typenormal sizeLevel1 " x="2047.912" y="-38.34241" z="-745.1213">
+						<links>
+							<link ref="XU_Waypoint10"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint53" tags="typenormal sizeLevel1 blocklink start " x="2047.912" y="-38.34241" z="-1469.963">
+						<links>
+							<link ref="XU_Waypoint54"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint52" tags="typenormal sizeLevel1 " x="1709.768" y="-38.34241" z="-745.1213">
+						<links>
+							<link ref="XU_Waypoint51"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint51" tags="typenormal sizeLevel1 blocklink end " x="1709.768" y="-38.34241" z="-1469.963">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint50" tags="typenormal sizeLevel1 blocklink start " x="1709.768" y="-38.34241" z="1434.221">
+						<links>
+							<link ref="XU_Waypoint49"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint49" tags="typenormal sizeLevel1 " x="1709.768" y="-38.34241" z="709.379">
+						<links>
+							<link ref="XU_Waypoint23"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint48" tags="typenormal sizeLevel1 blocklink end " x="2047.912" y="-38.34241" z="1434.221">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint47" tags="typenormal sizeLevel1 " x="2047.912" y="-38.34241" z="709.379">
+						<links>
+							<link ref="XU_Waypoint48"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint43" tags="typenormal sizeLevel1 blocklink start " x="4374.01" y="6.029694" z="652.9277">
+						<links>
+							<link ref="XU_Waypoint41"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint41" tags="typenormal sizeLevel1 " x="2220.565" y="6.029694" z="652.9277">
+						<links>
+							<link ref="XU_Waypoint24"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint46" tags="typenormal sizeLevel1 blocklink end " x="4374.01" y="6.029694" z="-684.9422">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint45" tags="typenormal sizeLevel1 " x="2220.565" y="6.029694" z="-684.9422">
+						<links>
+							<link ref="XU_Waypoint46"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint44" tags="typenormal sizeLevel1 blocklink start " x="-4271.98" y="-127.0109" z="199.207">
+						<links>
+							<link ref="XU_Waypoint32"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint42" tags="typenormal sizeLevel1 blocklink end " x="-4253.511" y="-127.0109" z="778.2931">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint40" tags="sizeLevel1 typedock start " x="-536.8335" y="-37.14771" z="468.6805">
+						<links>
+							<link ref="XU_Waypoint39"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint39" tags="typenormal sizeLevel1 " x="-536.8335" y="-37.14771" z="727.424">
+						<links>
+							<link ref="XU_Waypoint38"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint38" tags="typenormal sizeLevel1 " x="-600.6155" y="-37.14771" z="788.3035">
+						<links>
+							<link ref="XU_Waypoint37"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint37" tags="typenormal sizeLevel1 " x="-2100.006" y="-37.14771" z="788.3035">
+						<links>
+							<link ref="XU_Waypoint36"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint36" tags="typenormal sizeLevel1 " x="-2355.381" y="-135.4121" z="788.3035">
+						<links>
+							<link ref="XU_Waypoint35"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint35" tags="typenormal sizeLevel1 " x="-2628.92" y="-135.4121" z="788.3035">
+						<links>
+							<link ref="XU_Waypoint34"/>
+							<link ref="XU_Waypoint42"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint34" tags="typenormal sizeLevel1 " x="-2734.47" y="-135.4121" z="686.08">
+						<links>
+							<link ref="XU_Waypoint33"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint33" tags="typenormal sizeLevel1 " x="-2734.47" y="-135.4121" z="231.3752">
+						<links>
+							<link ref="XU_Waypoint32"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint32" tags="typenormal sizeLevel1 " x="-2705.149" y="-135.4121" z="203.1968">
+						<links>
+							<link ref="XU_Waypoint31"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint31" tags="typenormal sizeLevel1 " x="-2679.444" y="-135.4121" z="203.1968">
+						<links>
+							<link ref="XU_Waypoint30"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint30" tags="typenormal sizeLevel1 " x="-2616.352" y="-73.40512" z="203.1968">
+						<links>
+							<link ref="XU_Waypoint29"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint29" tags="typenormal sizeLevel1 " x="-2043.751" y="-73.40512" z="203.1968">
+						<links>
+							<link ref="XU_Waypoint28"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint28" tags="typenormal sizeLevel1 " x="-1918.837" y="-37.14771" z="203.1968">
+						<links>
+							<link ref="XU_Waypoint27"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint27" tags="typenormal sizeLevel1 " x="2083.517" y="-37.14771" z="203.1968">
+						<links>
+							<link ref="XU_Waypoint26"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint26" tags="typenormal sizeLevel1 " x="2145.464" y="-37.14771" z="284.6972">
+						<links>
+							<link ref="XU_Waypoint25"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint25" tags="typenormal sizeLevel1 " x="2145.464" y="-37.14771" z="604.0834">
+						<links>
+							<link ref="XU_Waypoint24"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint24" tags="typenormal sizeLevel1 " x="2113.652" y="-37.14771" z="638.6276">
+						<links>
+							<link ref="XU_Waypoint23"/>
+							<link ref="XU_Waypoint47"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint23" tags="typenormal sizeLevel1 " x="1635.264" y="-37.14771" z="638.6276">
+						<links>
+							<link ref="XU_Waypoint22"/>
+							<link ref="XU_Waypoint38"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint22" tags="typenormal sizeLevel1 " x="1607.809" y="-37.14771" z="605.3944">
+						<links>
+							<link ref="XU_Waypoint21"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint21" tags="sizeLevel1 typedock end " x="1607.809" y="-37.14771" z="462.6277">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint20" tags="sizeLevel1 typedock end " x="-1607.44" y="-37.14771" z="456.1302">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint19" tags="typenormal sizeLevel1 " x="-1607.44" y="-37.14771" z="596.8503">
+						<links>
+							<link ref="XU_Waypoint20"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint18" tags="typenormal sizeLevel1 " x="-1648.577" y="-37.14771" z="646.163">
+						<links>
+							<link ref="XU_Waypoint19"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint17" tags="typenormal sizeLevel1 " x="-2092.471" y="-37.14771" z="646.163">
+						<links>
+							<link ref="XU_Waypoint18"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint16" tags="typenormal sizeLevel1 " x="-2143.134" y="-37.14771" z="596.8503">
+						<links>
+							<link ref="XU_Waypoint17"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint15" tags="typenormal sizeLevel1 " x="-2143.134" y="-37.14771" z="33.57263">
+						<links>
+							<link ref="XU_Waypoint16"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint14" tags="typenormal sizeLevel1 " x="-1898.028" y="-37.14771" z="-203.1968">
+						<links>
+							<link ref="XU_Waypoint15"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint13" tags="typenormal sizeLevel1 " x="2072.111" y="-37.14771" z="-203.1968">
+						<links>
+							<link ref="XU_Waypoint14"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint12" tags="typenormal sizeLevel1 " x="2149.914" y="-37.14771" z="-281.2424">
+						<links>
+							<link ref="XU_Waypoint13"/>
+							<link ref="XU_Waypoint26"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint11" tags="typenormal sizeLevel1 " x="2149.914" y="-37.14771" z="-635.5042">
+						<links>
+							<link ref="XU_Waypoint12"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint10" tags="typenormal sizeLevel1 " x="2111.572" y="-37.14771" z="-675.8319">
+						<links>
+							<link ref="XU_Waypoint11"/>
+							<link ref="XU_Waypoint45"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint09" tags="typenormal sizeLevel1 " x="1641.03" y="-37.14771" z="-675.8319">
+						<links>
+							<link ref="XU_Waypoint10"/>
+							<link ref="XU_Waypoint52"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint08" tags="typenormal sizeLevel1 " x="1607.777" y="-37.14771" z="-635.5042">
+						<links>
+							<link ref="XU_Waypoint09"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint07" tags="sizeLevel1 typedock start " x="1607.777" y="-37.14771" z="-464.2568">
+						<links>
+							<link ref="XU_Waypoint08"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint06" tags="sizeLevel1 typedock start " x="-1607.44" y="-37.14771" z="-450.2072">
+						<links>
+							<link ref="XU_Waypoint05"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint05" tags="typenormal sizeLevel1 " x="-1607.44" y="-37.14771" z="-610.8892">
+						<links>
+							<link ref="XU_Waypoint04"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint04" tags="typenormal sizeLevel1 " x="-1574.721" y="-37.14771" z="-648.4531">
+						<links>
+							<link ref="XU_Waypoint03"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint03" tags="typenormal sizeLevel1 " x="-568.1957" y="-37.14771" z="-648.4531">
+						<links>
+							<link ref="XU_Waypoint09"/>
+							<link ref="XU_Waypoint02"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint02" tags="typenormal sizeLevel1 " x="-536.8335" y="-37.14771" z="-610.8892">
+						<links>
+							<link ref="XU_Waypoint01"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint01" tags="sizeLevel1 typedock end " x="-536.8335" y="-37.14771" z="-449.9048">
+						<links/>
+					</waypoint>
+				</waypoints>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="station">
+				<offset/>
+			</connection>
+			<connection name="connection_controlroom01" tags="room  defence">
+				<offset/>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_weapon_ar_l_macro" group="stationGroup" tags="destructible">
+				<offset>
+					<quaternion qx="-0" qy="-0.7071068" qz="-0" qw="-0.7071067"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_weapon_ar_m" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="-1070.969" y="-212.317" z="2.441406E-04"/>
+					<quaternion qx="-0" qy="-0.7071065" qz="-0" qw="-0.707107"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_weapon_ar_m1" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="-2142.362" y="212.2984" z="4.882813E-04"/>
+					<quaternion qx="-0" qy="-0.7071065" qz="-0" qw="-0.707107"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_weapon_ar_m2" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="-2142.362" y="-212.317" z="4.882813E-04"/>
+					<quaternion qx="-0" qy="-0.7071065" qz="-0" qw="-0.707107"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_weapon_ar_n" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="-356.353" y="225.9604" z="565.6787"/>
+					<quaternion qx="-0" qy="-0.7071065" qz="-0" qw="-0.707107"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_weapon_ar_m3" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="-1070.969" y="212.2984" z="2.441406E-04"/>
+					<quaternion qx="-0" qy="-0.7071065" qz="-0" qw="-0.707107"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_weapon_ar_m4" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="1071.338" y="-212.317" z="-2.441406E-04"/>
+					<quaternion qx="-0" qy="0.7071069" qz="-0" qw="-0.7071066"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_weapon_ar_m5" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="1071.338" y="212.2984" z="-2.441406E-04"/>
+					<quaternion qx="-0" qy="0.7071069" qz="-0" qw="-0.7071066"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_weapon_ar_m6" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="2142.73" y="-212.317" z="-4.882813E-04"/>
+					<quaternion qx="-0" qy="0.7071069" qz="-0" qw="-0.7071066"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_weapon_ar_m7" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="2142.73" y="212.2984" z="-4.882813E-04"/>
+					<quaternion qx="-0" qy="0.7071069" qz="-0" qw="-0.7071066"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_weapon_ar_k_macro" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="1606.527" y="0" z="0"/>
+					<quaternion qx="-0" qy="0.7071069" qz="-0" qw="-0.7071066"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_weapon_ar_n1" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="1247.673" y="225.9604" z="-564.9172"/>
+					<quaternion qx="-0" qy="0.7071069" qz="-0" qw="-0.7071066"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_weapon_ar_k_macro1" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="-1606.157" y="0" z="2.441406E-04"/>
+					<quaternion qx="-0" qy="-0.7071065" qz="-0" qw="-0.707107"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_weapon_ar_n2" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="-1783.8" y="-217.9637" z="-586.231"/>
+					<quaternion qx="-0.7071066" qy="-6.181727E-08" qz="-0.7071069" qw="1.685874E-07"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_weapon_ar_j_macro" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="2409.626" y="0" z="0"/>
+					<quaternion qx="-0" qy="0.7071069" qz="-0" qw="-0.7071066"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_weapon_ar_j_macro1" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="-2409.256" y="0" z="2.441406E-04"/>
+					<quaternion qx="-0" qy="-0.7071065" qz="-0" qw="-0.707107"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_tradeoffer_buy_missiles" group="stationGroup" tags="tradeofferdock">
+				<offset>
+					<position x="-356.39" y="376.0998" z="676.1868"/>
+				</offset>
+			</connection>
+			
+			<!-- New parts from here -->
+			
+			<connection name="connection_radar_fallback01" tags="radar ">
+				<offset/>
+			</connection>
+			
+			<connection name="ConnectionFor_props_surf_playerdock_repair_macro" group="stationGroup" tags="destructible">
+				<offset>
+					<!--<position x="265" y="-84" z="-140"/>-->
+					<position x="130" y="-84" z="0"/>
+				</offset>
+			</connection>
+			
+			<connection name="ConnectionFor_props_surf_playerdock_admin_macro" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="-265" y="210" z="555"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="-0"/>
+				</offset>
+			</connection>
+			
+			<connection name="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro" group="stationGroup" tags="destructible">
+				<offset>
+				<!--<position x="-356.353" y="225.9604" z="565.6787"/>-->
+					<position x="-371.353" y="180.9604" z="750.6787"/>
+					<quaternion qx="0" qy="0.70711" qz="0" qw="0.70711"/>
+				</offset>
+			</connection>
+			
+			<connection name="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro1" group="stationGroup" tags="destructible">
+				<offset>
+				<!--<position x="-1783.8" y="-217.9637" z="-586.231"/>-->
+					<position x="-1783.8" y="-217.9637" z="-771.231"/>
+					<quaternion qx="0" qy="-0.70711" qz="0" qw="0.70711"/>
+				</offset>
+			</connection>
+			
+			<connection name="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro2" group="stationGroup" tags="destructible">
+				<offset>
+				<!--<position x="1247.673" y="225.9604" z="-564.9172"/>-->
+					<position x="1247.673" y="180.9604" z="-749.9172"/>
+					<quaternion qx="0" qy="-0.70711" qz="0" qw="0.70711"/>
+				</offset>
+			</connection>
+			
+		</connections>
+	</component>
+</components>

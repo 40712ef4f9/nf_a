@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="//library[@name='NFMM_Relations']/actions/do_if[@exact=&quot;'ep1'&quot;]">
+					<set_value name="$todo" exact="['teladi', 'teladidrugrunner', 'teladigunrunner']"/>
+					<set_faction_relation faction="faction.{$todo.{1}}" otherfaction="faction.{$todo.{2}}" value="faction.{$todo.{1}}.relation.neutral.min +0.1f"/>
+					<set_faction_relation faction="faction.{$todo.{1}}" otherfaction="faction.{$todo.{3}}" value="faction.{$todo.{1}}.relation.neutral.min +0.1f"/>
+					<remove_value name="$todo"/>
+	</add>
+	<add sel="//library[@name='NFMM_Relations']/actions/do_else">
+					<set_value name="$todo" exact="['teladi', 'teladidrugrunner', 'teladigunrunner']"/>
+					<set_faction_relation faction="faction.{$todo.{1}}" otherfaction="faction.{$todo.{2}}" value="faction.{$todo.{1}}.relation.neutral.min +0.1f"/>
+					<set_faction_relation faction="faction.{$todo.{1}}" otherfaction="faction.{$todo.{3}}" value="faction.{$todo.{1}}.relation.neutral.min +0.1f"/>
+					<remove_value name="$todo"/>
+	</add>
+	<add sel="//library[@name='NFMM_Basic']/actions/do_if[@value='$differentWorld?']">
+				<do_if value="true">
+					<!--
+					faction.teladi
+					-->
+					<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone005_macro, macro.mine_te_ore_s_macro, faction.teladi]"/>
+					<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone002_macro, macro.struct_econ_cw_generic_te_water_macro, faction.teladi]"/>
+					<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone002_macro, macro.mine_te_ore_s_macro, faction.teladi]"/>
+					<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone001_macro, macro.landmarks_te_tradestation_macro, faction.teladi]"/>
+					<!--
+					faction.teladidrugrunner
+					-->
+					<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone008_macro, macro.struct_econ_weapon_ar_defence_pl_macro, faction.teladidrugrunner]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone003_macro, macro.struct_bt_alb_servicedock_macro, faction.teladidrugrunner]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone006_macro, macro.struct_econ_weapon_ar_defence_pl_macro, faction.teladidrugrunner]" comment="replace stuff"/>
+					<!--
+					faction.teladigunrunner
+					-->
+					<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone004_macro, macro.struct_econ_special_piratestation_macro, faction.teladigunrunner]"/>
+					<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone007_macro, macro.struct_econ_weapon_ar_defence_pl_macro, faction.teladigunrunner]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone005_macro, macro.struct_econ_weapon_ar_defence_pl_macro, faction.teladigunrunner]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone003_macro, macro.struct_bt_alb_servicedock_macro, faction.teladigunrunner]" comment="replace stuff"/>
+					<!--
+					faction.xenon
+					-->
+					<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone004_macro, macro.struct_at_xen_xenon_hive_macro, faction.xenon]"/>
+				</do_if>
+	</add>
+
+	<!--
+	vanilla MAP
+	-->
+	<add sel="//library[@name='NFMM_Basic']/actions/do_else">
+		<do_if value="true">
+			<!--
+			faction.teladi
+			-->
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone005_macro, macro.mine_te_ore_s_macro, faction.teladi]"/>
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone002_macro, macro.struct_econ_cw_generic_te_water_macro, faction.teladi]"/>
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone002_macro, macro.mine_te_ore_s_macro, faction.teladi]"/>
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone001_macro, macro.landmarks_te_tradestation_macro, faction.teladi]"/>
+			<!--
+			faction.teladidrugrunner
+			-->
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone006_macro, macro.struct_bt_te_pirate_outpost_04_macro, faction.teladidrugrunner]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone003_macro, macro.struct_bt_te_pirate_outpost_01_macro, faction.teladidrugrunner]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone008_macro, macro.struct_bt_te_pirate_outpost_04_macro, faction.teladidrugrunner]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone008_macro, macro.struct_econ_weapon_ar_defence_pl_macro, faction.teladidrugrunner]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone003_macro, macro.struct_bt_alb_servicedock_macro, faction.teladidrugrunner]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone006_macro, macro.struct_econ_weapon_ar_defence_pl_macro, faction.teladidrugrunner]" comment="replace stuff"/>
+			<!--
+			faction.teladigunrunner
+			-->
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone003_macro, macro.struct_bt_te_pirate_outpost_02_macro, faction.teladigunrunner]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone003_macro, macro.struct_bt_te_pirate_outpost_01_macro, faction.teladigunrunner]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone003_macro, macro.struct_bt_te_pirate_outpost_03_macro, faction.teladigunrunner]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone005_macro, macro.struct_bt_te_pirate_outpost_02_macro, faction.teladigunrunner]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone007_macro, macro.struct_bt_te_pirate_outpost_03_macro, faction.teladigunrunner]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone004_macro, macro.struct_econ_special_piratestation_macro, faction.teladigunrunner]"/>
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone007_macro, macro.struct_econ_weapon_ar_defence_pl_macro, faction.teladigunrunner]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone005_macro, macro.struct_econ_weapon_ar_defence_pl_macro, faction.teladigunrunner]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone003_macro, macro.struct_bt_alb_servicedock_macro, faction.teladigunrunner]" comment="replace stuff"/>
+			<!--
+			faction.xenon
+			-->
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone004_macro, macro.struct_at_xen_xenon_hive_macro, faction.xenon]"/>
+		</do_if>
+	</add>
+</diff>

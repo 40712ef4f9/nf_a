@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<diff>
+	<add sel="/aiscript/attention/actions/find_station" pos="after">
+      <do_if value="not $stations.count and this.ship.commander">
+        <do_if value="this.ship.commander.exists and this.ship.commander.macro.ismacro.{global.$mmcarriers} and this.ship.commander.zone == this.ship.zone">
+          <append_to_list name="$stations" exact="this.ship.commander"/>
+        </do_if>
+        <do_if value="this.ship.commander.commander and this.ship.commander.commander.exists and this.ship.commander.commander.macro.ismacro.{global.$mmcarriers} and this.ship.commander.commander.zone == this.ship.zone">
+          <set_value name="$stations" exact="[this.ship.commander.commander]" />
+          <append_to_list name="$stations" exact="this.ship.commander.commander"/>
+        </do_if>
+      </do_if>
+	</add>
+</diff>

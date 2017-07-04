@@ -1,0 +1,1349 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mdscript name="MM_Diplomatics" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+		<cue name="MMDIPLO_base" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="default" />
+					<event_conversation_returned_to_section section="default" />
+				</check_any>
+				<check_value value="[faction.player, faction.enemy, faction.criminal, faction.smuggler, faction.neutral, faction.friend, faction.ownerless].indexof.{event.object.owner}" negate="true"/>
+				<check_value value="event.object.container.isclass.station" />
+				<check_value value="event.object.owner.relationto.{faction.player} gt faction.player.relation.neutral.min"/>
+				<check_any>
+					<check_all>
+						<check_any>
+							<check_value value="event.object.type" exact="entitytype.engineer" />
+							<check_value value="event.object.type" exact="entitytype.defencecontrol" />
+						</check_any>
+						<check_value value="event.object.iscontrolentity" />
+					</check_all>
+					<check_value value="event.object.container.zone.policefaction and event.object == event.object.container.sector.representative.{event.object.container.zone.policefaction}.{entitytype.lawenforcement}" />
+				</check_any>
+			</conditions>
+			<actions>
+				<add_player_choice_sub text="{2802,1450}" position="left" section="mmdiplo_do_start" choiceparam="1"/>
+				<remove_value name="md.$deal"/>
+			</actions>
+		</cue>
+		<cue name="MMDIPLO_work" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_next_section sectionprefix="mmdiplo_do"/>
+					<event_conversation_returned_to_section sectionprefix="mmdiplo_do" />
+				</check_any>
+			</conditions>
+			<actions>
+				<do_if value="event.param" exact="'mmdiplo_do_start'">
+
+					<do_if value="event.object.container.zone.policefaction and event.object == event.object.container.sector.representative.{event.object.container.zone.policefaction}.{entitytype.lawenforcement}" comment="special mission for arrant villains">
+						<find_station name="$stations" space="event.object.container.sector" multiple="true">
+							<match owner="player.primaryship.owner" negate="true"/>		
+							<match owner="faction.enemy" negate="true"/>		
+							<match owner="faction.criminal" negate="true"/>		
+							<match owner="faction.smuggler" negate="true"/>		
+							<match owner="faction.neutral" negate="true"/>		
+							<match owner="faction.ownerless" negate="true"/>		
+							<match owner="faction.player" negate="true"/>		
+							<match owner="faction.friend" negate="true"/>
+						</find_station>
+					</do_if>
+					<do_else>
+						<find_station name="$stations" space="event.object.container.sector" multiple="true">
+							<match owner="player.primaryship.owner" negate="true"/>		
+							<match owner="faction.enemy" negate="true"/>		
+							<match owner="faction.criminal" negate="true"/>		
+							<match owner="faction.smuggler" negate="true"/>		
+							<match owner="faction.neutral" negate="true"/>		
+							<match owner="faction.ownerless" negate="true"/>		
+							<match owner="faction.player" negate="true"/>		
+							<match owner="faction.friend" negate="true"/>
+							<match_relation faction="event.object.container.owner"  relation="neutral" comparison="ge"/>
+						</find_station>
+					</do_else>
+					<create_list name="$factions" />
+					<do_all exact="$stations.count" counter="$Counter">
+						<do_if value="not $factions.indexof.{$stations.{$Counter}.owner}">
+							<append_to_list name="$factions" exact="$stations.{$Counter}.owner"/>
+						</do_if> 
+					</do_all>
+					<remove_value name="$stations"/>
+					
+					<set_value name="$td_start" exact="if event.param2? and (typeof event.param2).isnumeric then event.param2 else 1" />
+					<set_value name="$td_max" exact="$factions.count" />
+
+					<do_all exact="6" counter="$i">
+						<do_if value="$i == 6 and ($td_start + 1) le $td_max">
+							<add_player_choice 		text="{2802,1460}.[$td_start, $td_max]" 	position="bottom_right" section="mmdiplo_do_start" choiceparam="$td_start"/>
+						</do_if>
+						<do_elseif value="$td_start le $td_max">
+							<add_player_choice		text="{2802,1452}.[if $factions.{$td_start}.knownname != '' then $factions.{$td_start}.knownname else $factions.{$td_start}.id]"	position="$i" 		section="mmdiplo_do_what" choiceparam="$factions.{$td_start}"/>
+							<set_value name="$td_start"  operation="add" exact="1" /> 
+						</do_elseif>
+						<do_elseif value="$i == 6">
+							<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+						</do_elseif>
+					</do_all>
+					<remove_value name="$td_start"/>
+					<remove_value name="$td_max"/>
+					<remove_value name="$factions"/>
+					<remove_value name="md.$deal"/>
+
+				</do_if>
+				<do_elseif value="event.param" exact="'mmdiplo_do_what'">
+
+					<do_if value="md.$deal?" negate="true">
+						<set_value name="md.$deal" exact="table[	$faction_old = player.primaryship.owner,
+																	$faction = if event.param2? then event.param2 else false,
+																	$pos_1 = null,
+																	$pos_2 = null,
+																	$pos_3 = null,
+																	$pos_4 = null,
+																	$pos_5 = null,
+																	$faction_multi_old = 1,
+																	$faction_multi = 1
+																]" />
+
+						<set_value name="$faction_tmp" exact="md.$deal.$faction_old" />
+						<set_value name="$space_tmp" exact="player.galaxy" />
+						<include_actions ref="MMDIPLO_faction" />
+						<set_value name="$tmp_old" exact="table[$zo = $zones.count, $st = $stations.count, $cap = $ships_cap.count, $small = $ships_small.count, $dps = $faction_dps ]" />
+						<remove_value name="$faction_dps"/>
+						<remove_value name="$zones"/>
+						<remove_value name="$stations"/>
+						<remove_value name="$ships_cap"/>
+						<remove_value name="$ships_small"/>
+				
+						<set_value name="$faction_tmp" exact="md.$deal.$faction" />
+						<set_value name="$space_tmp" exact="player.galaxy" />
+						<include_actions ref="MMDIPLO_faction" />
+						<set_value name="$tmp" exact="table[$zo = $zones.count, $st = $stations.count, $cap = $ships_cap.count, $small = $ships_small.count, $dps = $faction_dps ]" />
+						<remove_value name="$faction_dps"/>
+						<remove_value name="$zones"/>
+						<remove_value name="$stations"/>
+						<remove_value name="$ships_cap"/>
+						<remove_value name="$ships_small"/>
+						
+						<set_value name="$keys" exact="$tmp.keys.list" />
+						<do_all exact="$keys.count" counter="$i">
+							<do_if value="$tmp_old.{$keys.{$i}} gt $tmp.{$keys.{$i}}*1.2f">
+								<set_value name="md.$deal.$faction_multi_old" operation="add"/>
+							</do_if>
+							<do_elseif value="$tmp_old.{$keys.{$i}}*1.2f lt $tmp.{$keys.{$i}}">
+								<set_value name="md.$deal.$faction_multi" operation="add"/>
+							</do_elseif>
+						</do_all>
+						<remove_value name="$keys"/>
+						<remove_value name="$tmp_old"/>
+						<remove_value name="$tmp"/>
+					</do_if>
+
+					<do_if value="md.$deal.$faction and md.$deal.$faction_old != md.$deal.$faction">
+
+						<add_player_choice text="{2802,1454}" tooltip="{2802,1455}" selectable="md.$deal.$faction_old.relationto.{md.$deal.$faction} le md.$deal.$faction.relation.enemy.min" section="mmdiplo_do_finish" choiceparam="[md.$deal.$faction, md.$deal.$faction.relation.enemy.max]"/>
+						<add_player_choice text="{2802,1456}" tooltip="{2802,1457}" selectable="md.$deal.$faction_multi_old gt md.$deal.$faction_multi and md.$deal.$faction_old.relationto.{md.$deal.$faction} le md.$deal.$faction.relation.neutral.min" section="mmdiplo_do_finish" choiceparam="[md.$deal.$faction, md.$deal.$faction.relation.neutral.min+0.001f]"/>
+						<add_player_choice text="{2802,1458}" tooltip="{2802,1459}" selectable="md.$deal.$faction_old.relationto.{md.$deal.$faction} gt md.$deal.$faction.relation.friend.min and md.$deal.$faction_old.relationto.{md.$deal.$faction} le md.$deal.$faction.relation.member.min" section="mmdiplo_do_finish" choiceparam="[md.$deal.$faction, [md.$deal.$faction.relation.member.min+0.1f, null, 'sync']]"/>
+
+						<add_player_choice_sub text="{2802,1462}" tooltip="{2802,1463}" section="mmdiplo_do_swap" choiceparam="md.$deal.$faction" />
+						<add_player_choice_sub text="{2802,1472}" section="mmdiplo_do_giftship" selectable="md.$deal.$faction_old == faction.player" choiceparam="[0, 0, 'player', 'sellship', ['mmdiplo_do_giftshipselected', event.object.container]]" comment="Donate ship"/>
+					</do_if>
+
+
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				</do_elseif>
+				<do_elseif value="event.param" list="['mmdiplo_do_giftshipselected','mmdiplo_do_giftshipconfirmed', 'mmdiplo_do_giftship', 'mmdiplo_do_giftselectship']">
+					<do_if value="event.param" list="['mmdiplo_do_giftshipselected','mmdiplo_do_giftshipconfirmed']">
+						<set_value name="$soldship" exact="event.param2.{1}" />
+						<set_value name="$soldshipprice" exact="event.param2.{2} * 1Cr" />
+					</do_if>
+	
+					<do_if value="event.param == 'mmdiplo_do_giftship'">
+						<add_conversation_view view="closeupdetailmonitor" />
+						<open_conversation_menu menu="PropertyMenu" param="event.param2" param2="event.param3" />
+					</do_if>
+	
+					<do_elseif value="event.param == 'mmdiplo_do_giftshipselected'">
+						<add_conversation_view view="facenormal" />
+						<add_player_choice text="{1002,8007}" position="top_left" section="mmdiplo_do_giftshipconfirmed" choiceparam="[event.param2.{1}, event.param2.{2}]" comment="Yes, sell this ship"/>
+						<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+					</do_elseif>
+	
+	
+					<do_elseif value="event.param == 'mmdiplo_do_giftshipconfirmed'">
+						<!-- NPC_Shiptrader compatibility $actor -->
+						<create_cue_actor name="$actor" cue="this">
+							<select ref="manager_omicron_lyrae_random"/>
+							<owner exact="md.$deal.$faction" />
+						</create_cue_actor>
+
+						<add_conversation_view view="facenormal" />
+						<set_value name="$boost" exact="0.00016LF + (0.00064LF / (4000000Cr)LF * ($soldshipprice)LF)" />
+						<add_faction_relation faction="md.$deal.$faction_old" otherfaction="md.$deal.$faction" value="$boost" />
+
+						<do_if value="typeof $soldship == datatype.list">
+							<do_all exact="$soldship.count" counter="$i">
+								<set_value name="$soldship2" exact="$soldship.{$i}"/>
+								<include_actions ref="md.NPC_Shiptrader.SellShipActions" />
+							</do_all>
+						</do_if>
+						<do_else>
+							<set_value name="$soldship2" exact="$soldship"/>
+							<include_actions ref="md.NPC_Shiptrader.SellShipActions" />
+						</do_else>
+
+						<remove_value name="md.$deal"/>
+						<destroy_object object="$actor"/>
+					</do_elseif>
+	
+					<do_elseif value="event.param == 'mmdiplo_do_giftselectship'">
+						<do_if value="not $showed_DMsellers_selectship?">
+							<set_value name="$showed_DMsellers_selectship" />
+							<add_conversation_view view="closeupdetailmonitor" />
+						</do_if>
+						<do_else>
+							<add_npc_line line="4170" comment="Is there anything else I can offer you?" view="closeupdetailmonitor" />
+						</do_else>
+						<open_conversation_menu menu="SelectShipMenu" param="event.param2" param2="event.param3" />
+					</do_elseif>
+
+					<remove_value name="$soldship" />
+					<remove_value name="$actor" />
+					<remove_value name="$dock" />
+					<remove_value name="$soldshipprice" />
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmdiplo_do_swap_select'">
+
+					<set_value name="md.$deal.$pos" exact="if event.param2? and (typeof event.param2).isnumeric then event.param2 else false" />
+					<do_if value="md.$deal.$pos">
+						<add_player_choice text="{20001,201}" section="gOrders_advancedflytopos" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectposition', ['mmdiplo_do_swap']]"/>
+						<add_player_choice text="{20001,301}" section="mmdiplo_do_select" choiceparam="[0, 0, 'sector', player.primaryship.sector, null, null, 'selectzone', ['mmdiplo_do_swap']]"/>
+						<do_if value="faction.player == if md.$deal.$pos lt 3 then md.$deal.$faction_old else md.$deal.$faction">
+							<add_player_choice text="{1001,3}" section="gAssign_selectlist" choiceparam="[0, 0, 'player', 'selectobject', ['mmdiplo_do_swap', null, null, null, false, null, true, true]]"/>
+						</do_if>
+						<do_else>
+							<add_player_choice text="{1001,3}" section="mmdiplo_do_select" choiceparam="[0, 0, 'zone', player.primaryship.zone, null, null, 'selectobject', ['mmdiplo_do_swap']]"/>
+						</do_else>
+						<add_player_choice text="{1001,6702}" section="mmdiplo_do_swap" choiceparam="['remove']" position="right"/>
+						
+						<set_value name="$value_o" exact="0Cr" />
+						<set_value name="$value_n" exact="0Cr" />
+						<do_all exact="5" counter="$c">
+							<do_if value="$c == 3">
+								<continue />
+							</do_if>
+
+							<do_if value="md.$deal.{'$pos_%1'.[$c]} != null">
+
+								<do_if value="not (typeof md.$deal.{'$pos_%1'.[$c]} == datatype.money) and md.$deal.{'$pos_%1'.[$c]}.isclass.[class.zone, class.sector, class.station]">
+									<set_value name="$value" exact="0Cr" />
+									<!--set_value name="$faction" exact="if $c lt 3 then md.$deal.$faction else md.$deal.$faction_old" /-->
+									<set_value name="$faction_old" exact="if $c lt 3 then md.$deal.$faction_old else md.$deal.$faction" />
+									<set_value name="$object" exact="md.$deal.{'$pos_%1'.[$c]}" />
+									<include_actions ref="MMDIPLO_value" />
+									<do_if value="$c lt 3">
+										<set_value name="$value_o" exact="$value * md.$deal.$faction_multi_old" operation="add"/>
+									</do_if>
+									<do_else>
+										<set_value name="$value_n" exact="$value * md.$deal.$faction_multi" operation="add"/>
+									</do_else>
+								</do_if>
+								<do_else>
+									<do_if value="$c lt 3">
+										<set_value name="$value_o" exact="md.$deal.{'$pos_%1'.[$c]}" operation="add"/>
+									</do_if>
+									<do_else>
+										<set_value name="$value_n" exact="md.$deal.{'$pos_%1'.[$c]}" operation="add"/>
+									</do_else>
+								</do_else>
+
+							</do_if>
+
+						</do_all>
+						
+						<set_value name="$amount" exact="0Cr" />
+						<do_if value="md.$deal.$pos == 1 or md.$deal.$pos == 2">
+							<set_value name="$amount" exact="$value_n - $value_o" />
+							<set_value name="$amount" exact="1Cr" operation="add" chance="if $amount gt 0Cr then 100 else 0" />
+						</do_if>
+						<do_else>
+							<set_value name="$amount" exact="$value_o - $value_n" />
+							<set_value name="$amount" exact="1Cr" operation="subtract" chance="if $amount gt 0Cr then 100 else 0" />
+						</do_else>
+						
+						<add_player_choice text="'%2 [%1Cr]'.[$amount.formatted.default, {1001,6522}]" selectable="$amount gt 0Cr and md.$deal.$faction_old.relationto.{md.$deal.$faction} gt md.$deal.$faction_old.relation.neutral.min" section="mmdiplo_do_swap" choiceparam="['Money', $amount]"/>
+						<remove_value name="$amount"/> 
+						<remove_value name="$value_n"/> 
+						<remove_value name="$value_o"/> 
+						<remove_value name="$faction_old"/> 
+						<remove_value name="$faction"/> 
+						<remove_value name="$value"/> 
+					</do_if>
+
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				</do_elseif>
+				<do_if value="event.param" exact="'mmdiplo_do_select'">
+					<open_conversation_menu menu="MapMenu" param="event.param2" param2="event.param3" />
+					<add_conversation_view view="closeupdetailmonitor" />
+				</do_if>
+				<do_elseif value="event.param" exact="'mmdiplo_do_swap'">
+
+
+					<do_if value="md.$deal?" negate="true">
+						<set_value name="md.$deal" exact="table[	$faction_old = player.primaryship.owner,
+																	$faction = if event.param2? then event.param2 else false,
+																	$pos_1 = null,
+																	$pos_2 = null,
+																	$pos_3 = null,
+																	$pos_4 = null,
+																	$pos_5 = null,
+																	$faction_multi_old = 1,
+																	$faction_multi = 1
+																]" />
+					</do_if>
+					<do_else>
+						<do_if value="event.param2.{3}? and event.param2.{3}.exists and md.$deal.$pos">
+							<do_if value="event.param2.{3}.isclass.sector">
+								<set_value name="$owner" exact="event.param2.{3}.owner == if (md.$deal.$pos == 1 or md.$deal.$pos == 2) then md.$deal.$faction_old else md.$deal.$faction" />
+								<do_if value="$owner" negate="true">
+									<find_zone name="$zones" space="event.param2.{3}" multiple="true" tempzone="false"/>
+									<do_all exact="$zones.count" counter="$s">
+										<do_if value="$zones.{$s}.owner == (if (md.$deal.$pos == 1 or md.$deal.$pos == 2) then md.$deal.$faction_old else md.$deal.$faction) and not ($zones.{$s}.istemporaryzone or $zones.{$s}.isclass.highway) and $zones.{$s}.ismapzone">
+											<set_value name="$owner" exact="true" />
+											<break />
+										</do_if>
+									</do_all>
+									<remove_value name="$zones"/> 
+								</do_if>
+								<do_if value="$owner" negate="true">
+									<find_station name="$stations" space="event.param2.{3}" owner="if (md.$deal.$pos == 1 or md.$deal.$pos == 2) then md.$deal.$faction_old else md.$deal.$faction"/>
+									<do_if value="$stations">
+										<set_value name="$owner" exact="true" />
+									</do_if>
+									<remove_value name="$stations"/> 
+								</do_if>
+
+								<do_if value="$owner">
+									<set_value name="md.$deal.{'$pos_%1'.[md.$deal.$pos]}" exact="event.param2.{3}" />
+								</do_if>
+								<do_else>
+									<set_value name="md.$deal.$pos" exact="false" />
+									<show_help position="8" log="false" force="true" duration="2s" custom="{2802,1464}" />
+								</do_else>
+							</do_if>
+							<do_elseif value="event.param2.{3}.owner == if (md.$deal.$pos == 1 or md.$deal.$pos == 2) then md.$deal.$faction_old else md.$deal.$faction" negate="true">
+								<set_value name="md.$deal.$pos" exact="false" />
+								<show_help position="8" log="false" force="true" duration="2s" custom="{2802,1464}" />
+							</do_elseif>
+							<do_elseif value="event.param2.{3}.isclass.station">
+								<set_value name="md.$deal.{'$pos_%1'.[md.$deal.$pos]}" exact="event.param2.{3}" />
+							</do_elseif>
+							<do_elseif value="event.param2.{3}.isclass.zone and not (event.param2.{3}.istemporaryzone or event.param2.{3}.isclass.highway) and event.param2.{3}.ismapzone">
+								<set_value name="md.$deal.{'$pos_%1'.[md.$deal.$pos]}" exact="event.param2.{3}" />
+							</do_elseif>
+							<do_else>
+								<show_help position="8" log="false" force="true" duration="2s" custom="{2802,1464}" />
+							</do_else>
+						</do_if>
+						<do_elseif value="event.param2.{2}? and event.param2.{1} == 'Money'">
+							<set_value name="md.$deal.{'$pos_%1'.[md.$deal.$pos]}" exact="event.param2.{2}" />
+						</do_elseif>
+						<do_elseif value="event.param2.{1}? and event.param2.{1} == 'remove'">
+							<set_value name="md.$deal.{'$pos_%1'.[md.$deal.$pos]}" exact="null" />
+						</do_elseif>
+						<set_value name="md.$deal.$pos" exact="false" />
+					</do_else>
+
+					<do_if value="md.$deal.$faction">
+						
+						<do_all exact="5" counter="$c">
+							<continue chance="if $c == 3 then 100 else 0" />
+							<add_player_choice text="if md.$deal.{'$pos_%1'.[$c]} != null then if not (typeof md.$deal.{'$pos_%1'.[$c]} == datatype.money) and md.$deal.{'$pos_%1'.[$c]}.isclass.[class.zone, class.sector, class.station] then md.$deal.{'$pos_%1'.[$c]}.name else '%1Cr'.[md.$deal.{'$pos_%1'.[$c]}.formatted.default] else {2802,1470}.[if $c lt 3 then md.$deal.$faction_old.knownname else md.$deal.$faction.knownname]" section="mmdiplo_do_swap_select" choiceparam="$c" position="$c"/>
+						</do_all>
+						
+						<set_value name="$relation" exact="null" />
+						<set_value name="$boost" exact="null" />
+						<set_value name="$value_o" exact="0Cr" />
+						<set_value name="$value_n" exact="0Cr" />
+						<set_value name="$value_1" exact="0Cr" />
+						<set_value name="$value_2" exact="0Cr" />
+						<create_list name="$sectors_old" />
+						<create_list name="$zones_old" />
+						<create_list name="$stations_old" />
+						<create_list name="$sectors" />
+						<create_list name="$zones" />
+						<create_list name="$stations" />
+						<set_value name="$dealornodeal" exact="false" />
+						<set_value name="$mood" exact="':|'" comment=">( , :( , :| , :), :D , oO, xD" />
+						<!-- calculation ¯\_(ツ)_/¯ ? -->
+						<do_all exact="5" counter="$c">
+							<do_if value="$c == 3">
+								<set_value name="$check_station_1" exact="$check_station"/>
+								<set_value name="$check_station" exact="0"/>
+								<set_value name="$check_sy" exact="0"/>
+								<continue />
+							</do_if>
+							<do_elseif value="$c == 1">
+								<set_value name="$check_station" exact="0"/>
+							</do_elseif>
+
+							<do_if value="md.$deal.{'$pos_%1'.[$c]} != null">
+
+								<do_if value="not (typeof md.$deal.{'$pos_%1'.[$c]} == datatype.money) and md.$deal.{'$pos_%1'.[$c]}.isclass.[class.zone, class.sector, class.station]">
+
+									<do_if value="$c lt 3">
+										<do_if value="md.$deal.{'$pos_%1'.[$c]}.isclass.sector">
+											<append_to_list name="$sectors_old" exact="md.$deal.{'$pos_%1'.[$c]}"/>
+										</do_if>
+										<do_elseif value="md.$deal.{'$pos_%1'.[$c]}.isclass.zone">
+											<append_to_list name="$zones_old" exact="md.$deal.{'$pos_%1'.[$c]}"/>
+										</do_elseif>
+										<do_elseif value="md.$deal.{'$pos_%1'.[$c]}.isclass.station">
+											<append_to_list name="$stations_old" exact="md.$deal.{'$pos_%1'.[$c]}"/>
+										</do_elseif>
+									</do_if>
+									<do_else>
+										<do_if value="md.$deal.{'$pos_%1'.[$c]}.isclass.sector">
+											<append_to_list name="$sectors" exact="md.$deal.{'$pos_%1'.[$c]}"/>
+										</do_if>
+										<do_elseif value="md.$deal.{'$pos_%1'.[$c]}.isclass.zone">
+											<append_to_list name="$zones" exact="md.$deal.{'$pos_%1'.[$c]}"/>
+										</do_elseif>
+										<do_elseif value="md.$deal.{'$pos_%1'.[$c]}.isclass.station">
+											<append_to_list name="$stations" exact="md.$deal.{'$pos_%1'.[$c]}"/>
+										</do_elseif>
+									</do_else>
+
+									<set_value name="$value" exact="0Cr" />
+									<!--set_value name="$faction" exact="if $c lt 3 then md.$deal.$faction else md.$deal.$faction_old" /-->
+									<set_value name="$faction_old" exact="if $c lt 3 then md.$deal.$faction_old else md.$deal.$faction" />
+									<set_value name="$object" exact="md.$deal.{'$pos_%1'.[$c]}" />
+									<include_actions ref="MMDIPLO_value" />
+									<do_if value="$c lt 3">
+										<set_value name="$value_o" exact="$value * md.$deal.$faction_multi_old" operation="add"/>
+									</do_if>
+									<do_else>
+										<set_value name="$value_n" exact="$value * md.$deal.$faction_multi" operation="add"/>
+									</do_else>
+								</do_if>
+								<do_else>
+									<do_if value="$c lt 3">
+										<set_value name="$value_o" exact="md.$deal.{'$pos_%1'.[$c]}" operation="add"/>
+										<set_value name="$value_1" exact="md.$deal.{'$pos_%1'.[$c]}" operation="add"/>
+									</do_if>
+									<do_else>
+										<set_value name="$value_n" exact="md.$deal.{'$pos_%1'.[$c]}" operation="add"/>
+										<set_value name="$value_2" exact="md.$deal.{'$pos_%1'.[$c]}" operation="add"/>
+									</do_else>
+								</do_else>
+
+							</do_if>
+
+						</do_all>
+						
+						<do_if value="$value_o + $value_n gt 0Cr">
+							<do_if value="$value_o lt $value_n">
+								<set_value name="$mood" exact="':('" comment=">( , :( , :| , :), :D , oO, xD" />
+								<!-- $faction will be unhappy -->
+								<do_if value="md.$deal.$faction_old.relationto.{md.$deal.$faction} gt 0">
+									<set_value name="$modif" exact="1f + md.$deal.$faction_old.relationto.{md.$deal.$faction}" />
+									<do_if value="$value_o*$modif ge $value_n">
+										<set_value name="$dealornodeal" exact="true" />
+										<set_value name="$mood" exact="':)'" comment=">( , :( , :| , :), :D , oO, xD" />
+									</do_if>
+								</do_if>
+							</do_if>
+							<do_else>
+								<!-- $faction will be happy -->
+								<set_value name="$dealornodeal" exact="true" />
+								<set_value name="$mood" exact="':D'" comment=">( , :( , :| , :), :D , oO, xD" />
+							</do_else>
+
+							<do_if value="$check_station_1">
+								<find_station name="$f_stations" space="player.galaxy" owner="md.$deal.$faction_old" multiple="true"/>
+								<do_if value="$f_stations.count == $check_station_1">
+									<set_value name="$dealornodeal" exact="false" />
+									<set_value name="$mood" exact="'oO'" comment=">( , :( , :| , :), :D , oO, xD" />
+									<show_help position="8" log="false" force="true" duration="2s" custom="{2802,1466}" />
+								</do_if>
+							</do_if>
+							<do_if value="$check_station">
+								<find_station name="$f_stations" space="player.galaxy" owner="md.$deal.$faction" multiple="true"/>
+								<do_if value="$f_stations.count == $check_station">
+									<set_value name="$dealornodeal" exact="false" />
+									<set_value name="$mood" exact="'>('" comment=">( , :( , :| , :), :D , oO, xD" />
+									<show_help position="8" log="false" force="true" duration="2s" custom="{2802,1466}" />
+								</do_if>
+								<do_if value="$check_sy">
+									<find_station name="$f_sy" space="player.galaxy" owner="md.$deal.$faction" multiple="true">
+										<match_content class="class.buildmodule" />
+									</find_station>
+									<do_if value="$f_sy.count == $check_sy">
+										<set_value name="$dealornodeal" exact="false" />
+										<set_value name="$mood" exact="'>('" comment=">( , :( , :| , :), :D , oO, xD" />
+										<show_help position="8" log="false" force="true" duration="2s" custom="{2802,1466}" />
+									</do_if>
+								</do_if>
+							</do_if>
+							<remove_value name="$f_stations"/>
+							<remove_value name="$f_sy"/>
+
+							<do_if value="$dealornodeal and md.$deal.$faction_old.relationto.{md.$deal.$faction} lt md.$deal.$faction.relation.neutral.min and ($value_o + $value_n) gt 100000000Cr">
+								<set_value name="$relation" exact="md.$deal.$faction.relation.neutral.min" />
+							</do_if>
+
+							<do_if value="$dealornodeal and ( ($value_o - $value_n) gt 10000000Cr or ($value_o - $value_n) lt -10000000Cr )">
+								<do_if value="$value_o - $value_n gt 0Cr">
+									<set_value name="$boost" exact="0.00016LF + (0.00064LF / (4000000Cr)LF * ($value_o - $value_n)LF)" />
+								</do_if>
+								<do_else>
+									<set_value name="$boost" exact="0.00016LF + (0.00064LF / (4000000Cr)LF * ($value_n - $value_o)LF)" />
+								</do_else>
+								<set_value name="$mood" exact="'xD'" comment=">( , :( , :| , :), :D , oO, xD" />
+							</do_if>
+
+							<do_if value="$value_1 - $value_2 gt 0Cr">
+								<do_if value="md.$deal.$faction_old == faction.player and player.entity.money lt $value_1 - $value_2">
+									<set_value name="$dealornodeal" exact="false" />
+								</do_if>
+								<do_elseif value="global.$factionCEOs.{'$' + md.$deal.$faction_old.id}? and global.$factionCEOs.{'$' + md.$deal.$faction_old.id}.money lt $value_1 - $value_2">
+									<set_value name="$dealornodeal" exact="false" />
+								</do_elseif>
+							</do_if>
+							<do_else>
+								<do_if value="md.$deal.$faction == faction.player and player.entity.money lt $value_2 - $value_1">
+									<set_value name="$dealornodeal" exact="false" />
+								</do_if>
+								<do_elseif value="global.$factionCEOs.{'$' + md.$deal.$faction.id}? and global.$factionCEOs.{'$' + md.$deal.$faction.id}.money lt $value_2 - $value_1">
+									<set_value name="$dealornodeal" exact="false" />
+								</do_elseif>
+							</do_else>
+						</do_if>
+
+						
+						<set_value name="$money" exact="$value_1 - $value_2" />
+						<!-- / calculation -->
+						<add_player_choice text="{2802,1468}.[$mood]" selectable="$dealornodeal" section="mmdiplo_do_finish" choiceparam="[ md.$deal.$faction, 
+																																					if $relation or $boost then [$relation, $boost] else null, 
+																																					if $sectors_old.count then $sectors_old else null, 
+																																					if $zones_old.count then $zones_old else null, 
+																																					if $stations_old.count then $stations_old else null, 
+																																					$money , 
+																																					if $sectors.count then $sectors else null, 
+																																					if $zones.count then $zones else null, 
+																																					if $stations.count then $stations else null ]" position="bottom_left"/>
+						<remove_value name="$dealornodeal"/> 
+						<remove_value name="$mood"/> 
+						<remove_value name="$money"/> 
+						<remove_value name="$stations"/> 
+						<remove_value name="$zones"/> 
+						<remove_value name="$sectors"/> 
+						<remove_value name="$stations_old"/> 
+						<remove_value name="$zones_old"/> 
+						<remove_value name="$sectors_old"/> 
+						<remove_value name="$check_station_1"/> 
+						<remove_value name="$check_station"/> 
+						<remove_value name="$check_sy"/> 
+						<remove_value name="$value_o"/> 
+						<remove_value name="$value_n"/> 
+						<remove_value name="$value_1"/> 
+						<remove_value name="$value_2"/> 
+						<remove_value name="$value"/> 
+						<remove_value name="$boost"/> 
+						<remove_value name="$relation"/> 
+					</do_if>
+
+
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmdiplo_do_finish'">
+
+					<set_value name="$faction_old" exact="player.primaryship.owner" />
+					<set_value name="$faction" exact="if event.param2.{1}? then event.param2.{1} else false" />
+					<!--
+					choiceparam="[ faction, [new.relation,boost], [sectors_f-old], [zones_f-old], [stations_f-old], money , [sectors_f], [zones_f], [stations_f] ]"
+					-->
+					<do_if value="$faction">
+						<do_if value="event.param2.{2}? and event.param2.{2} != null">
+							<do_if value="typeof event.param2.{2} == datatype.list">
+								<do_if value="event.param2.{2}.{1}? and event.param2.{2}.{1} != null">
+									<set_value name="$new_data" exact="event.param2.{2}.{1}" />
+								</do_if>
+								<do_if value="event.param2.{2}.{2}? and event.param2.{2}.{2} != null">
+									<set_value name="$boost" exact="event.param2.{2}.{2}" />
+								</do_if>
+								<do_if value="event.param2.{2}.{3}? and event.param2.{2}.{3} != null">
+									<set_value name="$range" exact="event.param2.{2}.{3}" />
+									<include_actions ref="MMDIPLO_sync" />
+								</do_if>
+							</do_if>
+							<do_else>
+								<set_value name="$new_data" exact="event.param2.{2}" />
+							</do_else>
+							<do_if value="$new_data? and (typeof $new_data).isnumeric">
+								<set_value name="$reference" exact="$faction_old.relationto.{$faction}" />
+								<set_faction_relation faction="$faction_old" otherfaction="$faction" value="$new_data" comment="relation change"/>
+								<do_if value="$reference != $new_data and $reference == $faction_old.relationto.{$faction}">
+									<set_faction_relation_locked faction="$faction" locked="false"/>
+									<set_faction_relation faction="$faction_old" otherfaction="$faction" value="$new_data" comment="relation change with lock"/>
+									<set_faction_relation_locked faction="$faction" locked="true"/>
+								</do_if>
+								<remove_value name="$reference"/> 
+							</do_if>
+							<do_if value="$boost? and (typeof $boost).isnumeric">
+								<add_faction_relation faction="$faction_old" otherfaction="$faction" value="$boost" />
+							</do_if>
+							<remove_value name="$new_data"/> 
+							<remove_value name="$boost"/> 
+						</do_if>
+						<do_if value="event.param2.{3}? and event.param2.{3} != null">
+							<set_value name="$data" exact="if typeof event.param2.{3} == datatype.list then event.param2.{3}.clone else if event.param2.{3}.exists and event.param2.{3}.isclass.sector then [event.param2.{3}] else []" />
+							<do_all exact="$data.count" counter="$d">
+								<do_if value="$data.{$d}.exists and $data.{$d}.isclass.sector">
+									<set_value name="$target_s" exact="$data.{$d}" />
+									<include_actions ref="MMDIPLO_sector" />
+								</do_if>
+							</do_all>
+							<remove_value name="$data"/> 
+						</do_if>
+						<do_if value="event.param2.{4}? and event.param2.{4} != null">
+							<set_value name="$data" exact="if typeof event.param2.{4} == datatype.list then event.param2.{4}.clone else if event.param2.{4}.exists and event.param2.{4}.isclass.zone then [event.param2.{4}] else []" />
+							<do_all exact="$data.count" counter="$d">
+								<do_if value="$data.{$d}.exists and $data.{$d}.isclass.zone">
+									<set_value name="$target_z" exact="$data.{$d}" />
+									<include_actions ref="MMDIPLO_zone" />
+								</do_if>
+							</do_all>
+							<remove_value name="$data"/> 
+						</do_if>
+						<do_if value="event.param2.{5}? and event.param2.{5} != null">
+							<set_value name="$data" exact="if typeof event.param2.{5} == datatype.list then event.param2.{5}.clone else if event.param2.{5}.exists and event.param2.{5}.isclass.station then [event.param2.{5}] else []" />
+							<do_all exact="$data.count" counter="$d">
+								<do_if value="$data.{$d}.exists and $data.{$d}.isclass.station">
+									<set_value name="$target" exact="$data.{$d}" />
+									<include_actions ref="MMDIPLO_station" />
+								</do_if>
+							</do_all>
+							<remove_value name="$data"/> 
+						</do_if>
+						<do_if value="event.param2.{6}? and event.param2.{6} != null and typeof event.param2.{6} == datatype.money and event.param2.{6} != 0Cr">
+							<set_value name="$data" exact="event.param2.{6}" />
+							<find_dock_location name="$Dock" container="event.object.container" dockpopulationtype="dockpopulationtype.trade"/>
+							<do_if value="$Dock" negate="true">
+								<find_dock_location name="$Dock" container="event.object.container" dockpopulationtype="dockpopulationtype.bar"/>
+								<do_if value="$Dock" negate="true">
+									<find_dock_location name="$Dock" container="event.object.container" dockpopulationtype="dockpopulationtype.repair"/>
+									<do_if value="$Dock" negate="true">
+										<find_dock_location name="$Dock" container="event.object.container" dockpopulationtype="dockpopulationtype.administrative"/>
+									</do_if>
+								</do_if>
+							</do_if>
+
+							<do_if value="$faction != faction.player">
+								<do_if value="$Dock">
+									<create_platform_actor name="$actor_faction" type="entitytype.commander" dockingbay="$Dock.component" ref="manager_omicron_lyrae_random">
+										<owner exact="$faction"/>
+									</create_platform_actor>
+								</do_if>
+								<do_else>
+									<create_cue_actor name="$actor_faction" cue="this">
+										<select ref="manager_omicron_lyrae_random"/>
+										<owner exact="$faction" />
+									</create_cue_actor>
+									<set_value name="$cue_actor_faction" exact="true" />
+								</do_else>
+								<do_if value="global.$factionCEOs.{'$' + $faction.id}?">
+									<share_actor_account actor="$actor_faction" otherobject="global.$factionCEOs.{'$' + $faction.id}"/>
+								</do_if>
+							</do_if>
+							<do_else>
+								<set_value name="$actor_faction" exact="player.entity" />
+							</do_else>
+							
+							<do_if value="$faction_old != faction.player">
+								<do_if value="$Dock">
+									<create_platform_actor name="$actor_faction_old" type="entitytype.commander" dockingbay="$Dock.component" ref="manager_omicron_lyrae_random">
+										<owner exact="$faction_old"/>
+									</create_platform_actor>
+								</do_if>
+								<do_else>
+									<create_cue_actor name="$actor_faction_old" cue="this">
+										<select ref="manager_omicron_lyrae_random"/>
+										<owner exact="$faction_old" />
+									</create_cue_actor>
+									<set_value name="$cue_actor_faction_old" exact="true" />
+								</do_else>
+								<do_if value="global.$factionCEOs.{'$' + $faction_old.id}?">
+									<share_actor_account actor="$actor_faction_old" otherobject="global.$factionCEOs.{'$' + $faction_old.id}"/>
+								</do_if>
+							</do_if>
+							<do_else>
+								<set_value name="$actor_faction_old" exact="player.entity" />
+							</do_else>
+							<remove_value name="$Dock" />
+
+							<do_if value="$data gt 0Cr">
+								<transfer_money from="$actor_faction_old" to="$actor_faction" amount="$data" />
+							</do_if>
+							<do_else>
+								<set_value name="$data_tmp" exact="0Cr - $data" />
+								<transfer_money from="$actor_faction" to="$actor_faction_old" amount="$data_tmp" />
+								<remove_value name="$data_tmp"/> 
+							</do_else>
+							
+							<do_if value="$cue_actor_faction? and $cue_actor_faction">
+								<destroy_object object="$actor_faction"/>
+							</do_if>
+							<do_if value="$cue_actor_faction_old? and $cue_actor_faction_old">
+								<destroy_object object="$actor_faction_old"/>
+							</do_if>
+							
+							<remove_value name="$actor_faction_old"/> 
+							<remove_value name="$actor_faction"/> 
+							<remove_value name="$data"/> 
+						</do_if>
+
+						<remove_value name="$target"/>
+						<remove_value name="$target_s"/>
+						<remove_value name="$target_z"/>
+						<set_value name="$faction_tmp" exact="$faction_old" />
+						<set_value name="$faction_old" exact="$faction" />
+						<set_value name="$faction" exact="$faction_tmp" />
+						<remove_value name="$faction_tmp"/>
+
+						<do_if value="event.param2.{7}? and event.param2.{7} != null">
+							<set_value name="$data" exact="if typeof event.param2.{7} == datatype.list then event.param2.{7}.clone else if event.param2.{7}.exists and event.param2.{7}.isclass.sector then [event.param2.{7}] else []" />
+							<do_all exact="$data.count" counter="$d">
+								<do_if value="$data.{$d}.exists and $data.{$d}.isclass.sector">
+									<set_value name="$target_s" exact="$data.{$d}" />
+									<include_actions ref="MMDIPLO_sector" />
+								</do_if>
+							</do_all>
+							<remove_value name="$data"/> 
+						</do_if>
+						<do_if value="event.param2.{8}? and event.param2.{8} != null">
+							<set_value name="$data" exact="if typeof event.param2.{8} == datatype.list then event.param2.{8}.clone else if event.param2.{8}.exists and event.param2.{8}.isclass.zone then [event.param2.{8}] else []" />
+							<do_all exact="$data.count" counter="$d">
+								<do_if value="$data.{$d}.exists and $data.{$d}.isclass.zone">
+									<set_value name="$target_z" exact="$data.{$d}" />
+									<include_actions ref="MMDIPLO_zone" />
+								</do_if>
+							</do_all>
+							<remove_value name="$data"/> 
+						</do_if>
+						<do_if value="event.param2.{9}? and event.param2.{9} != null">
+							<set_value name="$data" exact="if typeof event.param2.{9} == datatype.list then event.param2.{9}.clone else if event.param2.{9}.exists and event.param2.{9}.isclass.station then [event.param2.{9}] else []" />
+							<do_all exact="$data.count" counter="$d">
+								<do_if value="$data.{$d}.exists and $data.{$d}.isclass.station">
+									<set_value name="$target" exact="$data.{$d}" />
+									<include_actions ref="MMDIPLO_station" />
+								</do_if>
+							</do_all>
+							<remove_value name="$data"/> 
+						</do_if>
+					</do_if>
+					<remove_value name="$faction_old"/> 
+					<remove_value name="$faction"/> 
+					<remove_value name="md.$deal"/> 
+				</do_elseif>
+			</actions>
+		</cue>
+
+		<!-- 
+		<set_value name="$value" exact="0Cr" />
+		<set_value name="$faction_old" exact="faction.player" />
+		<set_value name="$object" exact="$var" />
+		<include_actions ref="MMDIPLO_value" />
+		-->
+		<library name="MMDIPLO_value">
+			<actions>
+				<do_if value="$value?" negate="true">
+					<set_value name="$value" exact="0Cr" />
+				</do_if>
+
+				<do_if value="$object.isclass.sector">
+					<find_zone name="$vl_zones" space="$object" multiple="true" tempzone="false"/>
+					<do_all exact="$vl_zones.count" counter="$s">
+						<do_if value="$vl_zones.{$s}.owner == $faction_old and not ($vl_zones.{$s}.istemporaryzone or $vl_zones.{$s}.isclass.highway) and $vl_zones.{$s}.ismapzone">
+							<set_value name="$value" exact="30000000Cr" operation="add" />
+							<do_if value="$vl_zones.{$s}.yield.indexof.{ware.ice}">
+								<set_value name="$value" exact="5000000Cr" operation="add" />
+							</do_if>
+							<do_if value="$vl_zones.{$s}.yield.indexof.{ware.ore}">
+								<set_value name="$value" exact="5000000Cr" operation="add" />
+							</do_if>
+							<do_if value="$vl_zones.{$s}.yield.indexof.{ware.silicon}">
+								<set_value name="$value" exact="5000000Cr" operation="add" />
+							</do_if>
+							<do_if value="$vl_zones.{$s}.yield.indexof.{ware.nividium}">
+								<set_value name="$value" exact="1000000Cr" operation="add" />
+							</do_if>
+							<do_if value="$vl_zones.{$s}.yield.indexof.{ware.crystals}">
+								<set_value name="$value" exact="1000000Cr" operation="add" />
+							</do_if>
+							<do_if value="$vl_zones.{$s}.yield.indexof.{ware.plasma}">
+								<set_value name="$value" exact="1000000Cr" operation="add" />
+							</do_if>
+							<do_if value="$vl_zones.{$s}.yield.indexof.{ware.ions}">
+								<set_value name="$value" exact="2000000Cr" operation="add" />
+							</do_if>
+							<do_if value="$vl_zones.{$s}.yield.indexof.{ware.hydrogen}">
+								<set_value name="$value" exact="1000000Cr" operation="add" />
+							</do_if>
+							<find_object name="$objects" space="$vl_zones.{$s}" class="class.gate" multiple="true"/>
+							<do_if value="$objects.count">
+								<set_value name="$value" exact="$objects.count * 10000000Cr" operation="add" />
+							</do_if>
+							<find_object name="$objects" space="$vl_zones.{$s}" class="class.jumpbeacon" multiple="true"/>
+							<do_if value="$objects.count">
+								<set_value name="$value" exact="$objects.count * 3000000Cr" operation="add" />
+							</do_if>
+							<find_object name="$objects" space="$vl_zones.{$s}" class="class.highwayexitgate" multiple="true"/>
+							<do_if value="$objects.count">
+								<set_value name="$value" exact="$objects.count * 3000000Cr" operation="add" />
+							</do_if>
+							<find_object name="$objects" space="$vl_zones.{$s}" class="class.highwayentrygate" multiple="true"/>
+							<do_if value="$objects.count">
+								<set_value name="$value" exact="$objects.count * 3000000Cr" operation="add" />
+							</do_if>
+							<remove_value name="$objects"/>
+						</do_if>
+					</do_all>
+					<find_station name="$vl_stations" space="$object" owner="$faction_old" multiple="true"/>
+					<do_all exact="$vl_stations.count" counter="$z">
+						<do_if value="$check_station?">
+							<set_value name="$check_station" operation="add"/>
+						</do_if>
+						<set_value name="$value" exact="$vl_stations.{$z}.value" operation="add" />
+						<do_if value="$vl_stations.{$z}.canbuildships">
+							<set_value name="$value" exact="10000000Cr" operation="add" />
+							<do_if value="$check_sy?">
+								<set_value name="$check_sy" operation="add"/>
+							</do_if>
+						</do_if>
+						<do_if value="$vl_stations.{$z}.canproduceships">
+							<set_value name="$value" exact="10000000Cr" operation="add" />
+						</do_if>
+					</do_all>
+				</do_if>
+				<do_elseif value="$object.isclass.zone">
+					<set_value name="$value" exact="30000000Cr" operation="add" />
+					<do_if value="$object.yield.indexof.{ware.ice}">
+						<set_value name="$value" exact="5000000Cr" operation="add" />
+					</do_if>
+					<do_if value="$object.yield.indexof.{ware.ore}">
+						<set_value name="$value" exact="5000000Cr" operation="add" />
+					</do_if>
+					<do_if value="$object.yield.indexof.{ware.silicon}">
+						<set_value name="$value" exact="5000000Cr" operation="add" />
+					</do_if>
+					<do_if value="$object.yield.indexof.{ware.nividium}">
+						<set_value name="$value" exact="1000000Cr" operation="add" />
+					</do_if>
+					<do_if value="$object.yield.indexof.{ware.crystals}">
+						<set_value name="$value" exact="1000000Cr" operation="add" />
+					</do_if>
+					<do_if value="$object.yield.indexof.{ware.plasma}">
+						<set_value name="$value" exact="1000000Cr" operation="add" />
+					</do_if>
+					<do_if value="$object.yield.indexof.{ware.ions}">
+						<set_value name="$value" exact="2000000Cr" operation="add" />
+					</do_if>
+					<do_if value="$object.yield.indexof.{ware.hydrogen}">
+						<set_value name="$value" exact="1000000Cr" operation="add" />
+					</do_if>
+					<find_object name="$objects" space="$object" class="class.gate" multiple="true"/>
+					<do_if value="$objects.count">
+						<set_value name="$value" exact="$objects.count * 10000000Cr" operation="add" />
+					</do_if>
+					<find_object name="$objects" space="$object" class="class.jumpbeacon" multiple="true"/>
+					<do_if value="$objects.count">
+						<set_value name="$value" exact="$objects.count * 3000000Cr" operation="add" />
+					</do_if>
+					<find_object name="$objects" space="$object" class="class.highwayexitgate" multiple="true"/>
+					<do_if value="$objects.count">
+						<set_value name="$value" exact="$objects.count * 3000000Cr" operation="add" />
+					</do_if>
+					<find_object name="$objects" space="$object" class="class.highwayentrygate" multiple="true"/>
+					<do_if value="$objects.count">
+						<set_value name="$value" exact="$objects.count * 3000000Cr" operation="add" />
+					</do_if>
+					<remove_value name="$objects"/>
+					<find_station name="$vl_stations" space="$object" owner="$faction_old" multiple="true"/>
+					<do_all exact="$vl_stations.count" counter="$z">
+						<do_if value="$check_station?">
+							<set_value name="$check_station" operation="add"/>
+						</do_if>
+						<set_value name="$value" exact="$vl_stations.{$z}.value" operation="add" />
+						<do_if value="$vl_stations.{$z}.canbuildships">
+							<set_value name="$value" exact="10000000Cr" operation="add" />
+							<do_if value="$check_sy?">
+								<set_value name="$check_sy" operation="add"/>
+							</do_if>
+						</do_if>
+						<do_if value="$vl_stations.{$z}.canproduceships">
+							<set_value name="$value" exact="10000000Cr" operation="add" />
+						</do_if>
+					</do_all>
+				</do_elseif>
+				<do_elseif value="$object.isclass.station">
+					<do_if value="$check_station?">
+						<set_value name="$check_station" operation="add"/>
+					</do_if>
+					<set_value name="$value" exact="$object.value" operation="add" />
+					<do_if value="$object.canbuildships">
+						<set_value name="$value" exact="10000000Cr" operation="add" />
+						<do_if value="$check_sy?">
+							<set_value name="$check_sy" operation="add"/>
+						</do_if>
+					</do_if>
+					<do_if value="$object.canproduceships">
+						<set_value name="$value" exact="10000000Cr" operation="add" />
+					</do_if>
+				</do_elseif>
+				<remove_value name="$vl_zones"/>
+				<remove_value name="$vl_stations"/>
+				<remove_value name="$object"/>
+			</actions>
+		</library>
+
+		<!-- 
+		<set_value name="$faction_old" exact="faction.player" />
+		<set_value name="$faction" exact="faction.player" />
+		<set_value name="$range" exact="event.param2.{2}.{3}" />
+		<include_actions ref="MMDIPLO_sync" />
+		-->
+		<library name="MMDIPLO_sync">
+			<actions>
+				<set_value name="$range" exact="if not (typeof $range).isstring and $range.class? and [class.cluster,class.sector,class.zone].indexof.{$range.class} then $range else player.galaxy" />
+				<create_list name="$factions" />
+				<do_if value="$range == player.galaxy">
+					<set_value name="$base_factions" exact="[
+						faction.player,
+						faction.beryll,
+						faction.nolimits,
+						faction.reivers,
+						faction.xenon,
+						faction.plutarch,
+						faction.heartofalbion,
+						faction.canteran,
+						faction.familyryak,
+						faction.argongovernment,
+						faction.albionenergy,
+						faction.aquarius,
+						faction.leddaindustrial,
+						faction.sonraenergy,
+						faction.sovereignsyndicate,
+						faction.hereticvanguards,
+						faction.chow,
+						faction.jonferson,
+						faction.frantonpharma,
+						faction.wholesomefoods]" />
+					<do_if value="md.$FieldsOfOpportunity?">
+						<include_actions ref="MMDIPLO_sync_to" />
+					</do_if>
+					<do_if value="md.$DLC2_Clusters?">
+						<include_actions ref="MMDIPLO_sync_hol" />
+					</do_if>
+					<do_all exact="$base_factions.count" counter="$Counter">
+						<do_if value="$base_factions.{$Counter}.relationto.{$faction} le $faction.relation.enemy.max and not $factions.indexof.{$base_factions.{$Counter}}">
+							<append_to_list name="$factions" exact="$base_factions.{$Counter}"/>
+						</do_if> 
+					</do_all>
+					<remove_value name="$base_factions"/>
+				</do_if>
+				<do_else>
+					<find_station name="$stations" space="$range" multiple="true">
+						<match owner="$faction" negate="true"/>		
+						<match owner="faction.enemy" negate="true"/>		
+						<match owner="faction.criminal" negate="true"/>		
+						<match owner="faction.smuggler" negate="true"/>		
+						<match owner="faction.neutral" negate="true"/>		
+						<match owner="faction.ownerless" negate="true"/>		
+						<match owner="faction.friend" negate="true"/>
+						<match_relation faction="$faction" relation="enemy" comparison="le"/>
+					</find_station>
+					<do_all exact="$stations.count" counter="$Counter">
+						<do_if value="not $factions.indexof.{$stations.{$Counter}.owner}">
+							<append_to_list name="$factions" exact="$stations.{$Counter}.owner"/>
+						</do_if> 
+					</do_all>
+					<remove_value name="$stations"/>
+					<find_ship name="$ships" space="$range" multiple="true">
+						<match owner="$faction" negate="true"/>		
+						<match owner="faction.enemy" negate="true"/>		
+						<match owner="faction.criminal" negate="true"/>		
+						<match owner="faction.smuggler" negate="true"/>		
+						<match owner="faction.neutral" negate="true"/>		
+						<match owner="faction.ownerless" negate="true"/>		
+						<match owner="faction.friend" negate="true"/>
+						<match_relation faction="$faction" relation="enemy" comparison="le"/>
+					</find_ship>
+					<do_all exact="$ships.count" counter="$Counter">
+						<do_if value="not $factions.indexof.{$ships.{$Counter}.owner}">
+							<append_to_list name="$factions" exact="$ships.{$Counter}.owner"/>
+						</do_if> 
+					</do_all>
+					<remove_value name="$ships"/>
+				</do_else>
+
+				<do_all exact="$factions.count" counter="$Counter">
+					<do_if value="$factions.{$Counter}.relationto.{$faction_old} gt $faction_old.relation.neutral.min">
+						<set_faction_relation faction="$faction_old" otherfaction="$factions.{$Counter}" value="$factions.{$Counter}.relation.enemy.max"/>
+					</do_if> 
+				</do_all>
+				<remove_value name="$factions"/>
+				<remove_value name="$range"/>
+			</actions>
+		</library>
+		<library name="MMDIPLO_sync_to">
+			<actions>
+				<append_to_list name="$base_factions" exact="faction.{['teladi'].{1}}"/> 
+				<append_to_list name="$base_factions" exact="faction.{['teladidrugrunner'].{1}}"/> 
+				<append_to_list name="$base_factions" exact="faction.{['teladigunrunner'].{1}}"/> 
+			</actions>
+		</library>
+		<library name="MMDIPLO_sync_hol">
+			<actions>
+				<append_to_list name="$base_factions" exact="faction.{['terracorp'].{1}}"/> 
+				<append_to_list name="$base_factions" exact="faction.{['terran'].{1}}"/> 
+				<append_to_list name="$base_factions" exact="faction.{['atlas'].{1}}"/> 
+				<append_to_list name="$base_factions" exact="faction.{['khaak'].{1}}"/> 
+			</actions>
+		</library>
+
+		<!-- 
+		<set_value name="$faction_old" exact="faction.player" />
+		<set_value name="$faction" exact="faction.player" />
+		<set_value name="$target_s" exact="$sector" />
+		<include_actions ref="MMDIPLO_sector" />
+		-->
+		<library name="MMDIPLO_sector">
+			<actions>
+				<find_zone name="$zones" space="$target_s" multiple="true" tempzone="false"/>
+				<set_value name="$tcount" exact="0" />
+				<do_all exact="$zones.count" counter="$s">
+					<do_if value="$zones.{$s}.owner == $faction_old and not ($zones.{$s}.istemporaryzone or $zones.{$s}.isclass.highway) and $zones.{$s}.ismapzone">
+						<set_value name="$target_z" exact="$zones.{$s}" />
+						<include_actions ref="MMDIPLO_zone" />
+						<set_value name="$tcount" operation="add" />
+					</do_if>
+				</do_all>
+				<do_if value="$tcount gt $zones.count/2">
+					<set_owner object="$target_s" faction="$faction" />
+				</do_if>
+				<find_station name="$stations" space="$target_s" owner="$faction_old" multiple="true"/>
+				<do_all exact="$stations.count" counter="$z">
+					<set_value name="$target" exact="$stations.{$z}" />
+					<include_actions ref="MMDIPLO_station" />
+				</do_all>
+				<remove_value name="$stations"/>
+				<remove_value name="$target_s"/>
+				<remove_value name="$tcount"/>
+				<remove_value name="$zones"/>
+			</actions>
+		</library>
+
+		<!-- 
+		<set_value name="$faction_old" exact="faction.player" />
+		<set_value name="$faction" exact="faction.player" />
+		<set_value name="$target_z" exact="$zone" />
+		<include_actions ref="MMDIPLO_zone" />
+		-->
+		<library name="MMDIPLO_zone">
+			<actions>
+				<find_station name="$stations" space="$target_z" multiple="true">
+					<match owner="$faction_old" />		
+				</find_station>
+				<do_all exact="$stations.count" counter="$zs">
+					<set_value name="$target" exact="$stations.{$zs}" />
+					<include_actions ref="MMDIPLO_station" />
+				</do_all>
+				<set_owner object="$target_z" faction="$faction" />
+				<find_object groupname="$mines" space="$target_z" macro="macro.props_wps_mine_02_macro" multiple="true"/>
+				<destroy_group group="$mines"/>
+				<remove_value name="$mines"/>
+				<remove_value name="$target_z"/>
+				<remove_value name="$stations"/>
+			</actions>
+		</library>
+
+		<!-- 
+		<set_value name="$faction_tmp" exact="faction.player" />
+		<set_value name="$space_tmp" exact="player.galaxy" />
+		<include_actions ref="MMDIPLO_faction" />
+		<remove_value name="$faction_dps"/>
+		<remove_value name="$zones"/>
+		<remove_value name="$stations"/>
+		<remove_value name="$ships_cap"/>
+		<remove_value name="$ships_small"/>
+		-->
+		<library name="MMDIPLO_faction">
+			<actions>
+				<set_value name="$faction_dps" exact="0"/>
+				<find_zone name="$zones" space="$space_tmp" multiple="true" owner="$faction_tmp" tempzone="false"/>
+				<find_station name="$stations" space="$space_tmp" functional="true" multiple="true">
+					<match owner="$faction_tmp"/>		
+				</find_station>
+				<find_ship name="$ships_cap" class="[class.ship_l, class.ship_xl]" functional="true" space="$space_tmp" multiple="true">
+					<match owner="$faction_tmp"/>
+				</find_ship>
+				<do_all exact="$ships_cap.count" counter="$Counter">
+					<set_value name="$faction_dps" exact="$ships_cap.{$Counter}.dps.all" operation="add"/>
+				</do_all>
+				<find_ship name="$ships_small" class="[class.ship_s, class.ship_m]" functional="true" space="$space_tmp" multiple="true">
+					<match owner="$faction_tmp"/>
+				</find_ship>
+				<do_all exact="$ships_small.count" counter="$Counter">
+					<set_value name="$faction_dps" exact="$ships_small.{$Counter}.dps.all" operation="add"/>
+				</do_all>
+				<remove_value name="$space_tmp"/>
+				<remove_value name="$faction_tmp"/>
+			</actions>
+		</library>
+
+		<!-- 
+		<set_value name="$faction" exact="faction.player" />
+		<set_value name="$target" exact="$Station" />
+		<include_actions ref="MMDIPLO_station" />
+		-->
+		<library name="MMDIPLO_station">
+			<actions>
+				<!-- remove subordinates / replace police with defence drones -->
+				<set_value name="$subordinates" exact="$target.subordinates" />
+				<do_if value="$target.buildingmodule.container? and $target.buildingmodule.container">
+					<do_if value="$subordinates.indexof.{$target.buildingmodule.container} == 0">
+						<append_to_list name="$subordinates" exact="$target.buildingmodule.container"/>
+					</do_if> 
+				</do_if>
+				<do_all exact="$subordinates.count" counter="$i" reverse="true">
+					<do_all exact="unitcategory.police.maxmk" counter="$xi" chance="if $faction == faction.player then 100 else 0">
+						<do_if value="unitcategory.police.mk.{$xi}.list.indexof.{$subordinates.{$i}.macro}">
+							<remove_units object="$target" macro="$subordinates.{$i}.macro" exact="1" unavailable="true"/>
+							<destroy_object object="$subordinates.{$i}"/>
+							<add_units object="$target" category="unitcategory.defence" mk="1" exact="1"/> 
+						</do_if> 
+					</do_all>
+					<do_if value="$subordinates.{$i}.exists">
+						<do_if value="$subordinates.{$i}.isplayerowned and $subordinates.{$i}.isclass.[class.ship_s, class.ship_m, class.ship_l, class.ship_xl]">
+							<abort_scripts entity="$subordinates.{$i}.pilot"/>
+							<remove_object_commander object="$subordinates.{$i}"/>
+							<do_if value="@$subordinates.{$i}.buildanchor">
+								<clear_buildmodule buildmodule="$subordinates.{$i}.buildmodule" />
+								<disconnect_from_build_location object="$subordinates.{$i}" />
+								<do_if value="$subordinates.{$i}.architect?">
+									<find_dock_location name="$target_dock"  multiple="false" container="$subordinates.{$i}" size="tag.dock_p" />
+									<do_if value="$subordinates.{$i}.architect.money and $subordinates.{$i}.architect.playerowned">
+										<transfer_money from="$subordinates.{$i}.architect" to="player.entity" amount="$subordinates.{$i}.architect.money" />
+									</do_if>
+
+									<set_value name="$Skill" exact="[skilltype.leadership, skilltype.navigation, skilltype.combat, skilltype.engineering, skilltype.management, skilltype.morale, skilltype.science]" />
+									<create_list name="$temp_Skill"/>
+									<do_all exact="$Skill.count" counter="$k">
+										<append_to_list name="$temp_Skill" exact="[$Skill.{$k},	'exact', $subordinates.{$i}.architect.skill.{$Skill.{$k}}]" />
+									</do_all>
+									<remove_value name="$Skill"/>
+									<set_value name="$name" exact="$subordinates.{$i}.architect.name"/>
+									<destroy_object object="$subordinates.{$i}.architect"/>
+
+									<set_value name="$temp_select" exact="[null, race.argon, tag.architect, null, null]" />
+									<set_value name="$temp_object" exact="$subordinates.{$i}" />
+									<set_value name="$temp_entitytype" exact="entitytype.architect" />
+									<set_value name="$temp_assign" exact="'architect'"/>
+									<include_actions ref="md.NF_BASE.NF_create_actor" />
+
+									<do_if value="$CEO and $shiparch.owner == $CEO.owner" chance="0">
+										<share_actor_account actor="$shiparch" otherobject="$CEO"/>
+									</do_if>
+									<set_object_name object="$newActor" name="$name" />
+
+									<remove_value name="$newActor"/>
+									<remove_value name="$name"/>
+									<remove_value name="$target_dock"/>
+									<remove_value name="$shiparch"/>
+								</do_if>
+							</do_if> 
+							<start_script object="$subordinates.{$i}.pilot" name="'player.default'"/>
+						</do_if>
+						<do_elseif value="$subordinates.{$i}.isclass.[class.ship_s, class.ship_m, class.ship_l, class.ship_xl]">
+							<do_if value="$subordinates.{$i}.subordinates">
+								<do_all exact="$subordinates.{$i}.subordinates.count" counter="$is" reverse="true">
+									<destroy_object object="$subordinates.{$i}.subordinates.{$is}"/>
+								</do_all>
+							</do_if> 
+							<destroy_object object="$subordinates.{$i}"/>
+						</do_elseif>
+						<do_else>
+							<get_control_entities object="$subordinates.{$i}" groupname="$ControlEntities"/>
+							<do_all exact="$ControlEntities.count" counter="$Counter">
+								<set_owner object="$ControlEntities.{$Counter}" faction="$faction"/>
+							</do_all>
+							<set_owner object="$subordinates.{$i}" faction="$faction" />
+						</do_else>
+					</do_if> 
+				</do_all>
+				<!-- remove old crew -->
+				<do_if value="$target.canbuildships">
+					<find_object_component name="$buildmodules" object="$target" class="class.buildmodule" multiple="true"/>
+					<do_all exact="$buildmodules.count" counter="$Count">
+						<do_if value="$buildmodules.{$Count}.buildanchor.exists">
+							<clear_buildmodule buildmodule="$buildmodules.{$Count}"/>
+						</do_if>
+					</do_all>
+					<remove_value name="$buildmodules" />
+					<find_object_component name="$ControlEntities" entitytype="entitytype.shiptrader" object="$target" multiple="true" />
+					<do_all exact="$ControlEntities.count" counter="$Counter">
+						<destroy_object object="$ControlEntities.{$Counter}"/>
+					</do_all>
+				</do_if>
+				<remove_value name="$ControlEntities" />
+				<do_if value="$target.canproduceships">
+					<find_object_component name="$ControlEntities" entitytype="entitytype.smallshiptrader" object="$target" multiple="true" />
+					<do_all exact="$ControlEntities.count" counter="$Counter">
+						<destroy_object object="$ControlEntities.{$Counter}"/>
+					</do_all>
+				</do_if>
+				<remove_value name="$ControlEntities" />
+				<create_list name="$specialists" />
+				<get_control_entities object="$target" groupname="$ControlEntities"/>
+				<do_all exact="$ControlEntities.count" counter="$Counter">
+					<remove_actor_account actor="$ControlEntities.{$Counter}" transfer="true" chance="if $ControlEntities.{$Counter}.hasownaccount then 100 else 0"/>
+					<abort_scripts entity="$ControlEntities.{$Counter}"/>
+					<destroy_object object="$ControlEntities.{$Counter}"/>
+				</do_all>
+				<remove_value name="$ControlEntities" />
+				<cease_fire object="$target"/>
+				<get_production_specialist_types name="$specialisttypes" object="$target" />
+				<do_all exact="$specialisttypes.count" counter="$l">
+					<find_object_component name="$ControlEntities" entitytype="$specialisttypes.{$l}" owner="$target.owner" object="$target" multiple="true" />
+					<set_value name="$chance" exact="0" />
+					<do_all exact="$ControlEntities.count" counter="$Counter" reverse="true">
+						<destroy_object object="$ControlEntities.{$Counter}"/>
+						<set_value name="$chance" exact="100" />
+					</do_all>
+					<append_to_list name="$specialists" exact="$specialisttypes.{$l}" chance="$chance"/>
+				</do_all>
+				<remove_value name="$ControlEntities" />
+				<remove_value name="$specialisttype" />
+				<remove_value name="$chance" />
+
+				<!-- change owner -->
+				<set_object_name object="$target" name="''" />
+				<set_owner object="$target" faction="$faction" />
+
+				<!-- new crew -->
+				<do_if value="$faction" exact="faction.player">
+					<find_dock_location name="$Stationdock" container="$target" size="tag.dock_p"  multiple="false" dockpopulationtype="dockpopulationtype.administrative"/>
+					<do_if value="not $Stationdock">
+						<find_dock_location name="$Stationdock" container="$target" size="tag.dock_p"/>
+					</do_if>
+
+					<!-- add engineer -->
+					<set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.engineer, null, null]" />
+					<set_value name="$temp_object" exact="$target" />
+					<set_value name="$temp_dock" exact="$Stationdock" />
+					<set_value name="$temp_entitytype" exact="entitytype.engineer" />
+					<set_value name="$temp_Skill" exact="true" />
+					<set_value name="$temp_assign" exact="'engineer'"/>
+					<set_value name="$temp_script" exact="'default'"/>
+					<include_actions ref="md.NF_BASE.NF_create_actor" />
+					<set_value name="$engineer" exact="$newActor" />
+					<remove_value name="$newActor"/>
+
+					<do_if value="$Stationdock or $target.resources.list.count or $target.products.list.count or $target.tradewares.list.count">
+						<!-- add manager -->		
+						<set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.manager, null, null]" />
+						<set_value name="$temp_object" exact="$target" />
+						<set_value name="$temp_dock" exact="$Stationdock" />
+						<set_value name="$temp_entitytype" exact="entitytype.manager" />
+						<set_value name="$temp_Skill" exact="true" />
+						<set_value name="$temp_assign" exact="'manager'"/>
+						<set_value name="$temp_script" exact="'default'"/>
+						<include_actions ref="md.NF_BASE.NF_create_actor" />
+						<set_value name="$manager" exact="$newActor" />
+						<remove_value name="$newActor"/>
+					</do_if>
+
+					<!-- add defense officer -->		
+					<set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.defencecontrol, null, null]" />
+					<set_value name="$temp_object" exact="$target" />
+					<set_value name="$temp_dock" exact="$Stationdock" />
+					<set_value name="$temp_entitytype" exact="entitytype.defencecontrol" />
+					<set_value name="$temp_Skill" exact="true" />
+					<set_value name="$temp_assign" exact="'defence'"/>
+					<set_value name="$temp_script" exact="'default'"/>
+					<include_actions ref="md.NF_BASE.NF_create_actor" />
+					<set_value name="$newActor.$config_attackenemies" exact="true" />
+					<set_value name="$defencenpc" exact="$newActor" />
+					<remove_value name="$newActor"/>
+
+					<!-- add specialists -->
+					<do_all exact="$specialists.count" counter="$l">
+						<set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.{$specialists.{$l}}, null, null]" />
+						<set_value name="$temp_object" exact="$target" />
+						<set_value name="$temp_dock" exact="$Stationdock" />
+						<set_value name="$temp_entitytype" exact="$specialists.{$l}" />
+						<set_value name="$temp_Skill" exact="true" />
+						<set_value name="$temp_assign" exact="'control'"/>
+						<include_actions ref="md.NF_BASE.NF_create_actor" />
+						<remove_value name="$newActor"/>
+					</do_all>
+
+					<!-- add Shiptrader (not yet supported) -->
+					<find_dock_location container="$target" name="$ShiptraderDocks" dockpopulationtype="dockpopulationtype.ships" multiple="true" />
+					<do_if value="$ShiptraderDocks.count">
+						<do_all exact="$ShiptraderDocks.count" counter="$j" >
+							<set_value name="$DockHasShipTrader" exact="false" />
+							<do_all exact="$ShiptraderDocks.{$j}.actors.count" counter="$k" >
+								<do_if value="$ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.shiptrader or $ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.smallshiptrader">
+									<set_remote_commable actor="$ShiptraderDocks.{$j}.actors.{$k}" remote="true" />
+									<set_value name="$DockHasShipTrader" exact="true" />
+								</do_if>
+							</do_all>
+							<do_if value="$DockHasShipTrader" negate="true">
+								<!-- shiptrader / smallshiptrader -->
+								<find_object_component name="$buildmodule" object="$target" class="class.buildmodule" checkoperational="false">
+								  <match_buildsource sequence="$ShiptraderDocks.{$j}.component.sequence" stage="$ShiptraderDocks.{$j}.component.stage" />
+								</find_object_component>
+								<do_if value="$buildmodule">
+									<create_platform_actor name="$Shiptrader" dockingbay="$ShiptraderDocks.{$j}.component" type="entitytype.shiptrader">
+										<select race="race.argon" tags="tag.shiptrader"/>
+										<owner exact="$faction"/>
+									</create_platform_actor>
+								</do_if>
+								<do_else>
+									<create_platform_actor name="$Shiptrader" dockingbay="$ShiptraderDocks.{$j}.component" type="entitytype.smallshiptrader">
+										<select race="race.argon" tags="tag.smallshiptrader"/>
+										<owner exact="$faction"/>
+									</create_platform_actor>
+								</do_else>
+								<set_remote_commable actor="$Shiptrader" remote="true" />
+								<share_actor_account actor="$Shiptrader" otherobject="$manager" chance="if $faction == faction.player then 100 else 0" /> <!-- Share account of Manager -->
+								<set_comm_handler actor="$Shiptrader" customhandler="true" />
+								<remove_value name="$Shiptrader"/>		  
+							</do_if>
+							<remove_value name="$buildmodule"/>		  
+							<remove_value name="$DockHasShipTrader"/>		  
+						</do_all>
+					</do_if>
+					<remove_value name="$specialists"/>
+					<remove_value name="$specialist"/>
+					<remove_value name="$defencenpc"/>
+					<remove_value name="$manager"/>
+					<remove_value name="$engineer"/>
+					<remove_value name="$buildmodule"/>
+					<remove_value name="$ShiptraderDocks"/>		  
+
+					<remove_value name="$Stationdock"/>
+				</do_if>
+				<do_else>
+					<!-- restart npc Station -->
+					<signal_objects object="player.galaxy" param="'init station'" param2="$target"/>
+				</do_else>
+				<remove_value name="$target"/>
+			</actions>
+		</library>
+
+
+	</cues>
+</mdscript>

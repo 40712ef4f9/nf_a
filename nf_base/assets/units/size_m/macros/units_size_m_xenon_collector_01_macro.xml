@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Michael (192.168.3.146) at 08.12.2015_13-58-44-->
+<macros>
+  <macro name="units_size_m_xenon_collector_01_macro" class="ship_m">
+    <component ref="units_size_m_xenon_collector_01" />
+    <properties>
+      <identification name="{40000,65}" description="{20101,17502}" mapicon="shipicon_miner_gas_m" />
+      <hull max="100000" />
+      <purpose primary="mine" />
+    </properties>
+    <connections>
+      <connection ref="connection_cockpit01">
+        <macro ref="cockpit_bridge_main_invisible_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_s01">
+        <macro ref="dronelaunchpad_invisible_ship_m_01_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_engine01">
+        <macro ref="engine_size_m_xenon_miner_01_macro" connection="connection_engine01" />
+      </connection>
+      <connection ref="connection_radar01">
+        <macro ref="radar_ship_m_freighter_01_macro" connection="ship" />
+      </connection>
+      <connection ref="connection_shieldgen01">
+        <macro ref="shieldgenerator_ship_m_01_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_storage01">
+        <macro ref="storage_ship_m_liquid_01_macro" connection="ShipConnection" />
+      </connection>
+	 </connections>
+  </macro>
+</macros>

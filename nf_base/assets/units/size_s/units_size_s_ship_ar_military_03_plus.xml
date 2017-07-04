@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<components>
+	<component name="units_size_s_ship_ar_military_03_plus" class="ship_m">
+		<source geometry="assets\units\size_s\units_size_s_ship_ar_military_03_data"/>
+		<layers>
+			<layer>
+				<waypoints/>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="ship">
+				<offset/>
+			</connection>
+			<connection name="Connection01" tags="part  ">
+				<offset/>
+				<parts>
+					<part name="part_main" wreck="part_main_wreck">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+									<material id="2" ref="argon.ar_unique_02"/>
+									<material id="3" ref="argon.ar_unique_03"/>
+									<material id="4" ref="generic.generic_engines_01"/>
+								</materials>
+							</lod>
+							<lod index="1">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+									<material id="2" ref="argon.ar_unique_02"/>
+									<material id="3" ref="argon.ar_unique_03"/>
+									<material id="4" ref="generic.generic_engines_01"/>
+								</materials>
+							</lod>
+							<lod index="2">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+									<material id="2" ref="argon.ar_unique_02"/>
+									<material id="3" ref="argon.ar_unique_03"/>
+									<material id="4" ref="generic.generic_engines_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="18.83256" y="8.75755" z="34.43341"/>
+							<center x="0" y="-2.054087" z="3.336673"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection02" tags="part  ">
+				<offset>
+					<position x="0" y="0" z="94.42521"/>
+				</offset>
+				<parts/>
+			</connection>
+			<connection name="connection_cockpit01" tags="cockpit ">
+				<offset>
+					<position x="-1.860444" y="2.159861" z="25.71654"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen01" tags="shieldgenerator ">
+				<offset>
+					<position x="2.377479" y="-4.870436" z="19.67161"/>
+				</offset>
+			</connection>
+			<connection name="connection_weapon_sec01" tags="weapon_small  secondary_slot">
+				<offset>
+					<position x="-11.57451" y="-5.639907" z="18.67976"/>
+				</offset>
+			</connection>
+			<connection name="connection_engine01" tags="engine ">
+				<offset>
+					<position x="-0.140141" y="-2.54275" z="-25.3099"/>
+				</offset>
+			</connection>
+			<connection name="connection_weapon_prim02" tags="weapon_small  primary_slot">
+				<offset>
+					<position x="16.42929" y="-7.160064" z="32.72056"/>
+				</offset>
+			</connection>
+			<connection name="connection_weapon_prim03" tags="weapon_small  primary_slot">
+				<offset>
+					<position x="15.96824" y="-8.150763" z="32.72056"/>
+				</offset>
+			</connection>
+			<connection name="connection_weapon_prim04" tags="weapon_small  primary_slot">
+				<offset>
+					<position x="-15.96607" y="-8.150763" z="32.72057"/>
+				</offset>
+			</connection>
+			<connection name="connection_weapon_sec02" tags="weapon_small  secondary_slot">
+				<offset>
+					<position x="11.53991" y="-5.639907" z="18.67976"/>
+				</offset>
+			</connection>
+			<connection name="connection_weapon_prim01" tags="weapon_small  primary_slot">
+				<offset>
+					<position x="-16.43662" y="-7.160064" z="32.72057"/>
+				</offset>
+			</connection>
+			<connection name="connection_radar01" tags="radar">
+				<offset/>
+			</connection>
+			<connection name="connection_engine03" tags="engine ">
+				<offset>
+					<position x="-4.45839" y="4.0461" z="-25.3099"/>
+					<quaternion qx="-0" qy="-0" qz="-0.9238795" qw="0.3826834"/>
+				</offset>
+			</connection>
+			<connection name="connection_engine02" tags="engine ">
+				<offset>
+					<position x="4.45839" y="4.0461" z="-25.3099"/>
+					<quaternion qx="-0" qy="-0" qz="-0.9238796" qw="-0.3826833"/>
+				</offset>
+			</connection>
+			<connection name="connection_storage01" tags="storage ">
+				<offset>
+					<position x="0" y="0" z="11"/>
+				</offset>
+			</connection>
+			<connection name="connection_storage02" tags="storage ">
+				<offset>
+					<position x="0" y="0" z="12"/>
+				</offset>
+			</connection>
+		</connections>
+	</component>
+</components>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Mike (192.168.3.147) at 19.10.2015_09-58-55-->
+<macros>
+  <macro name="xenon_asteroid_shipyard_macro" class="station">
+    <component ref="xenon_asteroid_shipyard" />
+    <properties>
+      <identification name="{20102,7901}" description="{20102,7902}" unique="0" />
+    </properties>
+    <connections>
+      <connection ref="ConnectionFor_struct_at_xen_shell_macro">
+        <macro ref="struct_at_xen_eshell_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_shell_macro1">
+        <macro ref="struct_at_xen_eshell_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_shell_macro2">
+        <macro ref="struct_at_xen_fshell_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_02_macro">
+        <macro ref="xenon_asteroid_02_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_02_part_01_macro">
+        <macro ref="xenon_asteroid_02_part_01s_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_02_part_02_macro">
+        <macro ref="xenon_asteroid_02_part_02s_macro" connection="position" />
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_02_part_03_macro">
+        <macro ref="xenon_asteroid_02_part_03s_macro" connection="position" />
+      </connection>
+      <connection ref="connection_controlroom01">
+        <macro ref="control_room_macro" connection="Connection01" />
+      </connection>
+      <connection ref="ConnectionFor_props_surf_playerdock_admin_macro">
+        <macro ref="props_surf_playerdock_admin_macro" connection="space" />
+      </connection>
+      <connection ref="connection_radar01">
+        <macro ref="radar_ship_xl_xenon_01_macro" connection="ship" />
+      </connection>
+      <connection ref="ConnectionFor_props_surf_playerdock_ships_macro">
+        <build mode="optional" group="production" sequence="C" stage="1" />
+        <macro ref="props_surf_playerdock_ships_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_props_surf_playerdock_ships_macro1">
+        <build mode="optional" group="production" sequence="A" stage="1" />
+        <macro ref="props_surf_playerdock_ships_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_props_surf_playerdock_ships_macro2">
+        <build mode="optional" group="production" sequence="B" stage="1" />
+        <macro ref="props_surf_playerdock_ships_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_buildmodule_stations_cw_xen_macro">
+        <build mode="optional" group="production" sequence="C" stage="1" tags="primary " />
+        <macro> 
+          <component ref="big_ship_production_dummy_xl" connection="space" />
+          <properties>
+            <identification name="{20107,3801}" description="{20107,3802}" unique="0" />
+            <build method="br_xenon" />
+            <explosiondamage value="100000" />
+            <hull max="6200000" />
+            <effects>
+              <explosion ref="explosion_station_01" />
+              <sefx_hack_disabled ref="hack_deactivated_m" />
+            </effects>
+            <secrecy level="4" />
+            <builder>
+              <macro ref="units_size_xl_xenon_01_macro" />
+              <macro ref="units_size_xl_xenon_newi_macro" />
+              <macro ref="units_size_xl_xenon_01_c_macro" />
+            </builder>
+          </properties>
+          <connections>
+            <connection ref="connection_dockingbay01">
+              <macro ref="props_surf_ar_docks_size_xl_inv_macro" connection="connection_component01" />
+            </connection>
+          </connections>
+        </macro> 
+      </connection>
+      <connection ref="ConnectionFor_buildmodule_stations_cw_xen_macro1">
+        <build mode="optional" group="production" sequence="A" stage="1" tags="primary " />
+        <macro> 
+          <component ref="big_ship_production_dummy_l" connection="space" />
+          <properties>
+            <identification name="{20107,3801}" description="{20107,3802}" unique="0" />
+            <build method="br_xenon" />
+            <explosiondamage value="100000" />
+            <hull max="6200000" />
+            <effects>
+              <explosion ref="explosion_station_01" />
+              <sefx_hack_disabled ref="hack_deactivated_m" />
+            </effects>
+            <secrecy level="4" />
+            <builder>
+              <macro ref="units_size_l_xenon_01_macro" />
+              <macro ref="units_size_l_xenon_01_dc_macro" />
+              <macro ref="units_size_l_xenon_01_cargo_macro" />
+              <macro ref="units_size_l_xenon_01_miner_macro" />
+              <macro ref="units_size_l_xenon_01_collector_macro" />
+            </builder>
+          </properties>
+          <connections>
+            <connection ref="connection_dockingbay01">
+              <macro ref="props_surf_ar_docks_size_l_inv_macro" connection="connection_component01" />
+            </connection>
+          </connections>
+        </macro> 
+      </connection>
+      <connection ref="ConnectionFor_buildmodule_stations_cw_xen_macro2">
+        <build mode="optional" group="production" sequence="B" stage="1" tags="primary " />
+        <macro> 
+          <component ref="big_ship_production_dummy_l" connection="space" />
+          <properties>
+            <identification name="{20107,3801}" description="{20107,3802}" unique="0" />
+            <build method="br_xenon" />
+            <explosiondamage value="100000" />
+            <hull max="6200000" />
+            <effects>
+              <explosion ref="explosion_station_01" />
+              <sefx_hack_disabled ref="hack_deactivated_m" />
+            </effects>
+            <secrecy level="4" />
+            <builder>
+              <macro ref="units_size_l_xenon_01_macro" />
+              <macro ref="units_size_l_xenon_01_dc_macro" />
+              <macro ref="units_size_l_xenon_01_cargo_macro" />
+              <macro ref="units_size_l_xenon_01_miner_macro" />
+              <macro ref="units_size_l_xenon_01_collector_macro" />
+            </builder>
+          </properties>
+          <connections>
+            <connection ref="connection_dockingbay01">
+              <macro ref="props_surf_ar_docks_size_l_inv_macro" connection="connection_component01" />
+            </connection>
+          </connections>
+        </macro> 
+      </connection>
+      <!--connection ref="connection_dock_xl01">
+        <build mode="optional" group="production" sequence="C" stage="1" />
+        <macro ref="props_surf_cw_docks_size_l_xl_int_inv_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_xl02">
+        <build mode="optional" group="production" sequence="A" stage="1" />
+        <macro ref="props_surf_cw_docks_size_l_xl_int_inv_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_xl03">
+        <build mode="optional" group="production" sequence="B" stage="1" />
+        <macro ref="props_surf_cw_docks_size_l_xl_int_inv_macro" connection="connection_component01" />
+      </connection-->
+      <connection ref="connection_dock_xl04">
+        <macro ref="props_surf_ar_docks_size_xl_inv_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_xl05">
+        <macro ref="props_surf_ar_docks_size_l_inv_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_xl06">
+        <macro ref="props_surf_ar_docks_size_l_inv_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_prod_shipsm_xen_macro">
+        <build mode="optional" group="production" sequence="D" stage="1" tags="primary " />
+        <macro ref="struct_econ_prod_shipsm_xen_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_props_surf_playerdock_ships_macro_sm">
+        <build mode="optional" group="production" sequence="D" stage="1" />
+        <macro ref="props_surf_playerdock_ships_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_prod_stor_container_macro">
+        <macro ref="struct_econ_prod_stor_container_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro">
+        <macro ref="struct_econ_ref_ar_pmc_dronedock_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro1">
+        <macro ref="struct_econ_ref_ar_pmc_dronedock_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro2">
+        <macro ref="struct_econ_ref_ar_pmc_dronedock_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro3">
+        <macro ref="struct_econ_ref_ar_pmc_dronedock_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_props_tradeoffer_buy_drones_standard">
+        <macro>
+          <component ref="props_tradeoffer_buy_drones_standard" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_props_tradeoffer_buy_shieldgenerators">
+        <macro>
+          <component ref="props_tradeoffer_buy_shieldgenerators" connection="space" />
+        </macro>
+      </connection>
+    </connections>
+  </macro>
+</macros>

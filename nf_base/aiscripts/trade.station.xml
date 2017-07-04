@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<diff>
+	<add sel="/aiscript/attention[@min='unknown']/actions/do_if[@value='this.station.owner != faction.player']/set_value[@name='$tradingstations']" pos="after">
+		<append_to_list name="$tradingstations" exact="macro.struct_bt_alb_servicedock_macro"/>
+	</add>
+	<add sel="//find_sell_offer[@tradepartner='this.station']" type="@chance" >if this.station.subordinates.{entitytype.manager}.count then 0 else 100</add>
+	<add sel="//find_sell_offer[@tradepartner='this.station']"  pos="before" >
+		<create_list name="$selloffers"/>
+		<signal_objects object="player.galaxy" param="'learned.something'" param2="[this, ware.inv_virtualseminarmanagement, 'trade']" />
+	</add>
+	<add sel="//find_buy_offer[@buyer='this.station']" type="@chance" >if this.station.subordinates.{entitytype.manager}.count then 0 else 100</add>
+	<add sel="//find_buy_offer[@buyer='this.station']"  pos="before" >
+		<create_list name="$buyoffers"/>
+	</add>
+	<replace sel="//interrupt_after_time/@time" >30min</replace>
+
+	<add sel="//label[@name='loop']" pos="after">
+		<do_if value="this.station.canbuildships and not this.$orders?">
+			<signal_objects object="player.galaxy" param="'do.start.syscript'" param2="this.station" />
+		</do_if>
+	</add>
+</diff>

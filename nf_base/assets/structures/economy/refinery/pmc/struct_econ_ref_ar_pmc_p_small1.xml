@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<components>
+	<component name="struct_econ_ref_ar_pmc_p_small1" class="destructible">
+		<properties>
+			<hull max="900000"/>
+			<effects>
+				<explosion ref="explosion_station_01"/>
+			</effects>
+		</properties>
+		<source geometry="assets\structures\Economy\refinery\pmc\struct_econ_ref_ar_pmc_p_small_data"/>
+		<layers>
+			<layer>
+				<waypoints/>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="Connection01" tags="part  ">
+				<offset/>
+				<parts>
+					<part name="part_main" wreck="part_main_wreck">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_hullpattern_03"/>
+									<material id="2" ref="argon.ar_hulls_01"/>
+									<material id="3" ref="generic.generic_techtrims_01"/>
+									<material id="4" ref="argon.ar_hulls_02"/>
+									<material id="5" ref="generic.generic_tech_01"/>
+									<material id="6" ref="argon.ar_windows_02"/>
+								</materials>
+							</lod>
+							<lod index="1">
+								<materials>
+									<material id="1" ref="argon.ar_hullpattern_03"/>
+									<material id="2" ref="argon.ar_hulls_01"/>
+									<material id="3" ref="generic.generic_techtrims_01"/>
+									<material id="4" ref="argon.ar_hulls_02"/>
+									<material id="5" ref="generic.generic_tech_01"/>
+									<material id="6" ref="argon.ar_windows_02"/>
+								</materials>
+							</lod>
+							<lod index="2">
+								<materials>
+									<material id="1" ref="argon.ar_hullpattern_03"/>
+									<material id="2" ref="argon.ar_hulls_01"/>
+								</materials>
+							</lod>
+							<lod index="3">
+								<materials>
+									<material id="1" ref="argon.ar_hulls_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="120.5192" y="93.12951" z="432.5546"/>
+							<center x="7.629395E-06" y="2.007813" z="1.220703E-04"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection02" tags="part  ">
+				<offset>
+					<position x="0" y="0" z="1081.387"/>
+				</offset>
+				<parts/>
+			</connection>
+		</connections>
+	</component>
+</components>

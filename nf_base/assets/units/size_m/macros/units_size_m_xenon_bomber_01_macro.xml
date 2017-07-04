@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Michael (192.168.3.146) at 08.12.2015_13-58-44-->
+<macros>
+  <macro name="units_size_m_xenon_bomber_01_macro" class="ship_m">
+    <component ref="units_size_m_xenon_bomber_01" />
+    <properties>
+      <identification name="{20101,2621}" description="{20101,2622}" mapicon="shipicon_fighter_m" />
+      <weapons>
+        <slot ref="weapon_primary_l" />
+        <slot ref="weapon_primary_r" />
+      </weapons>
+      <hull max="45000" />
+      <secrecy level="1" />
+      <purpose primary="fight" />
+    </properties>
+    <connections>
+      <connection ref="Connection01">
+        <macro ref="unit_combat_ar_cockpit_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_radar01">
+        <macro ref="radar_ship_s_fighter_01_macro" connection="ship" />
+      </connection>
+      <connection ref="connection_shieldgen01">
+        <macro ref="shieldgenerator_ship_s_07_macro" connection="Connection01" />
+      </connection>
+      <connection ref="conn_engine_main">
+        <macro ref="engine_ship_s_xen_drone_main_macro" connection="connection_engine01" />
+      </connection>
+      <connection ref="conn_engine_side01">
+        <macro ref="engine_ship_s_xen_drone_side_macro" connection="conn_engine01" />
+      </connection>
+      <connection ref="conn_engine_side02">
+        <macro ref="engine_ship_s_xen_drone_side_macro" connection="conn_engine01" />
+      </connection>
+      <connection ref="weapon_primary_l">
+        <macro ref="weapon_invisible_impulse_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="weapon_primary_r">
+        <macro ref="weapon_invisible_impulse_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="ConnectionFor_units_size_m_torpedo_bomber_part">
+        <macro>
+          <component ref="units_size_m_torpedo_bomber_part" connection="space" />
+		  <connections>
+			<connection ref="weaponconnection01">
+			  <macro ref="props_wps_rocketlauncher_macro" connection="ShipConnection" />
+			</connection>
+			<connection ref="weaponconnection02">
+			  <macro ref="props_wps_rocketlauncher_macro" connection="ShipConnection" />
+			</connection>
+			<connection ref="weaponconnection03">
+			  <macro ref="props_wps_rocketlauncher_02_macro" connection="ShipConnection" />
+			</connection>
+			<connection ref="weaponconnection04">
+			  <macro ref="props_wps_rocketlauncher_02_macro" connection="ShipConnection" />
+			</connection>
+			<connection ref="weaponconnection05">
+			  <macro ref="props_wps_rocketlauncher_03_macro" connection="ShipConnection" />
+			</connection>
+			<connection ref="weaponconnection06">
+			  <macro ref="props_wps_rocketlauncher_03_macro" connection="ShipConnection" />
+			</connection>
+			<connection ref="weaponconnection07">
+			  <macro ref="props_wps_rocketlauncher_03_macro" connection="ShipConnection" />
+			</connection>
+			<connection ref="weaponconnection08">
+			  <macro ref="props_wps_rocketlauncher_02_macro" connection="ShipConnection" />
+			</connection>
+			<connection ref="weaponconnection09">
+			  <macro ref="props_wps_rocketlauncher_02_macro" connection="ShipConnection" />
+			</connection>
+			<connection ref="weaponconnection10">
+			  <macro ref="props_wps_rocketlauncher_03_macro" connection="ShipConnection" />
+			</connection>
+			<connection ref="weaponconnection11">
+			  <macro ref="props_wps_rocketlauncher_macro" connection="ShipConnection" />
+			</connection>
+			<connection ref="weaponconnection12">
+			  <macro ref="props_wps_rocketlauncher_macro" connection="ShipConnection" />
+			</connection>
+		  </connections>
+        </macro>
+      </connection>
+     </connections>
+ </macro>
+</macros>

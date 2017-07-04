@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<mdscript name="MM_Corps_RYAK" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../libraries/md.xsd">
+	<cues>
+		<cue name="INIT" instantiate="false" namespace="static">
+			<conditions>
+				<check_any>
+					<event_player_created />
+					<event_cue_signalled cue="md.Setup.GameStart" />
+				</check_any>
+			</conditions>
+			<actions>
+				<set_value name="$_faction" exact="faction.familyryak" />
+
+				<create_cue_actor name="global.$RYAK_CEO" cue="INIT">
+					<select race="race.argon"/>
+					<owner exact="$_faction" />
+				</create_cue_actor>
+
+				<set_value name="$_CEO" exact="global.$RYAK_CEO" />
+	
+				<include_actions ref="md.MM_Corps__Data.MMCData_CEO_INI" />
+			</actions>
+			<cues>
+				<cue name="INIT_property">
+					<delay min="1s" max="60s"/>
+					<actions>
+						<!-- create additional startstuff -->
+						<include_actions ref="md.MM_Corps__Data.MMCData_CEO_PROPERTY_INIT" />
+
+						<!-- update everything to CEO -->
+						<set_value name="$do_stations" exact="true" />
+						<set_value name="$do_ships" exact="true" />
+						<set_value name="$CEO" exact="$_CEO" />
+						<set_value name="$faction" exact="$_faction" />
+						<set_value name="$target_space" exact="player.galaxy" />
+						<include_actions ref="md.MM_Corps__Data.MMCData_setaccount_space" />
+						<!-- clear -->
+						<remove_value name="$startzone"/>
+						<remove_value name="$faction"/>
+						<remove_value name="$CEO"/>
+						<remove_value name="$_faction"/>
+						<remove_value name="$_CEO"/>
+						<remove_value name="$zone"/>
+						<remove_value name="$Macro"/>
+					</actions>
+				</cue>
+
+				<cue name="DO_Worker" instantiate="true" checktime="player.age + 3min" checkinterval="14min">
+					<delay min="60s" max="540s"/>
+					<actions>
+						<!--
+						* define play style domination/cooperative/pirate
+						* command ships
+						* expand territory [timestamp next check] (intelligent behavior, step of aggression - based on strengh?)
+						* config for center and border (or gate/beacon) territory (with/out foreign zones)
+				
+						* relation handling ???
+						-->
+
+						<set_value name="$_CEO" exact="global.$RYAK_CEO" />
+						<!-- load config -->
+						<set_value name="$build" exact="['spl','ol','massenergy','energy','food','drug','tech','ship']" comment="['massenergy','energy','food','drug','tech','ship','al','ol','warehouse']"/>
+						<set_value name="$style" exact="['domination', 'cooperative', 'pirate']" comment="min 3 entries required"/>
+						<set_value name="$next_Check"	exact="[	90min,	45min,		1h,		6h,			6h			]" 
+														comment="[	Build,	Shopping,	Job,	Invasion,	Donation	]"/>
+						
+						<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include" />
+
+						<remove_value name="$_CEO"/>
+						<remove_value name="$build"/>
+						<remove_value name="$style"/>
+						<remove_value name="$next_Check"/>
+					</actions>
+				</cue>
+
+				<cue name="DO_Handler" instantiate="true" namespace="this">
+					<conditions>
+						<check_any>
+							<event_object_signalled object="global.$RYAK_CEO" param="'INIT SHIP'" />
+							<event_object_signalled object="global.$RYAK_CEO" param="'REPLACE CV'" />
+							<event_object_signalled object="global.$RYAK_CEO" param="'GIVE.ESCORTS'" />
+						</check_any>
+					</conditions>
+					<delay min="20ms" max="350ms"/>
+					<actions>
+						<!--
+						* assign ships to stations and ships for escorts
+						-->
+						<set_value name="$_CEO" exact="global.$RYAK_CEO" />
+						
+						<include_actions ref="md.MM_Corps__Data.MMCData_doHandler_include" />
+						
+						<remove_value name="$_CEO"/>
+					</actions>
+				</cue>
+			</cues>
+		</cue>
+	</cues>
+</mdscript>

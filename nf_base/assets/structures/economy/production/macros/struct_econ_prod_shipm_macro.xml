@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<add sel="//production/@wares"> shp_m_unicargoship</add>   
+		<add sel="//queue"> 	
+			<item ware="shp_m_unicargoship" />
+		</add>   
+		<!--add sel="//production/@wares"> shp_m_boardingship</add>   
+		<add sel="//queue"> 	
+			<item ware="shp_m_boardingship" />
+		</add-->
+</diff>

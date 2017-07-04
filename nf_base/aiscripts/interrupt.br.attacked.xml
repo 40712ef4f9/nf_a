@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="interrupt.br.attacked" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" priority="100">
+  <params>
+    <param name="attacker"/>
+    <param name="method"/>
+    <param name="attackedcomponent"/>
+  </params>
+
+  <interrupts>
+    <library>
+      <handler name="AttackBRHandler">
+        <conditions>		           
+          <event_object_attacked object="this.defensible"/>
+          <check_value value="this.defensible.isclass.ship_xl or this.defensible.isclass.ship_l or this.defensible.isclass.station" negate="true" />
+          <check_value value="event.param.isoperational" />
+        </conditions>
+        <actions>
+          <do_if value="not global.$last_npc_notification?">
+            <set_value name="global.$last_npc_notification" exact="0s" />
+          </do_if>
+          <do_if value="this.defensible.isclass.ship_xl or this.defensible.isclass.ship_l or this.defensible.isclass.station">
+            <!--TODO: Add attacker to blackboard? Don't activly distract a capship? Should this be a blackboard entry for all ships?-->
+          </do_if>
+          <do_if value="event.param" exact="player.primaryship">
+            <!-- chance that the pilot bails out-->
+            <do_if value="this.ship.iscapturable">
+              <do_if value="this.defensible.isclass.ship_s or this.defensible.isclass.ship_m">
+                <!-- currently we do not allow non-NPCs to eject form their ship (= no Xenon for now) -->
+                <do_if value="this.isclass.npc and (this.owner != faction.player)">
+                  <set_value name="$precheck" exact="true" />
+                  <!--Dismiss ship if it has shields which are above 20%-->
+                  <do_if value="this.ship.maxshield">
+                    <do_if value="this.ship.shieldpercentage gt 20">
+                      <set_value name="$precheck" exact="false" />
+                    </do_if>
+                  </do_if>
+                  <!--Dismiss ship if it has hull above 75%-->
+                  <do_if value="$precheck">
+                    <do_if value="this.ship.hullpercentage gt 75">
+                      <set_value name="$precheck" exact="false" />
+                    </do_if>
+                  </do_if>
+                  <do_if value="$precheck">
+                    <do_if value="not this.$nextcapturechance?">
+                      <set_value name="this.$nextcapturechance" exact="player.age - 1s" />
+                    </do_if>
+                    <do_if value="this.$nextcapturechance lt player.age">
+                      <!-- <debug_text text="'the time is now'" /> -->
+                      <!-- TODO: modify chance value based on current hull/shield strength, attacker firepower etc. -->
+                      <set_value name="$ejectchance" exact="18 - (this.skill.morale * 3)" />
+                      <do_if value="true" chance="$ejectchance">
+                        <!-- <debug_text text="'eject'" /> -->
+                        <!-- TODO: send notification "I'm giving up!" -->
+						<substitute_text text="$logtext" source="{1016,80}" comment="Captured $SHIP$ in sector $SECTOR$.">
+                          <replace string="'$SHIP$'" with="this.ship.knownname" />
+                          <replace string="'$SECTOR$'" with="this.sector.knownname" />
+                        </substitute_text>
+                        <write_to_logbook category="upkeep" text="$logtext" />
+                        <cease_fire object="this.ship" />
+                        <eject_npcs object="this.ship" />
+                        <set_value name="stat.ships_captured" operation="add" />
+                        <return />
+                      </do_if>
+                      <do_else>
+                        <set_value name="this.$nextcapturechance" exact="player.age + 30s" />
+                        <debug_text text="'next chance ' + this.$nextcapturechance" chance="0" />
+                      </do_else>
+                    </do_if>
+                  </do_if>
+                </do_if>
+              </do_if>
+            </do_if>
+
+            <do_if value="this.command.value" exact="command.attackobject">
+              <do_if value="this.command.param" exact="player.ship">
+                <set_value name="$Speak" exact="false"/>
+                <set_value name="$Speak_Line" exact="0"/>
+
+                <!--Only say something if no one has said anything for a few seconds-->
+                <do_if value="global.$last_npc_notification" max="player.age - 20s">
+                  <set_value name="$Speak" exact="this.page != 0 and not this.ship.isclass.ship_xl"/>
+                </do_if>
+
+                <do_if value="$Speak">
+                  <do_if value="this.ship.hullpercentage" min="0" max="20">
+                    <set_value name="$Speak_Line" list="[2033, 2034]"/>
+                  </do_if>
+                  <do_elseif value="this.ship.hullpercentage" max="80">
+                    <set_value name="$Speak_Line" list="[2015, 2016]"/>
+                  </do_elseif>
+                  <do_elseif value="this.ship.shieldpercentage" min="5" max="50">
+                    <set_value name="$Speak_Line" list="[2031, 2032]"/>
+                  </do_elseif>
+                  <do_else>
+                    <set_value name="$Speak_Line" list="[2013, 2014]"/>
+                  </do_else>
+                </do_if>
+
+                <do_if value="$Speak_Line">
+                  <start_conversation actor="this" conversation="Speak" type="unqueued" convparam="$Speak_Line" />
+                  <set_value name="global.$last_npc_notification" exact="player.age"/>
+                </do_if>
+              </do_if>
+            </do_if>
+          </do_if>
+
+          <!-- If it is already attacking the attacker, do not run the script -->
+          <do_if value="not (this.command.value == command.attackobject and this.command.param == event.param)" >
+            <!-- Run interrupt script to use blocking action: run_script attack object. -->
+            <run_interrupt_script name="'interrupt.br.attacked'">
+              <param name="attacker" value="event.param"/>
+              <param name="method" value="event.param2"/>
+              <param name="attackedcomponent" value="event.param3"/>
+            </run_interrupt_script>
+          </do_if>
+
+        </actions>
+      </handler>
+    </library>
+  </interrupts>
+
+  <attention min="unknown">
+    <actions>
+      <do_if value="not this.$brattackhandler?">
+        <set_value name="this.$brattackhandler" exact="true"/>
+      </do_if>
+      <do_if value="not this.$last_player_attack?">
+        <set_value name="this.$last_player_attack" exact="0"/>
+      </do_if>
+      <do_if value="this.defensible.isclass.ship_xl or this.defensible.isclass.ship_l or this.defensible.isclass.station">
+        <!--Temp. Capships and stations should not be distracted. Their turrets should find the enemy. Maybe post this target to the blackboard at least.-->
+        <return/>
+      </do_if>
+      <do_if value="not $attacker">
+        <!--Special case attack-->
+        <return/>
+      </do_if>
+      <!--Kill-relation case: Fight or flight-->
+      <do_if value="this.mayattack.{$attacker}">
+        <do_if value="$attacker" exact="player.ship" comment="Include remote drones">
+          <!--Only say something if no one has said anything for a few seconds-->
+          <set_value name="$Speak" exact="false"/>
+          <do_if value="global.$last_npc_notification" max="player.age - 20s">
+            <set_value name="$Speak" exact="this.page != 0"/>
+          </do_if>
+
+          <do_if value="$Speak">
+            <start_conversation actor="this" conversation="Speak" type="unqueued" convparam="2005" />
+            <set_value name="global.$last_npc_notification" exact="player.age"/>
+          </do_if>
+        </do_if>
+                
+        <set_value name="$Respond" exact="true"/>
+
+        <do_if value="this.command.value" exact="command.attackobject">
+          <do_if value="this.command.param" exact="$attacker">
+            <set_value name="$Respond" exact="false"/>
+          </do_if>
+        </do_if>
+
+        <do_if value="$Respond">
+          <!-- Attack respond if there are weapons -->
+          <do_if value="(this.ship.primarypurpose == objectpurpose.fight) or (this.ship.dps.all ge $attacker.dps.all)">
+            <run_script name="'fight.attack.object'">
+              <param name="target" value="$attacker"/>
+              <param name="escort" value="this.ship.commander" comment="no error if there is no commander" />
+			  <!--<param name="escort" value="null" comment="no error if there is no commander" />-->
+              <param name="pursuetargets" value="false" />
+              <param name="allowothertargets" value="false" />
+            </run_script>
+          </do_if>
+          <do_else>
+            <!-- TODO?: evade/flee/continue -->
+          </do_else>
+        </do_if>
+      </do_if>
+      
+      <!--Enemy (non-kill), Neutral or friendly case-->
+      <do_else>
+        <!--Perform evasive moves?-->
+        <set_value name="$Speak_Line" exact="0"/>
+
+        <do_if value="$attacker" exact="player.ship" comment="Include remote drones">
+          <set_value name="$Speak" exact="false"/>
+
+          <!--Only say something if no one has said anything for a few seconds-->
+          <do_if value="global.$last_npc_notification" max="player.age - 20s">
+            <!--Only say something if this pilot didn't say the same thing a while ago-->
+            <do_if value="player.age" min="this.$last_player_attack + 30s">
+              <set_value name="$Speak" exact="this.page != 0"/>
+            </do_if>
+          </do_if>
+
+          <do_if value="$Speak">
+            <do_if value="this.hasrelation.friend.{$attacker}">
+              <set_value name="$Speak_Line" list="[2001,2002]"/>
+            </do_if>
+            <!--Neutral and Enemy(non-kill) case-->
+            <do_else>
+              <set_value name="$Speak_Line" list="[2003,2004]"/>
+            </do_else>
+          </do_if>
+
+          <set_value name="this.$last_player_attack" exact="player.age"/>
+        </do_if>
+
+        <do_if value="$Speak_Line">
+          <start_conversation actor="this" conversation="Speak" type="unqueued" convparam="$Speak_Line" />
+          <set_value name="global.$last_npc_notification" exact="player.age"/>
+        </do_if>
+      </do_else>
+    </actions>
+  </attention>
+</aiscript>

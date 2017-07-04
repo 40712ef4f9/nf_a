@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- GAME START FOR CONQUEST AND WAR IN REBIRTH BY 'AIRSTRIKE' IVANOV; VERSION 0.1 -->
+
+<diff>
+	<add sel="/gamestarts">
+		<!--<gamestart id="cwir_canteran" name="Terran Commander" description="Having been quite lucky on your first few combat missions, the Republic of Cantera has given you command of a ship. Fight alongside your brothers and stop the Plutarch invasion of your home.&#10;&#10;Location: {20003,3}, {20004,19}, {20005,48}&#10;&#10;Property:&#10;- 1x {40000,17}&#10;- 0-6x {20101,11501}&#10;- 0-1x {20101,12703}" image="gamestart_2">-->
+		<gamestart id="cwir_canteran" name="{40002,1005}" description="{40002,1006}" image="gamestart_2" group="2">
+			<info>
+				<item name="{1021,502}" value="{40002,1077}" />
+				<item name="{1021,504}" value="{40002,1080}" />
+				<item name="{1021,506}" value="{40002,1083}" />
+				<item name="{1021,508}" value="{40002,1086}" />			
+			</info>
+			<location galaxy="xu_ep1_universe_macro" zone="tzonecluster_d_sector18_zone48_macro">
+				<position x="0.0" y="0.0" z="0.0" />
+				<rotation yaw="0.0" pitch="0.0" roll="0.0" />
+			</location>
+			<player macro="player" money="400000">
+				<ship macro="unit_player_ship_b_macro">
+					<!-- ship weapons, shields, engines, and upgrades -->
+					<upgrade macro="weapon_player_impulse_mk1_macro" />
+					<upgrade macro="weapon_player_plasma_mk1_macro" />
+					<upgrade macro="weapon_player_mining_mk1_macro" />
+					<upgrade macro="shieldgenerator_player_rec_mk2_macro" />
+					<upgrade macro="engine_player_man_mk2_macro" />
+					<upgrade macro="unit_player_ship_scanner_2_macro" />
+					<ammo macro="missile_player_guided_light_macro" count="5" />
+					<ammo macro="missile_player_swarm_macro" count="3" />
+				</ship>
+			</player>
+		</gamestart>
+	</add>
+
+	<add sel="/gamestarts">		
+		<gamestart id="cwir_pmcstart" name="{40002,1093}" description="{40002,1094}" image="gamestart_2" group="2">
+			<info>
+				<item name="{1021,502}" value="{40002,1102}" />
+				<item name="{1021,504}" value="{40002,1103}" />
+				<item name="{1021,506}" value="{40002,1104}" />
+				<item name="{1021,508}" value="{40002,1105}" />					
+			</info>
+			<location galaxy="xu_ep1_universe_macro" zone="tzonecluster_b_sector05_zone19_macro">
+				<position x="0.0" y="0.0" z="0.0" />
+				<rotation yaw="0.0" pitch="0.0" roll="0.0" />
+			</location>
+			<player macro="player" money="100000000">
+				<ship macro="unit_player_ship_b_macro">
+					<!-- ship weapons, shields, engines, and upgrades -->
+					<upgrade macro="weapon_player_impulse_mk1_macro" />
+					<upgrade macro="weapon_player_plasma_mk1_macro" />
+					<upgrade macro="weapon_player_mining_mk1_macro" />
+					<upgrade macro="shieldgenerator_player_rec_mk2_macro" />
+					<upgrade macro="engine_player_man_mk2_macro" />
+					<upgrade macro="unit_player_ship_scanner_2_macro" />
+					<ammo macro="missile_player_guided_light_macro" count="5" />
+					<ammo macro="missile_player_swarm_macro" count="3" />
+				</ship>
+			</player>
+		</gamestart>
+	</add>
+
+	<add sel="/gamestarts">		
+		<gamestart id="cwir_agstart" name="{40002,1095}" description="{40002,1096}" image="gamestart_2" group="2">
+			<info>
+				<item name="{1021,502}" value="{40002,1110}" />
+				<item name="{1021,504}" value="{40002,1111}" />
+				<item name="{1021,506}" value="{40002,1112}" />
+				<item name="{1021,508}" value="{40002,1113}" />					
+			</info>
+			<location galaxy="xu_ep1_universe_macro" zone="tzonecluster_c_sector08_zone92_macro">
+				<position x="0.0" y="0.0" z="0.0" />
+				<rotation yaw="0.0" pitch="0.0" roll="0.0" />
+			</location>
+			<player macro="player" money="10000000">
+				<ship macro="unit_player_ship_b_macro">
+					<!-- ship weapons, shields, engines, and upgrades -->
+					<upgrade macro="weapon_player_impulse_mk2_macro" />
+					<upgrade macro="weapon_player_plasma_mk2_macro" />
+					<upgrade macro="weapon_player_mining_mk1_macro" />
+					<upgrade macro="weapon_player_shotgun_mk2_macro" />
+					<upgrade macro="weapon_player_machinegun_mk2_macro" />
+					<upgrade macro="shieldgenerator_player_rec_mk4_macro" />
+					<upgrade macro="engine_player_bal_mk4_macro" />
+					<upgrade macro="unit_player_ship_scanner_2_macro" />
+					<ammo macro="missile_player_guided_light_macro" count="5" />
+					<ammo macro="missile_player_swarm_macro" count="3" />
+				</ship>
+			</player>
+		</gamestart>
+	</add>
+
+	<add sel="/gamestarts">		
+		<gamestart id="cwir_hoastart" name="{40002,1097}" description="{40002,1098}" image="gamestart_2" group="2">
+			<info>
+				<item name="{1021,502}" value="{40002,1106}" />
+				<item name="{1021,504}" value="{40002,1107}" />
+				<item name="{1021,506}" value="{40002,1108}" />
+				<item name="{1021,508}" value="{40002,1109}" />					
+			</info>
+			<location galaxy="xu_ep1_universe_macro" zone="tzonecluster_b_sector04_zone32_macro">
+				<position x="0.0" y="0.0" z="0.0" />
+				<rotation yaw="0.0" pitch="0.0" roll="0.0" />
+			</location>
+			<player macro="player" money="50000000">
+				<ship macro="unit_player_ship_b_macro">
+					<!-- ship weapons, shields, engines, and upgrades -->
+					<upgrade macro="weapon_player_impulse_mk2_macro" />
+					<upgrade macro="weapon_player_plasma_mk1_macro" />
+					<upgrade macro="weapon_player_mining_mk1_macro" />
+					<upgrade macro="weapon_player_shotgun_mk1_macro" />
+					<upgrade macro="weapon_player_machinegun_mk1_macro" />
+					<upgrade macro="shieldgenerator_player_rec_mk3_macro" />
+					<upgrade macro="engine_player_man_mk3_macro" />
+					<upgrade macro="unit_player_ship_scanner_2_macro" />
+					<ammo macro="missile_player_guided_light_macro" count="5" />
+					<ammo macro="missile_player_swarm_macro" count="3" />
+				</ship>
+			</player>
+		</gamestart>
+	</add>
+
+	<add sel="/gamestarts">
+		<!--<gamestart id="cwir_heretic" name="Heretic Vanguard Mercenary" description="You are a free lancer serving the Heretic Vanguard Faction. You are a follower of their ideals and creed. You hate all Xenos and you despise pretty much anyone else as well. Return Omicron Lyrae to its' former glory by ensuring the primacy of the Heretic Vanguard!&#10;&#10;Location: {20003,7}, {20004,25}, {20005,101}&#10;&#10;Property:&#10;- 1x {40000,39}&#10;- 1x {40000,41}" image="gamestart_2">-->
+		<gamestart id="cwir_heretic" name="{40002,1007}" description="{40002,1008}" image="gamestart_2" group="2">
+			<info>
+				<item name="{1021,502}" value="{40002,1078}" />
+				<item name="{1021,504}" value="{40002,1081}" />
+				<item name="{1021,506}" value="{40002,1084}" />
+				<item name="{1021,508}" value="{40002,1087}" />					
+			</info>
+			<location galaxy="xu_ep1_universe_macro" zone="tzonecluster_a_sector01_zone95_macro">
+				<position x="0.0" y="0.0" z="0.0" />
+				<rotation yaw="0.0" pitch="0.0" roll="0.0" />
+			</location>
+			<player macro="player" money="5000000">
+				<ship macro="unit_player_ship_b_macro">
+					<!-- ship weapons, shields, engines, and upgrades -->
+					<upgrade macro="weapon_player_impulse_mk1_macro" />
+					<upgrade macro="weapon_player_plasma_mk1_macro" />
+					<upgrade macro="weapon_player_mining_mk1_macro" />
+					<upgrade macro="shieldgenerator_player_rec_mk2_macro" />
+					<upgrade macro="engine_player_man_mk2_macro" />
+					<upgrade macro="unit_player_ship_scanner_2_macro" />
+					<ammo macro="missile_player_guided_light_macro" count="5" />
+					<ammo macro="missile_player_swarm_macro" count="3" />
+				</ship>
+			</player>
+		</gamestart>
+	</add>
+
+	<add sel="/gamestarts">		
+		<gamestart id="cwir_ambitiousentrepreneur" name="{40002,1071}" description="{40002,1072}" image="gamestart_2" group="2">
+			<info>
+				<item name="{1021,502}" value="{40002,1079}" />
+				<item name="{1021,504}" value="{40002,1082}" />
+				<item name="{1021,506}" value="{40002,1085}" />
+				<item name="{1021,508}" value="{40002,1088}" />					
+			</info>
+			<location galaxy="xu_ep1_universe_macro" zone="tzonecluster_a_sector02_zone105_macro">
+				<position x="0.0" y="0.0" z="0.0" />
+				<rotation yaw="0.0" pitch="0.0" roll="0.0" />
+			</location>
+			<player macro="player" money="100000000">
+				<ship macro="unit_player_ship_b_macro">
+					<!-- ship weapons, shields, engines, and upgrades -->
+					<upgrade macro="weapon_player_impulse_mk2_macro" />
+					<upgrade macro="weapon_player_plasma_mk2_macro" />
+					<upgrade macro="weapon_player_mining_mk2_macro" />
+					<upgrade macro="weapon_player_beam_v2_macro" />
+					<upgrade macro="weapon_player_shotgun_mk2_macro" />
+					<upgrade macro="weapon_player_machinegun_mk2_macro" />
+					<upgrade macro="shieldgenerator_player_rec_mk5_macro" />
+					<upgrade macro="engine_player_bal_mk5_macro" />
+					<upgrade macro="unit_player_ship_scanner_3_macro" />
+					<upgrade macro="software_trading_computer_mk2_macro" />
+					<upgrade macro="software_target_computer_mk2_macro" />
+					<ammo macro="missile_player_guided_light_macro" count="5" />
+					<ammo macro="missile_player_swarm_macro" count="3" />
+				</ship>
+			</player>
+		</gamestart>
+	</add>
+
+	<add sel="/gamestarts">
+		<gamestart id="cwir_xenon" name="{40002,1124}" description="{40002,1123}" image="gamestart_2">
+			<info>
+				<item name="{1021,502}" value="{40002,1126}" /> <!-- Location -->
+				<item name="{1021,504}" value="{40002,1125}" /> <!-- cash -->
+				<item name="{1021,506}" value="{40002,1127}" /> <!-- Equipment -->
+				<item name="{1021,508}" value="{40002,1128}" /> <!-- Property -->				
+			</info>
+			<location galaxy="xu_ep1_universe_macro" zone="tzonecluster_a_sector03_zone111_macro">
+				<position x="0.0" y="0.0" z="0.0" />
+				<rotation yaw="0.0" pitch="0.0" roll="0.0" />
+			</location>
+			<player macro="player" money="10000000">
+				<ship macro="unit_player_ship_b_macro">
+
+					<upgrade macro="weapon_player_impulse_mk2_macro" />
+					<upgrade macro="weapon_player_plasma_mk2_macro" />
+					<upgrade macro="weapon_player_mining_mk2_macro" />
+					<upgrade macro="weapon_player_beam_v2_macro" />
+					<upgrade macro="weapon_player_shotgun_mk2_macro" />
+					<upgrade macro="weapon_player_machinegun_mk2_macro" />
+					<upgrade macro="shieldgenerator_player_rec_mk5_macro" />
+					<upgrade macro="engine_player_bal_mk5_macro" />
+					<upgrade macro="unit_player_ship_scanner_3_macro" />
+					<upgrade macro="software_trading_computer_mk3_macro" />
+					<upgrade macro="software_target_computer_mk2_macro" />
+					<ammo macro="missile_player_guided_light_macro" count="5" />
+					<ammo macro="missile_player_swarm_macro" count="3" />
+				</ship>
+			</player>
+		</gamestart>
+	</add>
+</diff>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="lib.recall.fighters" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" priority="5" version="2">
+  <params>
+    <param name="timeout" default="5min" comment="If less than 0, does not force them to return" />
+    <param name="move" default="true" comment="move carrier" />
+    <param name="exemplary" default="100" comment="emergency docking" />
+  </params>
+<!-- $carrier_fighters_docked
+false/0 = not set
+1    = no carrier
+2    = no figter
+3    = docked
+// -->
+
+  <attention min="unknown">
+    <actions>
+
+      <set_command_action commandaction="commandaction.waitingdrones" />
+
+      <add_to_group groupname="$subordinates" list="this.ship.subordinates" />
+      <create_group groupname="$theShipfollowers" />
+      <do_if value="$subordinates.count" min="1">
+        <do_all exact="$subordinates.count" counter="$i">
+          <do_if value="$subordinates.{$i}.subordinates.count gt 0">
+            <do_if value="$subordinates.{$i}.isclass.[class.ship_s, class.ship_m] and $subordinates.{$i}.dockslot == null">
+              <add_to_group groupname="$theShipfollowers" object="$subordinates.{$i}" />
+              <add_to_group groupname="$theShipfollowers" list="$subordinates.{$i}.subordinates" />
+            </do_if>
+            <do_elseif value="$subordinates.{$i}.macro.ismacro.{global.$mmcarriers}" negate="true">
+              <add_to_group groupname="$theShipfollowers" list="$subordinates.{$i}.subordinates" />
+            </do_elseif>
+          </do_if>
+          <do_elseif value="$subordinates.{$i}.isclass.[class.ship_s, class.ship_m] and $subordinates.{$i}.dockslot == null">
+            <add_to_group groupname="$theShipfollowers" object="$subordinates.{$i}" />
+          </do_elseif>
+          <wait min="100ms" max="250ms" sinceversion="2" />
+        </do_all>
+        <remove_value name="$subordinates"/>
+
+        <wait min="500ms" max="1s" sinceversion="2" />
+        <!-- Filter subordinates -->
+        <do_all exact="$theShipfollowers.count" counter="$i" reverse="true">
+          <do_if value="$theShipfollowers.{$i}.isclass.[class.ship_s, class.ship_m]" negate="true">
+            <remove_from_group group="$theShipfollowers" object="$theShipfollowers.{$i}" />
+          </do_if>
+        </do_all>
+        <wait min="500ms" max="1s" sinceversion="2" />
+        <do_all exact="$theShipfollowers.count" counter="$i" reverse="true">
+          <do_if value="$theShipfollowers.{$i}.dockslot == null" negate="true">
+            <remove_from_group group="$theShipfollowers" object="$theShipfollowers.{$i}" />
+          </do_if>
+          <do_elseif value="$theShipfollowers.{$i}.zone != this.ship.zone or [commandaction.undocking, command.dockat].indexof.{$theShipfollowers.{$i}.pilot.command.value}">
+            <remove_from_group group="$theShipfollowers" object="$theShipfollowers.{$i}" /> 
+          </do_elseif>
+        </do_all>
+
+        <set_value name="$dock_s_i" exact="0" /> 
+        <set_value name="$dock_m_i" exact="0" />
+
+        <do_if value="$theShipfollowers.count" min="1">
+          <!-- open hangar -->
+          <activate_battlestate object="this.ship" state="open_hangar" />
+
+          <do_all exact="$theShipfollowers.count" counter="$i">
+            <do_if value="$theShipfollowers.{$i}.isplayerowned">
+              <start_script object="$theShipfollowers.{$i}.pilot" name="'carrier.default'" chance="if $theShipfollowers.{$i}.pilot.$carrier? then 0 else 100" >
+                <param name="base" value="this.ship" />
+                <param name="do_escort" value="$theShipfollowers.{$i}.commander" />
+              </start_script>
+              <do_if value="$theShipfollowers.{$i}.docksize" exact="tag.dock_s">
+                <do_if value="not $dock_s?">
+                  <find_dock_location container="this.ship" name="$dock_s" size="tag.dock_s" multiple="true" />
+                  <set_value name="$dock_s_i_max" exact="$dock_s.count" /> 
+                </do_if>
+                <do_if value="$dock_s">
+                  <set_value name="$dock_s_i" operation="add" />
+                  <signal_objects object="$theShipfollowers.{$i}" param="'dock at'" param2="this.ship" param3="$dock_s.{$dock_s_i}" />
+                  <set_value name="$dock_s_i" exact="0" chance="if $dock_s_i == $dock_s_i_max then 100 else 0"/> 
+                </do_if>
+              </do_if>
+              <do_elseif value="$theShipfollowers.{$i}.docksize" exact="tag.dock_m">
+                <do_if value="not $dock_m?">
+                  <find_dock_location container="this.ship" name="$dock_m" size="tag.dock_m" multiple="true" />
+                  <set_value name="$dock_m_i_max" exact="$dock_m.count" /> 
+                </do_if>
+                <do_if value="$dock_m">
+                  <set_value name="$dock_m_i" operation="add" />
+                  <signal_objects object="$theShipfollowers.{$i}" param="'dock at'" param2="this.ship" param3="$dock_m.{$dock_m_i}" />
+                  <set_value name="$dock_m_i" exact="0" chance="if $dock_m_i == $dock_m_i_max then 100 else 0"/> 
+                </do_if>
+              </do_elseif>
+            </do_if>
+            <do_else>
+              <start_script name="'move.dockat.carrier'" object="$theShipfollowers.{$i}.pilot" sinceversion="2">
+                <param name="destination" value="this.ship" />
+              </start_script>
+            </do_else>
+          </do_all>
+          <remove_value name="$dock_s_i"/>
+          <remove_value name="$dock_s_i_max"/>
+          <remove_value name="$dock_s"/>
+          <remove_value name="$dock_m_i"/>
+          <remove_value name="$dock_m_i_max"/>
+          <remove_value name="$dock_m"/>
+
+          <set_value name="$success" exact="1" />
+          <set_value name="$timeout" exact="player.age+$timeout" />
+              
+          <create_list name="$docks"/>
+          <do_all exact="2" counter="$j" chance="if player.primaryship.zone == this.ship.zone and not global.$mmcarrierconfig.$mm_carriers_sdockplus then 100 else 0">
+            <find_dock_location container="this.ship" size="[tag.dock_m, tag.dock_s].{$j}" name="$dock" multiple="true"/>
+            <do_all exact="$dock.count" counter="$i">
+              <do_if value="$dock.{$i}" list="$docks" negate="true">
+                <append_to_list name="$docks" exact="$dock.{$i}"/>
+              </do_if>
+            </do_all>
+            <remove_value name="$dock"/>
+          </do_all>
+
+          <do_while value="$success" exact="1">        
+            <wait min="10s" max="20s" />
+            <set_value name="$success" exact="2" />
+
+            <do_all exact="$docks.count" counter="$i" chance="if player.primaryship.zone == this.ship.zone and not global.$mmcarrierconfig.$mm_carriers_sdockplus then 100 else 0">
+              <do_if value="$docks.{$i}.component.docking.count gt 0">
+                <set_value name="$success" exact="1" />
+                <break />
+              </do_if>
+            </do_all>
+
+            <do_if value="($timeout lt player.age) or this.ship.hullpercentage lt 30">
+              <!-- sorry, but time to say goodby -->
+              <set_value name="$success" exact="2" />
+            </do_if>
+          </do_while>
+          <remove_value name="$success"/>
+          <do_if value="$move" exact="true">
+            <set_value name="this.$carrier_restart_fighters" />
+          </do_if>
+          <do_else>
+            <set_value name="this.$carrier_fighters_docked" exact="3" />
+          </do_else>
+
+          <!-- close hangar -->
+          <activate_battlestate object="this.ship" state="close_hangar" chance="$exemplary" />
+        </do_if>
+        <do_elseif value="$move" exact="true">
+          <set_value name="this.$carrier_fighters_docked" exact="2" />
+        </do_elseif>
+      </do_if>
+      <do_elseif value="$move" exact="true">
+        <set_value name="this.$carrier_fighters_docked" exact="2" />
+      </do_elseif>
+      <remove_value name="$theShipfollowers"/>
+      <remove_value name="$timeout"/>
+      <remove_value name="$move"/>
+      <remove_value name="$docks"/>
+    </actions>
+  </attention>
+</aiscript>

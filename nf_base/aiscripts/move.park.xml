@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<!-- Conquer_mod v020 -->
+<diff> 
+	<add sel="//run_script[@name=&quot;'move.undock'&quot;]" pos="before" >
+		<do_if value="not (this.ship.parkedat or this.ship.dockslot) and this.$last_park? and this.$last_park ge player.age">
+			<wait min="10s" max="20s" />
+			<set_value name="$loopend_message" exact="1"/>
+			<set_value name="this.$last_park" exact="player.age + 2s" />
+			<do_if value="this.ship.isjobship">
+				<debug_text text="'loop - goodby'" filter="error" chance="100" />
+				<destroy_object object="this.ship" explosion="false"/>
+			</do_if>
+		</do_if>
+		<do_elseif value="not (this.ship.parkedat or this.ship.dockslot) and this.$last_park? and this.$last_park lt player.age">
+			<remove_value name="this.$last_park" />
+		</do_elseif>
+		<do_else>
+			<set_value name="this.$last_park" exact="player.age + 2s" />
+		</do_else>
+	</add>
+	<add sel="//attention/actions/set_value[@name='$myindex']" pos="before" >
+		<debug_text text="'Fin movedock'" filter="error" chance="if $loopend_message? then 100 else 0" />
+		<remove_value name="this.$last_park" />
+		<remove_value name="$loopend_message" />
+	</add>
+
+
+	<add sel="//init">
+		<create_group groupname="$oberserve" />
+		<do_if value="$destination or $dockingslot">		
+			<add_to_group groupname="$oberserve" object="$destination" chance="if $destination then 100 else 0"/>
+		</do_if>
+	</add>
+	<add sel="/aiscript/interrupts">
+		<handler>
+			<conditions>
+				<check_any>
+					<event_object_destroyed group="$oberserve"/>
+					<event_object_changed_owner group="$oberserve"/>
+				</check_any>
+			</conditions>
+			<actions>
+				<abort_called_scripts resume="finish" />
+			</actions>
+		</handler>
+	</add>
+
+	<add sel="/aiscript/attention/actions/label[@name='start']" pos="after">
+		<do_if value="@this.ship.owner.relationto.{$destination.owner} le this.ship.owner.relation.enemy.min or @$destination.boarder">
+			<resume label="finish" />
+		</do_if>
+	</add>
+
+	<add sel="//do_while[@value='not $freeslot']" pos="before">
+		<do_if value="$freeslot?" negate="true">
+			<resume label="finish" />
+		</do_if>
+	</add>
+
+	<replace sel="//do_while[@value='not $freeslot']/@value">$freeslot? and not $freeslot</replace>
+
+	<replace sel="//do_if[@value='not $freeslot']/@value">$freeslot? and not $freeslot</replace>
+
+
+	<add sel="/aiscript/attention/actions">
+		<label name="finish" />
+
+		<set_value name="$debugoutputchance" exact="100" />		
+		<do_if value="$destination.exists and @this.ship.owner.relationto.{$destination.owner} le this.ship.owner.relation.enemy.min">
+			<!--<debug_text text="'Park actions interrupted by destination owner change or board.'" chance="100" />-->
+			<do_if value="$destination.isoperational">
+				<set_value name="$myindex" exact="@$destination.tradenpc.$parkingqueue.indexof.{this.ship}" />
+				<do_if value="$myindex">
+					<!--<debug_text text="'ABORT CLEANUP! Remove our queue index %3 on %1(%2)'.[$destination.knownname, $destination, $myindex]" chance="$debugchance" />-->
+					<remove_value name="$destination.tradenpc.$parkingqueue.{$myindex}" />
+				</do_if>
+			</do_if>
+			<disconnect_from_trade_location ship="this.ship" />
+			<!-- Safety delete Blackboard variable -->
+			<remove_value name="this.$ship_parking" />
+			<remove_value name="this.$reevaluate_parking" />
+
+			<run_script name="'move.undock'" />
+
+			<do_if value="this.ship.isjobship">
+				<set_value name="$bigship" exact="if this.ship.isclass.ship_l or this.ship.isclass.ship_xl then 1 else 0" />
+				<run_script  name="'move.die'">
+					<param name="byjump" value="$bigship" />
+					<param name="byhighway" value="not $bigship" />
+					<param name="bydock" value="not $bigship" />
+					<param name="byidle" value="true" />
+				</run_script>
+			</do_if>
+
+			<do_elseif value="this.ship.isplayerowned">
+				<!-- Flee -->
+				<set_value name="$flee" exact="'random'"/>
+				<do_if value="this.ship.isclass.[class.ship_m, class.ship_s]">
+					<do_any>
+						<set_value name="$flee" exact="'boost'"     weight="35" />
+						<set_value name="$flee" exact="'highway'"   weight="35" />
+						<set_value name="$flee" exact="'dock'"      weight="30" />
+					</do_any>
+				</do_if>
+				<do_elseif value="this.ship.isclass.[class.ship_l, class.ship_xl]">
+					<do_any>
+						<set_value name="$flee" exact="'jump'"      weight="20" />
+						<set_value name="$flee" exact="'boost'"     weight="80" />
+					</do_any>
+				</do_elseif>
+
+				<!--<debug_text text="'%4: flee with %1. Hull %2/Shield %3'.[$flee, this.ship.hullpercentage, this.ship.shieldpercentage, player.age]" chance="$debugoutputchance"/>-->
+
+				<run_script name="'move.flee'" sinceversion="1" result="$success" >
+					<param name="method" value="$flee" />
+				</run_script>
+
+				<!--<debug_text text="'%1: flee %2 succesful %3. Hull %4/Shield %5'.[player.age, $flee, $success, this.ship.hullpercentage, this.ship.shieldpercentage]" chance="$debugoutputchance"/>	-->		
+			</do_elseif>	
+			<do_else>
+				<!-- Flee -->
+				<set_value name="$flee" exact="'random'"/>
+				<do_if value="this.ship.isclass.[class.ship_m, class.ship_s]">
+					<do_any>
+						<set_value name="$flee" exact="'boost'"     weight="35" />
+						<set_value name="$flee" exact="'highway'"   weight="35" />
+						<set_value name="$flee" exact="'dock'"      weight="30" />
+					</do_any>
+				</do_if>
+				<do_elseif value="this.ship.isclass.[class.ship_l, class.ship_xl]">
+					<do_any>
+						<set_value name="$flee" exact="'jump'"      weight="20" />
+						<set_value name="$flee" exact="'boost'"     weight="80" />
+					</do_any>
+				</do_elseif>
+
+				<!--<debug_text text="'%4: flee with %1. Hull %2/Shield %3'.[$flee, this.ship.hullpercentage, this.ship.shieldpercentage, player.age]" chance="$debugoutputchance"/>-->
+
+				<run_script name="'move.flee'" sinceversion="1" result="$success" >
+					<param name="method" value="$flee" />
+				</run_script>
+
+				<!--<debug_text text="'%1: flee %2 succesful %3. Hull %4/Shield %5'.[player.age, $flee, $success, this.ship.hullpercentage, this.ship.shieldpercentage]" chance="$debugoutputchance"/>	-->		
+			</do_else>	
+		</do_if>
+		<return value="false" />	
+	</add>
+</diff>

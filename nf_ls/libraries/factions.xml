@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <add sel="/factions/faction[@id='acmecorp']/relations">
+    <relation faction="hayen" relation="-0.008" />
+    <relation faction="argon_colony" relation="-0.008" />
+    <relation faction="goner" relation="-0.008" />
+    <relation faction="searchlight" relation="-0.008" />
+    <relation faction="mlspirate" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='hayen']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='argon_colony']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='goner']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='searchlight']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='mlspirate']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+
+  <add sel="/factions/faction[@id='deepwater']/relations">
+    <relation faction="hayen" relation="-0.008" />
+    <relation faction="argon_colony" relation="-0.008" />
+    <relation faction="goner" relation="-0.008" />
+    <relation faction="searchlight" relation="-0.008" />
+    <relation faction="mlspirate" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='hayen']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='argon_colony']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='goner']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='searchlight']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='mlspirate']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+</diff>

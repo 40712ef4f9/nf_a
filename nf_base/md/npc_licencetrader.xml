@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff>
+  <!-- Cue to add construction drones to existing architects. -->
+  <add sel="/mdscript[@name='NPC_Licencetrader']/cues/cue[@name='OnPlatformPopulation_Licencetrader']/cues">
+    <cue name="NPC_L_Destroyed_cleanup" onfail="cancel">
+      <conditions>
+        <check_value value="not $actor.exists"/>
+      </conditions>
+      <actions>
+        <debug_text text="'NPC_Licencetrader destroyed!'" chance="100"/>
+
+        <cancel_cue cue="OnPlatformPopulation_Licencetrader"/>
+      </actions>
+    </cue>
+  </add>
+</diff>

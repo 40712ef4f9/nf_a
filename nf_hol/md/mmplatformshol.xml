@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mdscript name="MM_defenceplatform_hol" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+		<cue name="MM_defenceplatform_hol_init2" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_cue_signalled cue="md.Setup.GameStart"/>
+					<event_game_loaded />
+				</check_any>
+			</conditions>
+			<delay min="2s" />
+			<actions>
+				<do_if value="md.$mmdefenceplatformmacros? and md.$mmdefenceplatformmacros.indexof.{macro.units_size_m_khaak_weaponplatform_macro} == 0">
+					<append_to_list name="md.$mmdefenceplatformmacros" exact="macro.units_size_m_khaak_weaponplatform_macro"/>
+				</do_if>
+				<do_if value="md.$mmdefenceplatformmacros_cm? and md.$mmdefenceplatformmacros_cm.indexof.{macro.units_size_m_khaak_weaponplatform_macro} == 0">
+					<append_to_list name="md.$mmdefenceplatformmacros_cm" exact="macro.units_size_m_khaak_weaponplatform_macro"/>
+				</do_if>
+		  </actions>
+		</cue>
+	</cues>
+</mdscript>

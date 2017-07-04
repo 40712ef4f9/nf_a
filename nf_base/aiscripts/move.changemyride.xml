@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="move.changemyride" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+  <params>
+    <param name="target" default="null"/>
+    <param name="macro" default="null"/>
+  </params>
+  <init>
+    <set_command command="command.wait" />
+	<set_command_action commandaction="commandaction.flyingto" param="$target"/>
+  </init>
+  <attention min="visible">
+    <actions>
+      <set_value name="$debugoutputchance" exact="0" />
+
+      <wait min="1s" max="3s" />
+
+      <label name="search" />
+
+      <do_if value="not $target.exists">
+		  <!-- Find a station in zone -->
+		  <find_station name="$stations" functional="true" space="this.zone" multiple="true">
+			<match_relation object="this" relation="neutral" comparison="ge" />
+		  </find_station>
+		  
+		  <!-- now find in sector --> 
+		  <do_if value="not $stations.count">
+			<wait min="100ms" max="250ms" />
+			<find_station name="$stations" functional="true" space="this.sector" multiple="true">
+			  <match_relation object="this" relation="neutral" comparison="ge" />
+			</find_station>
+		  </do_if>
+	
+		  <!-- if still no stations, just use any and move to it -->
+		  <do_if value="not $stations.count">
+			<wait min="100ms" max="250ms" sinceversion="1" />
+			<find_station name="$stations" functional="true" space="this.sector" multiple="true"/>
+		  </do_if>
+	
+		  <do_if value="not $stations.count">
+			<resume label="waitforrescue" />
+		  </do_if>
+	
+		  <debug_text text="'found '+ $stations.count + ' potential targets, finding closest one.'" chance="$debugoutputchance" />
+		  <create_list name="$stationdists" exact="$stations.count" />
+		  <do_all exact="$stations.count" counter="$i">
+			<set_value name="$stationdists.{$i}" exact="this.ship.distanceto.{$stations.{$i}}" />
+		  </do_all>
+		  <set_value name="$target" exact="$stations.{$stationdists.indexof.{$stationdists.min}}" />
+      </do_if>
+
+
+      <label name="dock" />
+      
+      <debug_text text="'going to fly to %1 (%2)'.[$station.knownname, $station]" chance="$debugoutputchance" />
+      <run_script name="'move.generic'" >
+        <param name="destination" value="$target" />
+      </run_script>
+
+      <do_if value="not $target.exists">
+        <resume label="search" />
+      </do_if>
+      <!-- ship_xs cannot dock at regular docking bays, for now just have the pod fly to a station -->
+      <run_script name="'move.dockat'" result="$dockresult">
+        <param name="destination" value="$target" />
+      </run_script>
+
+      <do_if value="$dockresult">
+        <resume label="selfdestruct" />
+      </do_if>
+
+      <label name="waitforrescue" />
+      <!-- TODO: send out distress call, ships that come to pick up etc., activate beacon lights or something -->
+      <!-- <debug_text text="'no station found that would let me dock, hoping someone will come to rescue me...'" chance="$debugoutputchance" /> -->
+      <debug_text text="'waiting for someone to come to rescue me...'" chance="$debugoutputchance" />
+      <do_while value="this.ship.attention ge attention.visible">
+        <!-- wait until this is no longer visible, then self-destruct -->
+        <wait>
+          <interrupt>
+            <conditions>
+              <event_object_changed_attention object="this.ship" />
+            </conditions>
+          </interrupt>
+        </wait>
+      </do_while>
+
+      <label name="selfdestruct" />
+	  
+      <signal_objects object="player.computer" param="'DO.Transfer'" param2="[this.ship, $macro, $target]"  delay="1s"/>
+      <!--wait min="2min" max="5min" />
+
+      <destroy_object explosion="false" object="this.ship" /-->
+
+    </actions>
+  </attention>
+  <attention min="unknown">
+    <actions>
+
+      <wait min="1s" max="3s" />
+
+      <label name="search" />
+      <label name="dock" />
+      <label name="waitforrescue" />
+      <label name="selfdestruct" />
+      <debug_text text="'good bye, cruel world! (oos)'" chance="$debugoutputchance" />
+
+      <warp object="this.ship" zone="$target.zone" >
+		<safepos object="$target"/>
+      </warp>	  
+
+      <signal_objects object="player.computer" param="'DO.Transfer'" param2="[this.ship, $macro, $target]" delay="1s"/>
+      <!--wait min="2min" max="5min" />
+
+      <destroy_object explosion="false" object="this.ship" /-->
+
+    </actions>
+  </attention>
+</aiscript>

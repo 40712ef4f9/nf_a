@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="move.seekdefensible" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
+  <params>
+    <param name="destination"/>
+    <param name="pos"/>
+    <param name="engageenemies" default="true" comment="When moving, scan for and engage enemies"/>
+    <param name="idle" default="false" comment="When finished, idle around the area still seeking enemies"/>
+    <param name="idledistance" default="this.ship.size + 5km" comment="distance from $pos to idle around"/>
+    <param name="onlyinrange" default="true" />
+    <param name="escort" default="null" comment="Objects to escort - stay at 'pursuedistance' and shoot enemies attacking this" />
+    <param name="pursuedistance" default="this.ship.maxradarrange * 2" comment="Distance to pursue/escort (if pursuetargets true or 'escort' provided). Default: max radar range" />
+    <param name="debugoutputchance" default="0" />
+  </params>
+  <interrupts>
+    <handler ref="AttackHandler" />
+    <handler ref="ScannedHandler" />
+  </interrupts>
+  <attention min="unknown">
+    <actions>
+
+      <!-- If is Capital ship or has a very long range (acts as capital ship) -->
+      <set_value name="$capship" exact="this.ship.isclass.ship_l or this.ship.isclass.ship_xl or this.ship.maxcombatrange.all gt 5000km" />
+      <set_value name="$enemy" exact="null" />
+      <set_value name="$hulldamagelimit" exact="60 + (40 * this.ship.engineer.combinedskill / 100)" comment="below what percentage hull is a component considered damaged (ship engineer repairs up to a value between 60% and 100%, dependent on skill)"/>
+
+      <run_script name="'move.undock'" sinceversion="2" />
+
+      <create_position name="$targetpos" value="$pos"/>
+
+      <label name="start" />
+
+      <do_if value="not $destination.exists">
+        <!-- early out in case destination is a tempzone and got cleaned up -->
+        <debug_text text="'No destination'" chance="$debugoutputchance"/>
+        <return/>
+      </do_if>
+
+	  <do_if value="$capship and $destination.isclass.zone and this.zone != $destination">
+		  <run_script name="if @global.$mmcare_mmcarrier_is_active then 'move.generic.carrier' else 'move.generic'" >
+			<param name="destination" value="$destination" />
+			<param name="endintargetzone" value="true" />
+		  </run_script>
+	  </do_if>
+
+      <do_if value="not $idle">
+        <do_if value="this.ship.distanceto.[$destination, $pos]" max="this.ship.size * 2" comment="use the same distance in 'move.patrol'">
+          <debug_text text="'Not idle'" chance="$debugoutputchance"/>
+          <return/>
+        </do_if>
+      </do_if>
+
+      <!-- move to a random (safe) position, looking for enemies along the way -->
+      <label name="moveto" />
+      <debug_text text="'Gametime: ' + player.age + ' Starting moveto to ' + $destination.knownname + ' Position: ' + $pos" chance="$debugoutputchance" />
+
+      <!-- Script Compatibility -->
+      <move_to object="this.ship" destination="this.zone" chance="0" />
+      <move_to object="this.ship" destination="this.zone" chance="0" />
+      <move_to object="this.ship" destination="this.zone" chance="0" />
+      
+      <move_to object="this.ship" destination="$destination" finishonapproach="true" usehighways="not $capship" forceposition="false" forcesteering="not $capship">
+        <position value="$targetpos" />
+        <interrupt>
+          <conditions>
+            <check_any>
+              <!-- Found enemy in gravidar (if $engageenemies true) -->
+              <check_all>
+                <event_gravidar_has_scanned object="this.ship" />
+                <check_value value="$engageenemies" />
+                <check_value value="not this.zone.isclass.highway" />
+                <check_any>
+                  <!-- If capital ship -->
+                  <check_all>
+                    <check_value value="$capship" />
+                    <check_any>
+                      <!-- First search for capitals -->
+                      <count_gravidar_contacts result="$capitalenemies" object="this.ship" class="[class.ship_l,class.ship_xl]" repairable="true" min="1">
+                        <match_distance object="this.ship" max="@$pursuedistance"/>
+			  			<match_relation faction="this.ship.trueowner" relation="neutral" comparison="ge" />
+			  			<match_hull max="$hulldamagelimit" />
+                      </count_gravidar_contacts>
+                      <!-- Third search for rest (small, ..) -->
+                      <count_gravidar_contacts result="$smallenemies" object="this.ship" class="[class.ship_m, class.ship_s]" repairable="true" min="1">
+                        <match_parent>
+                          <match class="class.highway" negate="true"/>
+                        </match_parent>
+                        <match_distance object="this.ship" max="this.ship.maxradarrange/2"/>
+			  			<match_relation faction="this.ship.trueowner" relation="self" />
+						<match invulnerable="false">
+						  <match_hull max="$hulldamagelimit" />
+						  <match_hull min="30" />
+						</match>
+                      </count_gravidar_contacts>
+                    </check_any>
+                  </check_all>
+                  <!-- If NOT capital ship -->
+                  <check_all>
+                    <check_value value="not $capship" />
+                    <check_any>
+                      <!-- First search for small/medium -->
+                      <count_gravidar_contacts result="$smallenemies" object="this.ship" class="[class.ship_m, class.ship_s]" repairable="true" min="1">
+                        <match_parent>
+                          <match class="class.highway" negate="true"/>
+                        </match_parent>
+                        <match_distance object="this.ship" max="@$pursuedistance*0.5"/>
+			  			<match_relation faction="this.ship.trueowner" relation="neutral" comparison="ge" />
+						<match invulnerable="false">
+						  <match_hull max="$hulldamagelimit" />
+						  <match_hull min="40" />
+						</match>
+                      </count_gravidar_contacts>
+                      <!-- Second search for capitals -->
+                      <count_gravidar_contacts result="$capitalenemies" object="this.ship" class="[class.ship_l,class.ship_xl]" repairable="true" min="1">
+                        <match_distance object="this.ship" max="@$pursuedistance"/>
+			  			<match_relation faction="this.ship.trueowner" relation="neutral" comparison="ge" />
+			  			<match_hull max="$hulldamagelimit" />
+                      </count_gravidar_contacts>
+                    </check_any>
+                  </check_all>
+                </check_any>
+              </check_all>
+              <!--  On attention level change -->
+              <check_all>
+                <event_object_changed_attention object="this.ship" />
+                <check_value value="(event.param ge attention.visible) and (event.param2 lt attention.visible)" />
+              </check_all>
+            </check_any>
+          </conditions>
+          <actions>
+            <debug_text text="'Gametime: ' + player.age + ' Moveto interrupted by: ' + event.name" chance="$debugoutputchance"/>
+            <do_if value="event.name" exact="'event_gravidar_has_scanned'">
+              <!-- Select enemey based on the count gravidar already triggered -->
+              <do_if value="$smallenemies?">
+                <!-- Select small random enemy -->
+                <set_value name="$enemy" exact="$smallenemies.random" />
+              </do_if>
+              <do_elseif value="$capitalenemies?">
+                <!-- Select nearest capship -->
+                <debug_text text="'capitalenemies: ' + $capitalenemies" chance="$debugoutputchance"/>
+                <set_value name="$enemy" exact="$capitalenemies.{1}"/>
+                <set_value name="$NearestDistance" exact="this.ship.distanceto.{$enemy}"/>
+                <do_all exact="$capitalenemies.count" counter="$DistanceCounter">
+                  <do_if value="$DistanceCounter" min="2">
+                    <set_value name="$tempdist" exact="this.ship.distanceto.{$capitalenemies.{$DistanceCounter}}" />
+                    <do_if value="$tempdist" max="$NearestDistance">
+                      <set_value name="$enemy" exact="$capitalenemies.{$DistanceCounter}"/>
+                      <set_value name="$NearestDistance" exact="$tempdist"/>
+                    </do_if>
+                  </do_if>
+                </do_all>
+              </do_elseif>
+              <do_elseif value="$stationenemies?">
+                <!-- random station -->
+                <set_value name="$enemy" exact="$stationenemies.random"/>
+              </do_elseif>
+              <do_elseif value="$restenemies?">
+                <!-- random enemy (could be everything) -->
+                <set_value name="$enemy" exact="$restenemies.random"/>
+              </do_elseif>
+
+              <debug_text text="'enemy: ' + $enemy.knownname" chance="$debugoutputchance"/>
+
+              <!-- remove temp vars -->
+              <remove_value name="$NearestDistance"/>
+              <remove_value name="$DistanceCounter"/>
+              <remove_value name="$tempdist"/>
+              <remove_value name="$smallenemies"/>
+              <remove_value name="$capitalenemies"/>
+              <remove_value name="$stationenemies"/>
+              <remove_value name="$restenemies"/>
+            
+            </do_if>
+            <do_elseif value="event.name" exact="'event_object_signalled'" chance="0">
+              <set_value name="$enemy" exact="event.param2" />
+              <add_relation_boost object="this" otherobject="$enemy" value="-0.1" decay="1" delay="10min" />
+              <debug_text text="'reported by police. Enemy: ' + $enemy.knownname" chance="$debugoutputchance" />
+            </do_elseif>
+            <do_elseif value="event.name" exact="'event_object_changed_attention'">
+              <resume label="start" />
+            </do_elseif>
+          </actions>
+        </interrupt>
+      </move_to>      
+
+      <label name="attack" />
+      <set_value name="$enemy" exact="this.ship.engineer.$Defensible" chance="if this.ship.engineer.$Defensible? and this.ship.engineer.$Defensible != this.ship then 100 else 0" />
+
+	  <do_if value="$enemy == null">
+		  <find_gravidar_contact name="$RepairTargets" object="this.ship" class="[class.station]" multiple="true">
+			  <match_distance object="this.ship" max="this.ship.maxradarrange*2"/>
+			  <match_relation faction="this.ship.trueowner" relation="neutral" comparison="ge" />
+		  </find_gravidar_contact>
+		  <do_all exact="$RepairTargets.count" counter="$i">
+			  <do_if value="$RepairTargets.{$i}.hullpercentage ge $hulldamagelimit">
+				  <continue />
+			  </do_if>
+			  <do_if value="$enemy == null">
+				  <set_value name="$enemy" exact="$RepairTargets.{$i}"/>
+			  </do_if>
+			  <do_elseif value="this.ship.trueowner == $enemy.owner and this.ship.trueowner == $RepairTargets.{$i}.owner and $RepairTargets.{$i}.hullpercentage lt @$enemy.hullpercentage">
+				  <set_value name="$enemy" exact="$RepairTargets.{$i}"/>
+			  </do_elseif>
+			  <do_elseif value="this.ship.trueowner != $enemy.owner and ($RepairTargets.{$i}.hullpercentage lt @$enemy.hullpercentage or this.ship.trueowner == $RepairTargets.{$i}.owner)">
+				  <set_value name="$enemy" exact="$RepairTargets.{$i}"/>
+			  </do_elseif>
+		  </do_all>
+		  <remove_value name="$RepairTargets"/>
+	  </do_if>
+
+
+      <do_if value="$enemy.isoperational">
+
+		<set_value name="$endtime" exact="player.age + 10min" />
+		<set_command_action commandaction="commandaction.flyingto" param="$enemy" />
+<!--debug_text text="'MICT Repair: %1 - %2,%3 in %7 follows: _%5_ %4 (%6)'.[player.age,this.ship.trueowner.name, this.ship.knownname,$enemy.knownname,$enemy, this.ship.distanceto.{$enemy}-this.ship.maxradarrange/2, this.ship.zone.name]" filter="error" chance="100" /-->
+
+		<do_while value="(not $endtime or player.age lt $endtime) and $enemy.exists and not $enemy.iswreck and $enemy.zone == this.ship.zone and this.ship.distanceto.{$enemy} lt $pursuedistance">   
+
+			<do_if value="this.ship.distanceto.{$enemy}" min="this.ship.size + $enemy.size + 1000m">
+				<get_safe_pos zone="this.zone" radius="this.ship.size" result="$safepos" ignored="this.ship" object="$enemy" />
+				<move_to object="this.ship" destination="this.ship.zone" forceposition="false" forcerotation="true" usehighways="not $capship" commandaction="false">
+				  <position value="$safepos" z="1m" />
+				  <rotation pitch="0deg" yaw="0deg" roll="0deg" />
+				</move_to>
+			</do_if>
+		  
+		  <wait min="10s" max="20s" />        
+
+		</do_while>
+
+		<set_command_action commandaction="commandaction.flying" />
+		<set_value name="$enemy" exact="null" />
+
+		<do_if value="this.ship.engineer.$Defensible? and this.ship.engineer.$Defensible != this.ship">
+		  <resume label="attack"/>
+		</do_if>
+
+      </do_if>
+      <do_elseif value="$engageenemies">
+        <debug_text text="'No enemy found, moving to a new position'" chance="$debugoutputchance" />
+      </do_elseif>
+
+      <do_if value="$idle">
+        <create_position name="$targetpos" value="$pos" max="$idledistance"/>
+        <resume label="moveto"/>
+      </do_if>
+
+      <!-- Script Compatibility -->
+      <wait chance="0"/>
+      <move_to object="this.ship" destination="this.zone" chance="0" />
+      <wait chance="0"/>
+      <run_script name="''" chance="0" />
+      
+    </actions>
+  </attention>
+</aiscript>

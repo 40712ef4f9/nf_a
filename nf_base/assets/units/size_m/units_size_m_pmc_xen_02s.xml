@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<components>
+	<component name="units_size_m_pmc_xen_02s" class="ship_m">
+		<source geometry="assets\units\size_m\units_size_m_pmc_xen_02_data"/>
+		<layers>
+			<layer>
+				<waypoints/>
+				<lights>
+					<omni name="XU Omni05" shadow="0" r="255" g="24" b="0" range="15" shadowrange="15" lighteffect="1" trigger="1" intensity="0.4">
+						<lightanimations/>
+						<offset>
+							<position x="-8.336227" y="-8.664199" z="1.057205"/>
+						</offset>
+					</omni>
+					<omni name="XU Omni06" shadow="0" r="255" g="24" b="0" range="15" shadowrange="15" lighteffect="1" trigger="1" intensity="0.4">
+						<lightanimations/>
+						<offset>
+							<position x="-8.336227" y="6.577954" z="-6.97649"/>
+						</offset>
+					</omni>
+					<omni name="XU Omni07" shadow="0" r="255" g="24" b="0" range="15" shadowrange="15" lighteffect="1" trigger="1" intensity="0.4">
+						<lightanimations/>
+						<offset>
+							<position x="-8.336226" y="6.577955" z="9.302757"/>
+						</offset>
+					</omni>
+					<omni name="XU Omni08" shadow="0" r="255" g="24" b="0" range="15" shadowrange="15" lighteffect="1" trigger="1" intensity="0.4">
+						<lightanimations/>
+						<offset>
+							<position x="8.364024" y="6.577955" z="9.302757"/>
+						</offset>
+					</omni>
+					<omni name="XU Omni09" shadow="0" r="255" g="24" b="0" range="15" shadowrange="15" lighteffect="1" trigger="1" intensity="0.4">
+						<lightanimations/>
+						<offset>
+							<position x="8.364023" y="6.577954" z="-6.97649"/>
+						</offset>
+					</omni>
+					<omni name="XU Omni10" shadow="0" r="255" g="24" b="0" range="15" shadowrange="15" lighteffect="1" trigger="1" intensity="0.4">
+						<lightanimations/>
+						<offset>
+							<position x="8.364023" y="-8.664199" z="1.057205"/>
+						</offset>
+					</omni>
+					<omni name="XU Omni11" shadow="0" r="255" g="24" b="0" range="40" shadowrange="40" lighteffect="1" trigger="1" intensity="0.25">
+						<lightanimations/>
+						<offset>
+							<position x="0" y="-8.008617" z="43.60356"/>
+						</offset>
+					</omni>
+				</lights>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="ship">
+				<offset/>
+			</connection>
+			<connection name="Connection01" tags="part  ">
+				<offset/>
+				<parts>
+					<part name="part_main" wreck="part_main_wreck">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+									<material id="2" ref="argon.ar_unique_02"/>
+									<material id="3" ref="generic.generic_engines_01"/>
+									<material id="4" ref="argon.ar_unique_04"/>
+								</materials>
+							</lod>
+							<lod index="1">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+									<material id="2" ref="argon.ar_unique_02"/>
+									<material id="3" ref="generic.generic_engines_01"/>
+									<material id="4" ref="argon.ar_unique_04"/>
+								</materials>
+							</lod>
+							<lod index="2">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+							<lod index="3">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="28.19981" y="32.69847" z="53.70539"/>
+							<center x="9.536743E-06" y="-18.11337" z="34.42249"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection02" tags="part  ">
+				<offset>
+					<position x="0" y="0" z="139.3849"/>
+				</offset>
+				<parts/>
+			</connection>
+			<connection name="connection_cockpit01" tags="cockpit ">
+				<offset>
+					<position x="0" y="-4.510112" z="14.01413"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen01" tags="shieldgenerator ">
+				<offset>
+					<position x="0" y="8.636411" z="1.365298"/>
+					<quaternion qx="-1" qy="-0" qz="-0" qw="7.54979E-08"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen02" tags="shieldgenerator ">
+				<offset />
+			</connection>
+			<connection name="connection_shieldgen03" tags="shieldgenerator ">
+				<offset />
+			</connection>
+			<connection name="connection_weapon_prim01" tags="weapon_small  primary_slot">
+				<offset>
+					<position x="-8.905513" y="-1.744182" z="70.81248"/>
+				</offset>
+			</connection>
+			<connection name="connection_engine01" tags="engine ">
+				<offset/>
+			</connection>
+			<connection name="connection_weapon_sec01" tags="weapon_small  secondary_slot">
+				<offset>
+					<position x="-11.11171" y="-4.453281" z="50.36744"/>
+				</offset>
+			</connection>
+			<connection name="connection_weapon_prim02" tags="weapon_small  primary_slot">
+				<offset>
+					<position x="9.084405" y="-1.744182" z="70.81248"/>
+				</offset>
+			</connection>
+			<connection name="connection_weapon_prim03" tags="weapon_small  primary_slot">
+				<offset>
+					<position x="-4.360527" y="-20.67792" z="39.19205"/>
+				</offset>
+			</connection>
+			<connection name="connection_weapon_prim04" tags="weapon_small  primary_slot">
+				<offset>
+					<position x="4.398616" y="-20.67792" z="39.19205"/>
+				</offset>
+			</connection>
+			<connection name="connection_weapon_sec02" tags="weapon_small  secondary_slot">
+				<offset>
+					<position x="11.29801" y="-4.453281" z="50.36744"/>
+				</offset>
+			</connection>
+
+			<connection name="connection_weapon_prim05" tags="weapon_small  primary_slot">
+				<offset>
+					<position x="-10" y="-1.744182" z="70.81248"/>
+				</offset>
+			</connection>
+			<connection name="connection_weapon_prim06" tags="weapon_small  primary_slot">
+				<offset>
+					<position x="10" y="-1.744182" z="70.81248"/>
+				</offset>
+			</connection>
+			<connection name="connection_weapon_prim07" tags="weapon_small  primary_slot">
+				<offset>
+					<position x="-5.2" y="-20.67792" z="39.19205"/>
+				</offset>
+			</connection>
+			<connection name="connection_weapon_prim08" tags="weapon_small  primary_slot">
+				<offset>
+					<position x="5.2" y="-20.67792" z="39.19205"/>
+				</offset>
+			</connection>
+
+			<connection name="connection_radar01" tags="radar">
+				<offset/>
+			</connection>
+		</connections>
+	</component>
+</components>

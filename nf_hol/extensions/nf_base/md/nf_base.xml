@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="//do_elseif[@exact=&quot;'nfconf_do_player'&quot;]">
+					<add_player_choice text="{40002,336}.[if @global.$nfconfig.$limitCluster then $on else $off]"	position="top_right" selectable="global.$nfconfig.$limitCluster?"	section="nfconf_do_player" choiceparam="['limitCluster', 'do']" tooltip="{40002,337}" />
+	</add>
+</diff>

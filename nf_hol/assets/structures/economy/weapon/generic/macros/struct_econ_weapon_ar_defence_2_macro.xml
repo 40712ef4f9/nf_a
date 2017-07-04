@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Lino (192.168.3.137) at 14.12.2015_11-55-39-->
+<macros>
+  <macro name="struct_econ_weapon_ar_defence_2_macro" class="station">
+    <component ref="struct_econ_weapon_ar_defence_2" />
+    <properties>
+      <identification name="{2802,2308}" description="{20102,6002}" unique="1" />
+    </properties>
+    <connections>
+      <connection ref="ConnectionFor_props_tradeoffer_buy_missiles">
+        <macro>
+          <component ref="props_tradeoffer_buy_missiles" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_j_macro">
+        <build mode="optional" group="defense" sequence="A" stage="1" />
+        <macro ref="struct_econ_weapon_ar_j_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_j_macro1">
+        <macro ref="struct_econ_weapon_ar_j_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_k_macro">
+        <build mode="optional" group="defense" sequence="A" stage="1" tags="primary " />
+        <macro ref="struct_econ_weapon_ar_k_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_k_macro1">
+        <macro ref="struct_econ_weapon_ar_k_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_l_macro">
+        <macro ref="struct_econ_weapon_ar_l_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_m">
+        <macro>
+          <component ref="struct_econ_weapon_ar_m" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_m1">
+        <macro>
+          <component ref="struct_econ_weapon_ar_m" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_m2">
+        <macro>
+          <component ref="struct_econ_weapon_ar_m" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_m3">
+        <macro>
+          <component ref="struct_econ_weapon_ar_m" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_m4">
+        <build mode="optional" group="defense" sequence="A" stage="1" />
+        <macro>
+          <component ref="struct_econ_weapon_ar_m" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_m5">
+        <build mode="optional" group="defense" sequence="A" stage="1" />
+        <macro>
+          <component ref="struct_econ_weapon_ar_m" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_m6">
+        <build mode="optional" group="defense" sequence="A" stage="1" />
+        <macro>
+          <component ref="struct_econ_weapon_ar_m" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_m7">
+        <build mode="optional" group="defense" sequence="A" stage="1" />
+        <macro>
+          <component ref="struct_econ_weapon_ar_m" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_n">
+        <macro>
+          <component ref="struct_econ_weapon_ar_n" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_n1">
+        <build mode="optional" group="defense" sequence="A" stage="1" />
+        <macro>
+          <component ref="struct_econ_weapon_ar_n" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_weapon_ar_n2">
+        <macro>
+          <component ref="struct_econ_weapon_ar_n" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="connection_controlroom01">
+        <macro ref="control_room_macro" connection="Connection01" />
+      </connection>
+      <connection ref="ConnectionFor_props_surf_playerdock_admin_macro">
+        <macro ref="props_surf_playerdock_admin_macro" connection="space" />
+      </connection>
+      <connection ref="connection_shieldgen_external01">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="space" />
+      </connection>
+      <connection ref="connection_shieldgen_external02">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="space" />
+      </connection>
+      <connection ref="connection_shieldgen_external03">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="space" />
+      </connection>
+      <connection ref="connection_shieldgen_external04">
+        <macro ref="shieldgenerator_size_l_mk3_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro">
+        <macro ref="struct_econ_ref_ar_pmc_dronedock_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro1">
+        <macro ref="struct_econ_ref_ar_pmc_dronedock_macro" connection="space" />
+      </connection>
+      <connection ref="connection_radar_external01">
+        <macro ref="radar_ship_xl_military_01_macro" connection="connection_component01" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

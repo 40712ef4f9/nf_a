@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Michael (192.168.3.144) at 06.08.2014_15-08-47-->
+<macros>
+  <macro name="engine_size_xl_cs_omicron_03_sa_macro" class="engine">
+    <component ref="props_enginesystems_engine_xl" />
+    <properties>
+      <identification name="{20104,1201}" description="{20104,1202}" unique="0" />
+      <acceleration forward="16" reverse="16" strafe="6" pitch="1.8" yaw="1.8" roll="0.3" />
+      <angular roll="20" pitch="60" />
+      <speed forward="82" reverse="-28" strafe="24" pitch="18" yaw="18" roll="3" />
+      <hull max="60000" threshold="0.25" integrated="0" />
+      <effects>
+        <explosion ref="explosion_engine_xl" />
+        <sefx_shield ref="sefx_shield_l_01" />
+      </effects>
+    </properties>
+    <connections>
+      <connection ref="connection_booster01">
+        <macro ref="enginebooster_size_xl_01_macro" connection="engine" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

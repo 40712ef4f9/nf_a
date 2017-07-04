@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mdscript name="MM_Relation_helper" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+		<cue name="MMRelation" instantiate="true">
+			<conditions>
+				<event_object_signalled object="player.computer" param="'MM Relation'" />
+			</conditions>
+			<actions>
+				<do_if value="event.param2?" negate="true"> 
+					<debug_text text="'ERROR event.param2 missing'" filter="error" chance="0" />
+				</do_if>
+				<do_else>
+					<set_value name="$faction" exact="event.param2.{1}"/>
+					<set_value name="$boost" exact="event.param2.{2}"/>
+<set_value name="$text" exact="$faction.id + ' ' + $boost + ' ' + $relationboost?"/>
+
+					<do_if value="$relationboost?" negate="true">
+						<set_value name="$relationboost" exact="table[$timestamp = player.age]"/>
+					</do_if>
+
+					<do_if value="$relationboost.{'$%1'.[$faction.id]}?">
+<set_value name="$text" exact="' ' + $relationboost.{'$%1'.[$faction.id]}.{2}" operation="add"/>
+						<set_value name="$relationboost.{'$%1'.[$faction.id]}.{2}" exact="$boost" operation="add"/>
+					</do_if>
+					<do_else>
+						<set_value name="$relationboost.{'$%1'.[$faction.id]}" exact="[$faction,$boost]"/>
+					</do_else>
+<set_value name="$text" exact="' new:' + $relationboost.{'$%1'.[$faction.id]}.{2}" operation="add"/>
+					<remove_value name="$faction"/>
+					<remove_value name="$boost"/>
+					
+					<do_if value="$relationboost.$timestamp lt player.age - 40min">
+						<set_value name="$keys" exact="$relationboost.keys.list" />
+<set_value name="$text" exact="' update:' + $keys.count" operation="add"/>
+						<do_all exact="$keys.count" counter="$k">
+							<do_if value="typeof $relationboost.{$keys.{$k}} != datatype.list">
+								<continue />
+							</do_if>
+							<set_value name="$faction" exact="$relationboost.{$keys.{$k}}.{1}" />
+							<set_value name="$boost" exact="$relationboost.{$keys.{$k}}.{2}" />
+<set_value name="$text" exact="'\n* ' + $faction.id + ' ' + $boost" operation="add"/>
+							<add_faction_relation faction="faction.player" otherfaction="$faction" value="$boost" chance="if faction.player.relationto.{$faction} lt faction.player.relation.member.min then 100 else 0"/>
+						</do_all>
+						<remove_value name="$keys"/>
+						<set_value name="$relationboost" exact="table[$timestamp = player.age]"/>
+					</do_if>
+					<remove_value name="$faction"/>
+					<remove_value name="$boost"/>
+<debug_text text="$text" filter="error" chance="0" />
+<remove_value name="$text"/>
+				</do_else>
+			</actions>
+		</cue>
+	</cues>
+</mdscript>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="//library[@name='NFMM_Basic']/actions/do_if[@value='$differentWorld?']">
+				<do_if value="true">
+					<!--
+					faction.argon_colony
+					-->
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone01_macro, macro.struct_bt_ol_solar_power_plant_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone01_macro, macro.struct_bt_ol_solar_power_plant_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone01_macro, macro.struct_bt_ol_solar_power_plant_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone01_macro, macro.struct_bt_ls_defence_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone02_macro, macro.struct_bt_ol_soy_farm_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone04_macro, macro.struct_bt_ol_drone_complex_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone05_macro, macro.struct_bt_ol_solar_power_plant_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone05_macro, macro.struct_bt_ol_solar_power_plant_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone05_macro, macro.struct_bt_ls_defence_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone06_macro, macro.struct_bt_ol_bofu_plant_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone07_macro, macro.struct_bt_ls_colony_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone07_macro, macro.struct_bt_ol_fuelstation_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone08_macro, macro.struct_bt_ol_plankton_tank_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone08_macro, macro.struct_bt_ol_plankton_tank_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone08_macro, macro.struct_bt_ol_spice_farm_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone09_macro, macro.struct_bt_ol_drone_factory_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone09_macro, macro.struct_bt_ls_shipyard_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone09_macro, macro.struct_bt_ls_small_ships_complex_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone09_macro, macro.struct_bt_ol_weaponryproduction_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone10_macro, macro.struct_bt_ol_bofu_plant_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone10_macro, macro.struct_bt_ol_bofu_plant_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone10_macro, macro.struct_bt_ol_soy_farm_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone10_macro, macro.struct_bt_ol_spice_farm_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone04_macro, macro.struct_bt_ol_laboratory_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone03_macro, macro.struct_bt_ol_laboratory_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone05_macro, macro.struct_bt_ol_weaponrycomplex_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone06_macro, macro.struct_bt_ol_fuelstation_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone05_macro, macro.struct_bt_ls_defence_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone06_macro, macro.struct_bt_ls_defence_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone08_macro, macro.struct_bt_ol_fuelstation_macro, faction.argon_colony]"/>
+					<!--
+					faction.searchlight
+					-->
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone02_macro, macro.struct_bt_ol_cell_refinery_macro, faction.searchlight]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone03_macro, macro.struct_bt_ol_hightec_construction_macro, faction.searchlight]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone04_macro, macro.struct_bt_ol_tech_complex_macro, faction.searchlight]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone06_macro, macro.struct_bt_ol_crystal_refinement_macro, faction.searchlight]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone01_macro, macro.struct_bt_ls_small_ships_yard_macro, faction.searchlight]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone01_macro, macro.struct_bt_ol_construction_material_macro, faction.searchlight]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone02_macro, macro.struct_bt_ol_crystal_refinement_macro, faction.searchlight]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone04_macro, macro.struct_bt_ol_cell_refinery_macro, faction.searchlight]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone03_macro, macro.struct_bt_ol_high_energy_construction_macro, faction.searchlight]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone05_macro, macro.struct_bt_ol_metalworks_macro, faction.searchlight]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone05_macro, macro.struct_bt_ol_metalworks_macro, faction.searchlight]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone06_macro, macro.struct_bt_ol_metalworks_macro, faction.searchlight]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone01_macro, macro.struct_bt_ol_cell_refinery_macro, faction.searchlight]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone01_macro, macro.struct_bt_ol_cell_refinery_macro, faction.searchlight]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone01_macro, macro.struct_bt_ol_water_destillery_macro, faction.searchlight]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone02_macro, macro.struct_bt_ol_water_destillery_macro, faction.searchlight]"/>
+					<!--
+					faction.goner
+					-->
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone03_macro, macro.struct_bt_ol_farm_complex_macro, faction.goner]"/>
+					<!--
+					faction.hayen
+					-->
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone07_macro, macro.struct_bt_ol_medical_supplies_macro, faction.hayen]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone07_macro, macro.struct_bt_te_pirate_outpost_01_macro, faction.hayen]" chance="0"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone07_macro, macro.struct_bt_te_pirate_outpost_02_macro, faction.hayen]" chance="0"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone07_macro, macro.struct_bt_ol_fuelstation_macro, faction.hayen]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone07_macro, macro.struct_bt_ol_laboratory_macro, faction.hayen]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone09_macro, macro.struct_bt_ol_spacefuel_production_macro, faction.hayen]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone09_macro, macro.struct_bt_te_pirate_outpost_01_macro, faction.hayen]" chance="0"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone09_macro, macro.struct_bt_te_pirate_outpost_02_macro, faction.hayen]" chance="0"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone09_macro, macro.struct_bt_ol_fuelstation_macro, faction.hayen]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone09_macro, macro.struct_bt_ol_laboratory_macro, faction.hayen]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone04_macro, macro.struct_bt_te_pirate_outpost_01_macro, faction.hayen]" chance="0"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone04_macro, macro.struct_bt_te_pirate_outpost_02_macro, faction.hayen]" chance="0"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone04_macro, macro.struct_bt_ol_fuelstation_macro, faction.hayen]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone04_macro, macro.struct_bt_ol_laboratory_macro, faction.hayen]" comment="replace stuff"/>
+					<!--
+					faction.xenon
+					-->
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone07_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone03_macro, macro.struct_at_xen_xenon_hive_macro, faction.xenon]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone03_macro, macro.xenon_small_station_01_macro, faction.xenon]" chance="0"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone05_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.struct_econ_cw_generic_ar_water_L_macro, faction.xenon]" chance="0"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.struct_econ_cw_generic_ar_water_M_macro, faction.xenon]" chance="0"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.struct_econ_cw_generic_ar_water_XL_macro, faction.xenon]" chance="0"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
+					<!--
+					faction.familyryak
+					-->
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone1_macro, macro.struct_bt_alb_fuelstation_macro, faction.familyryak]" chance="0"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone1_macro, macro.struct_bt_ol_fuelstation_macro, faction.familyryak]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone1_macro, macro.struct_bt_dv_water_destillery_macro, faction.familyryak]"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone2_macro, macro.struct_bt_sp_chelt_ranch_macro, faction.familyryak]"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone2_macro, macro.struct_bt_sp_chelt_ranch_macro, faction.familyryak]"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone3_macro, macro.struct_bt_mls_shipyard_macro, faction.familyryak]"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone3_macro, macro.struct_split_colony_station_xl_macro, faction.familyryak]"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone4_macro, macro.struct_bt_dv_solar_power_plant_macro, faction.familyryak]"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone4_macro, macro.struct_bt_dv_solar_power_plant_macro, faction.familyryak]"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone5_macro, macro.struct_split_colony_station_s_macro, faction.familyryak]"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone9_macro, macro.struct_split_colony_station_s_macro, faction.familyryak]"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone9_macro, macro.struct_split_colony_station_s_macro, faction.familyryak]"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone9_macro, macro.struct_split_colony_station_s_macro, faction.familyryak]"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone8_macro, macro.struct_split_colony_station_s_macro, faction.familyryak]"/>
+					<!--
+					faction.mlspirate
+					-->
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone7_macro, macro.struct_bt_mls_pirate_outpost_01_macro, faction.mlspirate]"/>
+					<!--
+					faction.teladi
+					-->
+					<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone002_macro, macro.struct_bt_te_warehouse_macro, faction.teladi]"/>
+				</do_if>
+	</add>
+
+
+
+	<!--
+	vanilla MAP
+	-->
+	<add sel="//library[@name='NFMM_Basic']/actions/do_else">
+		<do_if value="true">
+			<!--
+			faction.argon_colony
+			-->
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone01_macro, macro.struct_bt_ol_solar_power_plant_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone01_macro, macro.struct_bt_ol_solar_power_plant_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone01_macro, macro.struct_bt_ol_solar_power_plant_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone01_macro, macro.struct_bt_ls_defence_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone02_macro, macro.struct_bt_ol_soy_farm_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone04_macro, macro.struct_bt_ol_drone_complex_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone05_macro, macro.struct_bt_ol_solar_power_plant_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone05_macro, macro.struct_bt_ol_solar_power_plant_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone05_macro, macro.struct_bt_ls_defence_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone06_macro, macro.struct_bt_ol_bofu_plant_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone07_macro, macro.struct_bt_ls_colony_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone07_macro, macro.struct_bt_ol_fuelstation_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone08_macro, macro.struct_bt_ol_plankton_tank_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone08_macro, macro.struct_bt_ol_plankton_tank_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone08_macro, macro.struct_bt_ol_spice_farm_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone09_macro, macro.struct_bt_ol_drone_factory_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone09_macro, macro.struct_bt_ls_shipyard_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone09_macro, macro.struct_bt_ls_small_ships_complex_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone09_macro, macro.struct_bt_ol_weaponryproduction_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone10_macro, macro.struct_bt_ol_bofu_plant_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone10_macro, macro.struct_bt_ol_bofu_plant_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone10_macro, macro.struct_bt_ol_soy_farm_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone10_macro, macro.struct_bt_ol_spice_farm_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone04_macro, macro.struct_bt_ol_laboratory_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone03_macro, macro.struct_bt_ol_laboratory_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone05_macro, macro.struct_bt_ol_weaponrycomplex_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone06_macro, macro.struct_bt_ol_fuelstation_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone05_macro, macro.struct_bt_ls_defence_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone06_macro, macro.struct_bt_ls_defence_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone08_macro, macro.struct_bt_ol_fuelstation_macro, faction.argon_colony]"/>
+			<!--
+			faction.searchlight
+			-->
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone02_macro, macro.struct_bt_ol_cell_refinery_macro, faction.searchlight]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone03_macro, macro.struct_bt_ol_hightec_construction_macro, faction.searchlight]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone04_macro, macro.struct_bt_ol_tech_complex_macro, faction.searchlight]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone06_macro, macro.struct_bt_ol_crystal_refinement_macro, faction.searchlight]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone01_macro, macro.struct_bt_ls_small_ships_yard_macro, faction.searchlight]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone01_macro, macro.struct_bt_ol_construction_material_macro, faction.searchlight]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone02_macro, macro.struct_bt_ol_crystal_refinement_macro, faction.searchlight]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone04_macro, macro.struct_bt_ol_cell_refinery_macro, faction.searchlight]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone03_macro, macro.struct_bt_ol_high_energy_construction_macro, faction.searchlight]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone05_macro, macro.struct_bt_ol_metalworks_macro, faction.searchlight]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone05_macro, macro.struct_bt_ol_metalworks_macro, faction.searchlight]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone06_macro, macro.struct_bt_ol_metalworks_macro, faction.searchlight]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone01_macro, macro.struct_bt_ol_cell_refinery_macro, faction.searchlight]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone01_macro, macro.struct_bt_ol_cell_refinery_macro, faction.searchlight]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone01_macro, macro.struct_bt_ol_water_destillery_macro, faction.searchlight]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone02_macro, macro.struct_bt_ol_water_destillery_macro, faction.searchlight]"/>
+			<!--
+			faction.goner
+			-->
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone03_macro, macro.struct_bt_ol_farm_complex_macro, faction.goner]"/>
+			<!--
+			faction.hayen
+			-->
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone07_macro, macro.struct_bt_ol_medical_supplies_macro, faction.hayen]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone07_macro, macro.struct_bt_te_pirate_outpost_01_macro, faction.hayen]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone07_macro, macro.struct_bt_te_pirate_outpost_02_macro, faction.hayen]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone07_macro, macro.struct_bt_ol_fuelstation_macro, faction.hayen]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone07_macro, macro.struct_bt_ol_laboratory_macro, faction.hayen]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone09_macro, macro.struct_bt_ol_spacefuel_production_macro, faction.hayen]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone09_macro, macro.struct_bt_te_pirate_outpost_01_macro, faction.hayen]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone09_macro, macro.struct_bt_te_pirate_outpost_02_macro, faction.hayen]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone09_macro, macro.struct_bt_ol_fuelstation_macro, faction.hayen]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone09_macro, macro.struct_bt_ol_laboratory_macro, faction.hayen]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone04_macro, macro.struct_bt_te_pirate_outpost_01_macro, faction.hayen]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone04_macro, macro.struct_bt_te_pirate_outpost_02_macro, faction.hayen]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone04_macro, macro.struct_bt_ol_fuelstation_macro, faction.hayen]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone04_macro, macro.struct_bt_ol_laboratory_macro, faction.hayen]" comment="replace stuff"/>
+			<!--
+			faction.xenon
+			-->
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone07_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone03_macro, macro.struct_at_xen_xenon_hive_macro, faction.xenon]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone03_macro, macro.xenon_small_station_01_macro, faction.xenon]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector04_Zone05_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.struct_econ_cw_generic_ar_water_L_macro, faction.xenon]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.struct_econ_cw_generic_ar_water_M_macro, faction.xenon]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.struct_econ_cw_generic_ar_water_XL_macro, faction.xenon]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
+			<!--
+			faction.familyryak
+			-->
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone1_macro, macro.struct_bt_alb_fuelstation_macro, faction.familyryak]" chance="0"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone1_macro, macro.struct_bt_ol_fuelstation_macro, faction.familyryak]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone1_macro, macro.struct_bt_dv_water_destillery_macro, faction.familyryak]"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone2_macro, macro.struct_bt_sp_chelt_ranch_macro, faction.familyryak]"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone2_macro, macro.struct_bt_sp_chelt_ranch_macro, faction.familyryak]"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone3_macro, macro.struct_bt_mls_shipyard_macro, faction.familyryak]"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone3_macro, macro.struct_split_colony_station_xl_macro, faction.familyryak]"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone4_macro, macro.struct_bt_dv_solar_power_plant_macro, faction.familyryak]"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone4_macro, macro.struct_bt_dv_solar_power_plant_macro, faction.familyryak]"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone5_macro, macro.struct_split_colony_station_s_macro, faction.familyryak]"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone9_macro, macro.struct_split_colony_station_s_macro, faction.familyryak]"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone9_macro, macro.struct_split_colony_station_s_macro, faction.familyryak]"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone9_macro, macro.struct_split_colony_station_s_macro, faction.familyryak]"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone8_macro, macro.struct_split_colony_station_s_macro, faction.familyryak]"/>
+			<!--
+			faction.mlspirate
+			-->
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone7_macro, macro.struct_bt_mls_pirate_outpost_01_macro, faction.mlspirate]"/>
+			<!--
+			faction.teladi
+			-->
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone002_macro, macro.struct_bt_te_warehouse_macro, faction.teladi]"/>
+		</do_if>
+	</add>
+</diff>

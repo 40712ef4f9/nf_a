@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mdscript name="MM_Detach_CV" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+		<cue name="SectionHandler_MM_Detach_CV_pilot" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="default" />
+					<event_conversation_returned_to_section section="default" />
+					<event_conversation_next_section section="mmDCV_do_remove" />
+				</check_any>
+				<check_value value="event.object.trueowner" exact="faction.player" />
+				<check_value value="event.object.type" exact="entitytype.commander" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_value value="event.object.ship.primarypurpose" exact="objectpurpose.build" />
+				<check_value value="@event.object.ship.buildanchor" />
+			</conditions>
+			<actions>
+				<do_if value="event.param" exact="'mmDCV_do_remove'">
+
+					<clear_buildmodule buildmodule="event.object.container.buildmodule" />
+					<disconnect_from_build_location object="event.object.container" />
+					
+					<do_if value="event.object.container.architect?">
+						<find_dock_location name="$temp_dock"  multiple="false" container="event.object.container" size="tag.dock_p" />
+						<do_if value="event.object.container.architect.money">
+							<transfer_money from="event.object.container.architect" to="player.entity" amount="event.object.container.architect.money" />
+						</do_if>
+						<set_value name="$Skill" exact="[skilltype.leadership, skilltype.navigation, skilltype.combat, skilltype.engineering, skilltype.management, skilltype.morale, skilltype.science]" />
+						<set_value name="$name" exact="event.object.container.architect.name"/>
+						<create_list name="$temp_Skill"/>
+						<do_all exact="$Skill.count" counter="$k">
+							<append_to_list name="$temp_Skill" exact="[$Skill.{$k},	'exact', event.object.container.architect.skill.{$Skill.{$k}}]" />
+						</do_all>
+						<remove_value name="$Skill"/>
+						<destroy_object object="event.object.container.architect"/>
+
+						<set_value name="$temp_select" exact="[argon.architect, null, null, null, null]" />
+						<set_value name="$temp_object" exact="event.object.container" />
+						<set_value name="$temp_entitytype" exact="entitytype.architect" />
+						<set_value name="$temp_assign" exact="'architect'"/>
+						<include_actions ref="md.NF_BASE.NF_create_actor" />
+
+						<set_object_name object="$newActor" name="$name" />
+						<remove_value name="$newActor"/>
+						<remove_value name="$name"/>
+						<remove_value name="$target_dock"/>
+						<remove_value name="$shiparch"/>
+					</do_if>
+					<remove_object_commander object="event.object.container" />
+
+				</do_if>
+				<do_else>
+					<add_player_choice_sub position="top_right" text="'Detach CV from Station'" section="mmDCV_do_remove" selectable="not event.object.ship.buildmodule.isbuilding" />
+				</do_else>
+			</actions>
+		</cue>
+	</cues>
+</mdscript>

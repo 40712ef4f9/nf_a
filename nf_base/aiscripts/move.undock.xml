@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<diff>
+	<add sel="/aiscript/attention/actions/do_if[@value='this.ship.parkedat']" pos="after">
+		<do_if value="@this.ship.dockslot != null and @this.ship.dockslot.component.container.macro.ismacro.{global.$mmcarriers} and this.ship.isclass.[class.ship_s, class.ship_m]">
+			<run_script name="'move.undock.carrier'" />
+			<return />
+		</do_if>
+	</add>
+</diff>

@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?> 
+
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- CWIR Version 0.9 -->
+  <replace sel="/regions/region[@name='mine_field_1']/fields/object/@densityfactor">0.0</replace>
+  
+  <replace sel="/regions/region[@name='region_zone_107']">
+    <region name="region_zone_107" density="1.0" rotation="0">
+    <boundary class="sphere">
+      <size r="600000" />
+    </boundary>
+    <falloff>
+      <radial>
+        <step position="0.0" value="1.0" />
+        <step position="0.9" value="1.0" />
+        <step position="1.0" value="0.0" />
+      </radial>
+    </falloff>
+    <fields>
+      <!--nebula ref="fogvolume_small_macro" localred="128" localgreen="128" localblue="128" localdensity="1.0" uniformred="128" uniformgreen="128" uniformblue="128" uniformdensity="0.5" />
+      <viewcorrection tonemapLUT="assets\textures\RegionLUTs\low_orbit-lut.dds" exposure="1.2" eyeadaptionspeed="5.0"/-->
+      <viewcorrection tonemapLUT="assets\textures\RegionLUTs\zone_105_lut.dds" exposure="1.2" eyeadaptionspeed="5.0"/>
+      <object ref="props_sm_lockbox_common_01_macro" densityfactor="0.00125" rotation="0" rotationvariation="70" />
+      <object ref="props_sm_lockbox_unusual_01_macro" densityfactor="0.00035" rotation="0" rotationvariation="70" />
+      <object ref="props_sm_lockbox_unusual_explosive_01_macro" densityfactor="0.00025" rotation="0" rotationvariation="70" />
+      <object ref="props_sm_lockbox_unusual_fragile_01_macro" densityfactor="0.00025" rotation="0" rotationvariation="70" />
+      <object ref="props_sm_lockbox_rare_01_macro" densityfactor="0.0001" rotation="0" rotationvariation="70" />
+      <object ref="props_sm_lockbox_rare_explosive_01_macro" densityfactor="0.0001" rotation="0" rotationvariation="70"/>
+      <object ref="props_sm_lockbox_rare_fragile_01_macro" densityfactor="0.0001" rotation="0" rotationvariation="70"/>
+
+	  
+	  <asteroid ref="env_ast_ore_l_01_macro" densityfactor="0.5" rotation="360" rotationvariation="4" resource="ore" resourcepercentage="100" yield="18432" yieldvariation="13824" replenishtime="150000" noisescale="1000" seed="3467" minnoisevalue="0.5" maxnoisevalue="1"/>
+      <asteroid ref="env_ast_ore_l_02_macro" densityfactor="0.5" rotation="360" rotationvariation="4" resource="silicon" resourcepercentage="100" yield="11264" yieldvariation="8448" replenishtime="150000" noisescale="15000" seed="2001" minnoisevalue="0.9" maxnoisevalue="1"/>
+	  <asteroid ref="env_ast_ore_l_05_macro" densityfactor="0.5" rotation="360" rotationvariation="4" resource="silicon" resourcepercentage="100" yield="11264" yieldvariation="8448" replenishtime="150000" noisescale="15000" seed="2001" minnoisevalue="0.95" maxnoisevalue="1"/>
+	  <asteroid ref="env_ast_ore_m_01_macro" densityfactor="2" rotation="360" rotationvariation="8" resource="ore" resourcepercentage="100" yield="2304" yieldvariation="1728" replenishtime="150000" noisescale="1000" seed="3467" minnoisevalue="0.2" maxnoisevalue="0.8"/>
+      <asteroid ref="env_ast_ore_xs_01_macro" densityfactor="2" rotation="360" rotationvariation="32" resource="ore" resourcepercentage="100" yield="36" yieldvariation="27" replenishtime="150000" noisescale="1000" seed="3467" minnoisevalue="0.2" maxnoisevalue="0.5"/>
+      <asteroid ref="env_ast_niv_l_01_macro" densityfactor="0.2" rotation="360" rotationvariation="4" resource="nividium" resourcepercentage="100" yield="3584" yieldvariation="2688" replenishtime="150000" noisescale="15000" seed="2001" minnoisevalue="0.95" maxnoisevalue="1"/>
+      <asteroid ref="env_ast_crystal_l_01_macro" densityfactor="0.10" rotation="360" rotationvariation="4" resource="crystals" resourcepercentage="100" yield="9216" yieldvariation="6912" replenishtime="150000" noisescale="15000" seed="13091977" minnoisevalue="0.95" maxnoisevalue="1"/>
+      <asteroid ref="env_ast_crystal_m_01_macro" densityfactor="0.15" rotation="360" rotationvariation="8" resource="crystals" resourcepercentage="100" yield="1152" yieldvariation="864" replenishtime="150000" noisescale="15000" seed="13091977" minnoisevalue="0.9" maxnoisevalue="1"/>
+      <asteroid ref="env_ast_crystal_s_01_macro" densityfactor="0.20" rotation="360" rotationvariation="16" resource="crystals" resourcepercentage="100" yield="144" yieldvariation="108" replenishtime="150000" noisescale="15000" seed="13091977" minnoisevalue="0.9" maxnoisevalue="1"/>
+      
+    </fields>
+  </region>
+  </replace>
+  
+	<replace sel="/regions/region[@name='region_zone_104']">
+	<region name="region_zone_104" density="1.0" rotation="0">
+    <boundary class="sphere">
+      <size r="40000" />
+    </boundary>
+    <falloff>
+      <radial>
+        <step position="0.0" value="1.0" />
+        <step position="0.9" value="1.0" />
+        <step position="1.0" value="0.0" />
+      </radial>
+    </falloff>
+    <fields>
+	  
+      <!--nebula ref="fogvolume_small_macro" localred="128" localgreen="128" localblue="128" localdensity="1.0" uniformred="128" uniformgreen="128" uniformblue="128" uniformdensity="0.5" />
+      <viewcorrection tonemapLUT="assets\textures\RegionLUTs\low_orbit-lut.dds" exposure="1.2" eyeadaptionspeed="5.0"/-->
+    </fields>
+  </region>
+  </replace>
+  
+	<replace sel="/regions/region[@name='region_zone_105']">
+		<region name="region_zone_105" density="1.0" rotation="0">
+    <boundary class="sphere">
+      <size r="600000" />
+    </boundary>
+    <falloff>
+      <radial>
+        <step position="0.0" value="1.0" />
+        <step position="0.5" value="1.0" />
+        <step position="1.0" value="0.0" />
+      </radial>
+    </falloff>
+    <fields>
+      <!--nebula ref="fogvolume_small_macro" localred="128" localgreen="128" localblue="128" localdensity="1.0" uniformred="128" uniformgreen="128" uniformblue="128" uniformdensity="0.5" /-->
+      <viewcorrection tonemapLUT="assets\textures\RegionLUTs\zone_105_lut.dds" exposure="1.2" eyeadaptionspeed="5.0"/>
+      <object ref="props_sm_lockbox_common_01_macro" densityfactor="0.00125" rotation="0" rotationvariation="70" />
+      <object ref="props_sm_lockbox_unusual_01_macro" densityfactor="0.00035" rotation="0" rotationvariation="70" />
+      <object ref="props_sm_lockbox_unusual_explosive_01_macro" densityfactor="0.00025" rotation="0" rotationvariation="70" />
+      <object ref="props_sm_lockbox_unusual_fragile_01_macro" densityfactor="0.00025" rotation="0" rotationvariation="70" />
+      <object ref="props_sm_lockbox_rare_01_macro" densityfactor="0.0001" rotation="0" rotationvariation="70" />
+      <object ref="props_sm_lockbox_rare_explosive_01_macro" densityfactor="0.0001" rotation="0" rotationvariation="70"/>
+      <object ref="props_sm_lockbox_rare_fragile_01_macro" densityfactor="0.0001" rotation="0" rotationvariation="70"/>
+
+	  <nebula ref="fogvolume_small_macro" localred="0" localgreen="0" localblue="0" localdensity="0.0" uniformred="0" uniformgreen="0" uniformblue="0" uniformdensity="0.0" resource="plasma" yield="1000000" gatherspeedfactor="0.15" replenishtime="3000"/>
+		<nebula ref="fogvolume_small_macro" localred="0" localgreen="0" localblue="0" localdensity="0.0" uniformred="0" uniformgreen="0" uniformblue="0" uniformdensity="0.0" resource="ions" yield="1000000" gatherspeedfactor="0.10" replenishtime="3000"/>
+	</fields>
+  </region>
+	</replace>
+	
+	<replace sel="/regions/region[@name='region_zone_106']">
+	<region name="region_zone_105" density="1.0" rotation="0">
+    <boundary class="sphere">
+      <size r="600000" />
+    </boundary>
+    <falloff>
+      <radial>
+        <step position="0.0" value="1.0" />
+        <step position="0.5" value="1.0" />
+        <step position="1.0" value="0.0" />
+      </radial>
+    </falloff>
+    <fields>
+	  <nebula ref="fogvolume_pattern_v1_near_macro" localred="106" localgreen="151" localblue="154" localdensity="0.05" uniformred="28" uniformgreen="40" uniformblue="43" uniformdensity="0.05" resource="hydrogen" yield="1000000" gatherspeedfactor="0.06" replenishtime="3000" backgroundfog="true" />
+      <!--nebula ref="fogvolume_small_macro" localred="128" localgreen="128" localblue="128" localdensity="1.0" uniformred="128" uniformgreen="128" uniformblue="128" uniformdensity="0.5" /-->
+      <viewcorrection tonemapLUT="assets\textures\RegionLUTs\zone_105_lut.dds" exposure="1.2" eyeadaptionspeed="5.0"/>
+      <object ref="props_sm_lockbox_common_01_macro" densityfactor="0.00125" rotation="0" rotationvariation="70" />
+      <object ref="props_sm_lockbox_unusual_01_macro" densityfactor="0.00035" rotation="0" rotationvariation="70" />
+      <object ref="props_sm_lockbox_unusual_explosive_01_macro" densityfactor="0.00025" rotation="0" rotationvariation="70" />
+      <object ref="props_sm_lockbox_unusual_fragile_01_macro" densityfactor="0.00025" rotation="0" rotationvariation="70" />
+      <object ref="props_sm_lockbox_rare_01_macro" densityfactor="0.0001" rotation="0" rotationvariation="70" />
+      <object ref="props_sm_lockbox_rare_explosive_01_macro" densityfactor="0.0001" rotation="0" rotationvariation="70"/>
+      <object ref="props_sm_lockbox_rare_fragile_01_macro" densityfactor="0.0001" rotation="0" rotationvariation="70"/>
+	  
+
+    </fields>
+  </region>
+	
+	</replace>
+</diff>

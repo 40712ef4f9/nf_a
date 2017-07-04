@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<components>
+	<component name="units_size_l_dv_fury_new_defence" class="ship_l">
+		<source geometry="assets\units\size_l\\units_size_l_dv_kit_new_defence_01_data"/>
+		<layers>
+			<layer>
+				<waypoints>
+					<waypoint name="XU_Waypoint24" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="460.2239" y="54.78664" z="144.1579">
+						<links>
+							<link ref="XU_Waypoint23"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint23" tags="typenormal sizeLevel1 dynamicmasstraffic " x="310.2239" y="54.78664" z="144.1579">
+						<links>
+							<link ref="XU_Waypoint20"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint22" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="460.2239" y="54.78664" z="171.1579">
+						<links>
+							<link ref="XU_Waypoint21"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint21" tags="typenormal sizeLevel1 dynamicmasstraffic " x="310.2239" y="54.78664" z="171.1579">
+						<links>
+							<link ref="XU_Waypoint20"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint20" tags="typenormal sizeLevel1 dynamicmasstraffic " x="260.2238" y="71.91163" z="174.7829">
+						<links>
+							<link ref="XU_Waypoint19"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint19" tags="sizeLevel1 typedock end dynamicmasstraffic " x="28.72044" y="71.91164" z="174.7828">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint18" tags="typenormal sizeLevel1 dynamicmasstraffic " x="310.2237" y="89.03664" z="144.1578">
+						<links>
+							<link ref="XU_Waypoint17"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint17" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="460.2237" y="89.03664" z="144.1578">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint16" tags="typenormal sizeLevel1 dynamicmasstraffic " x="310.2238" y="89.03664" z="171.1578">
+						<links>
+							<link ref="XU_Waypoint15"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint15" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="460.2238" y="89.03664" z="171.1578">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint14" tags="sizeLevel1 typedock start dynamicmasstraffic " x="28.72044" y="71.91164" z="140.5328">
+						<links>
+							<link ref="XU_Waypoint13"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint13" tags="typenormal sizeLevel1 dynamicmasstraffic " x="260.2239" y="71.91163" z="140.5329">
+						<links>
+							<link ref="XU_Waypoint16"/>
+							<link ref="XU_Waypoint18"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint12" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-252.691" y="71.91164" z="174.7828">
+						<links>
+							<link ref="XU_Waypoint07"/>
+							<link ref="XU_Waypoint09"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint11" tags="sizeLevel1 typedock start dynamicmasstraffic " x="-21.18752" y="71.91163" z="174.7828">
+						<links>
+							<link ref="XU_Waypoint12"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint06" tags="sizeLevel1 typedock end dynamicmasstraffic " x="-21.18752" y="71.91163" z="140.5328">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint05" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-252.6909" y="71.91164" z="140.5328">
+						<links>
+							<link ref="XU_Waypoint06"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint10" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-452.6908" y="89.03664" z="144.158">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint09" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-302.6908" y="89.03664" z="144.158">
+						<links>
+							<link ref="XU_Waypoint10"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint08" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-452.6908" y="89.03664" z="171.1578">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint07" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-302.6908" y="89.03664" z="171.1578">
+						<links>
+							<link ref="XU_Waypoint08"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint04" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-302.691" y="54.78664" z="144.1578">
+						<links>
+							<link ref="XU_Waypoint05"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint03" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-452.691" y="54.78664" z="144.1578">
+						<links>
+							<link ref="XU_Waypoint04"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint02" tags="typenormal sizeLevel1 dynamicmasstraffic " x="-302.691" y="54.78664" z="171.1578">
+						<links>
+							<link ref="XU_Waypoint05"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint01" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-452.691" y="54.78664" z="171.1578">
+						<links>
+							<link ref="XU_Waypoint02"/>
+						</links>
+					</waypoint>
+				</waypoints>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="ship">
+				<offset/>
+			</connection>
+			<connection name="Connection01" tags="part nocollision  ">
+				<offset/>
+				<parts>
+					<part name="part_dummy" wreck="part_dummy_wreck">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="lensflares.vertexcolor_basis"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="10" y="0" z="10"/>
+							<center x="0" y="0" z="0"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection02" tags="part  ">
+				<offset/>
+				<parts/>
+			</connection>
+			<connection name="connection_storage01" tags="storage ">
+				<offset/>
+			</connection>
+			<connection name="connection_radar_fallback01" tags="radar ">
+				<offset/>
+			</connection>
+			<connection name="connection_cockpit01" tags="cockpit cockpit_visible">
+				<offset/>
+			</connection>
+			<connection name="connection_dock_s01" tags="dock_s ">
+				<offset>
+					<position x="0" y="10.84535" z="519.3228"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen_external01" tags="shieldgenerator external ">
+				<offset>
+					<position x="0" y="-84.69465" z="350.3929"/>
+					<quaternion qx="4.371139E-08" qy="-1" qz="4.371139E-08" qw="-1.910685E-15"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_dv_carrier_kit_new_front_a" tags="destructible">
+				<offset>
+					<position x="0" y="0" z="219.9651"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_dv_carrier_kit_new_end_a" tags="destructible">
+				<offset>
+					<position x="0" y="0" z="-219.462"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_dv_fury_new_defence_a" tags="destructible">
+				<offset>
+					<position x="0" y="0" z="219.9651"/>
+				</offset>
+			</connection>
+		</connections>
+	</component>
+</components>

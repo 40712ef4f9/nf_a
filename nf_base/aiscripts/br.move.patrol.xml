@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<aiscript name="BR.move.patrol" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://utnas/~unitrader/XRebirthxsds/aiscripts.xsd" version="5">
+  <params>
+    <param name="range" default="''" comment="'zone','sector','cluster', some presets such as 'pmc', and list of spaces"/>
+    <param name="range_min" default="5km" comment="currently only supported when range=station, or patrolobject"/>
+    <param name="range_max" default="this.ship.maxradarrange" comment="currently only supported when range=station, or patrolobject. Default: max radar range"/>
+    <param name="patrolobject" default="null" comment="Object to patrol around (ignore range, but use range_min and range_max)" />
+    <param name="engageenemies" default="true" comment="When moving, scan for and engage enemies"/>
+    <param name="onlyinrange" default="true" comment="Stay in the range of 'range' or 'patrolobject' within 'range_max'" />
+    <param name="debugoutputchance" default="0" />
+    <param name="target" default="null"/>
+    <param name="createsquad" default="false"/>
+    <param name="allowstations" default="true" comment="Acquire stations as targets? Passed to move.seekenemies." />
+  </params>
+  <interrupts>
+    <handler ref="TargetInvalidHandler" />
+    <handler ref="AttackHandler" />
+    <handler ref="ScannedHandler" />
+
+	<handler>
+      <conditions>
+        <event_object_changed_zone object="this.ship" />	
+		<check_value value="this.ship.zone == @$targetzone" />
+		<check_value value="this.ship.owner != faction.xenon" />
+		<check_value value="this.ship.owner != faction.ownerless" />
+		<check_value value="this.ship.isclass.[class.ship_l, class.ship_xl]" />
+		<check_value value="this.ship.primarypurpose == objectpurpose.fight" />
+		<check_value value="this.ship.isjobship" />
+      </conditions>
+      <actions>
+       <!-- <debug_text text="'Interrupt br.move.patrol to call TroopShips if conditions meet'" chance="100" />-->
+		
+		<!--<write_to_logbook category="general" text="'=== CWIR_TS 0 === \n br.move patrol was Interrupt: \n this ship %1 changed zone to %2.\n player.entity was signalled with these parameters: \n p1: %3 \n p2: %4 \n p3: %5.'.[this.ship.name, this.ship.zone.name, 'TroopShips', this.ship.zone.name, this.ship.owner.name]"/>-->
+		
+		<signal_objects object="player.entity" param="'TroopShips'" param2="this.ship.zone" param3="this.ship.owner" delay="10ms" comment="Signal MD cue" />
+        <abort_called_scripts resume="start" />
+      </actions>
+    </handler>
+
+  </interrupts>
+  <init>
+    <set_command command="command.patrol"  />
+    <set_command_action commandaction="commandaction.calculating" />
+    <do_if value="@$createsquad and this.ship.subordinates.count == 0">
+      <signal_objects object="player.galaxy" param="'CW_Job_Squad_builder'" param2="this.ship" param3="$createsquad"/>
+    </do_if>
+    <set_value name="$createsquad" exact="false" />
+  </init>
+  <patch sinceversion="5">
+    <do_if value="not $allowstations?">
+      <set_value name="$allowstations" exact="true"/>
+    </do_if>
+  </patch>
+  <attention min="unknown">
+    <actions>
+      
+      <run_script name="'move.undock'" sinceversion="3" />
+      <do_all exact="this.ship.subordinates.count" counter="$j">
+	  	<signal_objects object="this.ship.subordinates.{$j}" param="'reboot'" delay="10ms" comment="Wake Follower" />
+      </do_all>
+      
+      
+      <!-- checking if we have a valid patrolobject, and if not (its a space instead) use it as range param if this one is not set, or if set ignore it in any other case where invalid-->
+      <do_if value="$patrolobject.exists">
+        <do_if value="$patrolobject.isclass.zone or $patrolobject.isclass.sector or $patrolobject.isclass.cluster">
+          <do_if value="$range != '' or $range != false">
+            <set_value name="$range" exact="$patrolobject" />
+          </do_if>
+          <set_value name="$patrolobject" exact="null" />
+        </do_if>
+        <do_elseif value="not $patrolobject.isclass.station">
+          <set_value name="$patrolobject" exact="null" />
+        </do_elseif>
+      </do_if>
+      
+      <!-- we only need to execute this once - its based on the $range param and returns a list of Zones which shall be patrolled -->
+      <label name="range" />
+      <do_if value="not $patrolobject.exists">
+        <run_script name="'BR.lib.range.decode'" result="$zones" sinceversion="4">
+          <param name="range" value="$range"/>
+        </run_script>
+      </do_if>
+      
+      <label name="start" />
+      
+      <!-- aggressive stance MAY BE CAUSING ISSUES -->
+      <!--<do_if value="this.ship.defencenpc != null">
+        <start_script object="this.ship.defencenpc" name="'fight.attack.object.capital'"/>
+      </do_if>-->
+      
+      <set_value name="$capship" exact="this.ship.isclass.ship_l or this.ship.isclass.ship_xl" />
+      <set_value name="$startzone" exact="this.ship.zone" />
+      <!-- Has a job main zone? -->
+      <do_if value="this.ship.jobmainzone">
+        <set_value name="$startzone" exact="this.ship.jobmainzone"/>
+      </do_if>
+      <set_value name="$targetzone" exact="this.ship.zone" />
+      <set_value name="$patrolendtime" exact="0"/>
+      <set_value name="$pos" exact="this.ship.position"/>
+      
+      <!-- yorrick-->
+      <do_if value="$patrolobject==null and $target!=null">
+        <set_value name="$patrolobject" exact="$target" />
+      </do_if>
+      
+      <break_formation object="this.ship" />
+      
+      <do_if value="$capship">
+        <set_value name="$patrol_duration" min="5min" max="20min" />
+      </do_if>
+      <do_else>
+        <set_value name="$patrol_duration" min="10min" max="15min" />
+        <create_formation formation="formationshape.vshape" object="this.ship" param="this.ship.size * 1.5" />
+      </do_else>
+      
+      <!-- decoding the $range String to $space was previously done here - now moved this to BR.lib.range.decode in Line ~36 (may move a bis because things still change) -->
+      
+      <set_value name="$DeVriesCheck" exact="false" />
+      <set_value name="$OmicronCheck" exact="false" />
+      <set_value name="$MaelstromCheck" exact="false" />
+      
+      <find_cluster name="$Albion" macro="macro.cluster_b_macro" />
+      <find_cluster name="$DeVries" macro="macro.cluster_d_macro" />
+      <find_cluster name="$Omicron_Lyrae" macro="macro.cluster_c_macro" />
+      <find_cluster name="$Maelstrom" macro="macro.cluster_a_macro" />
+      
+      <label name="find_destination" />
+      
+      <do_if value="not $DeVriesCheck">
+        <do_if value="not $DeVriesGate?">
+          <find_object name="$DeVriesGate" class="class.gate" space="$Albion" destination="$DeVries"/>
+        </do_if>
+        <do_if value="$DeVriesGate.isactive">
+          <remove_value name="$DeVriesGate" />
+          <set_value name="$DeVriesCheck" exact="true" />
+        </do_if>
+      </do_if>
+      <do_if value="not $OmicronCheck">
+        <do_if value="not $OmicronGate?">
+          <find_object name="$OmicronGate" class="class.gate" space="$DeVries" destination="$Omicron_Lyrae"/>
+        </do_if>
+        <do_if value="$OmicronGate.isactive">
+          <remove_value name="$OmicronGate" />
+          <set_value name="$OmicronCheck" exact="true" />
+        </do_if>
+      </do_if>
+      <do_if value="not $MaelstromCheck">
+        <do_if value="not $MaelstromGate?">
+          <find_object name="$MaelstromGate" class="class.gate" space="$Omicron_Lyrae" destination="$Maelstrom"/>
+        </do_if>
+        <do_if value="$MaelstromGate.isactive">
+          <remove_value name="$MaelstromGate" />
+          <set_value name="$MaelstromCheck" exact="true" />
+        </do_if>
+      </do_if>
+
+      <do_if value="$patrolobject.exists">
+        <set_value name="$targetzone" exact="$patrolobject.zone" />
+        
+        <create_position name="$patrolpos" object="$patrolobject" min="$range_min" max="$range_max" />
+        
+        <do_if value="not $capship">
+          <get_safe_pos result="$pos" radius="this.ship.size + 200m" value="$patrolpos" zone="$targetzone" />
+        </do_if>
+        <do_else>
+          <set_value name="$Y" min="-500m" max="500m"/>
+          <get_safe_pos result="$pos" radius="this.ship.size + 1000m" value="position.[$patrolpos.x, $Y, $patrolpos.z]" zone="$targetzone" allowyaxis="false"/>
+        </do_else>
+        <resume label="patrol" />
+      </do_if>
+      
+      <!-- yorrick - was missing in BKs version -->
+      <set_value name="$fly_around_zone" exact="false"/>
+      
+      <!-- the Snippet decoding $space to $zones which was here before is now in br.lib.range.decode called in ~36 (may move a bis because things still change) -->
+      
+      <do_if value="this.ship.sector" exact="$targetzone.sector">
+        <!--Use same check distance here and in 'move.seekenemies' (this.ship.size * 2) -->
+        <do_if value="this.ship.distanceto.[$targetzone, $pos]" max="this.ship.size * 2">
+          <!--Ship is in the target zone but patrol time needs to be set-->
+          <set_value name="$fly_around_zone" exact="true"/>
+          <do_if value="$patrolendtime" exact="0">
+            <set_value name="$patrolendtime" exact="player.age + $patrol_duration" />
+          </do_if>
+          <do_elseif value="player.age" min="$patrolendtime">
+            <debug_text text="'do_elseif value=player.age min=$patrolendtime (%1 - %2)'.[player.age, $patrolendtime]" chance="0" filter="error"/>
+            <!-- This seems to be missing from the original script... -->
+            <set_value name="$patrolendtime" exact="player.age + $patrol_duration" />
+            <!-- You can remove the "do_while" loop (but leave the "set_value") if you want the ship to be able to linger in the same zone longer if it get's chosen again. -->
+            <do_if value="$zones? and typeof $zones == datatype.list and ($zones.count gt 1 or ($zones_ini? and $zones.count ge 1))">
+              <set_value name="$do_while_of_death" exact="0" />
+              <set_value name="$GateCheck" exact="false" />
+              <set_value name="$zones" exact="$zones.clone" />
+
+              <do_while value="$zones.count ge 1 and this.ship.zone == $targetzone">
+                <set_value name="$do_while_of_death" operation="add"/>
+                <do_if value="not $zones_ini?">
+                  <set_value name="$zones_ini" exact="$zones.count" />
+                </do_if>
+                <set_value name="$targetzone" exact="$zones.random" />
+                <do_if value="$zones.indexof.{$targetzone}">
+                  <remove_value name="$zones.{$zones.indexof.{$targetzone}}" />
+                </do_if>
+
+                <do_if value="$do_while_of_death? and $do_while_of_death gt 10">
+                  <set_value name="$range" exact="if $capship then 'cluster' else 'sector'" />
+                  <remove_value name="$do_while_of_death" />
+                  <resume label="range" />
+                  <break />
+                </do_if>
+                <do_elseif value="$do_while_of_death?" negate="true">
+                  <set_value name="$do_while_of_death" exact="8" />
+                </do_elseif>
+              </do_while>
+
+              <remove_value name="$do_while_of_death" />
+            </do_if>
+            <do_elseif value="$zones_ini? and (typeof $range).isstring and $zones.count le 1 and $zones_ini gt $zones.count">
+              <remove_value name="$zones_ini" />
+              <resume label="range" />
+            </do_elseif>
+            <do_elseif value="$zones? and typeof $zones != datatype.list and $zones.isclass.zone">
+              <set_value name="$targetzone" exact="$zones" />
+              <debug_text text="'target zone (%1 - %2)'.[$targetzone.knownname, this.ship.zone.knownname]" chance="0" filter="error"/>
+            </do_elseif>
+            <do_elseif value="not $zones?">
+                <do_if value="not (typeof $range).isstring">
+                  <set_value name="$range" exact="if $capship then 'cluster' else 'sector'" />
+                </do_if>
+              <resume label="range" />
+            </do_elseif>
+            <do_else>
+              <set_value name="$targetzone" exact="if $zones.count then $zones.random else $startzone" />
+              <debug_text text="'target zone (%1 - %2)'.[$targetzone.knownname, this.ship.zone.knownname]" chance="0" filter="error"/>
+            </do_else>
+          </do_elseif>
+          <debug_text text="'fly around zone $targetzone (%1)'.[$targetzone.knownname]" chance="0" filter="error"/>
+          <!-- yorrick - changing position calc to prevent ships flying off to far zone borders -->
+          <!--<create_random_position_in_boundingbox name="$pos" component="$targetzone" />-->
+          <set_value name="$X" min="-16000m" max="16000m"/>
+          <set_value name="$Y" min="-5000m" max="5000m"/>
+          <set_value name="$Z" min="-16000m" max="16000m"/>
+          <get_safe_pos result="$pos" radius="this.ship.size + 1000m" value="position.[$X, $Y, $Z]" zone="$targetzone" />
+          <debug_text text="'pos (%1)'.[$pos]" chance="0" filter="error"/>
+        </do_if>
+      </do_if>
+      
+      <!-- yorrick - was missing in BKs version - here for if $space not valid -->
+      <do_if value="$fly_around_zone">
+        <!--Fly around the zone-->
+        
+        <set_value name="$X" min="-16000m" max="16000m"/>
+        <set_value name="$Y" min="-5000m" max="5000m"/>
+        <set_value name="$Z" min="-16000m" max="16000m"/>
+        <get_safe_pos result="$pos" radius="this.ship.size + 1000m" value="position.[$pos.x, $Y, $pos.z]" zone="$targetzone" />
+      </do_if>
+      
+      <debug_text text="'target zone (%1 - %2)'.[$targetzone.knownname, this.ship.zone.knownname]" chance="0" filter="error"/>
+      
+      <do_if value="this.ship.sector" exact="$targetzone.sector" negate="true">
+        <run_script name="if @global.$WWX_mmcarrier_is_active then 'move.generic.carrier' else 'move.generic'">
+          <param name="destination" value="$targetzone.sector" />
+        </run_script>
+        <!-- yorrick - moving zones seems broken. added these checks to make sure we are not resetting the patrol length every pass -->
+        <do_if value="$patrolendtime" exact="0">
+          <set_value name="$patrolendtime" exact="player.age + $patrol_duration" />
+        </do_if>
+      </do_if>
+      
+      <!-- Yorrick - new check for patrol leader ship class -->
+      <do_if value="$capship">
+        <do_if value="this.ship.zone" exact="$targetzone" negate="true">
+<!--#pref: 4.0
+          <run_script name="'move.nohighway'">
+            <param name="target" value="$targetzone" />
+          </run_script>-->
+          <run_script name="if @global.$WWX_mmcarrier_is_active then 'move.generic.carrier' else 'move.generic'">
+            <param name="destination" value="$targetzone" />
+          </run_script>
+          <do_if value="$patrolendtime" exact="0">
+            <set_value name="$patrolendtime" exact="player.age + $patrol_duration" />
+          </do_if>
+        </do_if>
+      </do_if>
+      <!-- not a cap ship, patrol leader will hit the highway -->
+      <do_else>
+        <do_if value="this.ship.zone" exact="$targetzone" negate="true">
+          <run_script name="'move.generic'">
+            <param name="destination" value="$targetzone" />
+          </run_script>
+          <do_if value="$patrolendtime" exact="0">
+            <set_value name="$patrolendtime" exact="player.age + $patrol_duration" />
+          </do_if>
+        </do_if>
+      </do_else>
+      
+      <!-- yorrick - was missing in BKs version -->
+      <label name="patrol" />
+      <!-- look at the escort ships for any destroyed? test idea -->
+      <!--<do_all exact="@this.ship.pilot.$escortgroup.count" counter="$i">
+        <do_if value="@this.ship.pilot.$escortgroup.{$i}.isoperational">
+          <debug_text text="'Escort ship destroyed.'" chance="100" filter="error"/>
+        </do_if>
+      </do_all>-->
+      <!-- Safety checking for non-existing zones -->
+      <do_if value="not $targetzone.exists or not $startzone.exists" >
+        <wait min="1s" max="2s" sinceversion="1" />
+        <resume label="start" />
+      </do_if>
+
+	  <do_if value="$range == 'station' and this.ship.commander and this.ship.commander.isclass.station and $targetzone == this.ship.commander.zone">
+		  <set_value name="$seekenemies" exact="'move.seekenemies.zone'" />
+	  </do_if>
+	  <do_elseif value="$patrolobject.exists and $patrolobject.isclass.station">
+		  <set_value name="$seekenemies" exact="'move.seekenemies.zone'" />
+	  </do_elseif>
+	  <do_elseif value="$range == 'zone' or (typeof $range == datatype.component and $range.isclass.zone)">
+		  <set_value name="$seekenemies" exact="'move.seekenemies.zone'" />
+	  </do_elseif>
+	  <do_elseif value="$patrolobject.exists and $patrolobject.isclass.ship">
+		  <set_value name="$seekenemies" exact="'move.seekenemies'" />
+	  </do_elseif>
+	  <do_else>
+		  <set_value name="$seekenemies" exact="'move.seekenemies'" />
+	  </do_else>
+      
+      <run_script name="if $seekenemies? then $seekenemies else 'move.seekenemies'">
+        <param name="destination" value="$targetzone"/>
+        <param name="pos" value="$pos"/>
+        <param name="engageenemies" value="$engageenemies"/>
+        <param name="onlyinrange" value="@$onlyinrange" />
+        <param name="escort" value="$patrolobject" />
+        <param name="pursuedistance" value="$range_max" />
+        <param name="allowstations" value="$allowstations" />
+        <param name="debugoutputchance" value="$debugoutputchance" />
+      </run_script>
+
+      <wait min="1s" max="2s" />
+
+      <!-- check if this is a jobship at the end of its lifetime -->
+      <do_if value="this.ship.jobexpired or this.ship.pilot.$end_of_work? and this.ship.pilot.$end_of_work lt player.age">
+        <debug_text text="'%1 doing job %2 has expired, die!'.[this.ship.knownname, this.ship.job]" chance="$debugoutputchance" />
+        <run_script name="'move.die'" sinceversion="2">
+          <param name="byjump" value="$capship" />
+          <param name="byhighway" value="not $capship" />
+          <param name="bydock" value="not $capship" />
+          <param name="byidle" value="true" />
+        </run_script>
+      </do_if>
+
+      <resume label="find_destination"/>
+
+    </actions>
+  </attention>
+</aiscript>

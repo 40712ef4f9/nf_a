@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Benedikt (192.168.3.128) at 08.10.2013_12-49-09-->
+<macros>
+  <macro name="buildmodule_stations_pirate_macro" class="buildmodule">
+    <component ref="standardbuildmodule" />
+    <properties>
+      <identification unique="0" />
+      <builder>
+		<macro ref="struct_bt_alb_cell_refinery_macro" />
+		<macro ref="struct_bt_alb_cattle_ranch_macro" />
+		<macro ref="struct_bt_alb_constructionmaterial_production_macro" />
+		<macro ref="struct_bt_alb_weaponry_complex_macro" />
+		<macro ref="struct_bt_alb_weaponry_production_macro" />
+		<macro ref="struct_bt_alb_fuelstation_macro" />
+		<macro ref="struct_bt_alb_crystal_refinement_macro" />
+		<macro ref="struct_bt_alb_farm_complex_macro" />
+		<macro ref="struct_bt_alb_food_production_complex_macro" />
+		<macro ref="struct_bt_alb_food_production_plant_macro" />
+		<macro ref="struct_bt_alb_water_destillery_macro" />
+		<macro ref="struct_bt_alb_high_energy_construction_macro" />
+		<macro ref="struct_bt_alb_wheat_farm_macro" />
+		<macro ref="struct_bt_alb_hightec_construction_macro" />
+		<macro ref="struct_bt_alb_laboratory_macro" />
+		<macro ref="struct_bt_alb_metal_works_macro" />
+		<macro ref="struct_bt_alb_solar_power_plant_macro" />
+		<macro ref="struct_bt_alb_medical_supplies_macro" />
+		<macro ref="struct_bt_alb_spice_farm_macro" />
+		<macro ref="struct_bt_alb_tech_complex_macro" />
+		<macro ref="struct_bt_alb_drone_factory_macro" />
+		<macro ref="struct_bt_alb_drone_complex_macro" />
+		<!-- Pirate Shipyard -->
+		<macro ref="struct_bt_pir_shipyard_2_macro" />
+        <!-- Small shipyards -->
+        <macro ref="struct_bt_pir_small_ships_yard_macro" />
+       <macro ref="struct_bt_pir_small_ships_complex_macro" />
+	   <macro ref="struct_econ_weapon_ar_defence_macro" />
+      </builder>
+    </properties>
+  </macro>
+</macros>

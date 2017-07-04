@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="fight.attack.object.plus" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+  <!--
+
+  Script to decide which fight.attack.object.foo script is suitable to be called
+
+  Depending on the class:
+  - Drone:
+    - fight.attack.object.drone.leader
+  - xs, s, m: 
+	  -fight.attack.object.fighter
+  - l, xl:
+		- signal 'attack target' (defense officer)
+		- move.attack.object.capital (pilot)
+  - station: 
+		- fight.attack.object.station
+  
+  -->
+  <params>
+    <param name="target" default="null" comment="The object to fight with" />
+    <param name="primarytargets" default="null" comment="Group of objects to destroy before moving on to other nearby targets" />
+    <param name="secondarytargets" default="null" comment="Group of objects to destroy after primary targets, before moving on to other nearby targets" />
+    <param name="escort" default="null" comment="Objects to escort - stay at 'pursuedistance' and shoot enemies attacking this" />
+    <param name="pursuedistance" default="this.ship.maxradarrange" comment="Distance to pursue/escort (if pursuetargets true or 'escort' provided). Default: max radar range" />
+    <param name="pursuetargets" default="false" comment="Pursue the target no matter what. Default: false" />
+    <param name="allowothertargets" default="true" comment="Whether the script shall keep running when all primary targets have been destroyed. Default: true" />
+    <param name="checkrelation" default="true" comment="Check may attack (faction enemy relation). Default: true" />
+    <param name="end" default="false" comment="Ending script. Default: false" />
+    <param name="idle" default="false" comment="Not to be used if rejoinformation is true. Default: false
+           When finished attacking enemy - Ships: Idle around looking for enemies. Stations: Start fight.attack.object.station"/>
+    <param name="debugoutputchance" default="0"/>
+  </params>
+
+  <interrupts>
+    <handler ref="TargetInvalidHandler" />
+    <handler ref="AttackHandler"/>
+    <handler ref="ScannedHandler" />
+    <handler>
+      <conditions>
+        <event_object_changed_owner object="$target" check="false" />
+      </conditions>
+      <actions>
+        <!-- Remove the target to stop shooting at it, when owner changes -->
+        <set_value name="$target" exact="null" />
+        <abort_called_scripts />
+      </actions>
+    </handler>
+  </interrupts>
+  <init>
+    <set_command command="command.attackobject" param="$target"/>
+  </init>
+  <patch sinceversion="1">
+    <set_value name="$checkrelation" exact="true" />
+  </patch>
+  <attention min="unknown">
+    <actions>
+      <do_if value="this.defensible.exists">
+        
+        <do_if value="not $target">
+          <do_if value="@$primarytargets.count">
+           <set_value name="$target" exact="$primarytargets.random" />
+          </do_if>
+          <do_elseif value="@$secondarytargets.count">
+           <set_value name="$target" exact="$secondarytargets.random" />
+          </do_elseif>
+          <do_elseif value="not $allowothertargets">
+           <resume label="finish" />
+          </do_elseif>
+        </do_if>
+
+        <!-- HACK: force relation boost from this to player, if check relation is false -->
+        <do_if value="not $checkrelation and @$target.isplayerowned and not @this.mayattack.{$target}" comment="target can be null">
+          <add_relation_boost object="this" otherobject="$target" value="this.owner.relation.kill.max" decay="1" delay="10min" silent="true" />
+        </do_if>
+        
+        <set_value name="$Defensible" exact="this.defensible"/>
+
+        <do_if value="$Defensible.isclass.ship">
+          <do_if value="this == $Defensible.pilot">
+            <!--If you're in a formation, leave-->
+            <!--TODO: Alert your formation leader and commander that you're going solo-->
+            <set_value name="$WasInFormation" exact="false"/>
+            <do_if value="$Defensible.formationleader">
+              <do_if value="$Defensible.formationleader" exact="$Defensible" negate="true">
+                <leave_formation object="$Defensible"/>
+                <set_value name="$WasInFormation" exact="true"/>
+              </do_if>
+            </do_if>
+            <!-- Drones -->
+            <do_if value="$Defensible.isclass.drone">
+              <run_script name="'fight.attack.object.drone.leader'">
+                <param name="target" value="$target"/>
+                <param name="checkrelation" value="$checkrelation" />
+                <param name="debugoutputchance" value="$debugoutputchance" />
+              </run_script>
+            </do_if>
+
+            <!-- Small ships -->
+            <do_elseif value="$Defensible.isclass.ship_xs or $Defensible.isclass.ship_s or $Defensible.isclass.ship_m">
+              <do_if value="not $primarytargets">
+				<add_to_group groupname="$primarytargets" object="$target" check="false" />
+              </do_if>
+              <run_script name="'fight.attack.object.fighter'">
+                <param name="primarytargets" value="$primarytargets"/>
+                <param name="secondarytargets" value="$secondarytargets"/>
+                <param name="pursuetargets" value="$pursuetargets" />
+                <param name="allowothertargets" value="$allowothertargets" />
+                <param name="escort" value="$escort"/>
+                <param name="pursuedistance" value="$pursuedistance" />
+                <param name="checkrelation" value="$checkrelation"/>
+                <param name="debugoutputchance" value="$debugoutputchance" />
+              </run_script>
+            </do_elseif>
+
+            <!-- Capital ships -->
+            <do_elseif value="$Defensible.isclass.ship_l or $Defensible.isclass.ship_xl">
+              <!-- Send the target to the Defence NPC -->
+              <do_if value="$Defensible.defencenpc.exists">
+                <signal_objects object="$Defensible.defencenpc" param="'attack'" param2="$target" param3="[$allowothertargets, $checkrelation]" />
+              </do_if>
+              <!-- Movement in pilot -->
+              <run_script name="'move.attack.object.capital'">
+                <param name="target" value="$target"/>
+                <param name="pursuetargets" value="$pursuetargets" />
+                <param name="escort" value="$escort"/>
+                <param name="pursuedistance" value="$pursuedistance" />
+                <param name="checkrelation" value="$checkrelation"/>
+                <param name="debugoutputchance" value="$debugoutputchance" />
+              </run_script>
+            </do_elseif>
+            <!-- Send the target to the Defence NPC -->
+            <do_if value="$Defensible.defencenpc.exists">
+              <signal_objects object="$Defensible.defencenpc" param="'stop attack'" />
+            </do_if>
+
+            <do_if value="$WasInFormation">
+              <do_if value="this.ship.commander.exists">
+                <do_if value="not this.ship.commander.isclass.station">
+                  <join_formation object="this.ship" leader="this.ship.commander"/>
+                </do_if>
+              </do_if>
+            </do_if>
+            <do_elseif value="$idle">
+              <run_script name="'move.patrol'">
+                <param name="range" value="'zone'"/>
+              </run_script>
+            </do_elseif>
+          </do_if>
+          <do_else>
+            <debug_text text="'Error: Attempting to call fight.attack.object on an entity which is not the pilot of the ship'"/>
+          </do_else>
+        </do_if>
+
+        <!-- Stations -->
+        <do_elseif value="$Defensible.isclass.station">
+          <do_if value="this == $Defensible.defencenpc">
+            <run_script name="'fight.attack.object.station'">
+              <param name="target" value="$target"/>
+              <param name="debugoutputchance" value="$debugoutputchance" />
+            </run_script>
+          </do_if>
+          <do_else>
+            <debug_text text="'Error: Attempting to call fight.attack.object on an entity which is not the Defence NPC of the station'"/>
+          </do_else>
+
+          <do_if value="$idle">
+            <run_script name="'fight.attack.object.station'">
+              <param name="debugoutputchance" value="$debugoutputchance" />
+            </run_script>
+          </do_if>
+        </do_elseif>
+
+        <do_else>
+          <debug_text text="'Error: Defensible is not of a class which has a suitable script'"/>
+        </do_else>
+
+
+      </do_if>
+      <do_else>
+        <debug_text text="'Error: fight.attack.object was called on an entity without a \'defensible\' class parent'"/>
+      </do_else>
+
+      <label name="finish" />
+      <do_if value="this.defensible.exists and not $end">
+            <do_if value="not $escort">
+              <set_value name="$escort" exact="this.ship.commander" />
+            </do_if>
+            <run_script name="'move.patrol'">
+              <param name="patrolobject" value="$escort" />
+            </run_script>
+      </do_if>
+    </actions>
+  </attention>
+</aiscript>

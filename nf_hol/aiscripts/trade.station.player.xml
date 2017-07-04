@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff>
+	<add sel="//do_while" type="@chance" >if this.station.macro.ismacro.masstraffic_station_03_macro then 0 else 100</add> 
+	<add sel="//do_while" pos="after" >
+		<do_if value="this.station.macro.ismacro.masstraffic_station_03_macro">
+			<do_if value="not $firstIni? and not global.$nfconfig.$limitCluster?">
+				<set_value name="global.$nfconfig.$limitCluster" exact="2"/>
+			</do_if>
+			<do_if value="global.$nfconfig.$limitCluster?">
+				<do_if value="global.$nfconfig.$limitCluster == 1">
+					<set_value name="$checkSpace" exact="this.station.cluster"/>
+				</do_if>
+				<do_elseif value="global.$nfconfig.$limitCluster gt 1">
+					<set_value name="$checkSpace" exact="this.station.sector"/>
+				</do_elseif>
+				<do_else>
+					<set_value name="$checkSpace" exact="player.galaxy"/>
+				</do_else>
+				<find_station name="$stations" space="$checkSpace" multiple="true">
+					<match owner="faction.player" negate="true"/>		
+					<match owner="faction.enemy" negate="true"/>		
+					<match owner="faction.criminal" negate="true"/>		
+					<match owner="faction.smuggler" negate="true"/>		
+					<match owner="faction.neutral" negate="true"/>		
+					<match owner="faction.ownerless" negate="true"/>		
+					<match owner="faction.friend" negate="true"/>
+					<match_relation faction="this.station.owner"  relation="neutral" comparison="ge"/>
+				</find_station>
+			</do_if>
+			<do_else>
+				<create_list name="$stations" />
+			</do_else>
+			<set_value name="$toProcess" exact="this.combinedskill" />
+			<do_all exact="$stations.count" counter="$Counter">
+				<set_value name="$tmphelper_done" operation="add"/>
+				<do_if value="$stations.{$Counter}.hastradesubscription">
+					<continue />
+				</do_if>
+				<do_if value="$stations.{$Counter}.owner.knowntoplayer" negate="true">
+					<set_faction_known faction="$stations.{$Counter}.owner" known="true" />
+					<set_value name="$toProcess" operation="subtract"/>
+				</do_if>
+				<do_if value="$stations.{$Counter}.cluster.name == $stations.{$Counter}.cluster.knownname" negate="true">
+					<set_known object="$stations.{$Counter}.cluster" known="true" />
+					<set_value name="$toProcess" operation="subtract"/>
+				</do_if> 
+				<do_if value="$stations.{$Counter}.sector.name == $stations.{$Counter}.sector.knownname" negate="true">
+					<set_known object="$stations.{$Counter}.sector" known="true" />
+					<set_value name="$toProcess" operation="subtract"/>
+				</do_if> 
+				<do_if value="$stations.{$Counter}.zone.name == $stations.{$Counter}.zone.knownname" negate="true">
+					<set_known object="$stations.{$Counter}.zone" known="true" />
+					<set_value name="$toProcess" operation="subtract"/>
+				</do_if> 
+				<do_if value="$stations.{$Counter}.name == $stations.{$Counter}.knownname" negate="true">
+					<set_known object="$stations.{$Counter}" known="true" />
+					<reveal_object object="$stations.{$Counter}" exact="100"/>
+					<set_value name="$toProcess" exact="3" operation="subtract"/>
+				</do_if> 
+				<do_if value="not $stations.{$Counter}.hastradesubscription and ($stations.{$Counter}.resources.list.count or $stations.{$Counter}.products.list.count or $stations.{$Counter}.tradewares.list.count)">
+					<add_trade_subscription object="$stations.{$Counter}" />
+					<set_value name="$toProcess" operation="subtract"/>
+				</do_if>
+
+				<do_if value="$toProcess lt 1">
+					<break />
+				</do_if>
+			</do_all>
+
+			<do_if value="global.$nfconfig.$limitCluster gt 1 and $toProcess gt 0 and not $firstIni?">
+				<set_value name="$firstIni"/>
+				<set_value name="global.$nfconfig.$limitCluster" exact="1"/>
+			</do_if>
+			<do_elseif value="$toProcess gt 0 and $firstIni? and $firstIni">
+				<set_value name="global.$nfconfig.$limitCluster" exact="0"/>
+				<remove_value name="$firstIni"/>
+			</do_elseif>
+
+			<remove_value name="$stations"/>
+			<remove_value name="$toProcess"/>
+			<wait min="20min" max="60min" />
+			
+			<resume label="loop"/>
+		</do_if>
+	</add> 
+</diff>

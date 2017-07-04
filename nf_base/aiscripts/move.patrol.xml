@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff>
+	<replace sel="//run_script[@name=&quot;'move.seekenemies'&quot;]/@name">if ($range == 'station' and this.ship.commander and this.ship.commander.isclass.station and $targetzone == this.ship.commander.zone) or ($patrolobject.exists and $patrolobject.isclass.station) then 'move.seekenemies.zone' else 'move.seekenemies'</replace>	
+	<add sel="/aiscript/attention[@min='unknown']/actions/do_elseif[@exact=&quot;'sector'&quot;]" pos="after">
+      <do_elseif value="$range" exact="'cluster'">
+        <set_value name="$space" exact="this.ship.cluster" />
+      </do_elseif>
+	</add>
+	<add sel="/aiscript/attention[@min='unknown']/actions/do_elseif[@exact=&quot;'sector'&quot;]" pos="after">
+      <do_elseif value="not (typeof $range).isstring and $range.class? and [class.cluster,class.sector,class.zone].indexof.{$range.class}">
+        <do_if value="$range.class" exact="class.zone">
+          <set_value name="$space" exact="null" />
+        </do_if>
+        <do_else>
+          <set_value name="$space" exact="$range" />
+        </do_else>
+      </do_elseif>
+	</add>
+	<add sel="/aiscript/attention[@min='unknown']/actions/do_else/do_if[@value=&quot;$range != 'sector'&quot;]" pos="after">
+        <do_if value="this.$params.$range?">
+          <set_value name="this.$params.$range" exact="'sector'"/>
+        </do_if>
+	</add>
+	<add sel="/aiscript/attention[@min='unknown']/actions/do_if/do_if/do_if/do_elseif/do_if/find_zone[@space='$space']" pos="after">
+        <do_if value="not $space and $range.isclass.[class.cluster,class.sector]">
+          <set_value name="$space" exact="$range"/>
+        </do_if>
+	</add>
+  <add sel="/aiscript/attention[@min='unknown']/actions/do_if[@value='this.ship.jobexpired']" pos="after">
+      <do_if value="this.ship.pilot.$end_of_work? and this.ship.pilot.$end_of_work lt player.age">
+        <debug_text text="'%1 doing job %2 has expired, die!'.[this.ship.knownname, this.ship.job]" chance="$debugoutputchance" />
+		<write_to_logbook category="general" text="'EOL: %1 [%2 / %3]'.[this.ship.knownname, @this.ship.pilot.$end_of_work, player.age]" chance="100"/>
+        <run_script name="'move.die'">
+          <param name="byjump" value="$capship" />
+          <param name="byhostile" value="true" />
+        </run_script>
+      </do_if>
+  </add>
+</diff>

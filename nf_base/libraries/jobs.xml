@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jobs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="libraries.xsd">
+	<job id="gonerjob_al" name="{20204,2811}">
+		<expirationtime min="43200" max="86400" />
+		<task task="move.voyager" />
+		<quota cluster="5" zone="1"/>
+		<location class="cluster" macro="cluster_b_macro"/>
+		<time interval="43200"/>
+		<ship ref="goner_prayer_04_p">
+			<owner exact="acmecorp" overridenpc="true"/>
+		</ship>
+	</job>
+	<job id="gonerjob_ol" name="{20204,2811}">
+		<expirationtime min="43200" max="86400" />
+		<task task="move.voyager" />
+		<quota cluster="5" zone="1"/>
+		<location class="cluster" macro="cluster_c_macro"/>
+		<time interval="43200"/>
+		<ship ref="goner_prayer_04_p">
+			<owner exact="acmecorp" overridenpc="true"/>
+		</ship>
+	</job>
+</jobs>

@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="move.shipjobs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
+	<params>
+		<param name="run_script_name" default="'move.die'" comment="run_script"/>
+		<param name="run_script_param" default="null"/>
+		<param name="destination" default="null" comment="can be a space or an object in a zone. Providing Sector and Cluster will attempt to find the nearest zone"/>
+		<param name="params" default="false" />
+		<param name="wait" default="1s" />
+	</params>
+	<interrupts>
+		<handler>
+			<conditions>
+				<event_object_signalled object="this.ship" param="'CM REBOOT'" />
+			</conditions>
+			<actions>
+				<do_if value="event.param2? and event.param2 and (event.param2.isclass.zone or (event.param2.component? and event.param2.component.isclass.zone))">
+					<set_value name="$destination" exact="event.param2"/>
+				</do_if>
+
+				<do_if value="$destination? and $destination">
+					<abort_called_scripts resume="start" />
+				</do_if>
+				<do_else>
+					<abort_called_scripts resume="work" />
+				</do_else>
+			</actions>
+		</handler>
+	</interrupts>
+	<attention min="unknown">
+		<actions>
+			<wait exact="$wait" sinceversion="2" />
+			
+			<do_if value="$run_script_param == 'stop'">
+				<resume label="finish" />
+			</do_if>
+			<set_value name="this.$whatido" exact="$run_script_name" />
+			<do_if value="typeof $run_script_param == datatype.list">
+				<set_value name="this.$params" exact="table[]"/>
+				<do_all exact="$run_script_param.count" counter="$i">
+					<set_value name="this.$params.{'$'+$run_script_param.{$i}.{1}}" exact="$run_script_param.{$i}.{2}"/>
+				</do_all>
+			</do_if>
+			<do_elseif value="$params and typeof $params == datatype.table">
+				<set_value name="this.$params" exact="$params.clone"/>
+			</do_elseif>
+			<do_else>
+				<set_value name="this.$params" exact="table[]"/>
+			</do_else>
+			<remove_value name="$run_script_param"/>
+			<remove_value name="$params"/>
+
+			<do_if value="this.ship.primarypurpose == objectpurpose.build and this.ship.buildmodule.exists and this.ship.buildmodule.buildanchor.exists and this.ship.pilot.$whatido != 'move.buildership'">
+				<resume label="finish" />
+			</do_if>
+
+
+			<label name="start" />
+			<debug_text text="'start: %1 [%2] %3'.[this.ship.knownname, this.ship.pilot.$whatido, @$destination.name]" filter="error" chance="0" />
+
+			<do_if value="not ($destination? and $destination) and (not this.ship.zone.ismapzone or this.ship.zone.istemporaryzone)">
+				<find_zone name="$destination" space="this.ship.sector" tempzone="false" mapzone="true" multiple="false">
+					<match_relation faction="this.ship.owner" relation="neutral" comparison="ge"/>
+				</find_zone>
+			</do_if>
+			<do_if value="not $destination?">
+				<set_value name="$destination" exact="null"/>
+			</do_if>
+
+			<do_if value="this.$params.$sfo?">
+				<set_value name="this.$params.$sfo" exact="1"/>
+			</do_if>
+			<do_if value="not $destination and this.$params.$destination.component? and this.$params.$destination.component.isclass.zone">
+				<set_value name="$destination" exact="this.$params.$destination.component"/>
+			</do_if>
+
+			<do_if value="this.$params.$range? and typeof this.$params.$range == datatype.component" chance="if ['move.patrol','move.plunder','trade.ship'].indexof.{$run_script_name} then 100 else 0">
+				<do_if value="not $destination.exists or $destination != this.$params.$range">
+					<set_value name="$destination" exact="this.$params.$range"/>
+				</do_if>
+				<do_if value="not $destination.exists or $destination != this.$params.$range" chance="if ['move.patrol','move.plunder'].indexof.{$run_script_name} and not global.$WWX_mmcarrier_is_active then 100 else 0">
+					<do_if value="$destination.isclass.sector">
+						<set_value name="this.$params.$range" exact="'sector'"/>
+					</do_if>
+					<do_elseif value="$destination.isclass.cluster" chance="if global.$WWX_mmcarrier_is_active then 100 else 0">
+						<set_value name="this.$params.$range" exact="'cluster'"/>
+					</do_elseif>
+					<do_elseif value="$destination.isclass.cluster">
+						<set_value name="this.$params.$range" exact="'sector'"/>
+					</do_elseif>
+					<do_else>
+						<set_value name="this.$params.$range" exact="'zone'"/>
+					</do_else>
+				</do_if>
+			</do_if>
+
+			<do_if value="$destination and $destination.isclass.sector" chance="if this.ship.pilot.$whatido == 'move.plunder' then 0 else 100">
+				<find_station name="$station" space="$destination">
+					<match_relation faction="this.ship.owner" relation="neutral" comparison="ge" />
+				</find_station>
+				<do_if value="$station" negate="true">
+					<find_object name="$station" space="$destination" class="class.jumpbeacon" />
+				</do_if>
+				<set_value name="$destination" exact="$station.zone" chance="if $station then 100 else 0"/>
+				<remove_value name="$station"/>
+			</do_if>
+			<do_elseif value="$destination and $destination.isclass.sector" chance="if this.ship.pilot.$whatido == 'move.plunder' then 100 else 0">
+				<find_station name="$station" space="$destination">
+					<match_relation faction="this.ship.owner" relation="neutral" comparison="le" />
+				</find_station>
+				<do_if value="$station" negate="true">
+					<find_object name="$station" space="$destination" class="class.jumpbeacon" />
+				</do_if>
+				<set_value name="$destination" exact="$station.zone" chance="if $station then 100 else 0"/>
+				<remove_value name="$station"/>
+			</do_elseif>
+
+			<!-- move to targetarea first -->
+			<debug_text text="'move: %1 [%2] %3'.[this.ship.knownname, this.ship.pilot.$whatido, this.ship.zone.name]" filter="error" chance="0" />
+			<do_if value="$destination.exists and (($destination.isclass.zone and $destination != this.zone) or (not $destination.isclass.zone and $destination.zone.exists and $destination.zone != this.zone))">
+				<run_script name="'move.generic'" >
+					<param name="destination" value="$destination" />
+					<param name="endintargetzone" value="true" />
+				</run_script>
+			</do_if>
+			<remove_value name="$destination"/>
+			<do_if value="this.$params.$sfo?">
+				<set_value name="this.$params.$sfo" exact="2"/>
+				<signal_objects object="player.galaxy" param="'check for new owner'" param2="this.ship.zone"/>
+			</do_if>
+
+			<debug_text text="'post Move: %1 [%2] %3 %4'.[this.ship.knownname, this.ship.pilot.$whatido, this.ship.zone.name, this.$params]" filter="error" chance="0" /><!-- 100 -->
+
+
+			<label name="work" />
+
+			<do_if value="( ['BR.move.patrol', 'move.patrol'].indexof.{$run_script_name} and this.$params.$range? and (['cluster','sector'].indexof.{this.$params.$range} or (typeof this.$params.$range == datatype.component and this.$params.$range.isclass.[class.sector, class.cluster] )) ) or $updateRange?" chance="this.ship.isclass.[class.ship_l, class.ship_xl] * 100">
+				<set_value name="$updateRange" exact="if this.$params.$range? and typeof this.$params.$range == datatype.component and this.$params.$range.isclass.[class.sector, class.cluster] then this.$params.$range else if this.$params.$range? and this.$params.$range == 'cluster' then this.ship.cluster else this.ship.sector"/>
+				<find_zone name="$zones" space="$updateRange" tempzone="false" mapzone="true" multiple="true">
+					<match_relation faction="this.ship.owner" relation="friend" comparison="ge"/>
+				</find_zone>
+				<do_if value="$zones.count" negate="true">
+					<find_zone name="$zones" space="$updateRange" tempzone="false" mapzone="true" multiple="true">
+						<match_relation faction="this.ship.owner" relation="neutral" comparison="ge"/>
+					</find_zone>
+				</do_if>
+				<do_if value="$zones.count">
+					<set_value name="this.$params" exact="table[$route = $zones, $allowstations = (if this.$params.$allowstations? then this.$params.$allowstations else false), $resetConf = (player.age + 12h)]"/>
+					<set_value name="$run_script_name" exact="'move.patrol.route'"/>
+					<set_value name="this.$whatido" exact="$run_script_name"/>
+				</do_if>
+				<remove_value name="$zones"/>
+			</do_if>
+
+			<do_if value="$run_script_name" exact="'move.plunder'">
+				<run_script name="'move.plunder'" >
+					<param name="range" value="if this.$params.$range? then this.$params.$range else 'sector'" />
+					<param name="range_min" value="if this.$params.$range_min? then this.$params.$range_min else 5km" />
+					<param name="range_max" value="if this.$params.$range_max? then this.$params.$range_max else this.ship.maxradarrange" />
+					<param name="returntobase" value="if this.$params.$returntobase? then this.$params.$returntobase else true" />
+					<param name="checkrelation" value="if this.$params.$checkrelation? then this.$params.$checkrelation else false" />
+					<param name="basebasket" value="if this.$params.$basebasket? then this.$params.$basebasket else null" />
+				</run_script>
+			</do_if>
+			<do_elseif value="$run_script_name" exact="'move.patrol'">
+				<remove_object_commander object="this.ship" />
+				<run_script name="'move.patrol'" >
+					<param name="range" value="if this.$params.$range? then this.$params.$range else 'sector'" />
+					<param name="range_min" value="if this.$params.$range_min? then this.$params.$range_min else 5km" />
+					<param name="range_max" value="if this.$params.$range_max? then this.$params.$range_max else this.ship.maxradarrange" />
+					<param name="patrolobject" value="if this.$params.$patrolobject? then this.$params.$patrolobject else null" />
+					<param name="engageenemies" value="if this.$params.$engageenemies? then this.$params.$engageenemies else true" />
+					<param name="onlyinrange" value="if this.$params.$onlyinrange? then this.$params.$onlyinrange else true" />
+					<param name="allowstations" value="if this.$params.$allowstations? then this.$params.$allowstations else true" />
+				</run_script>
+			</do_elseif>
+			<do_elseif value="$run_script_name" exact="'BR.move.patrol'">
+				<remove_object_commander object="this.ship" />
+				<run_script name="$run_script_name" >
+					<param name="range" value="if this.$params.$range? then this.$params.$range else 'sector'" />
+					<param name="range_min" value="if this.$params.$range_min? then this.$params.$range_min else 5km" />
+					<param name="range_max" value="if this.$params.$range_max? then this.$params.$range_max else this.ship.maxradarrange" />
+					<param name="patrolobject" value="if this.$params.$patrolobject? then this.$params.$patrolobject else null" />
+					<param name="engageenemies" value="if this.$params.$engageenemies? then this.$params.$engageenemies else true" />
+					<param name="onlyinrange" value="if this.$params.$onlyinrange? then this.$params.$onlyinrange else true" />
+					<param name="target" value="if this.$params.$target? then this.$params.$target else null" />
+					<param name="createsquad" value="if this.$params.$createsquad? then this.$params.$createsquad else false" />
+					<param name="allowstations" value="if this.$params.$allowstations? then this.$params.$allowstations else true" />
+				</run_script>
+			</do_elseif>
+			<do_elseif value="$run_script_name" exact="'move.patrol.route'">
+				<remove_object_commander object="this.ship" />
+
+				<do_if value="not this.$params.$route? or this.$params.$route? and this.$params.$route.count == 0">
+					<find_zone name="$zones" space="this.ship.sector" tempzone="false" mapzone="true" multiple="true">
+						<match_relation faction="this.ship.owner" relation="friend" comparison="ge"/>
+					</find_zone>
+					<do_if value="$zones.count" negate="true">
+						<find_zone name="$zones" space="this.ship.cluster" tempzone="false" mapzone="true" multiple="true">
+							<match_relation faction="this.ship.owner" relation="friend" comparison="ge"/>
+						</find_zone>
+					</do_if>
+					<do_if value="$zones.count">
+						<set_value name="this.$params.$route" exact="$zones"/>
+						<set_value name="this.$params.$resetConf" exact="player.age + 12h"/>
+					</do_if>
+					<do_else>
+						<remove_value name="$zones"/>
+						<do_if value="this.ship.isclass.[class.ship_m, class.ship_s]">
+							<set_value name="this.$params" exact="table[$range = 'sector', $allowstations = false]"/>
+						</do_if>
+						<do_else>
+							<set_value name="this.$params" exact="table[$range = 'cluster', $allowstations = false]"/>
+						</do_else>
+						<set_value name="$run_script_name" exact="if global.$nfconfig.$Check? then 'BR.move.patrol' else 'move.patrol'"/>
+						<set_value name="this.$whatido" exact="$run_script_name"/>
+						<resume label="start" />
+					</do_else>
+					<remove_value name="$zones"/>
+				</do_if>
+
+				<run_script name="'move.patrol.route'" >
+					<param name="route" value="if this.$params.$route? then this.$params.$route else [this.zone]" />
+					<param name="range" value="if this.$params.$range? then this.$params.$range else 5km" />
+					<param name="pursuedistance" value="if this.$params.$pursuedistance? then this.$params.$pursuedistance else this.ship.maxradarrange" />
+					<param name="engageenemies" value="if this.$params.$engageenemies? then this.$params.$engageenemies else true" />
+					<param name="onlyinrange" value="if this.$params.$onlyinrange? then this.$params.$onlyinrange else true" />
+					<param name="allowstations" value="if this.$params.$allowstations? then this.$params.$allowstations else true" />
+				</run_script>
+				<do_if value="not this.$params.$route? or (this.$params.$route? and this.$params.$route.count == 0) or (this.$params.$resetConf? and $updateRange? and this.$params.$resetConf le player.age)" comment="eat sleep rave repeat">
+					<resume label="work" />
+				</do_if>
+			</do_elseif>
+			<do_elseif value="$run_script_name" exact="'boarding.ship'">
+				<run_script name="$run_script_name" >
+					<param name="target" value="if this.$params.$target? then this.$params.$target else null" />
+					<param name="faction" value="if this.$params.$faction? then this.$params.$faction else this.ship.trueowner" />
+					<param name="marineone" value="if this.$params.$marineone? then this.$params.$marineone else this.ship.boardingnpc" />
+					<param name="returntocommander" value="if this.$params.$returntocommander? then this.$params.$returntocommander else false" />
+					<param name="canhacktarget" value="if this.$params.$canhacktarget? then this.$params.$canhacktarget else false" />
+					<param name="initialwaittime" value="if this.$params.$initialwaittime? then this.$params.$initialwaittime else $wait" />
+				</run_script>
+			</do_elseif>
+			<do_elseif value="$run_script_name" exact="'mining.ship.free'">
+
+				<do_if value="this.$params.$basketoverride? and this.$params.$basketoverride.count">
+					<do_all exact="this.$params.$basketoverride.count" counter="$i" reverse="true">
+						<do_if value="this.ship.cargo.{this.$params.$basketoverride.{$i}}.max gt 0" negate="true">
+							<remove_value name="this.$params.$basketoverride.{$i}"/>
+						</do_if>
+					</do_all>
+				</do_if>
+
+				<run_script name="'mining.ship.free'" >
+					<param name="basketoverride" value="if this.$params.$basketoverride? then this.$params.$basketoverride else null" />
+				</run_script>
+			</do_elseif>
+			<do_elseif value="$run_script_name" exact="'trade.ship.ranged'">
+				<run_script name="'trade.ship.ranged'" >
+					<param name="warelist" value="if this.$params.$warelist? then this.$params.$warelist else null" />
+					<param name="minbuy" value="if this.$params.$minbuy? then this.$params.$minbuy else 0" />
+					<param name="maxbuy" value="if this.$params.$maxbuy? then this.$params.$maxbuy else 1" />
+					<param name="minsell" value="if this.$params.$minsell? then this.$params.$minsell else 0" />
+					<param name="maxsell" value="if this.$params.$maxsell? then this.$params.$maxsell else 1" />
+				</run_script>
+			</do_elseif>
+			<do_elseif value="$run_script_name" exact="'trade.ship'">
+				<run_script name="'trade.ship'" >
+					<param name="warelist" value="if this.$params.$warelist? then this.$params.$warelist else null" />
+					<param name="range" value="if this.$params.$range? then this.$params.$range else 'sector'" />
+					<param name="simple" value="if this.$params.$simple? then this.$params.$simple else null" />
+					<param name="additionalparams" value="if this.$params.$additionalparams? then this.$params.$additionalparams else null" />
+				</run_script>
+			</do_elseif>
+			<do_elseif value="$run_script_name" exact="'move.idle'">
+				<run_script name="'move.idle'" >
+					<param name="TimeOut" value="if this.$params.$TimeOut? then this.$params.$TimeOut else null" />
+					<param name="Offset" value="if this.$params.$Offset? then this.$params.$Offset else this.ship.position" />
+					<param name="MaxDistance" value="if this.$params.$MaxDistance? then this.$params.$MaxDistance else 10km" />
+				</run_script>
+				<do_if value="this.ship.jobexpired or (this.ship.pilot.$end_of_work? and this.ship.pilot.$end_of_work lt player.age)" negate="true" comment="eat sleep rave repeat">
+					<resume label="work" />
+				</do_if>
+			</do_elseif>
+			<do_elseif value="$run_script_name" exact="'move.buildership'">
+				<remove_value name="this.$free4newjob"/>
+				<run_script name="'move.buildership'" >
+					<param name="destination" value="if this.$params.$destination? then this.$params.$destination else this.ship.zone" />
+					<param name="macro" value="if this.$params.$macro? then this.$params.$macro else null" />
+				</run_script>
+				<resume label="finish" />
+			</do_elseif>
+			<do_elseif value="$run_script_name" exact="'move.voyager'">
+				<run_script name="$run_script_name" >
+					<param name="workspace" value="if this.$params.$workspace? then this.$params.$workspace else [this.ship.cluster]" />
+					<param name="returnzone" value="if this.$params.$returnzone? then this.$params.$returnzone else this.ship.zone" />
+					<param name="continue" value="if this.$params.$continue? then this.$params.$continue else true" />
+					<param name="ignoreknown" value="if this.$params.$ignoreknown? then this.$params.$ignoreknown else false" />
+					<param name="ignoreownedzones" value="if this.$params.$ignoreownedzones? then this.$params.$ignoreownedzones else false" />
+					<param name="cover" value="if this.$params.$cover? then this.$params.$cover else 100" />
+					<param name="datapool" value="if this.$params.$datapool? then this.$params.$datapool else null" />
+					<param name="dispatchatfirstmatch" value="if this.$params.$dispatchatfirstmatch? then this.$params.$dispatchatfirstmatch else false" />
+				</run_script>
+			</do_elseif>
+			<do_elseif value="$run_script_name" list="['BR.move.escort','move.escort']">
+				<do_if value="(not this.ship.commander and this.$params.$target?) or (this.$params.$target? and this.ship.commander and this.$params.$target and this.ship.commander != this.$params.$target)">
+					<set_object_commander object="this.ship" commander="this.$params.$target" />
+				</do_if>
+				<run_script name="$run_script_name" >
+					<param name="target" value="if this.$params.$target? then this.$params.$target else this.ship.commander" />
+					<param name="timeout" value="if this.$params.$timeout? then this.$params.$timeout else -1" />
+					<param name="formation" value="if this.$params.$formation? then this.$params.$formation else formationshape.pointguard" />
+					<param name="formationparam" value="if this.$params.$formationparam? then this.$params.$formationparam else null" />
+					<param name="formationparam2" value="if this.$params.$formationparam2? then this.$params.$formationparam2 else null" />
+					<param name="rollformation" value="if this.$params.$rollformation? then this.$params.$rollformation else false" />
+					<param name="rollmembers" value="if this.$params.$rollmembers? then this.$params.$rollmembers else true" />
+					<param name="defendtarget" value="if this.$params.$defendtarget? then this.$params.$defendtarget else true" />
+				</run_script>
+				<do_if value="this.ship.jobexpired or (this.ship.pilot.$end_of_work? and this.ship.pilot.$end_of_work lt player.age)" negate="true" comment="second life">
+					<remove_object_commander object="this.ship" />
+					<do_if value="this.ship.isclass.[class.ship_m, class.ship_s]">
+						<set_value name="this.$params" exact="table[$range = 'sector', $allowstations = false]"/>
+					</do_if>
+					<do_else>
+						<set_value name="this.$params" exact="table[$range = 'cluster', $allowstations = false]"/>
+					</do_else>
+					<set_value name="$run_script_name" exact="if global.$nfconfig.$Check? then 'BR.move.patrol' else 'move.patrol'"/>
+					<set_value name="this.$whatido" exact="$run_script_name"/>
+					<resume label="start" />
+				</do_if>
+			</do_elseif>
+
+
+			<label name="finish" />
+			<write_to_logbook category="general" text="'EOW: %1 [%2]'.[this.ship.knownname, $run_script_name]" chance="0"/>
+			<!-- don't get lost in space -->
+			<do_if value="this.ship.jobexpired or (this.ship.pilot.$end_of_work? and this.ship.pilot.$end_of_work lt player.age)">
+				<write_to_logbook category="general" text="'EOL: %1 [%2]'.[this.ship.knownname, $run_script_name]" chance="100"/>
+				<run_script name="'move.die'">
+					<param name="byjump" value="this.ship.isclass.[class.ship_l, class.ship_xl]" />
+					<param name="byhostile" value="true" />
+				</run_script>
+			</do_if>
+
+			<remove_value name="this.$whatido"/>
+			<remove_value name="this.$params"/>
+			<stop_boost object="this.ship" />
+			<stop_moving object="this.ship" />
+		</actions>
+	</attention>
+	<on_abort>
+		<remove_value name="this.$whatido"/>
+		<remove_value name="this.$params"/>
+		<stop_boost object="this.ship" />
+		<stop_moving object="this.ship" />
+	</on_abort>
+</aiscript>

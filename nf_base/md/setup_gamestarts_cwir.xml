@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mdscript name="Setup_Gamestarts_CWIR" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+
+	<!-- CONQUEST AND WAR IN REBIRTH, CANTERAN GAMESTART BY 'AIRSTRIKE' IVANOV; VERSION 0.2 -->
+	<!-- Thanks to Euclid and Blackrain for helping out bigtime! Couldn't have done this without you guys. -->
+	<!-- Other Starts by BlackRain -->
+	<cues>
+
+		<cue name="CWIR_Helptext">
+			<conditions>
+				<event_cue_signalled cue="md.Setup.GameStart"/>
+			</conditions>
+			<delay exact="10s"/>
+			<actions>
+				<!--
+				<show_help custom="'Welcome to Version 0.9 of Conquest and War in Rebirth!'" position="1" duration="5s"/>
+				<show_help custom="'You\'ll find you are in a much more active universe now.'" position="1" duration="7s"/>
+				<show_help custom="'This mod is still in alpha, so watch out for issues.'" position="1" duration="5s"/>
+				<show_help custom="'Report any bugs to Blackrain and/or Rubini on the forums.'" position="1" duration="10s"/>
+				<show_help custom="'Remember, this is not the universe you remember, take care and good luck!'" position="1" duration="10s"/>
+				-->
+				<show_help custom="{40002,1048}" position="1" duration="5s"/>
+				<!--
+				<show_help custom="{40002,1049}" position="1" duration="7s"/>
+				<show_help custom="{40002,1050}" position="1" duration="5s"/>
+				<show_help custom="{40002,1051}" position="1" duration="10s"/>
+				<show_help custom="{40002,1052}" position="1" duration="10s"/>
+				-->
+			</actions>
+		</cue>
+
+		<!-- Gamestarts -->
+		<cue name="setup_cwir_canteran" module="cwir_canteran">
+			<conditions>
+				<event_cue_signalled cue="md.Setup.GameStart"/>
+			</conditions>
+			<actions>
+				<create_list name="$todo_stations" />
+				<create_list name="$todo_ships" />
+				<!-- UNIVERSE -->							
+				<signal_cue cue="md.Setup.Open_Jumpgates_Lib"/>
+				<signal_cue cue="md.Setup.WeaponTraderBasket3"/>
+				<signal_cue cue="md.Setup.EquipmentTraderBasket2"/>
+				<signal_cue cue="md.Setup.PostChapter3Jobs"/>
+				<!-- Known -->							
+				<set_faction_known faction="faction.canteran" known="true"/>
+				<set_faction_known faction="faction.reivers" known="true"/>
+				<set_faction_known faction="faction.argongovernment" known="true"/>
+				<set_faction_known faction="faction.familyryak" known="true"/>
+				<!-- Startspace -->							
+				<find_zone name="$startzone" macro="macro.tzonecluster_d_sector18_zone48_macro" />
+				<!-- Starting belongings -->							
+				<do_if value="player.difficulty" list="[level.medium]">
+					<!-- Medium -->
+					<append_to_list name="$todo_ships" exact="
+						[ $startzone.macro, null, [
+													['fight', macro.units_size_l_dv_fury_new_defence_macro, 1 ],
+													['fight', macro.units_size_m_canteran_01_macro, 4 ]
+												]
+						]
+					" />
+				</do_if>
+				<do_elseif value="player.difficulty" list="[level.easy]">
+					<!-- Easy -->
+					<append_to_list name="$todo_ships" exact="
+						[ $startzone.macro, null, [
+													['fight', macro.units_size_l_dv_fury_new_defence_macro, 1 ],
+													['fight', macro.units_size_m_canteran_01_macro, 6 ]
+												]
+						]
+					" />
+				</do_elseif>
+				<do_else>
+					<!-- Everything else -->
+					<append_to_list name="$todo_ships" exact="
+						[ $startzone.macro, null, [
+													['fight', macro.units_size_l_dv_fury_new_defence_macro, 1 ]
+												]
+						]
+					" />
+				</do_else>
+				<!-- MORE DOIF FOR THE EASY! --> 
+				<do_if value="player.difficulty" exact="level.easy">
+					<append_to_list name="$todo_ships" exact="
+						[ $startzone.macro, null, [
+													['trade', macro.units_size_l_dv_kit_new_energy_container_01_macro, 1 ]
+												]
+						]
+					" />
+					<!-- a few last ship upgrades and a bit of extra cash! -->
+					<upgrade_object_by_macro object="player.primaryship" macro="macro.software_trading_computer_macro" exact="100"/>
+					<upgrade_object_by_macro object="player.primaryship" macro="macro.software_target_computer_mk2_macro" exact="100"/>
+					<reward_player money="110000000"/>
+				</do_if>
+				<!-- INIT -->							
+				<set_value name="$_CEO" exact="player.entity" />
+				<set_value name="$_faction" exact="faction.player" />
+				<include_actions ref="md.MM_Corps__Data.MMCData_CEO_PROPERTY_INIT" />
+				<remove_value name="$todo_stations"/>
+				<remove_value name="$todo_ships"/>
+				<remove_value name="$_faction"/>
+				<remove_value name="$startzone"/>
+				<remove_value name="$_CEO"/>
+			</actions>
+			<cues>
+				<cue name="setup_cwir_canteran_Helptext">
+					<delay exact="60s"/>
+					<actions>
+						<!--
+						<show_help custom="'Congratulations on your promotion! You have been given a small fleet to begin expanding the Canteran presence.'" position="1" duration="20s"/>
+						-->
+						<show_help custom="{40002,1044}" position="1" duration="20s"/>
+
+						<do_if value="player.difficulty" list="[level.medium, level.easy]">
+							<!--
+							<show_help custom="'Manpower is thin here, but there are plenty of Heart of Albion volunteers that we\'ve staffed on your ships.'" position="1" duration="5s"/>
+							-->
+							<show_help custom="{40002,1045}" position="1" duration="5s"/>
+						</do_if>
+						<do_if value="player.difficulty" exact="level.easy">
+							<!--
+							<show_help custom="'You\'ve also been given a new Stryvok and a few ship upgrades to begin trading right away.'" position="1" duration="10s"/>
+							-->
+							<show_help custom="{40002,1046}" position="1" duration="10s"/>
+						</do_if>
+						<do_if value="player.difficulty" exact="level.hard">
+							<!--
+							<show_help log="true" custom="'You will have to find a crew for the Stromvok for yourself!'" position="1" duration="15s"/>
+							-->
+							<show_help log="true" custom="{40002,1047}" position="1" duration="15s"/>
+						</do_if>
+					</actions>
+				</cue>
+			</cues>
+		</cue>
+
+		<cue name="setup_cwir_heretic" module="cwir_heretic">
+			<conditions>
+				<event_cue_signalled cue="md.Setup.GameStart"/>
+			</conditions>
+			<actions>
+				<create_list name="$todo_stations" />
+				<create_list name="$todo_ships" />
+				<!-- UNIVERSE -->							
+				<signal_cue cue="md.Setup.Open_Jumpgates_Lib"/>
+				<signal_cue cue="md.Setup.WeaponTraderBasket3"/>
+				<signal_cue cue="md.Setup.EquipmentTraderBasket2"/>
+				<signal_cue cue="md.Setup.PostChapter3Jobs"/>
+				<!-- Known -->							
+				<set_faction_known faction="faction.argongovernment" known="true"/>
+				<set_faction_known faction="faction.familyryak" known="true"/>
+				<set_faction_known faction="faction.hereticvanguards" known="true"/>
+				<set_faction_known faction="faction.xenon" known="true"/>
+				<set_faction_known faction="faction.reivers" known="true"/>
+				<set_faction_known faction="faction.canteran" known="true"/>
+				<!-- Relations -->							
+				<set_faction_relation faction="faction.player" otherfaction="faction.hereticvanguards" value="30"/>
+				<set_faction_relation faction="faction.player" otherfaction="faction.plutarch" value="faction.player.relation.kill.max"/> 
+				<set_faction_relation faction="faction.player" otherfaction="faction.argongovernment" value="faction.player.relation.kill.max"/> 
+				<set_faction_relation faction="faction.player" otherfaction="faction.heartofalbion" value="faction.player.relation.kill.max"/> 
+				<set_faction_relation faction="faction.player" otherfaction="faction.canteran" value="faction.player.relation.kill.max"/> 
+				<set_faction_relation faction="faction.player" otherfaction="faction.familyryak" value="faction.player.relation.kill.max"/> 
+				<do_if value="md.$FieldsOfOpportunity? and md.$FieldsOfOpportunity" comment="dlc compatibility">
+					<set_faction_relation faction="faction.player" otherfaction="faction.{['teladi'].{1}}" value="faction.player.relation.kill.max"/> 
+				</do_if>
+				<!-- Startspace -->							
+				<find_zone name="$startzone" macro="macro.tzonecluster_a_sector01_zone95_macro" />
+				<!-- Starting belongings -->							
+				<append_to_list name="$todo_ships" exact="
+					[ $startzone.macro, null, [
+												['fight', macro.units_size_l_player_fury_macro, 1 ]
+											]
+					]
+				" />
+				<append_to_list name="$todo_ships" exact="
+					[ $startzone.macro, null, [
+												['fight', macro.units_size_l_player_harpy_macro, 1 ]
+											]
+					]
+				" />
+				<!-- INIT -->							
+				<set_value name="$_CEO" exact="player.entity" />
+				<set_value name="$_faction" exact="faction.player" />
+				<include_actions ref="md.MM_Corps__Data.MMCData_CEO_PROPERTY_INIT" />
+				<remove_value name="$todo_stations"/>
+				<remove_value name="$todo_ships"/>
+				<remove_value name="$_faction"/>
+				<remove_value name="$startzone"/>
+				<remove_value name="$_CEO"/>
+			</actions>
+			<cues>
+				<cue name="setup_cwir_heretic_Helptext">
+					<delay exact="60s"/>
+					<actions>
+						<!--
+						<show_help custom="'You are a member of the proud and true sect of goners known as The Heretic Vanguard'" position="1" duration="20s"/>
+						<show_help custom="'It is your mission to spread the message of your faction with fire and sword to all those who oppose you'" position="1" duration="20s"/>
+						<show_help custom="'No Xeno will be spared and soon the Argon Government will fall to the might of The Heretic Vanguard'" position="1" duration="20s"/>
+						<show_help custom="'Strive to help your faction come to dominance in this dangerous part of the universe'" position="1" duration="20s"/>
+						-->
+						<show_help custom="{40002,1053}" position="1" duration="20s"/>
+						<show_help custom="{40002,1054}" position="1" duration="20s"/>
+						<show_help custom="{40002,1055}" position="1" duration="20s"/>
+						<show_help custom="{40002,1056}" position="1" duration="20s"/>
+					</actions>
+				</cue>
+			</cues>
+		</cue>
+
+		<cue name="setup_cwir_ambitiousentrepreneur" module="cwir_ambitiousentrepreneur">
+			<conditions>
+				<event_cue_signalled cue="md.Setup.GameStart"/>
+			</conditions>
+			<actions>
+				<create_list name="$todo_stations" />
+				<create_list name="$todo_ships" />
+				<!-- UNIVERSE -->							
+				<signal_cue cue="md.Setup.Open_Jumpgates_Lib"/>
+				<signal_cue cue="md.Setup.WeaponTraderBasket3"/>
+				<signal_cue cue="md.Setup.EquipmentTraderBasket2"/>
+				<signal_cue cue="md.Setup.PostChapter3Jobs"/>
+				<!-- Known -->							
+				<set_faction_known faction="faction.argongovernment" known="true"/>
+				<set_faction_known faction="faction.familyryak" known="true"/>
+				<set_faction_known faction="faction.hereticvanguards" known="true"/>
+				<set_faction_known faction="faction.xenon" known="true"/>
+				<set_faction_known faction="faction.reivers" known="true"/>
+				<set_faction_known faction="faction.heartofalbion" known="true"/>
+				<set_faction_known faction="faction.canteran" known="true"/>
+				<set_faction_known faction="faction.plutarch" known="true"/>
+				<set_faction_known faction="faction.jonferson" known="true"/>
+				<!-- Known Spaces -->							
+				<create_list name="$todo" />
+				<append_to_list name="$todo" exact="macro.cluster_b_sector07_macro" comment="ALB_LookoutSec"/>
+				<append_to_list name="$todo" exact="macro.cluster_b_sector06_macro" comment="ALB_InnerworldSec"/>
+				<append_to_list name="$todo" exact="macro.cluster_d_sector20_macro" comment="DEV_MoltenArchonSec"/>
+				<append_to_list name="$todo" exact="macro.cluster_d_sector17_macro" comment="DEV_BleakPebbleSec"/>
+				<append_to_list name="$todo" exact="macro.cluster_c_sector10_macro" comment="OMI_EclipseCloudsSec"/>
+				<append_to_list name="$todo" exact="macro.cluster_c_sector08_macro" comment="OMI_DevoidClimeSec"/>
+				<append_to_list name="$todo" exact="macro.cluster_a_sector01_macro" comment="MA_SigmaSectorSec"/>
+				<append_to_list name="$todo" exact="macro.cluster_a_sector02_macro" comment="MA_BlurredReflectionSec"/>
+				<!-- Known Spaces DO -->							
+				<do_all exact="$todo.count" counter="$Counter">
+					<find_sector name="$todo_2" macro="$todo.{$Counter}" space="player.galaxy" required="true"/>
+					<set_known object="$todo_2" known="true"/>
+
+					<find_zone name="$todo_3" space="$todo_2" multiple="true" tempzone="false"/>
+					<do_all exact="$todo_3.count" counter="$Counter2">
+						<set_known object="$todo_3.{$Counter2}" known="true"/>
+					</do_all>
+					<remove_value name="$todo_3"/>
+
+					<find_object name="$todo_3" space="$todo_2" class="[class.gate, class.highwayentrygate, class.jumpbeacon, class.highwayexitgate]" multiple="true"/>
+					<do_all exact="$todo_3.count" counter="$Counter2">
+						<set_known object="$todo_3.{$Counter2}" known="true"/>
+					</do_all>
+					<remove_value name="$todo_3"/>
+					<remove_value name="$todo_2"/>
+				</do_all>
+				<remove_value name="$todo"/>
+				<!-- Relations -->							
+				<set_faction_relation faction="faction.player" otherfaction="faction.hereticvanguards" value="0"/>
+				<set_faction_relation faction="faction.player" otherfaction="faction.familyryak" value="0"/> 
+				<!-- Startspace -->							
+				<find_zone name="$startzone" macro="macro.tzonecluster_a_sector02_zone105_macro" />
+				<!-- Starting belongings -->							
+				<append_to_list name="$todo_ships" exact="
+					[ $startzone.macro, null, [
+												['fight', macro.units_size_xl_capital_destroyer_2_macro, 3 ]
+											]
+					]
+				" />
+
+				<append_to_list name="$todo_ships" exact="
+					[ $startzone.macro, null, [
+												['build', macro.units_size_xl_builder_ship_macro, 3 ]
+											]
+					]
+				" />
+				<!-- SETA + JD -->							
+				<add_inventory entity="player.entity" ware="ware.inv_timewarp" />
+				<upgrade_object_by_macro object="player.primaryship" macro="macro.unit_player_ship_jumpdrive_macro" exact="100" comment="exact in % of available slots!" />
+				<!-- INIT -->							
+				<set_value name="$_CEO" exact="player.entity" />
+				<set_value name="$_faction" exact="faction.player" />
+				<include_actions ref="md.MM_Corps__Data.MMCData_CEO_PROPERTY_INIT" />
+				<remove_value name="$todo_stations"/>
+				<remove_value name="$todo_ships"/>
+				<remove_value name="$_faction"/>
+				<remove_value name="$startzone"/>
+				<remove_value name="$_CEO"/>
+			</actions>
+			<cues>
+				<cue name="setup_cwir_ambitiousentrepreneur_Helptext">
+					<delay exact="60s"/>
+					<actions>
+						<show_help custom="{40002,1073}" position="1" duration="20s"/>
+						<show_help custom="{40002,1074}" position="1" duration="20s"/>
+						<show_help custom="{40002,1075}" position="1" duration="20s"/>
+						<show_help custom="{40002,1076}" position="1" duration="20s"/>
+					</actions>
+				</cue>
+			</cues>
+		</cue>
+
+		<cue name="setup_cwir_pmcstart" module="cwir_pmcstart">	
+			<conditions>
+				<event_cue_signalled cue="md.Setup.GameStart"/>
+			</conditions>
+			<actions>
+				<create_list name="$todo_stations" />
+				<create_list name="$todo_ships" />
+				<!-- UNIVERSE -->							
+				<signal_cue cue="md.Setup.Open_Jumpgates_Lib"/>
+				<signal_cue cue="md.Setup.WeaponTraderBasket3"/>
+				<signal_cue cue="md.Setup.EquipmentTraderBasket2"/>
+				<signal_cue cue="md.Setup.PostChapter3Jobs"/>
+				<!-- Known -->							
+				<set_faction_known faction="faction.argongovernment" known="true"/>
+				<set_faction_known faction="faction.xenon" known="true"/>
+				<set_faction_known faction="faction.reivers" known="true"/>
+				<set_faction_known faction="faction.heartofalbion" known="true"/>
+				<set_faction_known faction="faction.canteran" known="true"/>
+				<set_faction_known faction="faction.plutarch" known="true"/>
+				<set_faction_known faction="faction.jonferson" known="true"/>
+				<!-- Relations -->							
+				<set_faction_relation faction="faction.player" otherfaction="faction.plutarch" value="20"/>
+				<set_faction_relation faction="faction.player" otherfaction="faction.heartofalbion" value="-20"/> 
+				<set_faction_relation faction="faction.player" otherfaction="faction.canteran" value="-20"/> 
+				<!-- Startspace -->							
+				<find_zone name="$startzone" macro="macro.tzonecluster_b_sector05_zone19_macro" />
+				<!-- Starting belongings -->							
+				<append_to_list name="$todo_ships" exact="
+					[ $startzone.macro, null, [
+												['fight', macro.units_size_xl_capital_destroyer_2_macro, 1 ]
+											]
+					]
+				" />
+				<append_to_list name="$todo_ships" exact="
+					[ $startzone.macro, null, [
+												['fight', macro.units_size_l_kit_carrier_02_macro, 2 ]
+											]
+					]
+				" />
+				<append_to_list name="$todo_ships" exact="
+					[ $startzone.macro, null, [
+												['build', macro.units_size_xl_builder_ship_macro, 1 ]
+											]
+					]
+				" />
+				<!-- SETA -->							
+				<add_inventory entity="player.entity" ware="ware.inv_timewarp" />
+				<!-- INIT -->							
+				<set_value name="$_CEO" exact="player.entity" />
+				<set_value name="$_faction" exact="faction.player" />
+				<include_actions ref="md.MM_Corps__Data.MMCData_CEO_PROPERTY_INIT" />
+				<remove_value name="$todo_stations"/>
+				<remove_value name="$todo_ships"/>
+				<remove_value name="$_faction"/>
+				<remove_value name="$startzone"/>
+				<remove_value name="$_CEO"/>
+			</actions>
+			<cues>
+				<cue name="setup_cwir_pmcstart_Helptext">
+					<delay exact="60s"/>
+					<actions>
+						<show_help custom="{40002,1099}" position="1" duration="20s"/>
+					</actions>
+				</cue>
+			</cues>
+		</cue>
+
+		<cue name="setup_cwir_hoastart" module="cwir_hoastart">
+			<conditions>
+				<event_cue_signalled cue="md.Setup.GameStart"/>
+			</conditions>
+			<actions>
+				<signal_cue cue="md.Setup.Open_Jumpgates_Lib"/> 
+				<signal_cue cue="md.Setup.WeaponTraderBasket3"/>
+				<signal_cue cue="md.Setup.EquipmentTraderBasket2"/>
+				<signal_cue cue="md.Setup.PostChapter3Jobs"/>
+				<!-- Known -->							
+				<set_faction_known faction="faction.argongovernment" known="true"/>
+				<set_faction_known faction="faction.xenon" known="true"/>
+				<set_faction_known faction="faction.reivers" known="true"/>
+				<set_faction_known faction="faction.heartofalbion" known="true"/>
+				<set_faction_known faction="faction.canteran" known="true"/>
+				<set_faction_known faction="faction.plutarch" known="true"/>
+				<set_faction_known faction="faction.jonferson" known="true"/>
+				<!-- Relations -->							
+				<set_faction_relation faction="faction.player" otherfaction="faction.plutarch" value="-20"/>
+				<set_faction_relation faction="faction.player" otherfaction="faction.heartofalbion" value="20"/> 
+				<set_faction_relation faction="faction.player" otherfaction="faction.canteran" value="20"/> 
+				<!-- Startspace -->							
+				<find_zone name="$startzone" macro="macro.tzoneCluster_B_Sector04_Zone32_macro" />
+				<!-- Starting belongings -->							
+				<append_to_list name="$todo_ships" exact="
+					[ $startzone.macro, null, [
+												['fight', macro.units_size_l_single_attack_ship_macro, 1 ]
+											]
+					]
+				" />
+				<!-- SETA -->							
+				<add_inventory entity="player.entity" ware="ware.inv_timewarp" />
+				<!-- INIT -->							
+				<set_value name="$_CEO" exact="player.entity" />
+				<set_value name="$_faction" exact="faction.player" />
+				<include_actions ref="md.MM_Corps__Data.MMCData_CEO_PROPERTY_INIT" />
+				<remove_value name="$todo_stations"/>
+				<remove_value name="$todo_ships"/>
+				<remove_value name="$_faction"/>
+				<remove_value name="$startzone"/>
+				<remove_value name="$_CEO"/>
+			</actions>
+			<cues>
+				<cue name="setup_cwir_hoastart_Helptext">
+					<delay exact="60s"/>
+					<actions>
+						<show_help custom="{40002,1100}" position="1" duration="20s"/>
+					</actions>
+				</cue>
+			</cues>
+		</cue>
+
+		<cue name="setup_cwir_agstart" module="cwir_agstart">
+			<conditions>
+				<event_cue_signalled cue="md.Setup.GameStart"/>
+			</conditions>
+			<actions>
+				<create_list name="$todo_stations" />
+				<create_list name="$todo_ships" />
+				<!-- UNIVERSE -->							
+				<signal_cue cue="md.Setup.Open_Jumpgates_Lib"/>
+				<signal_cue cue="md.Setup.WeaponTraderBasket3"/>
+				<signal_cue cue="md.Setup.EquipmentTraderBasket2"/>
+				<signal_cue cue="md.Setup.PostChapter3Jobs"/>
+				<!-- Known -->							
+				<set_faction_known faction="faction.argongovernment" known="true"/>
+				<set_faction_known faction="faction.xenon" known="true"/>
+				<set_faction_known faction="faction.reivers" known="true"/>
+				<set_faction_known faction="faction.heartofalbion" known="true"/>
+				<set_faction_known faction="faction.canteran" known="true"/>
+				<set_faction_known faction="faction.plutarch" known="true"/>
+				<set_faction_known faction="faction.jonferson" known="true"/>
+				<!-- Relations -->							
+				<set_faction_relation faction="faction.player" otherfaction="faction.hereticvanguards" value="-20"/>
+				<set_faction_relation faction="faction.player" otherfaction="faction.argongovernment" value="20"/> 
+				<set_faction_relation faction="faction.player" otherfaction="faction.plutarch" value="-10"/> 
+				<!-- Startspace -->							
+				<find_zone name="$startzone" macro="macro.tzoneCluster_C_Sector08_Zone92_macro" />
+				<!-- Starting belongings -->							
+				<append_to_list name="$todo_ships" exact="
+					[ $startzone.macro, null, [
+												['fight', macro.units_size_xl_cs_omicron_ship_02_macro, 1 ],
+												['fight', macro.units_size_s_ship_ar_military_04_macro, 2 ],
+												['fight', macro.units_size_s_ship_ar_military_05_macro, 1 ],
+												['fight', macro.units_size_s_ship_ar_military_06_macro, 1 ]
+											]
+					]
+				" />
+
+				<append_to_list name="$todo_ships" exact="
+					[ $startzone.macro, null, [
+												['fight', macro.units_size_xl_cs_omicron_ship_03_macro, 2 ],
+												['fight', macro.units_size_s_ship_ar_military_04_macro, 2 ],
+												['fight', macro.units_size_s_ship_ar_military_05_macro, 1 ],
+												['fight', macro.units_size_s_ship_ar_military_06_macro, 1 ]
+											]
+					]
+				" />
+				<!-- SETA -->							
+				<add_inventory entity="player.entity" ware="ware.inv_timewarp" />
+				<!-- INIT -->							
+				<set_value name="$_CEO" exact="player.entity" />
+				<set_value name="$_faction" exact="faction.player" />
+				<include_actions ref="md.MM_Corps__Data.MMCData_CEO_PROPERTY_INIT" />
+				<remove_value name="$todo_stations"/>
+				<remove_value name="$todo_ships"/>
+				<remove_value name="$_faction"/>
+				<remove_value name="$startzone"/>
+				<remove_value name="$_CEO"/>
+			</actions>
+			<cues>
+				<cue name="setup_cwir_agstart_Helptext">
+					<delay exact="60s"/>
+					<actions>
+						<show_help custom="{40002,1101}" position="1" duration="20s"/>
+					</actions>
+				</cue>
+			</cues>
+		</cue>
+
+		<cue name="setup_cwir_xenon" module="cwir_xenon">
+			<conditions>
+				<event_cue_signalled cue="md.Setup.GameStart"/>
+			</conditions>
+			<actions>
+				<create_list name="$todo_stations" />
+				<create_list name="$todo_ships" />
+				<!-- UNIVERSE -->							
+				<signal_cue cue="md.Setup.Open_Jumpgates_Lib"/>
+				<signal_cue cue="md.Setup.WeaponTraderBasket3"/>
+				<signal_cue cue="md.Setup.EquipmentTraderBasket2"/>
+				<signal_cue cue="md.Setup.PostChapter3Jobs"/>
+				<!-- Known -->							
+				<set_faction_known faction="faction.canteran" known="true"/>
+				<set_faction_known faction="faction.reivers" known="true"/>
+				<set_faction_known faction="faction.argongovernment" known="true"/>
+				<set_faction_known faction="faction.familyryak" known="true"/>
+				<set_faction_known faction="faction.hereticvanguards" known="true"/>
+				<set_faction_known faction="faction.xenon" known="true"/>
+				<!-- Relations -->							
+				<set_faction_relation faction="faction.player" otherfaction="faction.xenon" value="30"/>
+				<set_faction_relation faction="faction.player" otherfaction="faction.hereticvanguards" value="faction.player.relation.kill.max"/>
+				<set_faction_relation faction="faction.player" otherfaction="faction.plutarch" value="faction.player.relation.kill.max"/> 
+				<set_faction_relation faction="faction.player" otherfaction="faction.argongovernment" value="faction.player.relation.kill.max"/> 
+				<set_faction_relation faction="faction.player" otherfaction="faction.heartofalbion" value="faction.player.relation.kill.max"/> 
+				<set_faction_relation faction="faction.player" otherfaction="faction.canteran" value="faction.player.relation.kill.max"/> 
+				<set_faction_relation faction="faction.player" otherfaction="faction.familyryak" value="faction.player.relation.kill.max"/> 
+				<do_if value="md.$FieldsOfOpportunity? and md.$FieldsOfOpportunity" comment="dlc compatibility">
+					<set_faction_relation faction="faction.player" otherfaction="faction.{['teladi'].{1}}" value="faction.player.relation.kill.max"/> 
+					<set_faction_relation faction="faction.{['teladi'].{1}}" otherfaction="faction.player" value="faction.{['teladi'].{1}}.relation.kill.max"/>
+				</do_if>
+				<!-- Startspace -->							
+				<find_zone name="$startzone" macro="macro.tzonecluster_a_sector03_zone111_macro" />
+				<!-- Starting belongings -->							
+				<append_to_list name="$todo_ships" exact="
+					[ $startzone.macro, null, [
+												['fight', macro.units_size_l_xenon_01_macro, 2 ]
+											]
+					]
+				" />
+				<append_to_list name="$todo_ships" exact="
+					[ $startzone.macro, null, [
+												['fight', macro.units_size_xl_xenon_01_macro, 2 ]
+											]
+					]
+				" />
+				<!-- SETA + JD -->							
+				<add_inventory entity="player.entity" ware="ware.inv_timewarp" />
+				<upgrade_object_by_macro object="player.primaryship" macro="macro.unit_player_ship_jumpdrive_macro" exact="100" comment="exact in % of available slots!" />
+				<!-- INIT -->							
+				<set_value name="$_CEO" exact="player.entity" />
+				<set_value name="$_faction" exact="faction.player" />
+				<include_actions ref="md.MM_Corps__Data.MMCData_CEO_PROPERTY_INIT" />
+				<remove_value name="$todo_stations"/>
+				<remove_value name="$todo_ships"/>
+				<remove_value name="$_faction"/>
+				<remove_value name="$startzone"/>
+				<remove_value name="$_CEO"/>
+			</actions>
+		</cue>
+	</cues>
+</mdscript>

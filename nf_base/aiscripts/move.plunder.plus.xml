@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="move.plunder.plus" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
+  <params>
+    <param name="range" default="'sector'" comment="'zone','station','sector','cluster'"/>
+    <param name="space" default="null"/>
+    <param name="range_min" default="5km" comment="currently only supported when range=station"/>
+    <param name="range_max" default="this.ship.maxradarrange" comment="currently only supported when range=station. Default: max radar range"/>
+    <param name="returntobase" default="true" comment="After filling cargobay, return wares to base? Base can be any trade station of this faction within this cluster."/>
+    <param name="allowstations" default="false" comment="Hack stations"/>
+    <param name="checkrelation" default="false" comment="Check the maybeattackedby status of potential targets. Otherwise, find any which are not of your faction"/>
+    <param name="basebasket" default="this.ship.warebasket.list" comment="Base warebasket. Default to that setup in jobs"/>
+    <param name="waitforcommand" default="false" comment="After filling cargobay, wait for player."/>
+    <param name="endscript" default="false" comment="After filling cargobay finish script. Do only on capped execution!"/>
+    <param name="homebase" default="null" comment="Prefered Station"/>
+    <param name="debugoutputchance" default="0" />
+  </params>
+  <patch sinceversion="2">
+    <set_value name="$homebase" exact="null" />
+  </patch>
+  <interrupts>
+    <handler ref="TargetInvalidHandler" />
+    <handler ref="AttackHandler" />
+    <handler ref="ScannedHandler" />
+
+    <handler ref="MMSurrender" />
+
+    <handler>
+      <conditions>
+        <check_all>
+          <event_gravidar_has_scanned object="this.ship" />
+          <check_value value="$seektargets and not this.zone.isclass.highway and not this.ship.isboostactive" />
+          <!--interesting use of maybeattackedby="$attacker". Attacker may be null or this.ship. If null, it ignores the filter. Better than having to copy the set of conditions twice-->
+          <check_any>
+            <!-- Search for capital freighters to attack-->
+            <check_all>
+			  <check_value value="$capship" />
+			  <count_gravidar_contacts result="$capitalfreighters" object="this.ship" class="[class.ship_l,class.ship_xl]" functional="true" maybeattackedby="$attacker" min="1">
+				<match_any>
+				  <match primarypurpose="objectpurpose.trade"/>
+				  <match primarypurpose="objectpurpose.mine"/>
+				</match_any>
+				<match owner="this.owner" negate="true"/>
+				<match_any_cargo wares="$currentbasket" comment="wares which can fit, exclude fuelcells"/>
+				<match_distance object="this.ship" max="$range_max"/>
+			  </count_gravidar_contacts>
+			</check_all>
+            <!-- Then search for small freighters to attack -->
+            <count_gravidar_contacts result="$smallfreighters" object="this.ship" class="[class.ship_m, class.ship_s]" functional="true" maybeattackedby="$attacker" min="1">
+              <match_parent>
+                <match class="class.highway" negate="true"/>
+              </match_parent>
+              <match_any>
+                <match primarypurpose="objectpurpose.trade"/>
+                <match primarypurpose="objectpurpose.mine"/>
+              </match_any>
+              <match owner="this.owner" negate="true"/>
+              <match_any_cargo wares="$currentbasket" comment="wares which can fit, exclude fuelcells"/>
+              <match_distance object="this.ship" max="$range_max"/>
+            </count_gravidar_contacts>
+            <!-- Then search for collectable
+            <count_gravidar_contacts result="$colcrates" object="this.ship" class="[class.collectable]" min="1">
+              <match_any_wares wares="$currentbasket" />
+              <match_distance object="this.ship" max="$range_max"/>
+            </count_gravidar_contacts> -->
+          </check_any>
+        </check_all>
+      </conditions>
+      <actions>
+        <debug_text text="'Gametime: ' + player.age + ' Moveto interrupted by: ' + event.name" chance="$debugoutputchance"/>
+
+        <!-- Select enemey based on the count gravidar already triggered -->
+        <do_if value="$capitalfreighters? and $capitalfreighters.count">
+          <!-- Select nearest capship -->
+          <!--<debug_text text="'capitalfreighters: ' + $capitalfreighters" chance="$debugoutputchance"/>-->
+          <set_value name="$enemy" exact="$capitalfreighters.{1}"/>
+          <set_value name="$NearestDistance" exact="this.ship.distanceto.{$enemy}"/>
+          <do_all exact="$capitalfreighters.count" counter="$DistanceCounter">
+            <do_if value="$DistanceCounter" min="2">
+              <set_value name="$tempdist" exact="this.ship.distanceto.{$capitalfreighters.{$DistanceCounter}}" />
+              <do_if value="$tempdist" max="$NearestDistance">
+                <set_value name="$enemy" exact="$capitalfreighters.{$DistanceCounter}"/>
+                <set_value name="$NearestDistance" exact="$tempdist"/>
+              </do_if>
+            </do_if>
+          </do_all>
+        </do_if>
+        <do_elseif value="$smallfreighters? and $smallfreighters.count">
+          <!-- Select small random enemy -->
+          <set_value name="$enemy" exact="$smallfreighters.random" />
+        </do_elseif>
+        <do_elseif value="$colcrates? and $colcrates.count">
+          <set_value name="$enemy" exact="null" />
+        </do_elseif>
+
+        <debug_text text="'enemy: ' + $enemy.knownname" chance="$debugoutputchance"/>
+
+        <!-- remove temp vars -->
+        <remove_value name="$NearestDistance"/>
+        <remove_value name="$DistanceCounter"/>
+        <remove_value name="$tempdist"/>
+        <remove_value name="$smallfreighters"/>
+        <remove_value name="$capitalfreighters"/>
+        <remove_value name="$colcrates"/>
+
+        <abort_called_scripts resume="plunder"/>
+
+      </actions>
+    </handler>
+    <handler>
+      <conditions>
+        <event_object_changed_attention object="this.ship" />
+        <check_value value="(event.param ge attention.visible) and (event.param2 lt attention.visible)" />
+        <check_value value="$seektargets and not this.ship.isboostactive" />
+      </conditions>
+      <actions>
+        <debug_text text="'Gametime: ' + player.age + ' Moveto interrupted by: ' + event.name" chance="$debugoutputchance"/>
+        <abort_called_scripts resume="patrol"/>
+      </actions>
+    </handler>
+  </interrupts>
+  <init>
+    <!--TODO: Piracy?-->
+    <set_command command="command.patrol"  />
+    <set_command_action commandaction="commandaction.calculating" />
+    <set_value name="$seektargets" exact="false"/>
+  </init>
+  <attention min="unknown">
+    <actions>
+
+      <label name="start" />
+
+      <!--do_if value="not (this.ship.isclass.ship_l or this.ship.isclass.ship_xl)">
+        <assert value="this.ship.isclass.ship_l or this.ship.isclass.ship_xl" exact="'move.plunder not currently supporting non-capships'"/>
+        <return value="false"/>
+      </do_if-->
+      <set_value name="$capship" exact="this.ship.isclass.[class.ship_l, class.ship_xl]" />
+
+      <set_value name="$startzone" exact="this.ship.zone" />
+      <!-- Has a job main zone? -->
+      <do_if value="this.ship.jobmainzone">
+        <set_value name="$startzone" exact="this.ship.jobmainzone"/>
+      </do_if>
+      <set_value name="$targetzone" exact="this.ship.zone" />
+      <set_value name="$searchendtime" exact="0"/>
+      <set_value name="$pos" exact="this.ship.position"/>
+
+      <do_if value="$basebasket">
+        <!--Fuelcells are always good-->
+        <set_value name="$basket" exact="$basebasket"/>
+        <do_if value="not $basket.indexof.{ware.fuelcells} and $capship">
+          <append_to_list name="$basket" exact="ware.fuelcells"/>
+        </do_if>
+      </do_if>
+      <do_else>
+        <set_value name="$basket" exact="[]"/>
+        <debug_text text="'No $basebasket set'" filter="error" />
+      </do_else>
+      <debug_text text="this.ship.knownname + ', ' + this.zone.knownname + 'Pirate basket is: ' + $basket" chance="$debugoutputchance"/>
+
+      <set_value name="this.$checkrelation" exact="$checkrelation"/>
+      <do_if value="$checkrelation">
+        <set_value name="$attacker" exact="this.ship"/>
+      </do_if>
+      <do_else>
+        <set_value name="$attacker" exact="null"/>
+      </do_else>
+
+      <run_script name="'move.undock'" />
+
+      <break_formation object="this.ship" />
+
+      <do_if value="$capship">
+        <set_value name="$search_duration" exact="20min" />
+      </do_if>
+      <do_else>
+        <set_value name="$search_duration" exact="10min" />
+        <create_formation formation="formationshape.vshape" object="this.ship" param="this.ship.size * 1.5" />
+      </do_else>
+
+      <do_if value="$space and $space.isclass.[class.sector, class.cluster, class.zone]">
+		<do_if value="$space.isclass.zone">
+		  <set_value name="$targetzone" exact="$space"/>
+		</do_if>
+		<do_elseif value="$space.isclass.[class.sector, class.cluster]">
+		  <find_zone name="$targetzone" space="$space" priorityzone="true" tempzone="false">
+			<match class="class.highway" negate="true" />
+		  </find_zone>
+		</do_elseif>
+        <set_value name="$pursuelimit" exact="$space.class"/>
+      </do_if>
+      <do_elseif value="$range" exact="'zone'">
+        <set_value name="$space" exact="null"/>
+        <set_value name="$pursuelimit" exact="class.zone"/>
+      </do_elseif>
+      <do_elseif value="$range" exact="'station'">
+        <set_value name="$space" exact="null"/>
+        <set_value name="$pursuelimit" exact="class.zone"/>
+      </do_elseif>
+      <do_elseif value="$range" exact="'sector'">
+        <set_value name="$space" exact="this.ship.sector" />
+        <set_value name="$pursuelimit" exact="class.sector"/>
+      </do_elseif>
+      <do_elseif value="$range" exact="'cluster'">
+        <set_value name="$space" exact="this.ship.cluster" />
+        <set_value name="$pursuelimit" exact="class.cluster"/>
+      </do_elseif>
+      <do_else>
+        <!-- Don't send capships to around the cluster until their move functionality allows them to handle jumpdrives-->
+        <do_if value="$range != 'sector'">
+          <debug_text text="'Range %1 not supported'.[$range]" filter="error" />
+        </do_if>
+        <set_value name="$space" exact="this.ship.sector" />
+        <set_value name="$pursuelimit" exact="class.sector"/>
+      </do_else>
+
+
+      <label name="find_destination" />
+
+      <set_value name="$fly_around_zone" exact="true"/>
+
+      <!--if $space is valid, the ship will patrol other zones-->
+      <do_if value="$space">
+        <set_value name="$fly_around_zone" exact="false"/>
+        <do_if value="this.sector" exact="@$targetzone.sector">
+          <!--Use same check distance here and in 'move.seekenemies' (this.ship.size * 2) -->
+          <do_if value="this.ship.distanceto.[$targetzone, $pos]" max="this.ship.size * 2">
+            <!--Ship is in the target zone but patrol time needs to be set-->
+            <set_value name="$fly_around_zone" exact="true"/>
+            <do_if value="$searchendtime" exact="0">
+              <set_value name="$searchendtime" exact="player.age + $search_duration" />
+            </do_if>
+
+            <!--Patrol time has ended, so find a zone in this space-->
+            <do_elseif value="player.age" min="$searchendtime">
+              <set_value name="$fly_around_zone" exact="false"/>
+              <find_zone name="$targetzone" space="$space" priorityzone="true" tempzone="false">
+                <match class="class.highway" negate="true" />
+              </find_zone>
+              <set_value name="$Y" min="-5000m" max="5000m"/>
+              <get_safe_pos result="$pos" value="position.[0,$Y,0]" radius="this.ship.size + 1000m" min="$range_min" max="$range_max" zone="$targetzone"/>
+			  <set_value name="$searchendtime" exact="0"/>
+            </do_elseif>
+          </do_if>
+        </do_if>
+		<do_elseif value="$targetzone != this.zone">
+          <run_script name="'move.generic'">
+            <param name="destination" value="$targetzone" />
+          </run_script>
+		  <resume label="find_destination"/>
+		</do_elseif>
+      </do_if>
+
+      <do_if value="$fly_around_zone">
+        <!--Fly around the commanding station-->
+        <do_if value="$range" exact="'station'">
+          <set_value name="$targetzone" exact="null" />
+          <do_if value="this.ship.commander.exists">
+            <do_if value="this.ship.commander.isclass.station">
+              <set_value name="$targetzone" exact="this.ship.commander.zone" />
+              <create_position name="$pos" object="this.ship.commander" min="$range_min" max="$range_max"/>
+              <do_if value="not $capship">
+                <get_safe_pos result="$pos" radius="this.ship.size + 200m" value="$pos" zone="$targetzone" />
+              </do_if>
+              <do_else>
+                <set_value name="$Y" min="-500m" max="500m"/>
+                <get_safe_pos result="$pos" radius="this.ship.size + 1000m" value="position.[$pos.x, $Y, $pos.z]" zone="$targetzone" allowyaxis="false"/>
+              </do_else>
+            </do_if>
+          </do_if>
+          <do_if value="not $targetzone">
+            <debug_text text="'No commanding station to anchor the patrolling object. Reverting to zone patrol.'" chance="$debugoutputchance" />
+            <set_value name="$range" exact="'zone'"/>
+            <resume label="find_destination"/>
+          </do_if>
+        </do_if>
+        <!--Fly around the startzone-->
+        <do_elseif value="$range" exact="'zone'">
+          <set_value name="$targetzone" exact="$startzone" />
+          <find_object space="$targetzone" name="$patrolobj" surfaceelement="false">
+            <match_size min="500m" />
+          </find_object>
+
+          <do_if value="(not $capship) and ($patrolobj.exists)">
+            <create_position name="$patrolpos" object="$patrolobj" min="500m" max="2km" />
+            <get_safe_pos result="$pos" radius="this.ship.size + 200m" value="$patrolpos" zone="$targetzone" />
+            <debug_text text="'fly to ' + $pos " chance="$debugoutputchance" />
+          </do_if>
+          <do_else>
+            <create_random_position_in_boundingbox name="$pos" component="$targetzone" />
+            <set_value name="$Y" min="-5000m" max="5000m"/>
+            <get_safe_pos result="$pos" radius="this.ship.size + 1000m" value="position.[$pos.x, $Y, $pos.z]" zone="$targetzone" />
+          </do_else>
+        </do_elseif>
+        <!--Fly around the current target zone-->
+        <do_else>
+          <find_object name="$patrolobj" space="$targetzone" class="[class.highwayentrygate,class.highwayexitgate,class.jumpbeacon,class.gate]" multiple="true">
+            <match_distance object="this.ship" min="[$range_min, $range_max/2].max"/>
+          </find_object>
+          <do_if value="$patrolobj.count">
+			<create_position name="$pos" object="$patrolobj.random" min="$range_min" max="$range_max"/>
+			<do_if value="not $capship">
+			  <get_safe_pos result="$pos" radius="this.ship.size + 200m" value="$pos" zone="$targetzone" />
+			</do_if>
+			<do_else>
+			  <set_value name="$Y" min="-5000m" max="5000m"/>
+			  <get_safe_pos result="$pos" radius="this.ship.size + 1000m" value="position.[$pos.x, $Y, $pos.z]" zone="$targetzone" allowyaxis="false"/>
+			</do_else>
+          </do_if>
+          <do_else>
+            <create_random_position_in_boundingbox name="$pos" component="$targetzone" />
+            <set_value name="$Y" min="-5000m" max="5000m"/>
+            <get_safe_pos result="$pos" radius="this.ship.size + 1000m" value="position.[$pos.x, $Y, $pos.z]" zone="$targetzone" />
+          </do_else>
+		  <remove_value name="$patrolobj" />
+        </do_else>
+      </do_if>
+
+
+      <label name="patrol" />
+      <!-- Safety checking for non-existing zones -->
+      <do_if value="not $targetzone.exists or not $startzone.exists" >
+        <wait min="1s" max="2s" />
+        <resume label="start" />
+      </do_if>
+
+      <set_value name="$enemy" exact="null"/>
+
+
+      <label name="seektargets"/>
+	  <do_if value="this.$checkrelation?" negate="true">
+		<set_value name="this.$checkrelation" exact="$checkrelation"/>
+	  </do_if>
+	  <do_elseif value="this.$checkrelation? and $checkrelation != this.$checkrelation">
+		<set_value name="$checkrelation" exact="this.$checkrelation"/>
+	  </do_elseif>
+	  <do_if value="$checkrelation">
+		<set_value name="$attacker" exact="this.ship"/>
+	  </do_if>
+	  <do_else>
+		<set_value name="$attacker" exact="null"/>
+	  </do_else>
+
+      <!--See which wares can currently fit inside, excluding fuelcells-->
+      <set_value name="$currentbasket" exact="[]"/>
+      <do_all exact="$basket.count" counter="$i">
+        <do_if value="this.ship.cargo.{$basket.{$i}}.free">
+          <do_if value="$basket.{$i} != ware.fuelcells">
+            <append_to_list name="$currentbasket" exact="$basket.{$i}"/>
+          </do_if>
+        </do_if>
+      </do_all>
+      <set_value name="$seektargets" exact="if this.ship.dps.all gt 200 then true else false"/>
+
+      <do_if value="not $enemy">
+        <do_if value="this.zone == $targetzone">
+          <move_to object="this.ship" destination="$targetzone" finishonapproach="true" usehighways="not $capship" forceposition="false" forcesteering="not $capship">
+            <position value="$pos" />
+          </move_to>
+        </do_if>
+        <do_else>
+          <run_script name="'move.generic'">
+            <param name="destination" value="$targetzone" />
+          </run_script>
+        </do_else>
+      </do_if>
+
+      <wait min="1s" max="2s" />
+
+
+      <label name="plunder" />
+
+      <do_if value="not $enemy.isoperational and not $capship and $allowstations">
+		<!-- smallship won't fight for -->
+		<find_gravidar_contact name="$Station" object="this.ship" class="[class.station]" multiple="false">
+		  <match_distance object="this.ship" max="this.ship.maxradarrange*0.5f"/>
+		  <match_relation faction="this.ship.owner" relation="neutral" comparison="le" />
+		</find_gravidar_contact>
+
+        <do_if value="$Station">
+		  <set_value name="$seektargets" exact="false"/>
+		  <find_object_component object="$Station" multiple="true" class="[class.storage]" functional="true" groupname="$hackingtargets" integrated="false">
+			<match_any_cargo wares="$currentbasket" />
+		  </find_object_component>
+		  <do_if value="$hackingtargets.count">
+			<find_object_component object="$Station" multiple="true" functional="true" groupname="$hackingtargets" integrated="false" chance="this.combinedskill">
+			  <match class="[class.radar, class.dronelaunchpad, class.turret, class.launcher, class.shieldgenerator]"/>
+			</find_object_component>
+  
+			<do_all exact="$hackingtargets.count" counter="$j">
+			  <set_object_hacked result="$hacked" object="$hackingtargets.{$j}" duration="600s" hacker="this.ship" chance="this.combinedskill" />
+			</do_all>
+		  </do_if>
+        </do_if>
+		<remove_value name="$hackingtargets" />
+		<remove_value name="$Station" />
+		<remove_value name="$hacked" />
+      </do_if>
+
+      <do_if value="$enemy.isoperational">
+        <set_value name="$seektargets" exact="false"/>
+
+        <run_script name="'move.plunder.object'">
+          <param name="target" value="$enemy "/>
+          <param name="pursuelimit" value="$pursuelimit"/>
+          <param name="checkrelation" value="$checkrelation" />
+          <param name="basket" value="$basket"/>
+          <param name="debugoutputchance" value="$debugoutputchance" />
+        </run_script>
+      </do_if>
+
+
+      <label name="collect" />
+      <!-- Clean Zone: Find crates that match the basket -->
+      <find_object name="$crates" class="class.collectable" space="this.ship.sector" multiple="true">
+        <match_distance object="this.ship" max="$range_max"/>
+        <match_any_wares wares="$basket" />
+      </find_object>
+
+      <debug_text text="'Crates to collect %1, basket: %2'.[$crates, $basket]" chance="$debugoutputchance"/>
+
+      <set_value name="$drops" exact="[]"/>
+      <do_all exact="$crates.count" counter="$i" reverse="true">
+        <do_if value="$crates.{$i}.distanceto.{this.ship} gt 10km">
+          <do_if value="this.ship.cargo.{$crates.{$i}.wares.list.{1}}.free" negate="true">
+		    <remove_value name="$crates.{$i}" />
+		  </do_if>
+		  <continue />
+        </do_if>
+        <set_value name="$cratewares" exact="$crates.{$i}.wares.list"/>
+        <debug_text text="'target dropped crate with: ' + $cratewares" chance="$debugoutputchance"/>
+        <do_all exact="$cratewares.count" counter="$o">
+          <do_if value="this.ship.cargo.{$cratewares.{$o}}.free">
+            <do_if value="$basket.indexof.{$cratewares.{$o}}">
+              <debug_text text="$cratewares.{$o} + ' added to final crates'" chance="$debugoutputchance"/>
+              <append_to_list name="$drops" exact="$crates.{$i}"/>
+              <break/>
+            </do_if>
+          </do_if>
+        </do_all>
+		<remove_value name="$crates.{$i}" />
+      </do_all>
+      <remove_value name="$cratewares" />
+
+      <do_if value="$drops.count == 0 and $crates.count ge 1">
+		<set_value name="$seektargets" exact="false"/>
+		<set_value name="$CrateZone" exact="$crates.{1}.zone"/>
+		<set_value name="$CratePos" exact="$crates.{1}.position"/>
+
+		<do_if value="$jumpdrive? and $jumpdrive.isfunctional" negate="true" chance="if this.combinedskill ge 80 then 100 else 0">
+          <find_object_component name="$jumpdrive" object="this.ship" class="class.jumpdrive" checkoperational="true"/>
+		</do_if>
+        <do_else>
+          <wait min="5s" max="10s" />
+        </do_else>
+
+        <do_if value="$crates.{1}? and $crates.{1}.exists">
+		  <do_if value="this.ship.distanceto.[$CrateZone, $CratePos] gt 10km and $jumpdrive? and $jumpdrive.isfunctional and $jumpdrive.cooldowntimeleft le 0">
+			<jump object="this.ship" zone="$CrateZone" skipcharge="true" ignorefuel="true">
+			  <safepos value="$CratePos" max="5km"/>
+			</jump>
+		  </do_if>
+		  <do_else>
+			<move_to object="this.ship" destination="$CrateZone" finishonapproach="true" boost="if this.ship.canboost and this.ship.distanceto.[$CrateZone, $CratePos] gt 10km then true else false" usehighways="not $capship" forceposition="false" forcesteering="not $capship">
+			  <safepos value="$CratePos" max="5km"/>
+			</move_to>
+		  </do_else>
+        </do_if>
+		<remove_value name="$crates" />
+		<remove_value name="$CrateZone" />
+		<remove_value name="$CratePos" />
+        <resume label="collect" />
+      </do_if>
+
+      <!-- Either if it was destroyed or disengaged, there might be some drops, if not end -->
+      <do_if value="$drops.count">
+		<set_value name="$seektargets" exact="false"/>
+        <set_command_action commandaction="commandaction.calculating" />
+        <!-- Collect -->
+        <sort_collectables_by_value name="$sortedlist" collectables="$drops" object="this.ship" />
+        <do_if value="$sortedlist.count">
+          <add_to_group groupname="$sorteddrops" list="$sortedlist"/>
+          <debug_text text="'Target was destroyed. Checking for crates. Basket %1, drops %2'.[$basket, $sorteddrops]" chance="$debugoutputchance"/>
+          <run_script name="'move.collect.ship'">
+            <param name="targetgroup" value="$sorteddrops"/>
+            <param name="debugoutputchance" value="$debugoutputchance"/>
+          </run_script>
+        </do_if>
+        <do_else>
+          <debug_text text="'Target was destroyed. No crates are suitable to be collected by this ship. Basket %1, drops %2'.[$basket, $drops]" chance="$debugoutputchance"/>
+        </do_else>
+      </do_if>
+      <remove_value name="$sorteddrops" />
+      <remove_value name="$drops" />
+      <remove_value name="$crates" />
+
+      <!--Calculate the free space in the ship, excluding fuel-->
+      <set_value name="$freespace" exact="this.ship.cargo.free - this.ship.cargo.{ware.fuelcells}.free"/>
+      <set_value name="$capacity" exact="this.ship.cargo.capacity - this.ship.cargo.{ware.fuelcells}.max"/>
+
+      <!-- No capacity -->
+      <do_if value="not $capacity or not this.ship.units.{unitcategory.transport}.count">
+        <debug_text text="'No capacity for some reason. Destroyed storage modules?'" chance="$debugoutputchance"/>
+        <wait min="2min" max="3min" />
+        <set_value name="$returntobase" exact="false"/>
+        <resume label="offload"/>
+      </do_if>
+      <!-- More than 5% of free space, so keep going -->
+      <do_elseif value="(100.0f / $capacity) * $freespace" min="5">
+        <do_if value="((100.0f / $capacity) * $freespace) != 100" chance="$debugoutputchance">
+          <debug_text text="this.ship.knownname + ' has ' + ((100.0f / $capacity) * $freespace) + '% of cargo free, excluding fuel. Continuing to search.'"/>
+        </do_if>
+        <resume label="find_destination"/>
+      </do_elseif>
+
+
+      <label name="offload"/>
+
+      <debug_text text="this.ship.knownname + ' has ' + ((100.0f / $capacity) * $freespace) + '% of cargo filled, excluding fuel. Looking to offload some.'" chance="$debugoutputchance"/>
+      <set_value name="$seektargets" exact="false"/>
+      <!-- Enable dropping of wares at a station-->
+      <do_if value="$returntobase">
+        <!-- With commander, try to get sell to him, otherwise free trade in range -->
+		<set_value name="$doRun" exact="if not this.ship.commander and $homebase and $homebase.exists and $homebase.owner == this.ship.trueowner then 2 else 1" />
+        <!-- 'trade.findtraderun' handles the case of commander with no offers -->
+        <do_all exact="$doRun" counter="$r" reverse="true">
+		  <set_object_commander object="this.ship" commander="$homebase" chance="if $r == 2 then 100 else 0" />
+		  <set_value name="$traderunscript" exact="if this.ship.commander.isoperational then 'trade.findtraderun' else 'trade.findfreetraderun'" />
+		  <!-- Find buy offer. Selloffer is not needed -->
+		  <run_script name="$traderunscript" >
+			<param name="warelist" value="this.ship.cargo.list" />
+			<param name="range" value="if this.ship.commander.isoperational then this.ship.commander.zone else if $space then $space else this.ship.sector" />
+			<param name="debugchance" value="$debugoutputchance"/>
+			<save_retval name="buyoffer" variable="$buyoffer" />
+		  </run_script>
+		  <remove_object_commander object="this.ship" chance="if $r == 2 then 100 else 0" />
+		  <do_if value="$buyoffer? and $buyoffer">
+			<break />
+		  </do_if>
+		</do_all>
+        <!-- Execute the trade -->
+        <do_if value="$buyoffer? and $buyoffer">
+		  <run_script name="'trade.performtraderun'" >
+			<param name="selloffer" value="null" />
+			<param name="buyoffer" value="$buyoffer" />
+			<param name="debugchance" value="$debugoutputchance" />
+			<save_retval name="success" variable="$success" />
+		  </run_script>
+        </do_if>
+
+        <remove_value name="$doRun" />
+        <remove_value name="$buyoffer" />
+        <remove_value name="$traderunscript" />
+
+        <do_if value="$success? and $success and this.ship.cargo.list.count gt 1">
+          <wait min="10s" max="30s" />
+          <remove_value name="$success" />
+          <resume label="offload"/>
+        </do_if>
+        <remove_value name="$success" />
+
+      </do_if>
+      <do_elseif value="$waitforcommand" chance="if this.ship.isplayerowned then 100 else 0">
+        <!-- TODO: message to player -->
+        <resume label="wait"/>
+      </do_elseif>
+      <do_elseif value="$endscript">
+        <resume label="end"/>
+      </do_elseif>
+      <do_else>
+        <run_script name="'move.patrol'" >
+          <param name="range" value="if this.ship.commander.isoperational and this.ship.commander.isclass.station then 'station' else 'sector'" />
+          <param name="allowstations" value="false" />
+        </run_script>
+      </do_else>
+
+      <resume label="find_destination"/>
+
+
+      <label name="wait"/>
+
+	  <get_safe_pos result="$pos" object="this.ship" min="10km" radius="this.ship.size + 10km" zone="this.ship.zone" />
+	  <set_flight_control_model object="this.ship" flightcontrolmodel="flightcontrolmodel.spline"/>
+	  <move_to object="this.ship" destination="this.ship.zone" finishonapproach="true" boost="if this.ship.canboost and this.ship.distanceto.[this.ship.zone, $pos] gt 10km then true else false" usehighways="false" forceposition="false" forcesteering="not $capship">
+		<position value="$pos" />
+	  </move_to>
+	  <set_command command="command.wait" />
+	  <set_command_action commandaction="commandaction.standingby" />
+	  <wait />
+
+
+      <label name="end"/>
+      <remove_value name="this.$checkrelation" />
+
+    </actions>
+  </attention>
+  <on_abort>
+    <remove_value name="this.$checkrelation" />
+  </on_abort>
+</aiscript>

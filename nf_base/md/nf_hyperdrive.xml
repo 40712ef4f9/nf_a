@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mdscript name="NF_HyperDrive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="D:\games\Steam\steamapps\common\X Rebirth\MODS_JSGME\libraries\md.xsd">
+	<cues>
+
+		<!-- X:R Conquer mod version 0.20 - mod by Rubini - X:R 4.00 compatible -->
+		<!-- needs at least 2 hyperdrive crystals to start the ship drive for safety-->
+		<!-- needs at least 25 hyperdrive crystals to start the multi ship drive for safety-->
+		<!-- but the final consume will be only one hyperdrive crystal per capship or skunk -->
+		<!-- hyperdrive also consume 2x fuel than normal drive-->
+		<!-- needs yet better fx effects in/out -->
+
+		<cue name="HyperDriveTrigger" instantiate="true" >
+			<conditions>
+				<event_cue_signalled cue="md.Guidance.NewTarget"/>
+				<check_value value="global.$nfconfig.$HyperDrive? and global.$nfconfig.$HyperDrive"/>
+				<check_value value="player.entity.inventory.{ware.inv_hyperdrivecrystal}.count or player.entity.inventory.{ware.inv_probe}.count" />
+			</conditions>
+			<actions>
+				<do_if value="(event.param.{1}.isclass.space) and (event.param.count == 2) and (event.param.{2} == 0)">
+					<start_conversation actor="player.copilot" conversation="HyperJumpMenu" convparam="event.param.{1}"/>
+				</do_if>
+				<do_else>
+					<cancel_cue cue="HyperDriveTrigger"/>
+				</do_else>
+			</actions>	 										
+		</cue>			
+
+		<cue name="HyperDriveMenu" instantiate="true">
+			<conditions>
+				<event_conversation_started conversation="HyperJumpMenu" />
+			</conditions>
+			<actions>
+
+				<set_value name="$Object1" exact="false" />
+				<set_value name="$Stations1" exact="false" />
+				<set_value name="$Ships1" exact="false" />
+				<do_if value="event.param2.isclass.zone">		
+					<find_object name="$Object1"  functional="true" space="event.param2" multiple="true">
+						<match_any>
+							<match macro="macro.props_gates_jumpbeacon_macro"/>
+							<match macro="macro.unit_size_xs_probe_macro"/>
+						</match_any>
+					</find_object>		
+
+					<find_station name="$Stations1" space="event.param2" functional="true" multiple="false">
+						<match owner="faction.ownerless" negate="true"/>		
+					</find_station>
+
+					<find_ship name="$Ships1" class="[class.ship_l, class.ship_xl]" functional="true" space="event.param2" multiple="false">
+						<match_any>
+							<match primarypurpose="objectpurpose.fight"/>
+							<match macro="macro.units_size_xl_cargo_hauler_2_macro"/>
+							<!-- CWIR only -->
+							<match macro="macro.units_size_l_pir_container_03_macro"/>
+							<!-- CWIR only -->
+						</match_any>
+						<match owner="faction.player" negate="true"/>				
+					</find_ship>
+					<do_if value="$Ships1" negate="true">		
+						<find_ship name="$Ships1" class="[class.ship_l, class.ship_xl]" functional="true" space="event.param2" multiple="false">
+							<match_any>
+								<match primarypurpose="objectpurpose.fight"/>
+								<match macro="macro.units_size_xl_cargo_hauler_2_macro"/>
+								<!-- CWIR only -->
+								<match macro="macro.units_size_l_pir_container_03_macro"/>
+								<!-- CWIR only -->
+							</match_any>
+							<match owner="faction.player" />				
+						</find_ship>
+					</do_if>
+				</do_if>
+
+				<find_object name="$Object2"  functional="true" space="player.ship.zone" multiple="true">
+					<match_any>
+						<match macro="macro.props_gates_jumpbeacon_macro"/>
+						<match macro="macro.unit_size_xs_probe_macro"/>
+					</match_any>
+				</find_object>	
+
+				<find_station name="$Stations2" space="player.ship.zone" functional="true" multiple="false">
+					<match owner="faction.ownerless" negate="true"/>		
+				</find_station>
+
+				<find_ship name="$Ships2" class="[class.ship_l, class.ship_xl]" functional="true" space="player.ship.zone" multiple="false">
+					<match_any>
+						<match primarypurpose="objectpurpose.fight"/>
+						<match macro="macro.units_size_xl_cargo_hauler_2_macro"/>
+						<!-- CWIR only -->
+						<match macro="macro.units_size_l_pir_container_03_macro"/>
+						<!-- CWIR only -->
+					</match_any>				
+					<match owner="faction.player" negate="true"/>				
+				</find_ship>
+				<do_if value="$Ships2" negate="true">		
+					<find_ship name="$Ships2" class="[class.ship_l, class.ship_xl]" functional="true" space="player.ship.zone" multiple="false">
+						<match_any>
+							<match primarypurpose="objectpurpose.fight"/>
+							<match macro="macro.units_size_xl_cargo_hauler_2_macro"/>
+							<!-- CWIR only -->
+							<match macro="macro.units_size_l_pir_container_03_macro"/>
+							<!-- CWIR only -->
+						</match_any>
+						<match owner="faction.player" />				
+					</find_ship>
+				</do_if>
+
+				<!--<show_help position="12" log="true" force="true" duration="15s" custom="' Reserve: \n %1 Probe(s) \n %2 HyperDrive Crystal(s) \n %3 Cr \n beacon_probe1 count/name %4 %6: \n beacon_probe2 count/name %5 %7 .'.[player.entity.inventory.{ware.inv_probe}.count, player.entity.inventory.{ware.inv_hyperdrivecrystal}.count, player.money/1Cr, @$Object1.count, @$Object2.count, @$Object1.{1}.name, @$Object2.{1}.name]" />-->
+
+
+				<!--<add_player_choice_sub text="'Hyper Jump to Zone'" section="gJumpZone" choiceparam="event.param2" selectable="player.entity.inventory.{ware.inv_hyperdrivecrystal}.count ge 2 and event.param2.isclass.zone and not event.param2.istemporaryzone"/>-->		
+				<!--<add_player_choice_sub text="'Hyper Jump with Squad'" section="gJumpWithSquad" choiceparam="event.param2" selectable="@player.primaryship.subordinates.count gt 0 and player.entity.inventory.{ware.inv_hyperdrivecrystal}.count ge 25 and event.param2.isclass.zone and not event.param2.istemporaryzone"/>-->
+
+				<add_player_choice_sub text="{40002,200}" section="gJumpSquadOnly" position="top_left"  choiceparam="event.param2" selectable="(@player.primaryship.subordinates.count gt 0) and player.entity.inventory.{ware.inv_hyperdrivecrystal}.count and event.param2.isclass.zone and (not event.param2.istemporaryzone) and @$Object1.count"/>
+
+				<add_player_choice_sub text="{40002,202}" section="gJumpSquadToMe" position="top_right" selectable="(@player.primaryship.subordinates.count gt 0) and player.entity.inventory.{ware.inv_hyperdrivecrystal}.count and @$Object2.count" />
+
+				<add_player_choice_sub text="{40002,36}" position="right" section="gCreateCV" choiceparam="[player.ship.zone, faction.player]" selectable="player.money ge 10000000Cr and not $Stations2 and $Ships2 and $Ships2.isplayerowned" tooltip="'Required: \n- 10Mio Cr \n- no other Station \n- min 1 owned Capital'"/>
+
+				<add_player_choice_sub text="{40002,37}" position="left" section="gCreateCV" choiceparam="[event.param2, faction.player]" selectable="player.money ge 10000000Cr and not $Stations1 and $Ships1 and $Ships1.isplayerowned" tooltip="'Required: \n- 10Mio Cr \n- no other Station \n- min 1 owned Capital'"/>
+
+				<add_player_choice_sub text="{40002,38}" section="gSendProbe" position="bottom_right" choiceparam="player.ship.zone" selectable="player.entity.inventory.{ware.inv_probe}.count gt 0" />
+
+				<add_player_choice_sub text="{40002,39}" section="gSendProbe" position="bottom_left" choiceparam="event.param2" selectable="player.entity.inventory.{ware.inv_probe}.count gt 0 and event.param2.isclass.zone and not event.param2.istemporaryzone"/>	
+
+
+				<remove_value name="$Object2"/>
+				<remove_value name="$Stations2"/>
+				<remove_value name="$Ships2"/>
+				<remove_value name="$Object1"/>
+				<remove_value name="$Stations1"/>
+				<remove_value name="$Ships1"/>
+			</actions>
+		</cue>
+
+		<cue name="OutpostBuilder" instantiate="true">
+			<conditions>
+				<event_conversation_next_section sectionprefix="gCreateCV"/>
+			</conditions>
+			<actions>
+				
+				<do_if value="player.primaryship.owner.id" list="['xenon']">
+					<set_value name="$Macro" exact="macro.struct_at_xen_xenon_outpost_macro" />
+				</do_if>
+				<do_else>
+					<!--set_value name="$Macro" exact="macro.struct_econ_weapon_ar_defence_pl_macro" /-->
+					<set_value name="$Macro" exact="macro.struct_bt_alb_outpost_macro" />
+				</do_else>
+
+				<do_if value="true">
+					<set_value name="$buildlocation" exact="null"/>
+					<do_all exact="event.param2.{1}.freebuildlocations.count" counter="$i">
+					  <do_if value="$buildlocation == null and not event.param2.{1}.freebuildlocations.{$i}.child">
+						<set_value name="$buildlocation" exact="event.param2.{1}.freebuildlocations.{$i}"/>
+						<break/>
+					  </do_if>
+					</do_all>
+					<do_all exact="event.param2.{1}.freenpcbuildlocations.count" counter="$i" chance="(not $buildlocation) *100">
+					  <do_if value="$buildlocation == null and not event.param2.{1}.freenpcbuildlocations.{$i}.child">
+						<set_value name="$buildlocation" exact="event.param2.{1}.freenpcbuildlocations.{$i}"/>
+						<break/>
+					  </do_if>
+					</do_all>
+	
+					<create_ship name="$Ship" zone="event.param2.{1}" macro="units_size_xl_builder_ship_plot_01_macro" capturable="false">
+						<owner exact="faction.neutral" overridenpc="true"/>
+						<pilot ref="trader_albion_random"/>
+						<defence ref="fighter_albion_random"/>
+						<engineer ref="engineer_albion_random"/>
+						<units>
+							<unit category="unitcategory.defence" mk="4" min="40" max="75"/>
+							<unit category="unitcategory.welder" mk="1" exact="40" />
+							<unit category="unitcategory.transport" mk="1" exact="10" />
+						</units>
+						<cargo>
+							<wares list="[ware.fuelcells]">
+								<fillpercent min="40" max="60"/>
+							</wares>
+						</cargo>
+						<position value="$buildlocation.offset" min="10km" max="15km"/>
+					</create_ship>
+					<set_object_name object="$Ship" name="'%1 %2'.[{20204,10013}, $Ship.knownname]" />
+					<start_script object="$Ship.pilot" name="'move.delivered'">
+						<param name="target" value="$buildlocation" />
+						<param name="macro" value="$Macro" />
+						<param name="payment" value="[null, player.entity, 10000000Cr]" />
+						<param name="owner" value="event.param2.{2}" />
+						<param name="movedie" value="true" />
+					</start_script>
+					<remove_value name="$buildlocation"/>
+					<remove_value name="$Ship"/>
+				</do_if>
+				<do_else>
+					<do_if value="player.primaryship.owner == faction.player">
+						<set_value name="$PreviousPlayerMoney" exact="player.money "/>
+						<set_value name="$money" exact="10000000Cr"/>
+						<do_if value="(player.money - $money) lt 0">							
+							<set_value name="$money" exact="player.money"/>
+							<reward_player money="player.money*-1" />
+						</do_if>
+						<do_else>
+							<reward_player money="$money*-1" />
+						</do_else>
+	
+						<set_value name="$Loc" exact="event.param2.{1}.name + ', ' + event.param2.{1}.sector.knownname + ', ' + event.param2.{1}.cluster.knownname"/>
+						<write_to_logbook category="general" text="{40002,40}.[$Loc, player.money/1Cr]"/>
+	
+						<substitute_text text="$message" source="{1015,7}">
+							<replace string="'$MONEY$'" with="$money.formatted.{'%s'}" />
+							<replace string="'$MONEY2$'" with="player.money.formatted.{'%s'}" />
+						</substitute_text>
+						<show_notification caption="{1015,6}"
+												 details="[$message]"
+												 icon="achievement_money_down"
+												 queued="true"
+												 sound="ui_mon_eve_money_down"
+							 />
+						<remove_value name="$PreviousPlayerMoney"/>
+						<remove_value name="$message"/>
+						<remove_value name="$money"/>
+						<remove_value name="$Loc"/>
+					</do_if> 
+	
+					<signal_cue_instantly cue="md.MM_Corps__Station_Const.MMCStationConst_contract" param="[event.param2.{1}, $Macro, event.param2.{2}, 100, 100, true, null, null, true]"/>
+				</do_else>
+
+				<remove_value name="$Macro"/>
+			</actions>
+		</cue>
+
+		<cue name="HyperDriveJ1" instantiate="true">
+			<conditions>
+				<event_conversation_next_section sectionprefix="gJumpZone"/>
+			</conditions>
+			<actions>
+				<set_value name="$destination" exact="event.param2" />
+				<add_effect object="player.primaryship" effect="'jump_activation_jumpdrive_cm'" >
+					<position x="0m" y="0m" z="2.5m" />
+				</add_effect>
+				<add_effect object="player.primaryship" effect="'jump_activation_jumpdrive_cm'" >
+					<position x="0m" y="0m" z="-15m" />
+				</add_effect>
+				<show_notification caption="{1010,11}" details="['Hyper drive charging.......']" queued="false" sound="notification_generic"/>
+				<signal_cue_instantly cue="JumpPlayer" param="$destination"/> 
+
+				<!-- order the squad small ships level 1 (player escorts)to jump with player-->		
+				<set_value name="$player_subordinates_level1" exact="player.primaryship.subordinates" />
+				<do_all exact="$player_subordinates_level1.count" counter="$i">								
+					<do_if value="$player_subordinates_level1.{$i}.isclass.ship_s or $player_subordinates_level1.{$i}.isclass.ship_m">
+						<add_effect object="$player_subordinates_level1.{$i}" effect="'jump_activation_jumpdrive_l'" >
+							<position x="0m" y="$y" z="0" />
+						</add_effect>
+						<!--<signal_objects object="$player_subordinates_level1.{$i}" param="'hold position'" />-->
+						<signal_cue_instantly cue="JumpSubordinates" param="[$player_subordinates_level1.{$i}, $player_subordinates_level1.{$i}, $destination, 0, 'jump_jumpin_l', position.[0m,20000m,0m], 1]"/>
+
+					</do_if>	
+				</do_all>
+			</actions>
+		</cue>
+
+		<cue name="HyperDriveJ2" instantiate="true" namespace="this">
+			<conditions>
+				<event_conversation_next_section sectionprefix="gJumpWithSquad"/>
+			</conditions>
+			<actions>		
+				<set_value name="$destination" exact="event.param2" />
+				<set_value name="$coordinates" exact="position.[0m,20000m,0m]"/>
+
+				<add_effect object="player.primaryship" effect="'jump_activation_jumpdrive_cm'" >
+					<position x="0m" y="0m" z="2.5m" />
+				</add_effect>
+				<add_effect object="player.primaryship" effect="'jump_activation_jumpdrive_cm'" >
+					<position x="0m" y="0m" z="-15m" />
+				</add_effect>
+
+				<show_notification caption="{1010,11}" details="['Hyper drive charging.......']" queued="false" sound="notification_generic"/>
+				<signal_cue_instantly cue="JumpPlayer" param="$destination"/> 
+				<signal_cue_instantly cue="HyperDriveJ5" param="[$destination, $coordinates, 0]"/>		
+			</actions>
+		</cue>
+
+		<cue name="HyperDriveJ3" instantiate="true">
+			<conditions>
+				<event_conversation_next_section sectionprefix="gJumpSquadOnly"/>
+			</conditions>
+			<actions>
+
+
+
+				<set_value name="$destination" exact="event.param2" />
+				<set_value name="$coordinates" exact="position.[0m,20000m,0m]"/>
+
+				<show_notification caption="{1010,11}" details="['Hyper drive beacon found...squad is jumping at destination!']" queued="false" sound="notification_generic"/>
+
+				<signal_cue_instantly cue="HyperDriveJ5" param="[$destination, $coordinates, 1]"/>		
+			</actions>
+		</cue>	
+
+		<cue name="HyperDriveJ4" instantiate="true">
+			<conditions>
+				<event_conversation_next_section sectionprefix="gJumpSquadToMe"/>
+			</conditions>
+			<actions>
+
+				<set_value name="$destination" exact="player.ship.zone" />
+				<set_value name="$coordinates" exact="player.ship.position"/>
+
+				<show_notification caption="{1010,11}" details="['Hyper drive beacon coordinates acquired...squad is jumping in!']" queued="false" sound="notification_generic"/>
+				<signal_cue_instantly cue="HyperDriveJ5" param="[$destination, $coordinates, 0]"/>	
+
+			</actions>
+		</cue>	
+
+		<cue name="HyperDriveJ5" instantiate="true">
+			<conditions>
+				<event_cue_signalled/>
+			</conditions>
+			<delay exact="1s"/>
+			<actions>
+
+				<set_value name="$jumpto" exact="event.param.{1}" />
+				<set_value name="$Position" exact="event.param.{2}" />
+				<set_value name="$SmallShips" exact="0" />
+				<set_value name="$hd_flag" exact="0" />
+				<set_value name="$Sub_level2" exact="0" />
+				<set_value name="$Sub_level3" exact="0" />
+				<set_value name="$Sub_level4" exact="0" />
+
+				<!--< level 1 >-->						
+				<set_value name="$player_subordinates_level1" exact="player.primaryship.subordinates" />
+				<do_all exact="$player_subordinates_level1.count" counter="$i">				
+					<set_value name="$jumpdrive" exact="null" />
+					<find_object_component name="$jumpdrive" object="$player_subordinates_level1.{$i}" class="class.jumpdrive" functional="true" checkoperational="true"/>
+
+					<!-- small ships (s or m) on level 1 will always stay escorting player ship-->		
+					<do_if value="$jumpdrive.exists and $jumpdrive.isoperational and $player_subordinates_level1.{$i}.cargo.{ware.fuelcells}.count gt 200 and player.entity.inventory.{ware.inv_hyperdrivecrystal}.count ge 1 or (($player_subordinates_level1.{$i}.isclass.ship_s or $player_subordinates_level1.{$i}.isclass.ship_m) and not event.param.{3})">
+
+						<do_if value="not $player_subordinates_level1.{$i}.parkedat and not $player_subordinates_level1.{$i}.dockslot and not $player_subordinates_level1.{$i}.docklink">
+
+
+
+							<!-- falta fuel and hyperdrive crystal-->
+							<!--<set_value name="$y" exact="1m" />-->
+							<do_if value="$player_subordinates_level1.{$i}.isclass.ship_l or $player_subordinates_level1.{$i}.isclass.ship_xl ">
+								<set_value name="$fx" exact="'jump_activation_jumpdrive'" />
+								<set_value name="$fx_in" exact="'jump_jumpin_xl'" />
+								<set_value name="$y" exact="-7m" />						
+								<signal_objects object="$player_subordinates_level1.{$i}" param="'stop order'" />
+								<signal_objects object="$player_subordinates_level1.{$i}" param="'hold position'" delay="2s"/>
+							</do_if>
+
+							<!-- falta fuel and hyperdrive crystal-->
+							<do_elseif value="$player_subordinates_level1.{$i}.isclass.ship_s or $player_subordinates_level1.{$i}.isclass.ship_m ">
+								<set_value name="$fx" exact="'jump_activation_jumpdrive_l'" />
+								<set_value name="$fx_in" exact="'jump_jumpin_l'" />
+								<set_value name="$y" exact="0m" />
+								<set_value name="$jumpdrive" exact="$player_subordinates_level1.{$i}" />
+							</do_elseif>
+
+							<do_if value="$player_subordinates_level1.{$i}.zone != $jumpto">
+								<stop_boost object="$player_subordinates_level1.{$i}" />
+
+								<add_effect object="$jumpdrive" effect="$fx" >
+									<position x="0m" y="$y" z="0" />
+								</add_effect>
+
+								<signal_cue_instantly cue="JumpSubordinates" param="[$player_subordinates_level1.{$i}, $jumpdrive, $jumpto, $y, $fx_in, $Position, 0]"/>
+
+							</do_if>
+
+							<set_value name="$hd_flag" exact="$hd_flag + 1" />					
+
+							<!--< level 2 >-->					
+							<set_value name="$player_subordinates_level2" exact="$player_subordinates_level1.{$i}.subordinates" />
+							<set_value name="$Sub_level2" exact="$Sub_level2 + $player_subordinates_level2.count" />	
+							<do_all exact="$player_subordinates_level2.count" counter="$j" >				
+								<set_value name="$jumpdrive" exact="null" />
+								<find_object_component name="$jumpdrive" object="$player_subordinates_level2.{$j}" class="class.jumpdrive" functional="true" checkoperational="true"/>
+
+								<do_if value="$jumpdrive.exists and $jumpdrive.isoperational and $player_subordinates_level2.{$j}.cargo.{ware.fuelcells}.count gt 200 and player.entity.inventory.{ware.inv_hyperdrivecrystal}.count ge 1 or $player_subordinates_level2.{$j}.isclass.ship_s or $player_subordinates_level2.{$j}.isclass.ship_m">
+
+									<do_if value="not $player_subordinates_level2.{$j}.parkedat and not $player_subordinates_level2.{$j}.dockslot and not $player_subordinates_level2.{$j}.docklink">
+
+										<!--<set_value name="$y" exact="1m" />-->
+										<do_if value="$player_subordinates_level2.{$j}.isclass.ship_l or $player_subordinates_level2.{$j}.isclass.ship_xl">
+											<set_value name="$fx" exact="'jump_activation_jumpdrive'" />
+											<set_value name="$fx_in" exact="'jump_jumpin_xl'" />
+											<set_value name="$y" exact="-7m" />
+										</do_if>
+										<do_elseif value="$player_subordinates_level2.{$j}.isclass.ship_s or $player_subordinates_level2.{$j}.isclass.ship_m">
+											<set_value name="$fx" exact="'jump_activation_jumpdrive_l'" />
+											<set_value name="$fx_in" exact="'jump_jumpin_l'" />
+											<set_value name="$y" exact="0m" />
+											<set_value name="$jumpdrive" exact="$player_subordinates_level2.{$j}" />
+										</do_elseif>
+
+										<do_if value="$player_subordinates_level2.{$j}.zone != $jumpto">
+
+											<stop_boost object="$player_subordinates_level2.{$j}" />
+
+											<add_effect object="$jumpdrive" effect="$fx" >
+												<position x="0m" y="$y" z="0" />
+											</add_effect>
+
+											<signal_cue_instantly cue="JumpSubordinates" param="[$player_subordinates_level2.{$j}, $jumpdrive, $jumpto, $y, $fx_in, $Position, 0]"/>
+
+										</do_if>	
+										<set_value name="$hd_flag" exact="$hd_flag + 1" />	
+
+
+										<!--< level 3 >-->					
+										<set_value name="$player_subordinates_level3" exact="$player_subordinates_level2.{$j}.subordinates" />
+										<set_value name="$Sub_level3" exact="$Sub_level3 + $player_subordinates_level3.count" />	
+										<do_all exact="$player_subordinates_level3.count" counter="$k" >
+											<set_value name="$jumpdrive" exact="null" />
+											<find_object_component name="$jumpdrive" object="$player_subordinates_level3.{$k}" class="class.jumpdrive" functional="true" checkoperational="true"/>
+
+											<do_if value="$jumpdrive.exists and $jumpdrive.isoperational  and $player_subordinates_level3.{$k}.cargo.{ware.fuelcells}.count gt 200 and player.entity.inventory.{ware.inv_hyperdrivecrystal}.count ge 1 or $player_subordinates_level3.{$k}.isclass.ship_s or $player_subordinates_level3.{$k}.isclass.ship_m">
+
+												<do_if value="not $player_subordinates_level3.{$k}.parkedat and not $player_subordinates_level3.{$k}.dockslot and not $player_subordinates_level3.{$k}.docklink">
+
+													<!--<set_value name="$y" exact="1m" />-->
+													<do_if value="$player_subordinates_level3.{$k}.isclass.ship_l or $player_subordinates_level3.{$k}.isclass.ship_xl">
+														<set_value name="$fx" exact="'jump_activation_jumpdrive'" />
+														<set_value name="$fx_in" exact="'jump_jumpin_xl'" />
+														<set_value name="$y" exact="-7m" />
+
+													</do_if>
+													<do_elseif value="$player_subordinates_level3.{$k}.isclass.ship_s or $player_subordinates_level3.{$k}.isclass.ship_m">
+														<set_value name="$fx" exact="'jump_activation_jumpdrive_l'" />
+														<set_value name="$fx_in" exact="'jump_jumpin_l'" />
+														<set_value name="$y" exact="0m" />
+														<set_value name="$jumpdrive" exact="$player_subordinates_level3.{$k}" />
+													</do_elseif>
+
+													<do_if value="$player_subordinates_level3.{$k}.zone != $jumpto">
+
+														<stop_boost object="$player_subordinates_level3.{$k}" />
+
+														<add_effect object="$jumpdrive" effect="$fx" >
+															<position x="0m" y="$y" z="0" />
+														</add_effect>
+
+														<signal_cue_instantly cue="JumpSubordinates" param="[$player_subordinates_level3.{$k}, $jumpdrive, $jumpto, $y, $fx_in, $Position, 0]"/>
+													</do_if>		
+													<set_value name="$hd_flag" exact="$hd_flag + 1" />		
+
+													<!--< level 4 >-->						
+													<set_value name="$player_subordinates_level4" exact="$player_subordinates_level3.{$k}.subordinates" />
+													<set_value name="$Sub_level4" exact="$Sub_level4 + $player_subordinates_level4.count" />	
+
+													<do_all exact="$player_subordinates_level4.count" counter="$m" >
+														<set_value name="$jumpdrive" exact="null" />
+														<find_object_component name="$jumpdrive" object="$player_subordinates_level4.{$m}" class="class.jumpdrive" functional="true" checkoperational="true"/>
+
+														<do_if value="$jumpdrive.exists and $jumpdrive.isoperational and $player_subordinates_level4.{$m}.cargo.{ware.fuelcells}.count gt 200 and player.entity.inventory.{ware.inv_hyperdrivecrystal}.count ge 1 or $player_subordinates_level4.{$m}.isclass.ship_s or $player_subordinates_level4.{$m}.isclass.ship_m">
+
+															<do_if value="not $player_subordinates_level4.{$m}.parkedat and not $player_subordinates_level4.{$m}.dockslot and not $player_subordinates_level4.{$m}.docklink">
+
+
+																<!--<set_value name="$y" exact="1m" />	-->
+																<do_if value="$player_subordinates_level4.{$m}.isclass.ship_l or $player_subordinates_levellevel4.{$m}.isclass.ship_xl">
+																	<set_value name="$fx" exact="'jump_activation_jumpdrive'" />
+																	<set_value name="$fx_in" exact="'jump_jumpin_xl'" />
+																	<set_value name="$y" exact="-7m" />						
+																</do_if>
+																<do_elseif value="$player_subordinates_level4.{$m}.isclass.ship_s or $player_subordinates_levellevel4.{$m}.isclass.ship_m">
+																	<set_value name="$fx" exact="'jump_activation_jumpdrive_l'" />
+																	<set_value name="$fx_in" exact="'jump_jumpin_l'" />
+																	<set_value name="$y" exact="0m" />
+																	<set_value name="$jumpdrive" exact="$player_subordinates_level4.{$m}" />
+																</do_elseif>
+
+																<do_if value="$player_subordinates_level4.{$m}.zone != $jumpto">
+
+																	<stop_boost object="$player_subordinates_level4.{$m}" />
+
+																	<add_effect object="$jumpdrive" effect="$fx" >
+																		<position x="0m" y="$y" z="0" />
+																	</add_effect>
+
+																	<signal_cue_instantly cue="JumpSubordinates" param="[$player_subordinates_level4.{$m}, $jumpdrive, $jumpto, $y, $fx_in, $Position, 0]"/>
+																</do_if>
+
+																<set_value name="$hd_flag" exact="$hd_flag + 1" />
+															</do_if>						
+														</do_if>
+													</do_all>
+												</do_if>						
+											</do_if>	
+										</do_all>
+									</do_if>					
+								</do_if>	
+							</do_all>
+						</do_if>				
+					</do_if>
+					<do_if value="event.param.{3} == 1 and ($player_subordinates_level1.{$i}.isclass.ship_s or $player_subordinates_level1.{$i}.isclass.ship_m)" >
+						<set_value name="$SmallShips" exact="$SmallShips + 1" />
+					</do_if>
+				</do_all>
+
+				<do_if value="$hd_flag">		
+					<set_value name="$TotalShips" exact="$player_subordinates_level1.count + $Sub_level2 + $Sub_level3 + $Sub_level4 - $SmallShips" />
+					<set_value name="$Loc" exact="$jumpto.name + ', ' + $jumpto.sector.knownname + ', ' + $jumpto.cluster.knownname"/>
+					<signal_cue_instantly cue="JumpReport" param="[$jumpto, $hd_flag, $TotalShips, $Loc]"/>
+				</do_if>
+
+
+			</actions>
+		</cue>	
+
+		<cue name="JumpSubordinates" instantiate="true" namespace="this"> 
+			<conditions>
+				<event_cue_signalled/>
+			</conditions>
+			<delay exact="20s"/>
+			<actions>
+
+				<set_value name="$object" exact="event.param.{1}" />
+				<set_value name="$jumpdrive" exact="event.param.{2}" />
+				<set_value name="$zone" exact="event.param.{3}" />
+				<set_value name="$posY" exact="event.param.{4}" />
+				<set_value name="$effect_in" exact="event.param.{5}" />
+				<set_value name="$position" exact="event.param.{6}" />				
+
+				<do_if value="$object.zone != $zone">
+					<add_effect object="$object" effect="'jump_jumpout_xl'" />
+					<!--<add_effect object="$object" effect="'jump_jumpout_l'" />-->
+	
+					<warp object="$object" zone="$zone" >
+						<safepos value="$position" min="1750m" max="4000m" radius="$object.size * 1.25f + 20m" allowyaxis="true"/>
+					</warp>
+
+					<!--<add_effect object="$object" effect="$effect_in" />-->
+					<!--<do_if value="($object.isclass.ship_l or $object.isclass.ship_xl or player.ship.zone != $zone) and event.param.{7} != 1">-->
+					<signal_objects object="$object" param="'hold position'" />
+					<do_if value="$object.isclass.ship_l or $object.isclass.ship_xl">
+						<remove_cargo object="$object" ware="ware.fuelcells" exact="200" />
+						<remove_inventory entity="player.entity" ware="ware.inv_hyperdrivecrystal" exact="1" />
+					</do_if>
+				</do_if>
+
+			</actions>
+		</cue>	
+
+		<cue name="JumpPlayer" instantiate="true" namespace="this"> 
+			<conditions>
+				<event_cue_signalled/>
+			</conditions>
+			<delay exact="20s"/>
+			<actions>
+				<remove_inventory entity="player.entity" ware="ware.inv_hyperdrivecrystal" exact="1" />
+				<!--<do_if value="event.param">-->
+				<set_value name="$Zone" exact="event.param" />
+				<warp object="player.ship" zone="$Zone" >
+					<position x="0m" y="20000m" z="0m"/>
+				</warp>
+				<!--</do_if>-->
+			</actions>
+		</cue>
+
+		<cue name="JumpReport" instantiate="true" namespace="this"> 
+			<conditions>
+				<event_cue_signalled/>
+			</conditions>
+			<delay exact="21s"/>
+			<actions>
+				<!--<remove_inventory entity="player.entity" ware="ware.inv_hyperdrivecrystal" exact="10" />-->
+				<do_if value="event.param.{2} == event.param.{3}">		
+					<do_if value="player.ship.zone != event.param.{1}">
+						<show_notification caption="{40002,210}" details="'\n' + {40002,212}.[event.param.{4}, event.param.{3}]" timeout="12s" queued="true" sound="notification_generic">			
+							<interaction text="''" param="event.param.{1}" param2="'GiveMeTheMap'" />		
+						</show_notification>
+					</do_if>
+					<do_else>
+						<show_notification caption="{40002,210}" details="'\n' + {40002,212}.[event.param.{4}, event.param.{3}]" timeout="12s" queued="true" sound="notification_generic"/>		
+					</do_else>
+
+					<write_to_logbook category="general" text="{40002,210} + '\n' + {40002,214}.[event.param.{4}, event.param.{3}]"/>
+				</do_if>			
+				<do_else>					
+					<do_if value="player.ship.zone != event.param.{1}">
+						<show_notification caption="{40002,210}" details="'\n' + {40002,216}.[event.param.{4}, event.param.{3} - event.param.{2}, event.param.{3}]" timeout="12s" queued="true" sound="notification_generic">			
+							<interaction text="''" param="event.param.{1}" param2="'GiveMeTheMap'" />		
+						</show_notification>
+					</do_if>
+					<do_else>
+						<show_notification caption="{40002,210}" details="'\n' + {40002,216}.[event.param.{4}, event.param.{3} - event.param.{2}, event.param.{3}]" timeout="12s" queued="true" sound="notification_generic"/>	
+					</do_else>
+
+					<write_to_logbook category="general" text="{40002,210} + '\n' + {40002,218}.[event.param.{4}, event.param.{3} - event.param.{2}, event.param.{3}]"/>			
+				</do_else>
+			</actions>
+		</cue>
+
+	</cues>
+</mdscript>

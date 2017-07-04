@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mdscript name="NF_ProbeJump" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<!-- Conquer_mod v019s -->
+	<!-- CWIR -->
+	<cues>
+
+		<cue name="ProbeDrop" instantiate="true">
+		  <conditions>
+			<check_any>
+			  <event_object_signalled object="player.primaryship" param="'player_dropped_object'"/>
+			  <event_object_dropped_objects object="player.primaryship"/>
+			</check_any>
+		  </conditions>
+		  <actions>
+			<do_if value="event.name" exact="'event_object_signalled'">
+			  <set_value name="$dropped" exact="event.param2"/>
+			</do_if>
+			<do_else>
+			  <set_value name="$dropped" exact="event.param"/>
+			</do_else>
+			<do_all exact="$dropped.count" counter="$i" reverse="true">
+			  <do_if value="$dropped.{$i}.isclass.collectablewares and $dropped.{$i}.wares.list.indexof.{ware.inv_probe}">
+				<play_sound object="player.primaryship" sound="'tdrone_undock_pship'" />
+				<create_ship name="$Probe"  macro="unit_size_xs_probe_macro" zone="player.primaryship.zone">
+					<owner exact="faction.player" overridenpc="true"/>
+					<pilot>
+						<select faction="faction.xenon" tags="[tag.fighterpilot]"/>
+					</pilot>
+					<position object="$dropped.{$i}" x="-1.5m" y="5.5m" z="-24.5m"/>
+				</create_ship>
+				<add_inventory entity="$Probe.pilot" ware="ware.inv_hyperdrivecrystal" exact="3" />
+				<destroy_object object="$dropped.{$i}" explosion="false"/>
+				<remove_value name="$Probe"/>
+			  </do_if>
+			</do_all>
+			<remove_value name="$dropped"/>
+		  </actions>
+		</cue>
+
+		<cue name="ProbeJ1" instantiate="true" namespace="this">
+			<conditions>
+				<event_conversation_next_section sectionprefix="gSendProbe"/>
+				<!--<check_value value="player.entity.inventory.{ware.inv_probe}.count"/>-->
+			</conditions>
+			<actions>
+				<signal_cue cue="md.Guidance.EndGuidance"/>
+				<play_sound object="player.primaryship" sound="'tdrone_undock_pship'" />
+				<remove_inventory entity="player.entity" ware="ware.inv_probe" exact="1" />
+
+				<do_if value="(player.ship) and (player.ship == player.primaryship)" >
+					<create_ship name="$Probe"  macro="unit_size_xs_probe_macro" zone="player.primaryship.zone">
+						<owner exact="faction.player" overridenpc="true"/>
+						<pilot>
+							<select faction="faction.xenon" tags="[tag.fighterpilot]"/>
+						</pilot>
+						<position object="player.primaryship" x="-1.5m" y="5.5m" z="-24.5m"/>
+						<rotation value="player.primaryship.rotation" />
+					</create_ship>	
+				</do_if>
+				<do_else>
+					<create_ship name="$Probe"  macro="unit_size_xs_probe_macro" zone="player.primaryship.zone">
+						<owner exact="faction.player" overridenpc="true"/>
+						<pilot>
+							<select faction="faction.xenon" tags="[tag.fighterpilot]"/>
+						</pilot>
+						<position object="player.ship" x="-1.5m" y="-175m" z="-24.5m"/>
+						<rotation value="player.ship.rotation" />
+					</create_ship>	
+				</do_else>
+
+				<!-- Better safe position (in front) -->
+				<get_safe_pos object="player.primaryship" zone="player.primaryship.zone" radius="500m" result="$safepos" directionobject="player.primaryship" direction="quadrant.front" ignored="player.primaryship" />
+				<start_script object="$Probe.pilot" name="'move.probe'">
+					<param name="destination" value="player.primaryship.zone" />
+					<param name="position" value="$safepos" />
+					<param name="jumpto" value="event.param2" />
+				</start_script>
+				
+				<remove_value name="$Probe"/>
+			</actions>
+		</cue>	
+
+		<cue name="ProbeJ2" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="default" />
+					<event_conversation_returned_to_section section="default" />
+				</check_any>
+				<check_value value="not event.object.customhandler" />
+			</conditions>
+			<actions>
+				<do_if value="event.object.ship.macro.ismacro.unit_size_xs_probe_macro" >
+					<add_player_choice text="'Move to Zone ...'" section="gOrders_advancedflytopos" selectable="event.object.ship.pilot.inventory.{ware.inv_hyperdrivecrystal}.count" choiceparam="[0, 0, 'sector', player.primaryship.sector, null, null, 'selectzone', ['gMain_Probe_pos']]" tooltip="'Jumps left: %1'.[event.object.ship.pilot.inventory.{ware.inv_hyperdrivecrystal}.count]"/>
+					<add_player_choice_sub text="'Destroy Probe'" position="top_right" section="gMain_Probe" choiceparam="event.object.ship" />
+				</do_if>
+			</actions>
+		</cue>	
+
+		<cue name="ProbeJ3" instantiate="true" namespace="this">
+			<conditions>
+				<event_conversation_next_section sectionprefix="gMain_Probe"/>
+			</conditions>
+			<actions>
+				<do_if value="event.param" exact="'gMain_Probe_pos'" >
+					<do_if value="event.param2.{3} != event.object.zone" >
+						<remove_inventory entity="event.object.ship.pilot" ware="ware.inv_hyperdrivecrystal" exact="1" />
+						<start_script object="event.object.ship.pilot" name="'move.probe'">
+							<param name="jumpto" value="event.param2.{3}" />
+						</start_script>
+					</do_if>
+					<do_else>
+						<start_script object="event.object.ship.pilot" name="'move.probe'">
+							<param name="position" value="if event.param2.{4}? then position.[event.param2.{4}.{1}, event.param2.{4}.{2}, event.param2.{4}.{3}] else position.[0, 0, 0]" />
+						</start_script>
+					</do_else>
+				</do_if>
+				<do_else>
+					<destroy_object object="event.object.ship" explosion="true"/>
+				</do_else>
+			</actions>
+		</cue>	
+	</cues>
+</mdscript>

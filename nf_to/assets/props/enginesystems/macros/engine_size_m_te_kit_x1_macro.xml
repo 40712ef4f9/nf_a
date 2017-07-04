@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: lino (192.168.3.143) at 28.11.2014_14-48-03-->
+<macros>
+  <macro name="engine_size_m_te_kit_x1_macro" class="engine">
+    <component ref="props_enginesystems_engine_m_02" />
+    <properties>
+      <identification name="{20104,1201}" description="{20104,1202}" unique="0" />
+      <acceleration forward="10" reverse="10" strafe="5" pitch="1" yaw="1" roll="0.5" />
+      <angular roll="20" pitch="60" />
+      <speed forward="90" reverse="-25" strafe="25" pitch="10" yaw="10" roll="2" />
+      <hull max="20000" integrated="0" />
+      <effects>
+        <explosion ref="explosion_engine_m" />
+        <sefx_shield ref="sefx_shield_m_01" />
+      </effects>
+    </properties>
+    <connections>
+      <connection ref="connection_booster01">
+        <macro ref="enginebooster_size_l_01_macro" connection="engine" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="BR.move.nohighway" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
+  <params>
+    <param name="target" />
+    <param name="position" default="position.[0,0,0]" comment="position is treated as an offset to target"/>
+    <param name="debugchance" default="0" />
+  </params>
+  <attention min="unknown">
+    <actions>
+
+      <run_script name="'move.undock'" />
+
+      <stop_moving object="this.ship" />
+
+      <label name="start"/>
+
+      <do_if value="not $target.exists">
+        <return />
+      </do_if>
+      <do_elseif value="$target.isclass.zone">
+        <set_value name="$targetzone" exact="$target" />
+		 </do_elseif>
+		<do_elseif value="$target.zone.isclass.highway">
+        <!--Target is in a highway, wait for it to exit-->
+        <wait min="45s" max="60s" sinceversion="2">
+          <interrupt>
+            <conditions>
+              <event_object_changed_zone object="$target"/>
+            </conditions>
+          </interrupt>
+        </wait>
+        <resume label="start"/>
+      </do_elseif>
+      
+      <do_else>
+        <set_value name="$targetzone" exact="$target.zone" />
+      </do_else>
+
+      <debug_text text="'this.zone = %1, $target = %2, $targetzone = %3'.[this.zone.knownname, $target.knownname, $targetzone.knownname]" chance="$debugchance" />
+      <do_if value="this.zone != $targetzone">
+        <debug_text text="'current position in zone: ' + this.ship.position" chance="$debugchance" />
+        <!-- safety check -->
+        <find_object_component class="class.enginebooster" object="this.ship" name="$booster" />
+        <do_if value="not $booster.exists">
+          <debug_text text="'WARNING! \'%1\' has no engine booster. Flight from %2(%3) to %4(%5) will take a looong time!'.[this.ship.macro.name, this.zone.knownname, this.sector.knownname, $targetzone.knownname, $targetzone.sector.knownname]" />
+        </do_if>		
+
+        <!-- figure out position to leave this zone at -->
+        <get_zone_exit_pos zone="this.zone" destination="$target" position="$pos" rotation="$rot" radius="this.ship.size/2" >
+          <position object="this.ship" />
+        </get_zone_exit_pos>
+
+        <debug_text text="'moving to zone exit pos: %1, %2m away'.[$pos, this.ship.distanceto.{$pos}]" chance="$debugchance" />
+		<!-- If is too close, don't move, only rotate -->
+        <do_if value="this.ship.distanceto.{$pos}" max="this.ship.size" >
+          <set_value name="$pos" exact="this.ship.position" />
+        </do_if>
+
+        <move_to object="this.ship" destination="this.zone" forceposition="false" forcerotation="true">
+          <position value="$pos" />
+          <rotation value="$rot" />
+		  
+        </move_to>
+
+        <!-- figure out an arrival position in the target zone -->
+        <get_zone_exit_pos zone="$targetzone" destination="this.ship" position="$targetpos" radius="this.ship.size" >
+          <position object="$target" value="$position" />
+        </get_zone_exit_pos>
+
+        <debug_text text="'%6 boost from %1 in %2 to %3 in %4 which is %5m away'.[this.ship.position, this.zone.knownname, $targetpos, $targetzone.knownname, this.ship.distanceto.[$targetzone,$targetpos], player.age]" chance="$debugchance" />
+
+        <!-- fire up the boosters and go to the zone arrival position -->
+        <set_value name="$booststart" exact="player.age" />
+        <set_value name="$boostdistance" exact="this.ship.distanceto.[$targetzone, $targetpos]" />
+        <debug_text text="player.age + ' BOOOOOOOOOOOST!'" chance="$debugchance" />
+        <do_if value="player.ship == this.ship">
+          <speak actor="this" line="1029" comment="Engaging boosters." />
+        </do_if>
+        <start_boost object="this.ship" />
+        <move_to object="this.ship" destination="$targetzone" usehighways="false" finishonapproach="false" forceposition="false">
+          <position value="$targetpos" />
+		</move_to>
+        <stop_boost object="this.ship" />
+		<stop_moving object="this.ship" />
+        <set_value name="$boostend" exact="player.age" />
+        <debug_text text="player.age + ' STOOOOOP!'" chance="$debugchance" />
+
+        <!-- command action calculating-->
+        <set_command_action commandaction="commandaction.calculating" />
+
+        <debug_text text="'%3 now in zone %1 at %2'.[this.zone.knownname, this.ship.position, player.age]" chance="$debugchance" />
+        <do_if value="this.zone != $targetzone">
+          <debug_text text="player.age + ' waiting to arrive in zone ' + $targetzone.knownname" chance="$debugchance" />
+          <wait exact="5s">
+		  <interrupt>
+              <conditions>
+                <event_object_changed_zone object="this.ship" />
+              </conditions> 
+			  <actions>
+                <debug_text text="player.age + ' %1: %2, %3'.[event.name, event.param, event.param2]" chance="$debugchance" />
+              </actions>
+		</interrupt>
+	   </wait>
+       <debug_text text="player.age + ' now in zone %1 at %2'.[this.zone.knownname, this.ship.position]" chance="$debugchance" />
+      </do_if>
+      <do_if value="this.zone != $targetzone">
+          <debug_text text="'%4 boost was unsuccessful! planned boost distance: %1m, time spent boosting: %2s, distance to target position remaining: %3m, current zone: %5(%6), target zone: %7(%8)'.[$boostdistance, $boostend-$booststart, this.ship.distanceto.[$targetzone, $targetpos], player.age, this.zone.knownname, this.zone, $targetzone.knownname, $targetzone]" />
+          <!--
+            <assert value="$targetzone == this.zone" text="'Ship %1 [%2] should now be in zone %3 [%4](%8) but is in %5 [%6](%9) at %7.'.[this.ship.knownname, this.ship, $targetzone.knownname, $targetzone, this.zone.knownname, this.zone, this.ship.position, $targetzone.attention, this.attention]" />
+          -->
+        </do_if>
+        <do_all exact="3">
+          <do_if value="this.zone == $targetzone">
+            <!-- safety check so we are not stuck here forever -->
+            <break />
+          </do_if>
+          <move_to object="this.ship" destination="$targetzone" usehighways="false" finishonapproach="false" forceposition="false" sinceversion="1">
+            <position value="$targetpos" />
+          </move_to>
+          <wait exact="5s" sinceversion="1">
+            <interrupt>
+              <conditions>
+                <event_object_changed_zone object="this.ship" />
+              </conditions>
+              <actions>
+                <debug_text text="player.age + ' %1: %2, %3'.[event.name, event.param, event.param2]" chance="$debugchance" />
+              </actions>
+            </interrupt>
+          </wait>
+        </do_all>
+      </do_if>
+      <debug_text text="'finished.'" chance="$debugchance" />
+	  </actions>
+  </attention>
+	<on_abort>
+    <stop_boost object="this.ship" />
+  </on_abort>
+</aiscript>

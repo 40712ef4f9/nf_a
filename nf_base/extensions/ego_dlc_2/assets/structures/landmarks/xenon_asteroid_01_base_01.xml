@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<add sel="//connections"> 	
+			<connection name="connection_storage2" tags="storage  ">
+				<offset>
+					<position x="10" y="0" z="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_tradeoffer_buy_minerals" group="stationGroup" tags="tradeofferdock">
+				<offset>
+					<position x="1800" y="900" z="700"/>
+					<rotation yaw="90" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_tradeoffer_sell_shiptech" group="stationGroup" tags="tradeofferdock">
+				<offset>
+					<position x="-200" y="-200" z="-1000"/>
+					<rotation yaw="-160" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_surf_playerdock_admin_macro" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="-400" y="745" z="400"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_wps_xen_weaponplatform_01_macro2" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="1759.466" y="-733.888" z="1970.631"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_wps_xen_weaponplatform_01_macro3" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="-2682.612" y="1106.802" z="-2288.905"/>
+				</offset>
+			</connection>
+		</add>   
+</diff>

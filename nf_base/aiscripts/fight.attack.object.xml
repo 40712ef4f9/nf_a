@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="//interrupts">
+		<!--handler ref="MMSurrender" /-->
+		<handler ref="EarlyWarningSystem" />
+		<handler ref="MMSurrendered" />
+	</add>
+	<add sel="//do_elseif[@value='$Defensible.isclass.ship_l or $Defensible.isclass.ship_xl']/do_if[@value='$Defensible.defencenpc.exists']">
+		<do_if	value="this.ship.isclass.ship_xl and not this.ship.boarder and this.ship.macro.ismacro.{global.$mmcarriers} and (not this.ship.pilot.$processboarding? or this.ship.pilot.$processboarding? and this.ship.pilot.$processboarding lt player.age)"
+				chance="if not this.ship.isplayerowned and $target.isclass.station and $target.owner.hasrelation.enemy.{this.ship.trueowner} and not $target.boardee then 70 else 0">
+			<signal_objects object="player.galaxy" param="'MMFSB_NPC'" param2="[this.ship, $target]" />
+		</do_if>
+	</add>
+	<add sel="//do_elseif[@value='$Defensible.isclass.ship_xs or $Defensible.isclass.ship_s or $Defensible.isclass.ship_m']" >
+		<signal_objects object="player.galaxy" param="'learned.something'" param2="[this, ware.inv_virtualseminarnavigation, 'fight.er']" chance="($Defensible.isclass.[class.ship_s,class.ship_m])*100"/>
+	</add>
+</diff>

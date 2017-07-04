@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mdscript name="MM_Surrender" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+		<cue name="MMSurrender_aiconnect" instantiate="true" namespace="this">
+			<conditions>
+				<event_object_signalled object="player.galaxy" param="'MM Surrender'" />
+			</conditions>
+			<actions>
+				<do_if value="event.param2?" negate="true"> 
+					<debug_text text="'ERROR event.param2 missing'" filter="error" chance="0" />
+				</do_if>
+				<do_else>
+					<set_value name="$attacker" exact="event.param2.{1}"/>
+					<set_value name="$target" exact="event.param2.{2}"/>
+					<set_value name="$step" exact="event.param2.{3}"/>
+
+					<do_if value="['reivers','sovereignsyndicate','hereticvanguards','teladigunrunner','teladidrugrunner','atlas'].indexof.{$attacker.owner.id} or player.primaryship == $attacker or player.primaryship.subordinates.indexof.{$attacker}" negate="true">
+						<set_value name="$step" exact="0"/>
+					</do_if>
+
+<set_value name="$text" exact="$attacker + ' ' + $attacker.knownname + ' ' + $target + ' ' + $target.knownname + ' ' + $step"/>
+					<do_if value="$step" exact="1">
+						<set_value name="$targetCargo" exact="0Cr"/>
+						<set_value name="$targetValue" exact="if $target.macro.ware then $target.macro.ware.averageprice else $target.value"/>
+						<set_value name="$targetZone" exact="$target.zone"/>
+
+						<set_value name="$targetDps" exact="$target.dps.all"/>
+						<do_all exact="$target.subordinates.count" counter="$i">
+							<do_if value="$target.subordinates.{$i}.isclass.[class.ship_l, class.ship_xl] and $target.subordinates.{$i}.isoperational and $target.subordinates.{$i}.zone == $targetZone"> 
+								<set_value name="$targetDps" exact="$target.subordinates.{$i}.dps.all" operation="add"/>
+							</do_if>
+						</do_all>
+						<set_value name="$attackerHullPerc" exact="$attacker.hullpercentage"/>
+						<set_value name="$targetHullPerc" exact="$target.hullpercentage"/>
+
+						<set_value name="$attackerDps" exact="$attacker.dps.all"/>
+						<do_all exact="$attacker.subordinates.count" counter="$i">
+							<do_if value="$attacker.subordinates.{$i}.isclass.[class.ship_l, class.ship_xl] and $attacker.subordinates.{$i}.isoperational and $attacker.subordinates.{$i}.zone == $targetZone"> 
+								<set_value name="$attackerDps" exact="$attacker.subordinates.{$i}.dps.all" operation="add"/>
+							</do_if>
+						</do_all>
+						<remove_value name="$targetZone"/>
+
+						<set_value name="$cargowares" exact="$target.cargo.list" />
+						<do_all exact="$cargowares.count" counter="$c">
+							<set_value name="$targetCargo" exact="$cargowares.{$c}.averageprice * $target.cargo.{$cargowares.{$c}}.count" operation="add"/>
+						</do_all>
+						<remove_value name="$cargowares"/>
+
+						<do_if value="($targetDps*1.5f) lt $attackerDps" chance="100 - [($target.pilot.skill.{skilltype.morale}*20) - (100-$targetHullPerc), 0].max"> 
+<set_value name="$spot" exact="1"/>
+							<set_value name="$step" exact="2"/>
+						</do_if>
+						<do_elseif value="($targetDps*1.5f) lt $attackerDps and $targetHullPerc lt $attackerHullPerc" chance="100 - [$target.pilot.combinedskill - (100-$targetHullPerc), 0].max"> 
+<set_value name="$spot" exact="2"/>
+							<set_value name="$step" exact="2"/>
+						</do_elseif>
+						<do_elseif value="$targetValue gt $targetCargo and ($targetDps*1.5f) lt $attackerDps and $targetHullPerc lt $attackerHullPerc"> 
+<set_value name="$spot" exact="3"/>
+							<set_value name="$step" exact="2"/>
+						</do_elseif>
+
+<debug_text text="$text + ' ' +  @$spot + ' :: ' +  $targetValue.formatted.default + ' gt ' +  $targetCargo.formatted.default + ' dps' +  $targetDps+ '=' +  ($targetDps*1.5f) + ' ' +  $attackerDps + ' h' +  $targetHullPerc + ' ' +  $attackerHullPerc + ' ' + $target.pilot.combinedskill  + ' ' +  $target.pilot.skill.{skilltype.morale}" filter="error" chance="if $spot? then 0 else 0" />
+<remove_value name="$spot"/>
+<remove_value name="$text"/>
+						<remove_value name="$targetCargo"/>
+						<remove_value name="$targetValue"/>
+						<remove_value name="$targetDps"/>
+						<remove_value name="$attackerDps"/>
+						<remove_value name="$targetHullPerc"/>
+						<remove_value name="$attackerHullPerc"/>
+					</do_if>
+
+					<do_if value="$step" exact="2"> 
+						<do_if value="$attacker.defencenpc.exists"> 
+							<signal_objects object="$attacker.defencenpc" param="'stop attack'" />
+						</do_if>
+						<signal_objects object="$attacker" param="'MM Surrendered'" />
+
+						<do_if value="$target.defencenpc.exists"> 
+							<signal_objects object="$target.defencenpc" param="'stop attack'" />
+						</do_if>
+						<set_object_hacked result="$hacked" dropresult="$drops" object="$target" duration="90s" hacker="$attacker" />
+						<set_cover_owner object="$target" faction="faction.neutral"/>
+						<set_value name="$cargowares" exact="$target.cargo.list" />
+						<do_all exact="$cargowares.count" counter="$c">
+							<drop_cargo object="$target" ware="$cargowares.{$c}" exact="$target.cargo.{$cargowares.{$c}}.count"/>
+						</do_all>
+						<remove_value name="$cargowares"/>
+
+						<signal_objects object="player.galaxy" param="'MM Surrender'" param2="[$attacker, $target, 3]" delay="8s"/>
+					</do_if>
+					<do_elseif value="$step" exact="3"> 
+						<set_cover_owner object="$target"/>
+						<do_if value="$attacker.defencenpc.exists"> 
+							<signal_objects object="$attacker.defencenpc" param="'stop attack'" />
+						</do_if>
+						<do_if value="$target.defencenpc.exists"> 
+							<signal_objects object="$target.defencenpc" param="'stop attack'" />
+						</do_if>
+						<set_relation_boost object="$target" faction="$attacker.owner" value="0.0" decay="1" delay="30min"/>
+					</do_elseif>
+				</do_else>
+				<remove_value name="$attacker"/>
+				<remove_value name="$target"/>
+				<remove_value name="$step"/>
+			</actions>
+		</cue>
+		<cue name="MMSurrender_conv" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_conversation_next_section section="g_surrender" />
+					<event_conversation_next_section section="mmsurrender" />
+					<event_conversation_returned_to_section section="mmsurrender" />
+				</check_any>
+				<check_value value="event.object.container.isclass.[class.ship_l, class.ship_xl]" />
+			</conditions>
+			<actions>
+				<do_if value="event.param2" exact="1"> 
+					<signal_objects object="player.galaxy" param="'MM Surrender'" param2="[player.primaryship, event.object.container, 1]"/>
+				</do_if>
+				<do_elseif  value="event.param2" exact="2"> 
+					<signal_objects object="player.galaxy" param="'MM Surrender'" param2="[player.primaryship, event.object.container, 2]"/>
+				</do_elseif>
+				<do_else>
+					<add_player_choice 	text="'Surrender step 1'"	section="mmsurrender" choiceparam="1"/>
+					<add_player_choice 	text="'Surrender step 2'"	section="mmsurrender" choiceparam="2"/>
+				</do_else>
+			</actions>
+		</cue>
+	</cues>
+</mdscript>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="/aiscript/interrupts">
+		<handler>
+			<conditions>
+				<event_object_attacked object="this.defensible"/>
+				<check_value value="true" chance="this.combinedskill"/>
+				<check_value value="this.defensible.hullpercentage lt 97" />
+				<check_value value="event.param.isclass.[class.ship_l, class.ship_xl]" />
+				<check_value value="not $nextCall? or $nextCall lt player.age" />
+			</conditions>
+			<actions>
+				<set_value name="$nextCall" exact="player.age+10min" />
+				<debug_text text="this.defensible.knownname + ' ' + this.defensible.sector.name + ' ' + this.defensible.hullpercentage" filter="error" chance="0" />
+				<signal_objects object="this.defensible.sector" param="'help requested'" param2="this.defensible" />
+			</actions>
+		</handler>
+	</add>
+</diff>

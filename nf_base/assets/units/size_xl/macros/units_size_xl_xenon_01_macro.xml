@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	
+	<replace sel="//macros/macro[@name='units_size_xl_xenon_01_macro']/properties/explosiondamage/@value">200000</replace>
+	<replace sel="//macros/macro[@name='units_size_xl_xenon_01_macro']/connections/connection[@ref='connection_shieldgen03']/macro/@ref">shieldgenerator_size_m_mk2_macro</replace>
+	<replace sel="//macros/macro[@name='units_size_xl_xenon_01_macro']/connections/connection[@ref='connection_shieldgen04']/macro/@ref">shieldgenerator_size_m_mk2_macro</replace>
+	<add sel="//macros/macro[@name='units_size_xl_xenon_01_macro']/connections">
+		<connection ref="connection_dock_p01">
+			<macro ref="playerdock_capship01_macro" connection="connection_component01" />
+		</connection>
+        <connection ref="connection_dock_s01">
+			<macro ref="props_surf_ar_docks_size_s_floor_macro" connection="Connection_component" />
+		</connection>
+		<connection ref="connection_dock_s02">
+			<macro ref="props_surf_ar_docks_size_s_floor_macro" connection="Connection_component" />
+		</connection>
+		<connection ref="connection_shieldgen103">
+			<macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+		</connection>
+		<connection ref="connection_shieldgen104">
+			<macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+		</connection>
+		<connection ref="connection_turret_small_xe35">
+			<macro ref="turret_small_xe_macro" connection="connection_component01" />
+		</connection>
+		<connection ref="connection_turret_small_xe36">
+			<macro ref="turret_small_xe_macro" connection="connection_component01" />
+		</connection>
+		<connection ref="connection_turret_small_xe37">
+			<macro ref="turret_small_xe_macro" connection="connection_component01" />
+		</connection>
+		<connection ref="connection_turret_small_xe38">
+			<macro ref="turret_small_xe_macro" connection="connection_component01" />
+		</connection>
+		<connection ref="connection_shieldgen105">
+			<macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component" />
+		</connection>
+	</add>
+</diff>

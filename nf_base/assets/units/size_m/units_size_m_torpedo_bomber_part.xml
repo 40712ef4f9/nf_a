@@ -1,0 +1,994 @@
+<?xml version="1.0"?>
+<components>
+	<component name="units_size_m_torpedo_bomber_part" class="destructible">
+		<source geometry="assets\units\size_s\units_size_s_torpedo_bomber_data"/>
+		<layers>
+			<layer>
+				<waypoints/>
+				<lights>
+					<omni name="XU Omni01" shadow="0" r="255" g="255" b="218" range="10" shadowrange="10" lighteffect="1" trigger="1" intensity="0.4">
+						<lightanimations/>
+						<offset>
+							<position x="0" y="10.23427" z="-3.002084"/>
+						</offset>
+					</omni>
+					<omni name="XU Omni02" shadow="0" r="253" g="228" b="110" range="10" shadowrange="10" lighteffect="1" trigger="1" intensity="0.4">
+						<lightanimations/>
+						<offset>
+							<position x="0" y="9.495657" z="18.275"/>
+						</offset>
+					</omni>
+					<omni name="XU Omni05" shadow="0" r="120" g="253" b="255" range="5" shadowrange="5" lighteffect="1" trigger="1" intensity="0.5">
+						<lightanimations/>
+						<offset>
+							<position x="-4.722" y="3.930503" z="-23.80135"/>
+						</offset>
+					</omni>
+					<omni name="XU Omni04" shadow="0" r="120" g="253" b="255" range="5" shadowrange="5" lighteffect="1" trigger="1" intensity="0.5">
+						<lightanimations/>
+						<offset>
+							<position x="4.722" y="3.930503" z="-23.80135"/>
+						</offset>
+					</omni>
+					<omni name="XU Omni06" shadow="0" r="120" g="253" b="255" range="5" shadowrange="5" lighteffect="1" trigger="1" intensity="0.5">
+						<lightanimations/>
+						<offset>
+							<position x="4.722" y="3.930503" z="-10.85614"/>
+						</offset>
+					</omni>
+					<omni name="XU Omni07" shadow="0" r="120" g="253" b="255" range="5" shadowrange="5" lighteffect="1" trigger="1" intensity="0.5">
+						<lightanimations/>
+						<offset>
+							<position x="-4.722" y="3.930503" z="-10.85614"/>
+						</offset>
+					</omni>
+				</lights>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="Connection03" tags="part animation  ">
+				<offset/>
+				<animations>
+					<animation name="flymode" start="1" end="1"/>
+					<animation name="attackmode_activating" start="1" end="60"/>
+					<animation name="attackmode" start="60" end="90"/>
+					<animation name="attackmode_deactivating" start="90" end="150"/>
+				</animations>
+				<parts>
+					<part name="anim_main" wreck="anim_main_wreck">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+									<material id="2" ref="argon.ar_windows_02"/>
+									<material id="3" ref="generic.generic_engines_01"/>
+									<material id="4" ref="argon.ar_unique_02"/>
+								</materials>
+							</lod>
+							<lod index="1">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+									<material id="2" ref="argon.ar_unique_02"/>
+								</materials>
+							</lod>
+							<lod index="2">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+							<lod index="3">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="8.6496" y="10.0102" z="37.1987"/>
+							<center x="0" y="0" z="0"/>
+						</size>
+						<size_raw>
+							<max x="8.6496" y="10.0102" z="37.1987"/>
+							<center x="0" y="0" z="0"/>
+						</size_raw>
+						<lights>
+							<omni name="XU Omni02 battlemode" shadow="0" r="255" g="0" b="0" range="51" shadowrange="51" lighteffect="1" trigger="1" intensity="0.1">
+								<lightanimations>
+									<lightanimation name="intensity" controller="linear_float">
+										<key frame="0" value="0.1"/>
+										<key frame="1" value="0.8"/>
+										<key frame="60" value="0.8"/>
+										<key frame="90" value="0.8"/>
+										<key frame="91" value="0.1"/>
+										<key frame="150" value="0.1"/>
+									</lightanimation>
+								</lightanimations>
+								<offset>
+									<position x="6.085" y="-3.385693" z="14.14485"/>
+								</offset>
+							</omni>
+							<omni name="XU Omni01 battlemode" shadow="0" r="255" g="0" b="0" range="51" shadowrange="51" lighteffect="1" trigger="1" intensity="0.1">
+								<lightanimations>
+									<lightanimation name="intensity" controller="linear_float">
+										<key frame="0" value="0.1"/>
+										<key frame="1" value="0.8"/>
+										<key frame="60" value="0.8"/>
+										<key frame="90" value="0.8"/>
+										<key frame="91" value="0.1"/>
+										<key frame="150" value="0.1"/>
+									</lightanimation>
+								</lightanimations>
+								<offset>
+									<position x="-6.084786" y="-3.385693" z="14.14485"/>
+								</offset>
+							</omni>
+						</lights>
+					</part>
+				</parts>
+				<waypoints/>
+			</connection>
+			<connection name="Connection04" tags="part detail_xs iklink  " parent="anim_main">
+				<offset>
+					<position x="4.182933" y="2.036335" z="-1.368141"/>
+				</offset>
+				<parts>
+					<part name="upper_arm01">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="3.096494" y="2.711761" z="0.6961733"/>
+							<center x="1.631343" y="-2.281361" z="2.460015E-02"/>
+						</size>
+						<size_raw>
+							<max x="1.465151" y="4.993122" z="0.6715732"/>
+							<center x="-0.4615242" y="-2.676668" z="2.460015E-02"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection05" tags="part detail_xs iklink  " parent="upper_arm01">
+				<offset>
+					<position x="-1.038651" y="-5.178219" z="-2.822876E-04"/>
+				</offset>
+				<parts>
+					<part name="lower_arm01">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="6.254865" y="2.702994" z="0.7951443"/>
+							<center x="5.574515" y="1.971936" z="-9.536743E-07"/>
+						</size>
+						<size_raw>
+							<max x="0.6803491" y="0.7310572" z="0.7951453"/>
+							<center x="1.926342" y="1.906114" z="-9.536743E-07"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection06" tags="part detail_xs iklink  " parent="lower_arm01">
+				<offset>
+					<position x="3.867462" y="3.877715" z="-9.138584E-04"/>
+				</offset>
+				<parts>
+					<part name="hand01">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="5.788731" y="4.447992" z="1.582552"/>
+							<center x="3.519003" y="-4.627765" z="-0.1453779"/>
+						</size>
+						<size_raw>
+							<max x="2.269727" y="8.853168" z="1.481548"/>
+							<center x="-3.560734E-02" y="-4.516471" z="-2.218652E-02"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="weaponconnection05" tags="weapon_small  secondary_slot" parent="hand01">
+				<offset>
+					<position x="-8.883476E-02" y="-5.497893" z="0.4806348"/>
+					<quaternion qx="-3.085364E-08" qy="-0.2588191" qz="-1.151473E-07" qw="0.9659258"/>
+				</offset>
+			</connection>
+			<connection name="weaponconnection06" tags="weapon_small  secondary_slot" parent="hand01">
+				<offset>
+					<position x="0.7519717" y="-1.960588" z="0.965883"/>
+					<quaternion qx="-3.085364E-08" qy="-0.2588191" qz="-1.151473E-07" qw="0.9659258"/>
+				</offset>
+			</connection>
+			<connection name="Connection07" tags="part detail_xs iklink  " parent="hand01">
+				<offset>
+					<position x="-0.1426334" y="-3.431362" z="2.572063"/>
+				</offset>
+				<parts>
+					<part name="chain01_01">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="7.023779" y="4.509792" z="1.538469"/>
+							<center x="2.505966" y="3.979134" z="-0.7522987"/>
+						</size>
+						<size_raw>
+							<max x="4.517814" y="0.383577" z="1.867689"/>
+							<center x="-1.851338" y="4.052675" z="-0.5407596"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection08" tags="part detail_xs iklink  " parent="hand01">
+				<offset>
+					<position x="-1.284881" y="-6.798853" z="2.005593"/>
+				</offset>
+				<parts>
+					<part name="chain01_02">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="7.68875" y="5.237176" z="1.364438"/>
+							<center x="2.328897" y="4.729132" z="-0.5032513"/>
+						</size>
+						<size_raw>
+							<max x="5.359854" y="0.3740636" z="1.867689"/>
+							<center x="-2.093698" y="4.796122" z="-0.5407596"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection09" tags="part detail_xs iklink  " parent="anim_main">
+				<offset>
+					<position x="4.182933" y="2.036335" z="9.125916"/>
+				</offset>
+				<parts>
+					<part name="upper_arm02">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="2.367938" y="2.560868" z="0.6961737"/>
+							<center x="0.9027867" y="-2.432254" z="2.460003E-02"/>
+						</size>
+						<size_raw>
+							<max x="1.465151" y="4.993122" z="0.6715732"/>
+							<center x="-0.4615242" y="-2.676668" z="2.460003E-02"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection10" tags="part detail_xs iklink  " parent="upper_arm02">
+				<offset>
+					<position x="-1.038651" y="-5.178219" z="-2.822876E-04"/>
+				</offset>
+				<parts>
+					<part name="lower_arm02">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="5.006623" y="2.675687" z="0.7951443"/>
+							<center x="4.326274" y="1.867599" z="-9.536743E-07"/>
+						</size>
+						<size_raw>
+							<max x="0.6803491" y="0.7310572" z="0.7951453"/>
+							<center x="1.926342" y="1.906115" z="-9.536743E-07"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection11" tags="part detail_xs iklink  " parent="lower_arm02">
+				<offset>
+					<position x="3.867461" y="3.877715" z="-9.1362E-04"/>
+				</offset>
+				<parts>
+					<part name="hand02">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="4.559363" y="4.65008" z="1.582552"/>
+							<center x="2.289637" y="-4.829854" z="-0.1453781"/>
+						</size>
+						<size_raw>
+							<max x="2.269726" y="8.853168" z="1.481548"/>
+							<center x="-3.560829E-02" y="-4.516471" z="-2.218723E-02"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="weaponconnection03" tags="weapon_small  secondary_slot" parent="hand02">
+				<offset>
+					<position x="-8.883476E-02" y="-5.497894" z="0.4806337"/>
+					<quaternion qx="-2.314024E-08" qy="-0.2588191" qz="-8.636051E-08" qw="0.9659258"/>
+				</offset>
+			</connection>
+			<connection name="weaponconnection04" tags="weapon_small  secondary_slot" parent="hand02">
+				<offset>
+					<position x="0.7516456" y="-1.960588" z="0.9658861"/>
+					<quaternion qx="-2.314024E-08" qy="-0.2588191" qz="-8.636051E-08" qw="0.9659258"/>
+				</offset>
+			</connection>
+			<connection name="Connection12" tags="part detail_xs iklink  " parent="hand02">
+				<offset>
+					<position x="-0.3756504" y="-3.431363" z="2.572063"/>
+				</offset>
+				<parts>
+					<part name="chain02_01">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="5.827795" y="4.661243" z="1.525623"/>
+							<center x="1.309985" y="3.827687" z="-0.6490803"/>
+						</size>
+						<size_raw>
+							<max x="4.51781" y="0.3835774" z="1.867689"/>
+							<center x="-1.851336" y="4.052676" z="-0.54076"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection13" tags="part detail_xs iklink  " parent="hand02">
+				<offset>
+					<position x="-1.382822" y="-6.798852" z="2.00559"/>
+				</offset>
+				<parts>
+					<part name="chain02_02">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="6.219863" y="5.562572" z="1.563201"/>
+							<center x="1.352497" y="4.715605" z="-0.3044882"/>
+						</size>
+						<size_raw>
+							<max x="4.867367" y="0.4562102" z="1.867689"/>
+							<center x="-1.84041" y="4.910984" z="-0.54076"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection14" tags="part detail_xs iklink  " parent="anim_main">
+				<offset>
+					<position x="4.182933" y="2.036335" z="18.73926"/>
+				</offset>
+				<parts>
+					<part name="upper_arm03">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="1.621079" y="2.44788" z="0.6961737"/>
+							<center x="0.1559296" y="-2.545242" z="2.460098E-02"/>
+						</size>
+						<size_raw>
+							<max x="1.46515" y="4.993122" z="0.6715732"/>
+							<center x="-0.4615238" y="-2.676668" z="2.460098E-02"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection15" tags="part detail_xs iklink  " parent="upper_arm03">
+				<offset>
+					<position x="-1.038651" y="-5.178219" z="-2.822876E-04"/>
+				</offset>
+				<parts>
+					<part name="lower_arm03">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="3.907373" y="2.637172" z="0.7951443"/>
+							<center x="3.227024" y="1.906115" z="0"/>
+						</size>
+						<size_raw>
+							<max x="0.6803491" y="0.7310572" z="0.7951453"/>
+							<center x="1.926342" y="1.906115" z="0"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection16" tags="part detail_xs iklink  " parent="lower_arm03">
+				<offset>
+					<position x="3.867461" y="3.877716" z="-9.117126E-04"/>
+				</offset>
+				<parts>
+					<part name="hand03">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="3.445043" y="4.558389" z="1.582553"/>
+							<center x="1.175317" y="-4.738163" z="-0.1453781"/>
+						</size>
+						<size_raw>
+							<max x="2.269726" y="8.853168" z="1.481548"/>
+							<center x="-3.560686E-02" y="-4.516471" z="-2.218628E-02"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="weaponconnection01" tags="weapon_small  secondary_slot" parent="hand03">
+				<offset>
+					<position x="0.7516522" y="-1.960588" z="0.9658794"/>
+					<quaternion qx="-0" qy="-0.2588191" qz="-0" qw="0.9659258"/>
+				</offset>
+			</connection>
+			<connection name="weaponconnection02" tags="weapon_small  secondary_slot" parent="hand03">
+				<offset>
+					<position x="-8.883333E-02" y="-5.497895" z="0.4806309"/>
+					<quaternion qx="-0" qy="-0.2588191" qz="-0" qw="0.9659258"/>
+				</offset>
+			</connection>
+			<connection name="Connection17" tags="part detail_xs iklink  " parent="hand03">
+				<offset>
+					<position x="-0.2868977" y="-3.431362" z="2.57206"/>
+				</offset>
+				<parts>
+					<part name="chain03_01">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="4.753664" y="4.570287" z="1.50254"/>
+							<center x="0.2358508" y="3.91864" z="-0.7163696"/>
+						</size>
+						<size_raw>
+							<max x="4.517813" y="0.3835771" z="1.867689"/>
+							<center x="-1.851337" y="4.052675" z="-0.54076"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection18" tags="part detail_xs iklink  " parent="hand03">
+				<offset>
+					<position x="-1.393105" y="-6.798854" z="2.005592"/>
+				</offset>
+				<parts>
+					<part name="chain03_02">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="5.150614" y="5.473589" z="1.391392"/>
+							<center x="0.2832451" y="4.804587" z="-0.4762974"/>
+						</size>
+						<size_raw>
+							<max x="4.867369" y="0.4562099" z="1.867689"/>
+							<center x="-1.840411" y="4.910983" z="-0.54076"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection19" tags="part detail_xs iklink  " parent="anim_main">
+				<offset>
+					<position x="-4.182932" y="2.036335" z="-1.368141"/>
+				</offset>
+				<parts>
+					<part name="upper_arm04">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="3.096495" y="2.711761" z="0.6961734"/>
+							<center x="-1.631343" y="-2.281361" z="2.459991E-02"/>
+						</size>
+						<size_raw>
+							<max x="0.5421022" y="4.993122" z="0.6715734"/>
+							<center x="0.461525" y="-2.676668" z="2.459943E-02"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection20" tags="part detail_xs iklink  " parent="upper_arm04">
+				<offset>
+					<position x="1.038653" y="-5.178219" z="-2.828836E-04"/>
+				</offset>
+				<parts>
+					<part name="lower_arm04">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="6.254865" y="2.702992" z="0.7951441"/>
+							<center x="-5.574515" y="1.971935" z="-8.34465E-07"/>
+						</size>
+						<size_raw>
+							<max x="4.533034" y="0.7310569" z="0.795145"/>
+							<center x="-1.926342" y="1.906114" z="-8.34465E-07"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection21" tags="part detail_xs iklink  " parent="lower_arm04">
+				<offset>
+					<position x="-3.867463" y="3.877714" z="-9.121895E-04"/>
+				</offset>
+				<parts>
+					<part name="hand04">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="5.78873" y="4.447993" z="1.582551"/>
+							<center x="-3.519002" y="-4.627767" z="-0.145378"/>
+						</size>
+						<size_raw>
+							<max x="2.198512" y="8.853168" z="1.481551"/>
+							<center x="3.560781E-02" y="-4.51647" z="-2.218902E-02"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="weaponconnection07" tags="weapon_small  secondary_slot" parent="hand04">
+				<offset>
+					<position x="-0.7752881" y="-1.962657" z="0.9615031"/>
+					<quaternion qx="6.170725E-08" qy="0.258819" qz="2.302947E-07" qw="0.9659258"/>
+				</offset>
+			</connection>
+			<connection name="weaponconnection10" tags="weapon_small  secondary_slot" parent="hand04">
+				<offset>
+					<position x="6.519747E-02" y="-5.499963" z="0.4762542"/>
+					<quaternion qx="6.170725E-08" qy="0.258819" qz="2.302947E-07" qw="0.9659258"/>
+				</offset>
+			</connection>
+			<connection name="Connection22" tags="part detail_xs iklink  " parent="hand04">
+				<offset>
+					<position x="0.1426334" y="-3.431363" z="2.572062"/>
+				</offset>
+				<parts>
+					<part name="chain04_02">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="7.02378" y="4.509792" z="1.538471"/>
+							<center x="-2.505966" y="3.979135" z="-0.7522972"/>
+						</size>
+						<size_raw>
+							<max x="0.8151376" y="0.383577" z="1.867689"/>
+							<center x="1.851338" y="4.052675" z="-0.540758"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection23" tags="part detail_xs iklink  " parent="hand04">
+				<offset>
+					<position x="1.284882" y="-6.798854" z="2.00559"/>
+				</offset>
+				<parts>
+					<part name="chain04_01">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="7.688751" y="5.237177" z="1.364441"/>
+							<center x="-2.328897" y="4.729132" z="-0.5032487"/>
+						</size>
+						<size_raw>
+							<max x="1.172458" y="0.3740638" z="1.867689"/>
+							<center x="2.093698" y="4.796123" z="-0.5407577"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection24" tags="part detail_xs iklink  " parent="anim_main">
+				<offset>
+					<position x="-4.182933" y="2.036335" z="9.125916"/>
+				</offset>
+				<parts>
+					<part name="upper_arm05">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="2.367938" y="2.560868" z="0.6961737"/>
+							<center x="-0.9027877" y="-2.432254" z="2.460003E-02"/>
+						</size>
+						<size_raw>
+							<max x="0.5421023" y="4.993122" z="0.6715733"/>
+							<center x="0.4615238" y="-2.676668" z="2.460003E-02"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection25" tags="part detail_xs iklink  " parent="upper_arm05">
+				<offset>
+					<position x="1.038651" y="-5.178219" z="-2.841949E-04"/>
+				</offset>
+				<parts>
+					<part name="lower_arm05">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="5.006623" y="2.675687" z="0.7951442"/>
+							<center x="-4.326273" y="1.8676" z="-9.536743E-07"/>
+						</size>
+						<size_raw>
+							<max x="4.533032" y="0.731057" z="0.7951452"/>
+							<center x="-1.926342" y="1.906115" z="-9.536743E-07"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection26" tags="part detail_xs iklink  " parent="lower_arm05">
+				<offset>
+					<position x="-3.867461" y="3.877716" z="-9.1362E-04"/>
+				</offset>
+				<parts>
+					<part name="hand05">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="4.559363" y="4.65008" z="1.582553"/>
+							<center x="-2.289639" y="-4.829854" z="-0.1453772"/>
+						</size>
+						<size_raw>
+							<max x="2.198512" y="8.853168" z="1.481547"/>
+							<center x="3.560638E-02" y="-4.516471" z="-2.218628E-02"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="weaponconnection09" tags="weapon_small  secondary_slot" parent="hand05">
+				<offset>
+					<position x="-0.7752852" y="-1.962656" z="0.9615078"/>
+					<quaternion qx="-0" qy="0.258819" qz="-0" qw="0.9659258"/>
+				</offset>
+			</connection>
+			<connection name="weaponconnection08" tags="weapon_small  secondary_slot" parent="hand05">
+				<offset>
+					<position x="6.519365E-02" y="-5.499962" z="0.4762535"/>
+					<quaternion qx="-0" qy="0.258819" qz="-0" qw="0.9659258"/>
+				</offset>
+			</connection>
+			<connection name="Connection27" tags="part detail_xs iklink  " parent="hand05">
+				<offset>
+					<position x="0.3756495" y="-3.431363" z="2.572063"/>
+				</offset>
+				<parts>
+					<part name="chain05_01">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="5.827795" y="4.661242" z="1.525622"/>
+							<center x="-1.309984" y="3.827687" z="-0.6490803"/>
+						</size>
+						<size_raw>
+							<max x="0.8151377" y="0.3835772" z="1.867689"/>
+							<center x="1.851336" y="4.052676" z="-0.5407581"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection28" tags="part detail_xs iklink  " parent="hand05">
+				<offset>
+					<position x="1.38282" y="-6.798854" z="2.005589"/>
+				</offset>
+				<parts>
+					<part name="chain05_02">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="6.219863" y="5.562572" z="1.5632"/>
+							<center x="-1.352495" y="4.715604" z="-0.3044891"/>
+						</size>
+						<size_raw>
+							<max x="1.186546" y="0.4562099" z="1.867689"/>
+							<center x="1.840411" y="4.910983" z="-0.5407581"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection29" tags="part detail_xs iklink  " parent="anim_main">
+				<offset>
+					<position x="-4.182933" y="2.036335" z="18.73926"/>
+				</offset>
+				<parts>
+					<part name="upper_arm06">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="1.621079" y="2.44788" z="0.6961737"/>
+							<center x="-0.1559296" y="-2.545242" z="2.460098E-02"/>
+						</size>
+						<size_raw>
+							<max x="0.5421023" y="4.993122" z="0.6715734"/>
+							<center x="0.4615238" y="-2.676668" z="2.460098E-02"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection30" tags="part detail_xs iklink  " parent="upper_arm06">
+				<offset>
+					<position x="1.038651" y="-5.178219" z="-2.861023E-04"/>
+				</offset>
+				<parts>
+					<part name="lower_arm06">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="3.574483" y="2.822703" z="0.7951441"/>
+							<center x="-2.894134" y="2.091647" z="0"/>
+						</size>
+						<size_raw>
+							<max x="4.533032" y="0.7310569" z="0.795145"/>
+							<center x="-1.926342" y="1.906115" z="0"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection31" tags="part detail_xs iklink  " parent="lower_arm06">
+				<offset>
+					<position x="-3.867461" y="3.877716" z="-9.117126E-04"/>
+				</offset>
+				<parts>
+					<part name="hand06">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="3.107077" y="4.508324" z="1.582554"/>
+							<center x="-0.8373528" y="-4.344845" z="-0.1453781"/>
+						</size>
+						<size_raw>
+							<max x="2.198513" y="8.853168" z="1.481548"/>
+							<center x="3.560543E-02" y="-4.516471" z="-2.218628E-02"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="weaponconnection11" tags="weapon_small  secondary_slot" parent="hand06">
+				<offset>
+					<position x="-0.7752919" y="-1.962656" z="0.9615021"/>
+					<quaternion qx="-0" qy="0.258819" qz="-0" qw="0.9659258"/>
+				</offset>
+			</connection>
+			<connection name="weaponconnection12" tags="weapon_small  secondary_slot" parent="hand06">
+				<offset>
+					<position x="0.0651927" y="-5.499963" z="0.4762497"/>
+					<quaternion qx="-0" qy="0.258819" qz="-0" qw="0.9659258"/>
+				</offset>
+			</connection>
+			<connection name="Connection32" tags="part detail_xs iklink  " parent="hand06">
+				<offset>
+					<position x="0.2868977" y="-3.431363" z="2.572063"/>
+				</offset>
+				<parts>
+					<part name="chain06_01">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="4.415699" y="4.440485" z="1.502542"/>
+							<center x="0.1021142" y="4.056908" z="-0.7163696"/>
+						</size>
+						<size_raw>
+							<max x="0.8151376" y="0.3835771" z="1.867689"/>
+							<center x="1.851338" y="4.052675" z="-0.5407581"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection33" tags="part detail_xs iklink  " parent="hand06">
+				<offset>
+					<position x="1.393103" y="-6.798854" z="2.005596"/>
+				</offset>
+				<parts>
+					<part name="chain06_02">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="4.81265" y="5.367193" z="1.391393"/>
+							<center x="5.471992E-02" y="4.910984" z="-0.4762955"/>
+						</size>
+						<size_raw>
+							<max x="1.186546" y="0.4562098" z="1.867689"/>
+							<center x="1.840412" y="4.910983" z="-0.5407562"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection34" tags="part nocollision iklink textureanimation  " parent="anim_main">
+				<offset>
+					<position x="2.980232E-06" y="-8.617759E-02" z="10.6763"/>
+				</offset>
+				<parts>
+					<part name="fx_redlight">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="effects.gradient_red"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="7.322426" y="7.758844" z="21.3376"/>
+							<center x="-1.192093E-07" y="-2.384186E-07" z="0"/>
+						</size>
+						<size_raw>
+							<max x="7.322426" y="7.758844" z="21.3376"/>
+							<center x="-1.192093E-07" y="-2.384186E-07" z="0"/>
+						</size_raw>
+						<uv_animations>
+							<uv_animation mapchannel="1">
+								<uv_property name="u_offset" controller="bezier_float">
+									<key frame="0" value="0" in_tangent_type="auto" out_tangent_type="auto"/>
+									<key frame="60" value="0" in_tangent_type="auto" out_tangent_type="auto"/>
+									<key frame="90" value="-1" in_tangent_type="auto" out_tangent_type="auto"/>
+									<key frame="240" value="-1" in_tangent_type="auto" out_tangent_type="auto"/>
+								</uv_property>
+							</uv_animation>
+						</uv_animations>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection35" tags="part animation iklink detail_s nocollision  " parent="anim_main">
+				<offset>
+					<position x="0.5808309" y="-5.078948E-02" z="30.74262"/>
+				</offset>
+				<animations/>
+				<parts>
+					<part name="anim_laser01">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="effects.laser"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="3.486102" y="2.518734" z="98.50936"/>
+							<center x="-1.192093E-07" y="-1.192093E-07" z="98.51495"/>
+						</size>
+						<size_raw>
+							<max x="3.486102" y="2.518734" z="5.585276E-03"/>
+							<center x="-1.192093E-07" y="-1.192093E-07" z="0.4953518"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection36" tags="part animation  ">
+				<offset>
+					<position x="0" y="0" z="95.27779"/>
+				</offset>
+				<animations/>
+				<parts/>
+			</connection>
+		</connections>
+	</component>
+</components>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Benedikt (192.168.3.150) at 16.01.2014_11-07-20-->
+<macros>
+  <macro name="buildmodule_ships_devries_xl_3_macro" class="buildmodule">
+    <component ref="props_surf_ar_buildmodule_xl" />
+    <properties>
+      <identification name="{20107,4001}" description="{20107,4002}" unique="0" />
+      <build method="albion" />
+      <explosiondamage value="100000" />
+      <hull max="12800000" />
+      <effects>
+        <explosion ref="explosion_station_01" />
+        <sefx_hack_disabled ref="hack_deactivated_l" />
+      </effects>
+      <secrecy level="4" />
+      <builder>
+        <macro ref="units_size_xl_red_destroyer_macro" />
+        <macro ref="units_size_xl_builder_ship_dv_3_macro" />
+<!-- Titurel -->
+       <!-- <macro ref="units_size_xl_cargo_hauler_2_macro" />-->
+		<macro ref="units_size_xl_van_destroyer_macro" />
+		<!--<macro ref="units_size_xl_builder_outpost_macro" />-->
+      </builder>
+    </properties>
+    <connections>
+      <connection ref="connection_dockingbay01">
+        <macro ref="props_surf_ar_docks_size_xl_inv_macro" connection="connection_component01" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

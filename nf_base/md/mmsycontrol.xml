@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mdscript name="MM_ShipYardC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+
+		<!--  conversation hook  -->
+		<cue name="MMSYC_base" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="gMain_propertyResult" />
+					<event_conversation_next_section section="gMain_propertyResult" />
+					<event_conversation_returned_to_section section="gMain_propertyResult" />
+				</check_any>
+				<check_value value="event.param2.owner" exact="faction.player" />
+				<check_value value="event.param2.canbuildships" />
+			</conditions>
+			<actions>
+            	<add_player_choice_subconv text="{2802,2210}" position="top_left" conversation="mmsyc_menu" actor="event.param2.tradenpc" baseparam="event.param2" />
+			</actions>
+		</cue>
+
+		<cue name="MMSYC_work_cargofix" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_next_section section="mmsyccargofix"/>
+					<event_conversation_next_section section="mmsyccargostart"/>
+					<event_conversation_next_section section="mmsycresetai"/>
+				</check_any>
+			</conditions>
+			<actions>
+				<set_value name="$Station" exact="event.object.container" />
+				<set_value name="$multi" exact="0.4" />
+				<do_if value="event.param" exact="'mmsyccargofix'">
+					<set_value name="$sourcelist" exact="$Station.cargo.list"/>
+					<set_value name="$multi" exact="0.8" />
+				</do_if>
+				<do_elseif value="event.param" exact="'mmsyccargostart'">
+					<set_value name="$sourcelist" exact="$Station.tradewares.list"/>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmsycresetai'">
+					<create_list name="$sourcelist" />
+					<signal_objects object="$Station" param="'GOING_ON'" />
+				</do_elseif>
+				<do_all exact="$sourcelist.count" counter="$i">
+					<do_if value="$Station.cargo.{$sourcelist.{$i}}.count" min="1">
+						<remove_cargo object="$Station" ware="$sourcelist.{$i}" exact="$Station.cargo.{$sourcelist.{$i}}.count" />
+					</do_if>
+					<do_if value="$Station.cargo.{$sourcelist.{$i}}.target gt 0">
+						<add_cargo object="$Station" ware="$sourcelist.{$i}" exact="$Station.cargo.{$sourcelist.{$i}}.target * $multi" />
+					</do_if>
+				</do_all>
+				<remove_value name="$sourcelist"/>
+				<remove_value name="$multi"/>
+				<remove_value name="$Station"/>
+			</actions>
+		</cue>
+
+		<!--  options submenu  -->
+		<cue name="MMSYC_work_menu" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="mmsyc_menu" />
+					<event_conversation_returned_to_section section="mmsyc_menu" />
+					<event_conversation_next_section sectionprefix="mmsyc_"/>
+				</check_any>
+			</conditions>
+			<actions>
+				<set_value name="$Station" exact="event.object.container" />
+				<set_value name="$on" exact="{1001,2648}" />
+				<set_value name="$off" exact="{1001,2649}" />
+
+
+				<do_if value="event.param == 'mmsyc_build'">  
+
+					<set_value name="$objectpurpose" exact="[	[{20213,300}, objectpurpose.fight, null, 4],
+																[{20213,200}, objectpurpose.trade, null, 1],
+																[{20213,400}, objectpurpose.build, null, 5],
+																[{20213,500}, objectpurpose.mine, null, 2] 
+															]" />
+
+					<do_if value="event.param2.{1}? and event.param2.{1} == 'do_restrict'">
+						<do_if value="not event.object.$build_restrictions?">
+							<set_value name="event.object.$build_restrictions" exact="[]"/>
+						</do_if>
+						
+						<do_if value="event.param2.{2} == 'tag' and event.object.$build_restrictions.indexof.{event.param2.{3}}">
+							<remove_value name="event.object.$build_restrictions.{event.object.$build_restrictions.indexof.{event.param2.{3}}}"/>
+						</do_if>
+						<do_elseif value="event.param2.{2} == 'tag'">
+							<append_to_list name="event.object.$build_restrictions" exact="event.param2.{3}" />
+						</do_elseif>
+
+						<do_if value="event.param2.{2} == 'reset' or event.object.$build_restrictions.count == 0">
+							<remove_value name="event.object.$build_restrictions"/>
+						</do_if>
+					</do_if>
+
+					<!-- menue -->
+					<do_all exact="$objectpurpose.count" counter="$i">
+						<add_player_choice text="'%1 [%2]'.[$objectpurpose.{$i}.{1}, if @event.object.$build_restrictions.indexof.{$objectpurpose.{$i}.{2}} then $off else $on]" immediate="@event.object.$build_restrictions.indexof.{$objectpurpose.{$i}.{2}}" position="$objectpurpose.{$i}.{4}" section="mmsyc_build" choiceparam="['do_restrict', 'tag', $objectpurpose.{$i}.{2}]" />
+					</do_all>
+
+					<add_player_choice text="'Reset'" selectable="event.object.$build_restrictions?" section="mmsyc_build" choiceparam="['do_restrict', 'reset']" />
+
+					<remove_value name="$objectpurpose"/>
+
+				</do_if>
+				<do_elseif value="event.param == 'mmsyc_settings'">  
+
+					<do_if value="event.param2?">
+						<set_value name="$Station.tradenpc.$stop_trading" exact="player.age" chance="if $Station.tradenpc.$stop_trading? then 0 else 100" />
+						<do_if value="event.param2" exact="'add'">
+							<set_value name="$Station.tradenpc.$stop_trading" exact="10min" operation="add" />
+						</do_if>
+						<do_elseif value="event.param2" exact="'sub'">
+							<set_value name="$Station.tradenpc.$stop_trading" exact="10min" operation="subtract" chance="if $Station.tradenpc.$stop_trading-11min lt player.age then 0 else 100"/>
+							<set_value name="$Station.tradenpc.$stop_trading" exact="player.age" chance="if $Station.tradenpc.$stop_trading lt player.age then 100 else 0"/>
+						</do_elseif>
+						<do_elseif value="event.param2" exact="'restart'">
+							<set_value name="$Station.tradenpc.$stop_trading" exact="player.age" />
+						</do_elseif>
+					</do_if>
+
+					<set_value name="$range" exact="'--'" />
+					<set_value name="$range" exact="($Station.tradenpc.$stop_trading - player.age)/1min " chance="if $Station.tradenpc.$stop_trading? then 100 else 0" />
+
+					<add_player_choice text="{2802,2216}" section="mmsyc_settings" choiceparam="'add'" />
+					<add_player_choice text="{2802,2215}.[$range]" section="mmsyc_settings" choiceparam="'restart'" immediate="player.age lt $Station.tradenpc.$stop_trading and event.param2?"/>
+					<add_player_choice text="{2802,2217}" section="mmsyc_settings" choiceparam="'sub'" />
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+					<remove_value name="$range"/>
+				</do_elseif>
+				<do_elseif value="event.param == 'mmsyc_menu'">  
+					<do_if value="event.param2 == 'randombuild' and $Station.tradenpc.$denyBuildRandomNPC?">
+						<remove_value name="$Station.tradenpc.$denyBuildRandomNPC"/>
+					</do_if>
+					<do_elseif value="event.param2? and event.param2 == 'randombuild' and not $Station.tradenpc.$denyBuildRandomNPC?">
+						<set_value name="$Station.tradenpc.$denyBuildRandomNPC" />
+					</do_elseif>
+					<!--
+					<add_player_choice_sub text="{2802,2218}" position="top_left" section="mmsyc_build" />
+					 -->
+					<add_player_choice position="left" text="'Do NPC Buildorders [%1]'.[if $Station.tradenpc.$denyBuildRandomNPC? then $off else $on]" tooltip="'station will build ships random with specific order for NPC'" section="mmsyc_menu" choiceparam="'randombuild'"/>
+					<add_player_choice_sub position="bottom_left" text="{2802,2211}" section="mmsyc_settings" />
+
+					<add_player_choice_sub position="top_right" text="{30114,20001}" section="gMain_objectTradeWares" choiceparam="[0, 0, $Station.tradenpc]" comment="Tradeware"/>
+					<add_player_choice_sub position="right" text="{2802,2212}" section="mmsyc_cheats" />
+
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				</do_elseif>
+				<do_elseif value="event.param == 'mmsyc_cheats'">  
+					<do_if value="event.param2? and event.param2 == 'randombuild' and $Station.tradenpc.$BuildRandom?">
+						<remove_value name="$Station.tradenpc.$BuildRandom"/>
+					</do_if>
+					<do_elseif value="event.param2? and event.param2 == 'randombuild' and not $Station.tradenpc.$BuildRandom?">
+						<set_value name="$Station.tradenpc.$BuildRandom" />
+					</do_elseif>
+					<!--
+					<add_player_choice_sub text="{2802,2213}" section="mmsyccargofix" />
+					<add_player_choice_sub text="{2802,2214}" section="mmsyccargostart" />
+					<add_player_choice_sub text="'restart loop'" section="mmsycresetai" />
+					 -->
+					<add_player_choice text="'RandomBuild [%1]'.[if $Station.tradenpc.$BuildRandom? then $on else $off]" tooltip="'station will build ships random without specific order'" section="mmsyc_cheats" choiceparam="'randombuild'"/>
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				</do_elseif>
+
+				<remove_value name="$off"/>
+				<remove_value name="$on"/>
+				<remove_value name="$Station"/>
+			</actions>
+		</cue>
+
+	</cues>
+</mdscript>

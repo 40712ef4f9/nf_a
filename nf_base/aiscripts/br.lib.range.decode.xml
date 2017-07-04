@@ -1,0 +1,1389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiscript xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="BR.lib.range.decode" xsi:noNamespaceSchemaLocation="http://utnas/~unitrader/XRebirthxsds/aiscripts.xsd">
+  <params>
+    <param name="range" default="''" comment="'zone','sector','cluster', some presets such as 'pmc', and list of spaces"/>
+  </params>
+  <attention min="unknown">
+    <actions>
+      <!-- before first: look up if we already have a pre-calculated Value (also with simple Version managment - increase $tabe_version to purge outdated lists and create them anew (adding Entres is fine, changing requires update)-->
+      <set_value name="$table_version" exact="1"/>
+      <do_if value="not global.$BR_range_table?">
+        <set_value name="global.$BR_range_table" exact="table[$version=$table_version]"/>
+      </do_if>
+      <do_elseif value="global.$BR_range_table.$version lt $table_version ">
+        <remove_value name="global.$BR_range_table"/>
+        <set_value name="global.$BR_range_table" exact="table[$version=$table_version]"/>
+      </do_elseif>
+      <do_elseif value="typeof $range == datatype.string">
+        <do_if value="global.$BR_range_table.{'$'+$range}?">
+          <return value="global.$BR_range_table.{'$'+$range}"/>
+        </do_if>
+      </do_elseif>
+      <do_elseif value="global.$BR_range_table.{$range}?">
+        <return value="global.$BR_range_table.{$range}"/>
+      </do_elseif>
+      <!-- ================================ -->
+      <!-- first decode Strings to a List of Spaces. -->
+      <!-- ================================ -->
+      <create_list name="$space"/>
+      <!-- Space String -->
+      <do_if value="(typeof $range).isstring">
+        <do_if value="$range == 'zone'">
+          <append_to_list name="$space" exact="if this.ship.jobmainzone then this.ship.jobmainzone else this.ship.zone"/>
+        </do_if>
+        <do_elseif value="$range == 'sector'">
+          <append_to_list name="$space" exact="if this.ship.jobmainzone then this.ship.jobmainzone.sector else this.ship.sector"/>
+        </do_elseif>
+        <do_elseif value="$range == 'cluster'">
+          <append_to_list name="$space" exact="if this.ship.jobmainzone then this.ship.jobmainzone.cluster else this.ship.cluster"/>
+        </do_elseif>
+        <do_elseif value="$range == 'galaxy'">
+          <append_to_list name="$space" exact="player.galaxy"/>
+        </do_elseif>
+        <!-- Preset PMC : Albion cluster -->
+        <do_elseif value="$range == 'albioncl'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone28_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone29_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone30_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone31_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone32_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone33_macro"/>
+          <append_to_list name="$space" exact="$temp"/>		  
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector04_Zone27_macro"/>
+          <append_to_list name="$space" exact="$temp"/>		  
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone19_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone20_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone21_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone22_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone23_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone24_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone25_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone26_macro"/>
+          <append_to_list name="$space" exact="$temp"/>		  
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone11_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone12_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone13_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone14_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone15_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone16_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone17_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone18_macro"/>
+          <append_to_list name="$space" exact="$temp"/>		  
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone01_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone02_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone03_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone04_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone05_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone06_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone07_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone08_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone09_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone10_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- PMC space Albion -->
+        <do_elseif value="$range == 'pmcspace'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone19_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone20_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone21_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone22_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone23_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone24_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone25_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone26_macro"/>
+          <append_to_list name="$space" exact="$temp"/>		  
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone11_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone12_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone13_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone14_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone15_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone16_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone17_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone18_macro"/>
+          <append_to_list name="$space" exact="$temp"/>		  
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone01_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone02_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone03_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone04_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone05_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone06_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone07_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone08_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone09_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone10_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Hoa Space albion -->
+        <do_elseif value="$range == 'hoaspace'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone28_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone29_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone30_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone31_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone32_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone33_macro"/>
+          <append_to_list name="$space" exact="$temp"/>		  
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector04_Zone27_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<do_elseif value="$range == 'hoaspacenopmc'">          
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone28_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone29_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone30_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone31_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone32_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone33_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- HOA DEFENSE 1 -->
+		<do_elseif value="$range == 'hoadefense1'">          
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone28_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone29_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone30_macro"/>
+          <append_to_list name="$space" exact="$temp"/>		  
+          <remove_value name="$temp"/>
+		  </do_elseif>
+		  <!-- HOA DEFENSE 2 -->
+		  <do_elseif value="$range == 'hoadefense2'">          
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone31_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone32_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_sector04_zone33_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        
+        <!-- The Big Empty -->
+        <do_elseif value="$range == 'TBE'">
+          <find_zone name="$temp" macro="macro.tzonecluster_b_sector04_zone27_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Cold Peaks 1.5 -->
+		<do_elseif value="$range == 'cold'">
+          <find_zone name="$temp" macro="macro.tzonecluster_b_sector06_zone15_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Bleak Pebble -->
+        <do_elseif value="$range == 'bleakpebble'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone34_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone35_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone36_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone37_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone38_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone39_macro"/>
+          <append_to_list name="$space" exact="$temp"/>				  
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- All zones in bleak -->
+        <do_elseif value="$range == 'bleakrocattack'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone34_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone35_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone36_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone37_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone38_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone39_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Individual zones -->
+		<do_elseif value="$range == 'twilight'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone34_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<do_elseif value="$range == 'flickering'">          
+		   <find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone35_macro"/>
+          <append_to_list name="$space" exact="$temp"/>		   
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<do_elseif value="$range == 'dimflame'">          
+		   <find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone36_macro"/>
+          <append_to_list name="$space" exact="$temp"/>		   
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<do_elseif value="$range == 'persistent'">          
+		   <find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone37_macro"/>
+          <append_to_list name="$space" exact="$temp"/>		   
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<do_elseif value="$range == 'sparse'">          
+		   <find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone38_macro"/>
+          <append_to_list name="$space" exact="$temp"/>		   
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<do_elseif value="$range == 'crimson'">          
+		   <find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone39_macro"/>
+          <append_to_list name="$space" exact="$temp"/>		   
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<do_elseif value="$range == 'drift'">          
+		   <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone111_macro"/>
+          <append_to_list name="$space" exact="$temp"/>		   
+          <remove_value name="$temp"/>
+        </do_elseif>
+		
+		<!-- PMC invasion of bleak 1 -->
+		<do_elseif value="$range == 'bleakpmcinv1'">          
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone37_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone38_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone39_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- PMC invasion of bleak 2 -->
+		<do_elseif value="$range == 'bleakpmcinv2'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone35_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone36_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_d_sector17_zone39_macro"/>
+          <append_to_list name="$space" exact="$temp"/>	
+			<remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Glaring Truth -->
+        <do_elseif value="$range == 'glaring'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone45_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone46_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone47_macro"/>
+          <append_to_list name="$space" exact="$temp"/>	
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone48_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone49_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone50_macro"/>
+          <append_to_list name="$space" exact="$temp"/>	
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone51_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone52_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone53_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Barren Heart -->
+        <do_elseif value="$range == 'barren'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone40_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone41_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone42_macro"/>
+          <append_to_list name="$space" exact="$temp"/>	
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone43_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone44_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Not Bleak Pebble and Glaring Truth -->
+        <do_elseif value="$range == 'devriesrei'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone40_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone41_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone42_macro"/>
+          <append_to_list name="$space" exact="$temp"/>	
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone43_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone44_macro"/>
+          <append_to_list name="$space" exact="$temp"/>            
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector20_Zone54_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector20_Zone55_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector20_Zone56_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector20_Zone57_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector20_Zone58_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- DEVRIES JUMP BEACON ZONES -->
+        <!-- Lava Flow and Fervid Corona -->
+        <do_elseif value="$range == 'devriesreibeacons'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector19_zone41_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector18_zone45_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector20_zone55_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Lava Flow and Fervid Corona for PMC-->
+        <do_elseif value="$range == 'pmcdevJB'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector18_zone45_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector20_zone55_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Just Lava Flow -->
+        <do_elseif value="$range == 'LFbeacon'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector20_zone55_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Just Vapour Stream -->
+        <do_elseif value="$range == 'Vapour'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector20_zone54_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Just Fervid Corona -->
+        <do_elseif value="$range == 'FCbeacon'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector18_zone45_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Devries EXCEPT non combat zones -->
+        <do_elseif value="$range == 'devriescombat'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone34_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone35_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone36_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone37_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone38_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone39_macro"/>
+          <append_to_list name="$space" exact="$temp"/>	
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone45_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone46_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone47_macro"/>
+          <append_to_list name="$space" exact="$temp"/>	
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone48_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone49_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone50_macro"/>
+          <append_to_list name="$space" exact="$temp"/>	
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone51_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone52_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone53_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector19_zone40_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector19_zone42_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector19_zone44_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector20_zone54_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector20_zone55_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector20_zone56_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector20_zone58_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Devries XENON -->
+        <do_elseif value="$range == 'devriesxenon'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone34_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone35_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone36_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone37_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone38_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone39_macro"/>
+          <append_to_list name="$space" exact="$temp"/>	
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone45_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone46_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone47_macro"/>
+          <append_to_list name="$space" exact="$temp"/>	
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone48_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone49_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone50_macro"/>
+          <append_to_list name="$space" exact="$temp"/>	
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone51_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone52_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone53_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone40_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone41_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone42_macro"/>
+          <append_to_list name="$space" exact="$temp"/>	
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone43_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone44_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Devries POINT OF INTEREST DEFENSE FLEETS -->
+		<do_elseif value="$range == 'Darn'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_d_sector18_zone50_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Preset Lookout Lookout Alpha -->
+        <do_elseif value="$range == 'lookout'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone01_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone02_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone03_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone04_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone05_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone06_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone07_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone08_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone09_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone10_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Preset Inner World -->
+        <do_elseif value="$range == 'inner'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone11_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone12_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone13_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone14_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone15_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone16_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone17_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone18_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Preset Ascendancy -->
+        <do_elseif value="$range == 'ascendancy'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone19_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone20_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone21_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone22_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone23_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone24_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone25_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone26_macro"/>
+          <append_to_list name="$space" exact="$temp"/>		  
+          <remove_value name="$temp"/>
+        </do_elseif>		
+        <!-- Preset Argon Government : Omicron cluster and Sigma Sector sector -->
+        <do_elseif value="$range == 'argonspace'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+		  
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone59_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone60_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone61_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone62_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone63_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone64_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone65_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+		  
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone66_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone67_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone68_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone69_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone70_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone71_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone72_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone73_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone74_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone75_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone76_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone77_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone78_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone79_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone80_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone81_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone82_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+         
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone100_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone101_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone102_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone103_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone99_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone98_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone97_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone96_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone95_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone94_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Preset Omicron Lyrae HEV invasion -->
+        <do_elseif value="$range == 'omicronspace'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+		  
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone59_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone60_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone61_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone62_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone63_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone64_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone65_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+		  
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone66_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone67_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone68_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone69_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone70_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone71_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone72_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone73_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone74_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone75_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone76_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone77_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone78_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone79_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone80_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone81_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone82_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Alpha Quadrant -->
+		<do_elseif value="$range == 'alpha'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone94_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Preset Radiant -->
+        <do_elseif value="$range == 'radiant'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone75_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone76_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone77_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone78_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone79_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone80_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone81_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector11_Zone82_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Preset Eclipse -->
+        <do_elseif value="$range == 'eclipse'">          
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone66_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone67_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone68_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone69_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone70_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone71_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone72_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone73_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector10_Zone74_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Preset Commerce -->
+        <do_elseif value="$range == 'commerce'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone59_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone60_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone61_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone62_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone63_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone64_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone65_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Preset Devoid -->
+        <do_elseif value="$range == 'devoid'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone87_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Sigma Sector -->
+        <do_elseif value="$range == 'sigma'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone100_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone101_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone102_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone103_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone99_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone98_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone97_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone96_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone95_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone94_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Blurred Reflection -->
+        <do_elseif value="$range == 'blur'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector02_Zone104_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector02_Zone105_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector02_Zone106_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector02_Zone107_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector02_Zone108_macro"/>
+          <append_to_list name="$space" exact="$temp"/>		  
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Sable Vortex -->
+        <do_elseif value="$range == 'sable'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone109_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone110_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone111_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone112_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone113_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone114_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Sable Vortex no AQUEDUCT -->
+        <do_elseif value="$range == 'sable2'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone109_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone110_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone111_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone112_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone113_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone114_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Preset Devries -->
+        <do_elseif value="$range == 'devries'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone34_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone35_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone36_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone37_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone38_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone39_macro"/>
+          <append_to_list name="$space" exact="$temp"/>	
+		  
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone45_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone46_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone47_macro"/>
+          <append_to_list name="$space" exact="$temp"/>	
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone48_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone49_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone50_macro"/>
+          <append_to_list name="$space" exact="$temp"/>	
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone51_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone52_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_D_Sector18_Zone53_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone40_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone41_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+			<find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone42_macro"/>
+          <append_to_list name="$space" exact="$temp"/>	
+		  <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone43_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector19_Zone44_macro"/>
+          <append_to_list name="$space" exact="$temp"/>  
+		  
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector20_Zone54_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector20_Zone55_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector20_Zone56_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector20_Zone57_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector20_Zone58_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Preset Xenon Invasion of Molten Archon -->
+        <do_elseif value="$range == 'molten'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector20_Zone54_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector20_Zone55_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector20_Zone56_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector20_Zone57_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		   <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector20_Zone58_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Preset Maelstrom -->
+        <do_elseif value="$range == 'maelstrom'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone100_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone101_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone102_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone103_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone99_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone98_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone97_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone96_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone95_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector01_Zone94_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector02_Zone104_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector02_Zone105_macro"/>
+          <append_to_list name="$space" exact="$temp"/> 
+		  <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector02_Zone106_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector02_Zone107_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_A_Sector02_Zone108_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone109_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone110_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone111_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone112_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone113_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector03_zone114_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- SIGMA SECTOR HEV SPACE -->
+		<do_elseif value="$range == 'hevspace'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone101_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone102_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone103_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone94_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone96_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone95_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone97_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone98_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone99_macro"/>
+          <append_to_list name="$space" exact="$temp"/>          
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Sigma Sector Argon Invade -->
+		<do_elseif value="$range == 'arginvhev'">
+			<find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone100_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone101_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone102_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone103_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone96_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone94_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+		  <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone95_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone97_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone98_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_sector01_zone99_macro"/>
+          <append_to_list name="$space" exact="$temp"/>          
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Maelstrom Sixth Scripture -->
+		<do_elseif value="$range == 'six'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_Sector02_Zone108_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Sigma Sector Sunken Frigate -->
+		<do_elseif value="$range == 'sunk'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_a_Sector01_Zone101_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Eternal Dawn -->
+		<do_elseif value="$range == 'eternal'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector08_Zone92_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Wavy Haze -->
+		<do_elseif value="$range == 'wavy'">
+          <find_zone name="$temp" macro="macro.tzonecluster_c_sector10_zone66_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Aspiring Champion -->
+		<do_elseif value="$range == 'aspire'">
+          <find_zone name="$temp" macro="macro.tzonecluster_c_sector11_zone75_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Gleam of Hope -->
+		<do_elseif value="$range == 'gleam'">
+          <find_zone name="$temp" macro="macro.tzonecluster_c_sector11_zone77_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Voracious -->
+		<do_elseif value="$range == 'voracious'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone61_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Aerodrome -->
+		<do_elseif value="$range == 'aero'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone62_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Silent Void -->
+		<do_elseif value="$range == 'silent'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_c_Sector08_Zone88_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Last Stand -->		
+		<do_elseif value="$range == 'last'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_C_Sector09_Zone60_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Buried Treasure -->
+        <do_elseif value="$range == 'buried'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone21_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Forge-Welded Mail -->
+        <do_elseif value="$range == 'forge'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone26_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Serpentine Driveway -->
+        <do_elseif value="$range == 'serpentine'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone23_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Sinister Poem -->
+        <do_elseif value="$range == 'sinister'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone17_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Cuspid Splint -->
+        <do_elseif value="$range == 'cuspid'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone13_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		<!-- Wrecksville -->
+        <do_elseif value="$range == 'wreck'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone01_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Frozen Circuit -->
+        <do_elseif value="$range == 'frozen'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone12_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Distress Reek -->
+        <do_elseif value="$range == 'distress'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone14_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Straining Coppice -->
+        <do_elseif value="$range == 'straining'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone04_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Even Temper -->
+        <do_elseif value="$range == 'even'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone09_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Exhaustless Mines -->
+        <do_elseif value="$range == 'exhaustless'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector04_Zone29_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Gemstone Manufacture -->
+        <do_elseif value="$range == 'gemstone'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector04_Zone32_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Rising Star -->
+        <do_elseif value="$range == 'rising'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector04_Zone33_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Periodic Blasting -->
+        <do_elseif value="$range == 'periodic'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone18_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Smokestack -->
+        <do_elseif value="$range == 'smoke'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone03_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Shady Vault -->
+        <do_elseif value="$range == 'shady'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone19_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+		 <!-- Liquid Metal -->
+        <do_elseif value="$range == 'liquid'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone25_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Five Ways -->
+        <do_elseif value="$range == 'five'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone20_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Azure Barrier -->
+        <do_elseif value="$range == 'azure'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone02_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Distant Fume -->
+        <do_elseif value="$range == 'distant'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone07_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Auspicious Excavation -->
+        <do_elseif value="$range == 'auspicious'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector07_Zone05_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Watergate -->
+        <do_elseif value="$range == 'water'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone11_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Crossroads -->
+        <do_elseif value="$range == 'crossroads'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector06_Zone16_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Steady Mole -->
+        <do_elseif value="$range == 'steady'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector04_Zone31_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Concealed Hideout -->
+        <do_elseif value="$range == 'concealed'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector04_Zone28_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Woodland Pasture -->
+        <do_elseif value="$range == 'woodland'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector04_Zone30_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- The Third Duke -->
+        <do_elseif value="$range == 'third'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone24_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Forlorn Armoury -->
+        <do_elseif value="$range == 'forlorn'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_B_Sector05_Zone22_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Twilight Sentinel ROC-->
+        
+        <!-- Twilight Sentinel PMC-->
+        <do_elseif value="$range == 'twipmc'">
+          <find_zone name="$temp" macro="macro.tzoneCluster_b_Sector07_Zone05_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <find_zone name="$temp" macro="macro.tzoneCluster_D_Sector17_Zone34_macro"/>
+          <append_to_list name="$space" exact="$temp"/>
+          <remove_value name="$temp"/>
+        </do_elseif>
+        <!-- Empty String - default Value -->
+        <do_elseif value="$range == ''">
+          <do_if value="this.ship.isclass.ship_l or this.ship.isclass.ship_xl">
+            <append_to_list name="$space" exact="if this.ship.jobmainzone then this.ship.jobmainzone.cluster else this.ship.cluster"/>
+          </do_if>
+          <do_else>
+            <append_to_list name="$space" exact="if this.ship.jobmainzone then this.ship.jobmainzone.sector else this.ship.sector"/>
+          </do_else>
+        </do_elseif>
+        <!-- Unknown string - use default Value, but also produce an error because this is likely the result of an typo or oversight - UniTrader -->
+        <do_else>
+          <debug_text filter="error" text="'Could not decode String-Based Range:\n$range= %1 , Object Name= %2 , Ship Job ID= %3 '.[$range,this.container.knownname,this.ship.job]"/>
+          <do_if value="this.ship.isclass.ship_l or this.ship.isclass.ship_xl">
+            <append_to_list name="$space" exact="if this.ship.jobmainzone then this.ship.jobmainzone.cluster else this.ship.cluster"/>
+          </do_if>
+          <do_else>
+            <append_to_list name="$space" exact="if this.ship.jobmainzone then this.ship.jobmainzone.sector else this.ship.sector"/>
+          </do_else>
+        </do_else>
+      </do_if>
+      <do_else>
+        <do_if value="$range">
+          <!-- list of Spaces or macros -->
+          <do_if value="@$range.count">
+            <do_all exact="$range.count" counter="$i">
+              <do_if value="($range.{$i}.isclass.zone and (not $range.{$i}.isclass.highway) and (not $range.{$i}.istemporaryzone)) or $range.{$i}.isclass.sector or $range.{$i}.isclass.cluster or typeof $range.{$i} == datatype.macro">
+                <append_to_list name="$space" exact="$range.{$i}"/>
+              </do_if>
+            </do_all>
+          </do_if>
+          <!-- single Space or macro -->
+          <do_elseif value="($range.isclass.zone and (not $range.isclass.highway) and (not $range.istemporaryzone)) or $range.isclass.sector or $range.isclass.cluster or typeof $range == datatype.macro">
+              <append_to_list name="$space" exact="$range"/>
+          </do_elseif>
+        </do_if>
+        <!-- fallback: nothing fitting, $range is boolean false -->
+        <do_else>
+          <do_if value="this.ship.isclass.ship_l or this.ship.isclass.ship_xl">
+            <!-- was it intended that Capships just patrol the Zone if the $range value is boolean false? changed to cluster, like above - UniTrader -->
+            <append_to_list name="$space" exact="if this.ship.jobmainzone then this.ship.jobmainzone.cluster else this.ship.cluster"/>
+          </do_if>
+          <do_else>
+            <append_to_list name="$space" exact="if this.ship.jobmainzone then this.ship.jobmainzone.sector else this.ship.sector"/>
+          </do_else>
+        </do_else>
+      </do_else>
+      <!-- ================================ -->
+      <!-- === Create Zones List from Spaces === -->
+      <!-- ================================ -->
+      <!-- $space is a list of spaces - resolve them all to their Zones and add them to the List -->
+      <create_list name="$zones"/>
+      <do_all exact="$space.count" counter="$i">
+        <do_if value="$space.{$i}.isclass.zone">
+          <append_to_list name="$zones" exact="$space.{$i}"/>
+        </do_if>
+        <do_elseif value="$space.{$i}.isclass.sector or $space.{$i}.isclass.cluster">
+          <find_zone name="$zones_add" space="$space.{$i}" priorityzone="true" tempzone="false" multiple="true">
+            <match class="class.highway" negate="true"/>
+          </find_zone>
+          <do_all exact="$zones_add.count" counter="$j">
+            <append_to_list name="$zones" exact="$zones_add.{$j}"/>
+          </do_all>
+        </do_elseif>
+        <do_elseif value="typeof $space.{$i} == datatype.macro">
+          <find_zone name="$zones_add" space="player.galaxy" priorityzone="true" tempzone="false" multiple="true" macro="$space.{$i}">
+            <match class="class.highway" negate="true"/>
+          </find_zone>
+          <do_all exact="$zones_add.count" counter="$j">
+            <append_to_list name="$zones" exact="$zones_add.{$j}"/>
+          </do_all>
+        </do_elseif>
+        <do_else>
+          <debug_text filter="error" text="'Invalid Value for $space.{$i} provided:\n$range= %1 , Object Name= %2 , Ship Job ID= %3 , $space.{$i} = %4'.[$range,this.container.knownname,this.ship.job,$space.{$i}]"/>
+        </do_else>
+      </do_all>
+      <remove_value name="$zones_add"/>
+      
+      <!-- Bugfix: Never return an Empty List - use the current Zone in this case and print some Error Message to the Debuglog to fix this -->
+      <do_if value="$zones.count == 0">
+        <debug_text filter="error" text="'Decoding $range resulted in an Empty List, falling back to current Zone to avoid further Errors:\n$range= %1 , Object Name= %2 , Ship Job ID= %3 '.[$range,this.container.knownname,this.ship.job]"/>
+        <append_to_list name="$zones" exact="if this.ship.jobmainzone and this.ship.jobmainzone.exists then this.ship.jobmainzone else this.ship.zone" />
+      </do_if>
+      
+      <!-- Add calculated Zones to global var to avoid doing this calculation again and then return the result -->
+      <set_value name="global.$BR_range_table.{'$'+$range}" exact="$zones"/>
+      <return value="$zones"/>
+    </actions>
+  </attention>
+</aiscript>
+

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <add sel="/characters">
+  <character id="acmecorp_lawenforcement" group="albion.lawenforcement">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, lawenforcement]" faction="acmecorp" race="argon"/>
+    <owner exact="acmecorp"/>
+  </character>
+  <character id="acmecorp_trader_random" group="teladi.trader">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, pilot, traderpilot, masstraffic]" faction="acmecorp" race="teladi"/>
+    <owner exact="acmecorp"/>
+    <skills>
+      <skill type="boarding" min="3" max="4" />
+      <skill type="combat" min="3" max="5" />
+      <skill type="engineering" min="4" max="5" />
+      <skill type="leadership" min="4" max="5" />
+      <skill type="management" min="3" max="5" />
+      <skill type="morale" min="4" max="5" />
+      <skill type="navigation" min="5" max="5" />
+      <skill type="science" min="3" max="4" />
+    </skills>
+  </character>
+  <character id="acmecorp_fighter_random" group="split.generic">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, pilot, fighterpilot, defencecontrol, masstraffic]" faction="acmecorp" race="split"/>
+    <owner exact="acmecorp"/>
+    <skills>
+      <skill type="boarding" min="3" max="4" />
+      <skill type="combat" min="4" max="5" />
+      <skill type="engineering" min="3" max="5" />
+      <skill type="leadership" min="4" max="5" />
+      <skill type="management" min="3" max="5" />
+      <skill type="morale" min="4" max="5" />
+      <skill type="navigation" min="5" max="5" />
+      <skill type="science" min="3" max="4" />
+    </skills>
+  </character>
+  <character id="acmecorp_commander_random" group="argon.commander">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, commander]" faction="acmecorp" race="argon"/>
+    <owner exact="acmecorp"/>
+    <skills>
+      <skill type="boarding" min="3" max="4" />
+      <skill type="combat" min="5" max="5" />
+      <skill type="engineering" min="3" max="5" />
+      <skill type="leadership" min="5" max="5" />
+      <skill type="management" min="4" max="5" />
+      <skill type="morale" min="5" max="5" />
+      <skill type="navigation" min="5" max="5" />
+      <skill type="science" min="3" max="4" />
+    </skills>
+  </character>
+  <character id="acmecorp_manager_random" group="argon.manager">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, manager]" faction="acmecorp" race="argon"/>
+    <owner exact="acmecorp"/>
+    <skills>
+      <skill type="boarding" min="3" max="4" />
+      <skill type="combat" min="3" max="5" />
+      <skill type="engineering" min="5" max="5" />
+      <skill type="leadership" min="4" max="5" />
+      <skill type="management" min="3" max="5" />
+      <skill type="morale" min="4" max="5" />
+      <skill type="navigation" min="4" max="5" />
+      <skill type="science" min="3" max="4" />
+    </skills>
+  </character>
+  <character id="acmecorp_engineer_random" group="argon.engineer">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, engineer, specialengineer]" faction="acmecorp" race="argon"/>
+    <owner exact="acmecorp"/>
+    <skills>
+      <skill type="boarding" min="3" max="4" />
+      <skill type="combat" min="3" max="5" />
+      <skill type="engineering" min="5" max="5" />
+      <skill type="leadership" min="4" max="5" />
+      <skill type="management" min="3" max="5" />
+      <skill type="morale" min="4" max="4" />
+      <skill type="navigation" min="5" max="5" />
+      <skill type="science" min="3" max="4" />
+    </skills>
+  </character>
+  <character id="acmecorp_architect_random" group="argon.architect">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, architect]" faction="acmecorp" race="argon"/>
+    <owner exact="acmecorp"/>
+  </character>
+  <character id="acmecorp_marine_random" group="argon.marine">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, marine]" faction="acmecorp" race="argon"/>
+    <owner exact="acmecorp"/>
+  </character>
+  <character id="acmecorp_platform_random" group="teladi.trader">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, upgradetrader, shiptrader, smallshiptrader, miningsupplier, junkdealer, spacefarmer, shiptech, humanresources, equipment, foodmerchant, shadyguy, dronetrader, recruitment, armsdealer, licencetrader]" faction="acmecorp" race="teladi"/>
+    <owner exact="acmecorp"/>
+  </character>
+  <character id="acmecorp_specialist_random" group="argon.specialengineer">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, specialistagriculture, specialistpowerstorage, specialistfood, specialistchemical, specialistprecision, specialistweapons, specialistpharmaceuticals, specialistmetals, specialistgeophysics, specialistsurfacesystems, specialistpowersupply, specialistaquatics]" faction="acmecorp" race="argon"/>
+    <owner exact="acmecorp"/>
+    <skills>
+      <skill type="boarding" min="0" max="3" />
+      <skill type="combat" min="0" max="3" />
+      <skill type="engineering" min="3" max="5" />
+      <skill type="leadership" min="3" max="4" />
+      <skill type="management" min="3" max="5" />
+      <skill type="morale" min="0" max="3" />
+      <skill type="navigation" min="1" max="4" />
+      <skill type="science" min="2" max="5" />
+    </skills>
+  </character>
+
+  <character id="deepwater_lawenforcement" group="albion.lawenforcement">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, lawenforcement]" faction="deepwater" race="argon"/>
+    <owner exact="deepwater"/>
+  </character>
+  <character id="deepwater_trader_random" group="teladi.trader">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, pilot, traderpilot, masstraffic]" faction="deepwater" race="teladi"/>
+    <owner exact="deepwater"/>
+    <skills>
+      <skill type="boarding" min="3" max="4" />
+      <skill type="combat" min="3" max="5" />
+      <skill type="engineering" min="4" max="5" />
+      <skill type="leadership" min="4" max="5" />
+      <skill type="management" min="3" max="5" />
+      <skill type="morale" min="4" max="5" />
+      <skill type="navigation" min="5" max="5" />
+      <skill type="science" min="3" max="4" />
+    </skills>
+  </character>
+  <character id="deepwater_fighter_random" group="split.generic">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, pilot, fighterpilot, defencecontrol, masstraffic]" faction="deepwater" race="split"/>
+    <owner exact="deepwater"/>
+    <skills>
+      <skill type="boarding" min="3" max="4" />
+      <skill type="combat" min="4" max="5" />
+      <skill type="engineering" min="3" max="5" />
+      <skill type="leadership" min="4" max="5" />
+      <skill type="management" min="3" max="5" />
+      <skill type="morale" min="4" max="5" />
+      <skill type="navigation" min="5" max="5" />
+      <skill type="science" min="3" max="4" />
+    </skills>
+  </character>
+  <character id="deepwater_commander_random" group="argon.commander">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, commander]" faction="deepwater" race="argon"/>
+    <owner exact="deepwater"/>
+    <skills>
+      <skill type="boarding" min="3" max="4" />
+      <skill type="combat" min="5" max="5" />
+      <skill type="engineering" min="3" max="5" />
+      <skill type="leadership" min="5" max="5" />
+      <skill type="management" min="4" max="5" />
+      <skill type="morale" min="5" max="5" />
+      <skill type="navigation" min="5" max="5" />
+      <skill type="science" min="3" max="4" />
+    </skills>
+  </character>
+  <character id="deepwater_manager_random" group="argon.manager">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, manager]" faction="deepwater" race="argon"/>
+    <owner exact="deepwater"/>
+    <skills>
+      <skill type="boarding" min="3" max="4" />
+      <skill type="combat" min="3" max="5" />
+      <skill type="engineering" min="5" max="5" />
+      <skill type="leadership" min="4" max="5" />
+      <skill type="management" min="3" max="5" />
+      <skill type="morale" min="4" max="5" />
+      <skill type="navigation" min="4" max="5" />
+      <skill type="science" min="3" max="4" />
+    </skills>
+  </character>
+  <character id="deepwater_engineer_random" group="argon.engineer">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, engineer, specialengineer]" faction="deepwater" race="argon"/>
+    <owner exact="deepwater"/>
+    <skills>
+      <skill type="boarding" min="3" max="4" />
+      <skill type="combat" min="3" max="5" />
+      <skill type="engineering" min="5" max="5" />
+      <skill type="leadership" min="4" max="5" />
+      <skill type="management" min="3" max="5" />
+      <skill type="morale" min="4" max="4" />
+      <skill type="navigation" min="5" max="5" />
+      <skill type="science" min="3" max="4" />
+    </skills>
+  </character>
+  <character id="deepwater_architect_random" group="argon.architect">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, architect]" faction="deepwater" race="argon"/>
+    <owner exact="deepwater"/>
+  </character>
+  <character id="deepwater_marine_random" group="argon.marine">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, marine]" faction="deepwater" race="argon"/>
+    <owner exact="deepwater"/>
+  </character>
+  <character id="deepwater_platform_random" group="teladi.trader">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, upgradetrader, shiptrader, smallshiptrader, miningsupplier, junkdealer, spacefarmer, shiptech, humanresources, equipment, foodmerchant, shadyguy, dronetrader, recruitment, armsdealer, licencetrader]" faction="deepwater" race="teladi"/>
+    <owner exact="deepwater"/>
+  </character>
+  <character id="deepwater_specialist_random" group="argon.specialengineer">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, specialistagriculture, specialistpowerstorage, specialistfood, specialistchemical, specialistprecision, specialistweapons, specialistpharmaceuticals, specialistmetals, specialistgeophysics, specialistsurfacesystems, specialistpowersupply, specialistaquatics]" faction="deepwater" race="argon"/>
+    <owner exact="deepwater"/>
+    <skills>
+      <skill type="boarding" min="0" max="3" />
+      <skill type="combat" min="0" max="3" />
+      <skill type="engineering" min="3" max="5" />
+      <skill type="leadership" min="3" max="4" />
+      <skill type="management" min="3" max="5" />
+      <skill type="morale" min="0" max="3" />
+      <skill type="navigation" min="1" max="4" />
+      <skill type="science" min="2" max="5" />
+    </skills>
+  </character>
+
+
+
+  <character id="hoa_lawenforcement" group="albion.lawenforcement">
+    <category tags="[albion, lawenforcement]" faction="heartofalbion" race="argon"/>
+    <owner exact="heartofalbion"/>
+  </character>
+  
+  <character id="pmc_lawenforcement" group="albion.lawenforcement">
+    <category tags="[albion, devries, lawenforcement]" faction="plutarch" race="argon"/>
+    <owner exact="plutarch"/>
+  </character>
+  
+  <character id="roc_lawenforcement" group="devries.lawenforcement">
+    <category tags="[albion, devries, lawenforcement]" faction="canteran" race="argon"/>
+    <owner exact="canteran"/>
+  </character>
+  
+  <character id="argon_lawenforcement" group="argon.lawenforcement">
+    <category tags="[omicronlyrae, maelstrom, lawenforcement]" faction="argongovernment" race="argon"/>
+    <owner exact="argongovernment"/>
+  </character>
+  
+  <character id="hereticvanguards_lawenforcement" group="argon.lawenforcement">
+    <category tags="[omicronlyrae, maelstrom, lawenforcement]" faction="hereticvanguards" race="argon"/>
+    <owner exact="hereticvanguards"/>
+  </character>
+	
+  <character id="platform_trader_maelstrom_hv" group="argon.trader">
+    <category tags="[maelstrom, upgradetrader, shiptrader, smallshiptrader, miningsupplier, junkdealer, spacefarmer, shiptech, humanresources, equipment, foodmerchant, shadyguy, dronetrader, recruitment, armsdealer, licencetrader]" faction="hereticvanguards" race="argon"/>
+    <owner exact="hereticvanguards"/>
+  </character>
+  
+  <character id="platform_trader_neutral" group="argon.trader">
+    <category tags="[upgradetrader, shiptrader, smallshiptrader, miningsupplier, junkdealer, spacefarmer, shiptech, humanresources, equipment, foodmerchant, shadyguy, dronetrader, recruitment, armsdealer, licencetrader]" faction="neutral" race="argon"/>
+    <owner exact="neutral"/>
+  </character>
+
+  <character id="platform_trader_maelstrom_xenon" group="argon.trader">
+    <category tags="[maelstrom, upgradetrader, shiptrader, smallshiptrader, miningsupplier, junkdealer, spacefarmer, shiptech, humanresources, equipment, foodmerchant, shadyguy, dronetrader, recruitment, armsdealer, licencetrader]" faction="xenon" race="argon"/>
+    <owner exact="xenon"/>
+  </character>  
+  
+  <character id="manager_xenon_random" group="argon.manager">
+    <category tags="[maelstrom, omicronlyrae, manager]" faction="xenon" race="argon"/>
+    <owner exact="xenon"/>
+  </character>
+	
+	<character id="equipment_trader_HV" group="argon.trader">
+    <category tags="[maelstrom, pilot, traderpilot, masstraffic, watchdog]" faction="hereticvanguards" race="argon"/>
+    <owner exact="hereticvanguards"/>
+  </character>
+  <character id="trader_HV" group="argon.trader">
+    <category tags="[maelstrom, pilot, traderpilot, masstraffic, watchdog]" faction="hereticvanguards" race="argon"/>
+    <owner exact="hereticvanguards"/>
+  </character>
+  <character id="fighter_HV" group="argon.pilot">
+    <category tags="[maelstrom, pilot, fighterpilot, commander, defencecontrol, masstraffic, watchdog]" faction="hereticvanguards" race="argon"/>
+    <owner exact="hereticvanguards"/>
+  </character>  
+
+  <character id="sovereignsyndicate_specialist_random" group="argon.specialengineer">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, specialistagriculture, specialistpowerstorage, specialistfood, specialistchemical, specialistprecision, specialistweapons, specialistpharmaceuticals, specialistmetals, specialistgeophysics, specialistsurfacesystems, specialistpowersupply, specialistaquatics]" faction="sovereignsyndicate" race="argon"/>
+    <owner exact="sovereignsyndicate"/>
+  </character>
+  
+  <character id="equipment_trader_xen" group="argon.trader">
+    <category tags="[maelstrom, traderpilot, masstraffic, watchdog]" faction="xenon" race="argon"/>
+    <owner exact="xenon"/>
+  </character>
+    	
+  <character id="xenon_generic_human" group="argon.pilot">
+    <category tags="[omicronlyrae, maelstrom, architect, commander, defencecontrol, pilot, engineer, manager, marine, masstraffic, watchdog, specialengineer, traderpilot, specialistagriculture, specialistpowerstorage, specialistfood, specialistchemical, specialistprecision, specialistweapons, specialistpharmaceuticals, specialistmetals, specialistgeophysics, specialistsurfacesystems, specialistpowersupply, specialistaquatics]" faction="xenon" race="argon" comment="fullyqualified"/>
+    <owner exact="xenon"/>
+  </character>
+  </add>
+  
+  <replace sel="//character[@id='hev_generic']">
+	<character id="hev_generic" group="argon.pilot">
+    <category faction="hereticvanguards" race="argon" tags="[omicronlyrae, maelstrom, architect, commander, defencecontrol, engineer, fighterpilot, manager, marine, masstraffic, watchdog, pilot, specialengineer, traderpilot, specialistagriculture, specialistpowerstorage, specialistfood, specialistchemical, specialistprecision, specialistweapons, specialistpharmaceuticals, specialistmetals, specialistgeophysics, specialistsurfacesystems, specialistpowersupply, specialistaquatics]" comment="fullyqualified"/>
+    <owner exact="hereticvanguards"/>
+	</character>
+  </replace>
+  
+  <!--replace sel="//character[@id='xenon_generic']">
+  <character id="xenon_generic" macro="character_xenon_macro">
+    <category tags="[maelstrom, defencecontrol, engineer, fighterpilot, commander]" faction="xenon" race="xenon" comment="fullyqualified"/>
+    <owner exact="xenon"/>
+  </character>
+  </replace-->
+    
+   </diff>

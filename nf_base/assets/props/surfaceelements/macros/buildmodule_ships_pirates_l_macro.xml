@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Benedikt (192.168.3.150) at 16.01.2014_11-06-53-->
+<macros>
+  <macro name="buildmodule_ships_pirates_l_macro" class="buildmodule">
+    <component ref="props_surf_ar_buildmodule_l" />
+    <properties>
+      <identification name="{20107,3801}" description="{20107,3802}" />
+      <build method="albion" />
+      <explosiondamage value="100000" />
+      <hull max="6200000" />
+      <effects>
+        <explosion ref="explosion_station_01" />
+        <sefx_hack_disabled ref="hack_deactivated_m" />
+      </effects>
+      <secrecy level="4" />
+      <builder>
+		<macro ref="units_size_l_pir_besieger_frig_macro" />
+		<macro ref="units_size_l_pir_vanguard_frig_macro" />
+        <macro ref="units_size_l_pir_container_03_macro" />
+        <macro ref="units_size_l_ice_collector_macro" />
+        <macro ref="units_size_l_ions_collector_macro" />
+        <macro ref="units_size_l_hydrogen_collector_macro" />
+        <macro ref="units_size_l_ore_collector_macro" />        
+      </builder>
+    </properties>
+    <connections>
+      <connection ref="connection_dockingbay01">
+        <macro ref="props_surf_ar_docks_size_l_inv_macro" connection="connection_component01" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

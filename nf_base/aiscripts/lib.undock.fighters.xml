@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="lib.undock.fighters" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" priority="5">
+	<params>
+		<param name="timeout" default="3min" />
+		<param name="exemplary" default="100" comment="emergency undocking" />
+	</params>
+
+	<attention min="unknown">
+		<actions>
+
+			<create_group groupname="$theShipfollowers" />
+			<create_group groupname="$stopgroup" />
+			<create_list name="$docks"/>
+			<do_all exact="2" counter="$j">
+				<find_dock_location container="this.ship" size="[tag.dock_m, tag.dock_s].{$j}" name="$dock" multiple="true"/>
+				<do_all exact="$dock.count" counter="$i">
+					<do_if value="$dock.{$i}" list="$docks" negate="true">
+						<append_to_list name="$docks" exact="$dock.{$i}"/>
+					</do_if>
+				</do_all>
+				<remove_value name="$dock"/>
+			</do_all>
+			<do_all exact="$docks.count" counter="$i">
+				<add_to_group groupname="$theShipfollowers" list="$docks.{$i}.component.docked" chance="if $docks.{$i}.component.docked.count then 100 else 0"/>
+			</do_all>
+			<remove_value name="$docks"/>
+
+			<!-- Filter subordinates -->
+			<do_all exact="$theShipfollowers.count" counter="$i">
+				<do_if value="$theShipfollowers.{$i}.hullpercentage lt 70 and $theShipfollowers.{$i}.engineer.exists and $theShipfollowers.{$i}.engineer.isclass.npc">
+					<add_to_group groupname="$stopgroup" object="$theShipfollowers.{$i}" chance="if $stopgroup.list.indexof.{$theShipfollowers.{$i}} then 0 else 100" />
+					<add_to_group groupname="$stopgroup" list="$theShipfollowers.{$i}.subordinates" chance="if $theShipfollowers.{$i}.subordinates.count then 100 else 0"/>
+				</do_if>
+			</do_all>
+
+			<do_if value="$theShipfollowers.count gt 0">
+				<!-- open hangar -->
+				<activate_battlestate object="this.ship" state="open_hangar" chance="$exemplary" />
+
+				<do_all exact="$theShipfollowers.count" counter="$i">
+					<do_if value="$theShipfollowers.{$i}" list="$stopgroup.list">
+						<continue />
+					</do_if>
+					<do_if value="$theShipfollowers.{$i}.engineer.exists and $theShipfollowers.{$i}.engineer.isclass.npc">
+						<do_if value="$theShipfollowers.{$i}.hullpercentage" min="70">
+							<destroy_object object="$theShipfollowers.{$i}.engineer"/>
+						</do_if>
+						<do_else>
+							<continue />
+						</do_else>
+					</do_if>
+
+					<do_if value="$theShipfollowers.{$i}.isplayerowned">
+						<start_script object="$theShipfollowers.{$i}.pilot" name="'carrier.default'" chance="if $theShipfollowers.{$i}.pilot.$carrier? then 0 else 100" >
+							<param name="base" value="this.ship" />
+							<param name="do_escort" value="$theShipfollowers.{$i}.commander" />
+						</start_script>
+						<signal_objects object="$theShipfollowers.{$i}" param="'modeoff'" />
+					</do_if>
+					<do_else>
+						<start_script name="'move.escort'" object="$theShipfollowers.{$i}.pilot">
+							<param name="target" value="$theShipfollowers.{$i}.commander" />
+							<param name="formation" value="[formationshape.vshape, formationshape.invvshape, formationshape.triangle, formationshape.eagle, formationshape.circle, formationshape.twin, formationshape.vulcan, formationshape.pointguard, formationshape.invpointguard].random" />
+						</start_script>
+					</do_else>
+
+				</do_all>
+
+				<set_value name="$success" exact="1" />
+				<set_value name="$timeout" exact="player.age+$timeout" />
+				<set_value name="$reverse" exact="false" />
+				<do_while value="$success" exact="1">        
+					<wait min="10s" max="20s" chance="$exemplary" />
+					<set_value name="$success" exact="2" />
+
+					<do_if value="$theShipfollowers.count gt 0" chance="if player.primaryship.zone == this.ship.zone and not global.$mmcarrierconfig.$mm_carriers_sdockplus then 100 else 0">
+						<do_all exact="$theShipfollowers.count" counter="$i" reverse="$reverse">
+							<do_if value="$theShipfollowers.{$i}.isclass.[class.ship_s, class.ship_m]">
+								<do_if value="$theShipfollowers.{$i}.pilot.command.value == commandaction.undocking" chance="$exemplary">
+									<set_value name="$success" exact="1" />
+								</do_if>
+							</do_if>
+						</do_all>
+						<do_if value="$reverse" exact="true">
+							<set_value name="$reverse" exact="false" />
+						</do_if>
+						<do_else>
+							<set_value name="$reverse" exact="true" />
+						</do_else>
+					</do_if>
+
+					<do_if value="($timeout lt player.age)">
+						<set_value name="$success" exact="2" />
+					</do_if>
+				</do_while>
+				<remove_value name="$success"/>
+				<remove_value name="$timeout"/>
+				<remove_value name="this.$carrier_restart_fighters"/>
+				<remove_value name="this.$carrier_fighters_docked"/>
+				<!-- close hangar -->
+				<activate_battlestate object="this.ship" state="close_hangar" chance="$exemplary"/>
+			</do_if>
+			<remove_value name="$theShipfollowers"/>
+			<remove_value name="$stopgroup"/>
+
+		</actions>
+	</attention>
+</aiscript>

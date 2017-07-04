@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="move.voyager" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd">
+	<params>
+		<param name="workspace" default="[this.ship.cluster]"/>
+		<param name="returnzone" default="this.ship.zone" />
+		<param name="continue" default="true" />
+		<param name="ignoreknown" default="false" />
+		<param name="ignoreownedzones" default="false" />
+		<param name="cover" default="100" />
+		<param name="datapool" default="null" />
+		<param name="dispatchatfirstmatch" default="false" />
+		<param name="debugchance" default="0" />
+	</params>
+	<interrupts>
+		<handler ref="AttackHandler" />
+		<handler>
+			<conditions>
+				<check_any>
+					<event_object_signalled object="this.ship" param="'do.orientation'" />
+					<event_object_changed_zone object="this.ship" />
+				</check_any>
+				<check_value value="not this.ship.zone.isclass.highway and this.ship.zone.ismapzone" />
+			</conditions>
+			<actions>
+				<set_value name="$hint" exact="false"/>
+				<do_if value="this.ship.zone.owner and this.ship.zone.owner.hasrelation.enemy.{this.ship.owner}" chance="$cover">
+					<do_if value="this.ship.owner != this.ship.trueowner and not this.ship.zone.owner.hasrelation.enemy.{this.ship.trueowner}">
+						<get_control_entities groupname="$Entities" object="this.ship"/>
+						<do_all exact="$Entities.count" counter="$i" > 
+							<set_cover_owner object="$Entities.{$i}"/>
+						</do_all> 
+						<set_cover_owner object="this.ship"/>
+						<remove_value name="$Entities"/>
+						<do_all exact="this.ship.subordinates.count" counter="$i">
+							<get_control_entities groupname="$Entities" object="this.ship.subordinates.{$i}"/>
+							<do_all exact="$Entities.count" counter="$j" > 
+								<set_cover_owner object="$Entities.{$j}"/>
+							</do_all> 
+							<set_cover_owner object="this.ship.subordinates.{$i}"/>
+							<remove_value name="$Entities"/>
+						</do_all>
+					</do_if>
+					<do_else>
+						<get_control_entities groupname="$Entities" object="this.ship"/>
+						<do_all exact="$Entities.count" counter="$h" > 
+							<set_cover_owner object="$Entities.{$h}" faction="if this.ship.zone.owner == faction.player then faction.civilian else this.ship.zone.owner"/>
+						</do_all> 
+						<set_cover_owner object="this.ship" faction="if this.ship.zone.owner == faction.player then faction.civilian else this.ship.zone.owner"/>
+						<remove_value name="$Entities"/>
+						<do_all exact="this.ship.subordinates.count" counter="$g">
+							<get_control_entities groupname="$Entities" object="this.ship.subordinates.{$g}"/>
+							<do_all exact="$Entities.count" counter="$h" > 
+								<set_cover_owner object="$Entities.{$h}" faction="if this.ship.zone.owner == faction.player then faction.civilian else this.ship.zone.owner"/>
+							</do_all> 
+							<set_cover_owner object="this.ship.subordinates.{$g}" faction="if this.ship.zone.owner == faction.player then faction.civilian else this.ship.zone.owner"/>
+							<remove_value name="$Entities"/>
+						</do_all>
+					</do_else>
+				</do_if>
+				<find_station space="this.ship.zone" known="false" name="$th_stations" multiple="true" chance="if $ignoreknown then 100 else 0" />
+				<find_station space="this.ship.zone" name="$th_stations" multiple="true" chance="if $ignoreknown then 0 else 100" />
+
+				<do_all exact="$th_stations.count" counter="$t">
+					<do_if value="$th_stations.{$t}.owner.hasrelation.enemy.{this.ship.trueowner}" negate="true">
+						<do_if value="this.ship.isplayerowned">
+							<reveal_object object="$th_stations.{$t}" exact="25"/>
+							<add_encyclopedia_entry type="factions" item="$th_stations.{$t}.owner.id" chance="if $th_stations.{$t}.owner.knowntoplayer then 0 else 100" />
+							<set_faction_known faction="$th_stations.{$t}.owner" known="true" chance="if $th_stations.{$t}.owner.knowntoplayer then 0 else 100" />
+							<add_encyclopedia_entry type="stationtypes" item="$th_stations.{$t}.macro.id" chance="if $th_stations.{$t}.name == $th_stations.{$t}.knownname then 0 else 100" />
+							<set_known object="$th_stations.{$t}" known="true" chance="if $th_stations.{$t}.name == $th_stations.{$t}.knownname then 0 else 100" />
+							<set_object_radar_visible object="$th_stations.{$t}"/>
+							<store_trade_offer_snapshot object="$th_stations.{$t}" chance="if not $th_stations.{$t}.hastradesubscription and ($th_stations.{$t}.resources.list.count or $th_stations.{$t}.products.list.count or $th_stations.{$t}.tradewares.list.count) then 100 else 0" />
+						</do_if>
+					</do_if>
+					<do_else>
+						<do_if value="$found_stations?" negate="true">
+							<create_list name="$found_stations"/>
+						</do_if>
+						<do_if value="$found_stations.indexof.{$th_stations.{$t}} == 0">
+							<append_to_list name="$found_stations" exact="$th_stations.{$t}"/>
+						</do_if>
+
+						<do_if value="$th_stations.{$t}.isplayerowned">
+							<set_value name="$hint" exact="this.zone" chance="100"/>
+						</do_if>
+					</do_else>
+				</do_all>
+
+				<do_if value="this.ship.zone.name == this.ship.zone.knownname" negate="true" chance="this.ship.isplayerowned *100">
+					<set_known object="this.ship.zone" known="true"/>
+					<do_if value="this.ship.cluster.name == this.ship.cluster.knownname" negate="true">
+						<set_known object="this.ship.cluster" known="true"/>
+					</do_if>
+					<do_if value="this.ship.sector.name == this.ship.sector.knownname" negate="true">
+						<set_known object="this.ship.sector" known="true"/>
+					</do_if>
+				</do_if>
+
+				<find_object space="this.ship.zone" name="$th_objects" class="[class.gate, class.highwayentrygate, class.jumpbeacon, class.highwayexitgate]" multiple="true" chance="this.ship.isplayerowned *100"/>
+				<do_all exact="$th_objects.count" counter="$ojk" chance="$th_objects? *100">
+					<set_known object="$th_objects.{$ojk}" known="true" chance="this.combinedskill"/>
+					<do_if value="$th_objects.{$ojk}.isclass.gate and $th_objects.{$ojk}.isactive and $th_objects.{$ojk}.exit and $th_objects.{$ojk}.destination">
+						<set_known object="$th_objects.{$ojk}.exit" known="true" chance="this.combinedskill"/>
+						<set_known object="$th_objects.{$ojk}.destination" known="true" chance="this.combinedskill"/>
+						<set_known object="$th_objects.{$ojk}.destination.sector" known="true" chance="this.combinedskill"/>
+						<set_known object="$th_objects.{$ojk}.destination.cluster" known="true" chance="this.combinedskill"/>
+					</do_if>
+					<do_elseif value="$th_objects.{$ojk}.isclass.highwayentrygate and $th_objects.{$ojk}.highway and $th_objects.{$ojk}.exit and $th_objects.{$ojk}.destination">
+						<set_known object="$th_objects.{$ojk}.exit" known="true" chance="this.combinedskill"/>
+						<set_known object="$th_objects.{$ojk}.destination" known="true" chance="this.combinedskill"/>
+						<set_known object="$th_objects.{$ojk}.destination.sector" known="true" chance="this.combinedskill"/>
+						<set_known object="$th_objects.{$ojk}.destination.cluster" known="true" chance="this.combinedskill"/>
+						<set_known object="$th_objects.{$ojk}.highway" known="true" chance="this.combinedskill"/>
+					</do_elseif>
+					<do_elseif value="$th_objects.{$ojk}.isclass.highwayexitgate and $th_objects.{$ojk}.highway and $th_objects.{$ojk}.entry">
+						<set_known object="$th_objects.{$ojk}.entry" known="true" chance="this.combinedskill"/>
+						<set_known object="$th_objects.{$ojk}.entry.zone" known="true" chance="this.combinedskill"/>
+						<set_known object="$th_objects.{$ojk}.entry.sector" known="true" chance="this.combinedskill"/>
+						<set_known object="$th_objects.{$ojk}.entry.cluster" known="true" chance="this.combinedskill"/>
+						<set_known object="$th_objects.{$ojk}.highway" known="true" chance="this.combinedskill"/>
+					</do_elseif>
+				</do_all>
+				<remove_value name="$th_objects"/>
+
+				<do_if value="$hint? and $hint == this.zone">
+					<signal_objects object="player.computer" param="'CM_EWS_SCOUT'" param2="[this.ship, this.ship.zone]" />
+					<set_value name="$hint" exact="true" chance="100"/>
+				</do_if>
+				<remove_value name="$th_stations"/>
+			</actions>
+		</handler>
+		<handler>
+			<conditions>
+				<event_gravidar_has_scanned object="this.ship" />
+				<check_value value="not this.zone.isclass.highway and not event.object.zone.isclass.highway" />
+				<check_value value="this.ship.isplayerowned" chance="this.combinedskill"/>
+				<check_value value="not $nextReaction? or $nextReaction lt player.age" />
+				<count_gravidar_contacts result="$EnemyTargets" object="this.ship" class="[class.ship_l, class.ship_xl, class.ship_s, class.ship_m]" min="1">
+					<match_distance object="this.ship" max="this.ship.maxradarrange"/>
+					<match_relation faction="this.ship.owner" relation="enemy" comparison="le" />
+				</count_gravidar_contacts>
+			</conditions>
+			<actions>
+				<set_value name="$nextReaction" exact="player.age+10min" />
+				<do_if value="event.name" exact="'event_gravidar_has_scanned'">
+					<set_value name="$dps" exact="0"/>
+					<do_all exact="$EnemyTargets.count" counter="$i">
+						<set_value name="$dps" exact="($EnemyTargets.{$i}.dps.all)i" operation="add"/>
+					</do_all>
+					<do_if value="this.ship.dps.all*1.5f lt $dps and $dps gt 70000">
+						<signal_objects object="player.computer" param="'CM_EWS'" param2="$EnemyTargets.{1}" />
+						<do_if value="md.CM_Config.Settings.$Check?" negate="true">
+							<show_notification caption="'=== Early Warning System ==='" details="'%1 Enemies found in \n%2'.[$EnemyTargets.count, this.ship.zone.knownname]" queued="true" priority="5"/>
+						</do_if>
+						<do_if value="global.$RRFspaces?">
+							<signal_objects object="this.defensible.sector" param="'help requested'" param2="this.defensible" />
+						</do_if>
+					</do_if>
+				</do_if>
+				<remove_value name="$EnemyTargets"/>
+			</actions>
+		</handler>
+		<handler>
+			<conditions>
+				<event_object_signalled object="this.ship" param="'withdraw battle'" />
+				<check_value value="this.ship.isboostactive" negate="true"/>
+			</conditions>
+			<actions>
+				<do_if value="$zones? and $zones.indexof.{this.ship.zone}">
+					<remove_value name="$zones.{$zones.indexof.{this.ship.zone}}"/>
+					<abort_called_scripts resume="travel" />
+				</do_if>
+				<do_else>
+					<do_any>
+						<set_value name="$flee" exact="'jump'"      weight="if this.ship.canboost then 80 else 100" />
+						<set_value name="$flee" exact="'boost'"     weight="if this.ship.canboost then 20 else 0" />
+					</do_any>
+					<run_interrupt_script name="'move.flee'" abortscripts="true" resume="start">
+						<param name="method" value="$flee" />
+					</run_interrupt_script>
+					<remove_value name="$flee"/>
+				</do_else>
+			</actions>
+			<abort_called_scripts resume="travel" />
+		</handler>
+	</interrupts>
+	<init>
+		<set_command command="command.explore"/>
+		<set_command_action commandaction="commandaction.calculating" />
+	</init>
+	<attention min="unknown">
+		<actions>
+
+			<run_script name="'move.undock'" />
+
+			<set_value name="$run" exact="0"/>
+
+
+			<label name="start" />
+
+			<signal_objects object="this.ship" param="'do.orientation'" />
+
+			<create_list name="$zones"/>
+
+			<do_if value="typeof $workspace == datatype.list" negate="true">
+				<set_value name="$workspace" exact="[$workspace]"/>
+			</do_if>
+
+			<do_if value="$workspace.count lt 1 and $run">
+				<set_value name="$continue" exact="false"/>
+				<debug_text text="'%1 %2 %3 return to %4'.[this.ship, this.ship.knownname, this.ship.zone.knownname, @$returnzone.knownname]"  />
+				<resume label="returnto"/>
+			</do_if>
+			<do_if value="$ignoreknown and (not this.ship.isplayerowned or $run)">
+				<set_value name="$ignoreknown" exact="false"/>
+			</do_if>
+
+			<do_all exact="$workspace.count" counter="$w">
+				<!-- fallback macro -> space -->
+				<do_if value="typeof $workspace.{$w} == datatype.macro">
+					<find_cluster name="$temp" macro="$workspace.{$w}"/>
+					<do_if value="$temp" negate="true">
+						<find_sector name="$temp" macro="$workspace.{$w}"/>
+						<do_if value="$temp" negate="true">
+							<find_zone name="$temp" macro="$workspace.{$w}"/>
+							<do_if value="$temp" negate="true">
+								<continue />
+							</do_if>
+							<do_else>
+								<set_value name="$workspace.{$w}" exact="$temp"/>
+							</do_else>
+						</do_if>
+						<do_else>
+							<set_value name="$workspace.{$w}" exact="$temp"/>
+						</do_else>
+					</do_if>
+					<do_else>
+						<set_value name="$workspace.{$w}" exact="$temp"/>
+					</do_else>
+					<remove_value name="$temp"/>
+				</do_if>
+				<!-- collect zones -->
+				<find_station space="$workspace.{$w}" name="$stations" multiple="true" chance="if $ignoreknown then 100 else 0" known="false" />
+				<find_station space="$workspace.{$w}" name="$stations" multiple="true" chance="if $ignoreknown then 0 else 100" />
+
+				<do_if value="$workspace.{$w}.isclass.[class.sector, class.cluster, class.galaxy]">
+
+					<find_zone space="$workspace.{$w}" groupname="$tmp_zones" multiple="true" tempzone="false" priorityzone="true" chance="if $ignoreknown then 100 else 0" known="false" />
+					<find_zone space="$workspace.{$w}" groupname="$tmp_zones" multiple="true" tempzone="false" priorityzone="true" chance="if $ignoreknown then 0 else 100" />
+
+					<do_all exact="$tmp_zones.count" counter="$i">
+						<do_if value="not $zones.indexof.{$tmp_zones.{$i}}" chance="if $ignoreownedzones and $tmp_zones.{$i}.owner == this.ship.trueowner then 0 else 100">
+							<append_to_list name="$zones" exact="$tmp_zones.{$i}"/>
+						</do_if>
+					</do_all>
+					<remove_value name="$tmp_zones"/>
+				</do_if>
+				<do_elseif value="$workspace.{$w}.isclass.zone">
+					<do_if value="not $zones.indexof.{$workspace.{$w}}" chance="if $ignoreownedzones and $workspace.{$w}.owner == this.ship.trueowner then 0 else 100">
+						<append_to_list name="$zones" exact="$workspace.{$w}"/>
+					</do_if>
+				</do_elseif>
+
+				<do_all exact="$stations.count" counter="$i">
+					<do_if value="not $zones.indexof.{$stations.{$i}.zone}" chance="if $ignoreownedzones and $stations.{$i}.zone.owner == this.ship.trueowner then 0 else 100">
+						<append_to_list name="$zones" exact="$stations.{$i}.zone"/>
+					</do_if>
+				</do_all>
+				<remove_value name="$stations"/>
+			</do_all>
+
+			<label name="travel" />
+
+			<do_if value="$zones_cleanup? and $zones_cleanup">
+				<do_all exact="$zones.count" counter="$i" reverse="true">
+					<do_if value="$zones.{$i}.exists" negate="true">
+						<remove_value name="$zones.{$i}"/>
+					</do_if>
+				</do_all>
+				<remove_value name="$zones_cleanup"/>
+			</do_if>
+
+			<do_if value="$zones.count" negate="true">
+				<resume label="returnto"/>
+			</do_if>
+
+			<do_if value="$zones.{1}.exists" negate="true">
+				<remove_value name="$zones.{1}"/>
+				<resume label="travel"/>
+			</do_if>
+
+			<set_value name="$targetzone" exact="null"/>
+			<do_if value="$zones.indexof.{this.ship.zone}">
+				<set_value name="$targetzone" exact="this.ship.zone"/>
+			</do_if>
+			<do_elseif value="this.ship.zone.adjacentzones.indexof.{$zones.{1}}" negate="true">
+
+				<do_all exact="$zones.count" counter="$i">
+					<do_if value="$zones.{$i}.exists" negate="true">
+						<set_value name="$zones_cleanup" exact="true"/>
+						<continue />
+					</do_if>
+					<do_elseif value="this.ship.zone.adjacentzones.indexof.{$zones.{$i}} and this.ship.sector == $zones.{$i}.sector">
+						<set_value name="$targetzone" exact="$zones.{$i}"/>
+						<break />
+					</do_elseif>
+					<do_elseif value="this.ship.zone.adjacentzones.indexof.{$zones.{$i}}">
+						<set_value name="$targetzone" exact="$zones.{$i}"/>
+					</do_elseif>
+					<do_elseif value="(not $targetzone or ($targetzone and $targetzone.sector != this.ship.sector)) and this.ship.sector == $zones.{$i}.sector">
+						<set_value name="$targetzone" exact="$zones.{$i}"/>
+					</do_elseif>
+					<do_elseif value="not $targetzone and this.ship.cluster == $zones.{$i}.cluster">
+						<set_value name="$targetzone" exact="$zones.{$i}"/>
+					</do_elseif>
+				</do_all>
+
+				<do_if value="$targetzone" negate="true">
+					<set_value name="$targetgate" exact="null"/>
+					<find_object name="$object" space="this.ship.sector" class="[class.gate]" multiple="true"/>
+					<do_if value="$object" negate="true">
+						<find_object name="$object" space="this.ship.cluster" class="[class.gate]" multiple="true"/>
+					</do_if>
+					<do_all exact="$object.count" counter="$y">
+						<do_if value="not $object.{$y}.isactive">
+							<continue />
+						</do_if>
+
+						<do_if value="$zones.indexof.{$object.{$y}.destination}">
+							<set_value name="$targetzone" exact="$object.{$y}.destination"/>
+							<set_value name="$targetgate" exact="$object.{$y}"/>
+						</do_if>
+						<do_elseif value="$targetgate and $zones.indexof.{$object.{$y}.destination} and this.ship.distanceto.{$object.{$y}} lt this.ship.distanceto.{$targetgate}">
+							<set_value name="$targetzone" exact="$object.{$y}.destination"/>
+							<set_value name="$targetgate" exact="$object.{$y}"/>
+						</do_elseif>
+					</do_all>
+					<remove_value name="$targetgate"/>
+					<remove_value name="$object"/>
+					<do_if value="$targetzone" negate="true">
+						<set_value name="$targetzone" exact="$zones.{1}"/>
+					</do_if>
+				</do_if>
+			</do_elseif>
+			<do_else>
+				<set_value name="$targetzone" exact="$zones.{1}"/>
+			</do_else>
+
+			<set_command_action commandaction="commandaction.flyingto" param="$targetzone"/>
+
+			<do_if value="$targetzone != this.ship.zone">
+				<run_script name="'move.generic'">
+					<param name="destination" value="$targetzone" />
+					<param name="endintargetzone" value="true" />
+				</run_script>
+			</do_if>
+			<do_if value="$zones.indexof.{this.ship.zone}">
+				<remove_value name="$zones.{$zones.indexof.{this.ship.zone}}"/>
+			</do_if>
+			<remove_value name="$targetzone"/>
+			<!-- find targets -->
+			<do_if value="$ignoreknown">
+				<find_station space="this.ship.zone" known="false" name="$stations" multiple="true" />
+			</do_if>
+			<do_else>
+				<find_station space="this.ship.zone" name="$stations" multiple="true" />
+			</do_else>
+
+			<do_if value="this.ship.isplayerowned" chance="this.combinedskill">
+				<find_ship space="this.ship.zone" name="$ownerless" class="[class.ship_s,class.ship_m,class.ship_l,class.ship_xl]" owner="faction.ownerless" multiple="true" />
+				<do_if value="$ownerless.count">
+					<set_value name="$text" exact="''"/>
+					<do_if value="$ownerlessFound?" negate="true">
+						<create_list name="$ownerlessFound" />
+					</do_if>
+					<do_all exact="$ownerless.count" counter="$i">
+						<do_if value="this.ship.macro.ismacro.{global.$mmcarriers} and $ownerless.{$i}.isclass.[class.ship_s,class.ship_m] and $ownerless.{$i}.hullpercentage gt 10" chance="(not this.ship.zone.owner or (this.ship.zone.owner and not this.ship.zone.owner.hasrelation.enemy.{this.ship.trueowner})) *100">
+							<set_owner object="$ownerless.{$i}" faction="this.ship.trueowner" />
+							<create_pilot name="$pilot" ship="$ownerless.{$i}">
+								<select race="[race.argon, race.split, race.terran, race.teladi].random" tags="tag.pilot"/>
+								<owner exact="this.ship.trueowner"/>
+							</create_pilot>
+							<set_object_commander object="$ownerless.{$i}" commander="this.ship" />
+							<start_script object="$pilot" name="'move.dockat'">
+								<param name="destination" value="this.ship" />
+							</start_script>
+							<remove_value name="$pilot"/>
+							<set_value name="$text" exact="'%1 acquired\n'.[$ownerless.{$i}.name]" operation="add"/>
+							<set_value name="$print"/>
+						</do_if>
+						<do_elseif value="$ownerlessFound.indexof.{$ownerless.{$i}}" negate="true">
+							<append_to_list name="$ownerlessFound" exact="$ownerless.{$i}"/>
+							<set_value name="$text" exact="'%1 x:%2 y:%3 z:%4\n'.[$ownerless.{$i}.name, $ownerless.{$i}.position.x, $ownerless.{$i}.position.y, $ownerless.{$i}.position.z]" operation="add"/>
+							<set_value name="$print"/>
+						</do_elseif>
+					</do_all>
+					<do_if value="$print?">
+						<show_notification caption="{2802,3030}" details="{2802,3032}.[this.ship.zone.knownname, $text]" queued="true" priority="5"/>
+						<write_to_logbook category="tips" text="{2802,3032}.[this.ship.zone.knownname, $text]"/>
+					</do_if>
+				</do_if>
+				<remove_value name="$print"/>
+				<remove_value name="$text"/>
+				<remove_value name="$ownerless"/>
+			</do_if>
+
+
+			<label name="moveto" />
+
+			<set_value name="$target" exact="null"/>
+			<do_if value="$stations.count">
+				<do_if value="$stations.{1}.exists" negate="true">
+					<remove_value name="$stations.{1}"/>
+					<resume label="moveto"/>
+				</do_if>
+				<set_value name="$target" exact="$stations.{1}"/>
+
+				<set_command_action commandaction="commandaction.flyingto" param="$target"/>
+			</do_if>
+
+			<do_if value="$target and this.ship.distanceto.{$target} gt this.ship.maxradarrange">
+				<create_position name="$pos" object="this.ship" space="$target" />
+				<create_orientation name="$BoostVector" refposition="$pos" orientation="look_at">
+					<position object="this.ship" space="this.ship.zone"/>
+				</create_orientation>
+				<move_to object="this.ship" destination="this.ship.zone" forcesteering="false" forceposition="false" forcerotation="true" finishonapproach="false">
+					<position value="this.ship.position"/>
+					<rotation value="$BoostVector"/>
+				</move_to>
+
+				<create_position_outside_boundingbox name="$pos" distance="this.ship.maxradarrange" component="$target">
+					<position value="$pos" />
+				</create_position_outside_boundingbox>
+
+				<do_if value="this.ship.position != $pos">
+					<set_flight_control_model object="this.ship" flightcontrolmodel="flightcontrolmodel.spline"/>
+					<move_to object="this.ship" destination="$target" boost="true" finishonapproach="true" forceposition="false">
+						<position value="$pos" />
+					</move_to>
+				</do_if>
+				<stop_moving object="this.ship" />
+			</do_if>
+
+
+			<label name="scan" />
+
+			<set_command_action commandaction="commandaction.scanningto" param="this.ship.zone"/>
+
+			<do_if value="this.ship.isplayerowned and $target and $target.hastradesubscription">
+				<set_value name="$TimeOut" min="1min" max="3min" />
+			</do_if>
+			<do_else>
+				<set_value name="$TimeOut" min="3min" max="10min" />
+			</do_else>
+			<run_script name="'move.idle'">
+				<param name="TimeOut" value="$TimeOut" />
+			</run_script>
+			<remove_value name="$TimeOut"/>
+
+			<do_if value="$target and $target.exists">
+
+				<set_command_action commandaction="commandaction.scanningto" param="$target"/>
+
+				<do_if value="$target.owner.hasrelation.enemy.{this.ship.trueowner}" negate="true">
+					<do_if value="this.ship.isplayerowned">
+						<reveal_object object="$target" exact="25"/>
+						<add_encyclopedia_entry type="factions" item="$target.owner.id" chance="if $target.owner.knowntoplayer then 0 else 100" />
+						<set_faction_known faction="$target.owner" known="true" chance="if $target.owner.knowntoplayer then 0 else 100" />
+						<add_encyclopedia_entry type="stationtypes" item="$target.macro.id" chance="if $target.name == $target.knownname then 0 else 100" />
+						<set_known object="$target" known="true" chance="if $target.name == $target.knownname then 0 else 100" />
+						<set_object_radar_visible object="$target"/>
+						<store_trade_offer_snapshot object="$target" chance="if not $target.hastradesubscription and ($target.resources.list.count or $target.products.list.count or $target.tradewares.list.count) then 100 else 0" />
+						<add_trade_subscription object="$target" chance="if not $target.hastradesubscription and ($target.resources.list.count or $target.products.list.count or $target.tradewares.list.count) and ($target.owner.relationto.{this.ship.trueowner} ge $target.owner.relation.neutral.max or ($target.owner.relationto.{this.ship.trueowner} gt $target.owner.relation.neutral.min and this.ship.isclass.[class.ship_s, class.ship_m])) then 100 else 0" />
+						<reveal_object object="$target" exact="100"/>
+					</do_if>
+				</do_if>
+				<do_else>
+					<do_if value="$found_stations?" negate="true">
+						<create_list name="$found_stations"/>
+					</do_if>
+					<do_if value="$target.isplayerowned and @$hint != true">
+						<set_value name="$hint" exact="this.zone" chance="100"/>
+					</do_if>
+					<do_if value="$hint? and $hint == this.zone">
+						<signal_objects object="player.computer" param="'CM_EWS_SCOUT'" param2="[this.ship, this.ship.zone]" />
+						<set_value name="$hint" exact="true" chance="100"/>
+					</do_if>
+
+					<do_if value="$dispatchatfirstmatch and typeof $dispatchatfirstmatch == datatype.list and $dispatchatfirstmatch.indexof.{$target.owner}">
+						<do_if value="$found_stations.indexof.{$target} == 0">
+							<append_to_list name="$found_stations" exact="$target"/>
+						</do_if>
+						<remove_value name="$target"/>
+						<remove_value name="$stations"/>
+						<resume label="returnto"/>
+					</do_if>
+					<do_elseif value="$dispatchatfirstmatch and typeof $dispatchatfirstmatch == datatype.faction and $target.owner == $dispatchatfirstmatch">
+						<do_if value="$found_stations.indexof.{$target} == 0">
+							<append_to_list name="$found_stations" exact="$target"/>
+						</do_if>
+						<remove_value name="$target"/>
+						<remove_value name="$stations"/>
+						<resume label="returnto"/>
+					</do_elseif>
+					<do_elseif value="$dispatchatfirstmatch and [datatype.list, datatype.faction].indexof.{typeof $dispatchatfirstmatch} == 0">
+						<do_if value="$found_stations.indexof.{$target} == 0">
+							<append_to_list name="$found_stations" exact="$target"/>
+						</do_if>
+						<remove_value name="$target"/>
+						<remove_value name="$stations"/>
+						<resume label="returnto"/>
+					</do_elseif>
+					<do_elseif value="$dispatchatfirstmatch" negate="true">
+						<append_to_list name="$found_stations" exact="$target" />
+					</do_elseif>
+				</do_else>
+
+				<remove_value name="$stations.{$stations.indexof.{$target}}"/>
+			</do_if>
+			<remove_value name="$target"/>
+			<!-- next station -->
+			<do_if value="$stations.count">
+				<resume label="moveto"/>
+			</do_if>
+			<remove_value name="$stations"/>
+			<!-- next zone -->
+			<do_if value="$zones.count">
+				<resume label="travel"/>
+			</do_if>
+
+
+			<label name="returnto" />
+			<!-- go home -->
+			<do_if value="$returnzone and $returnzone.exists and $returnzone.isclass.zone">
+				<set_command_action commandaction="commandaction.flyingto" param="$returnzone"/>
+				<do_if value="$returnzone.isclass.zone and $returnzone == this.ship.zone and $zones.count">
+					<clear_list list="$zones" />
+				</do_if>
+				<do_elseif value="$returnzone.isclass.zone and $returnzone != this.ship.zone">
+					<run_script name="'move.generic'">
+						<param name="destination" value="$returnzone" />
+						<param name="endintargetzone" value="true" />
+					</run_script>
+				</do_elseif>
+				<do_elseif value="$returnzone.exists and $returnzone.isclass.[class.ship, class.station] and $returnzone != this.ship.zone">
+					<run_script name="'move.generic'">
+						<param name="destination" value="$returnzone.zone" />
+						<param name="endintargetzone" value="true" />
+					</run_script>
+				</do_elseif>
+			</do_if>
+
+
+			<label name="finish" />
+
+			<set_command_action commandaction="commandaction.calculating" />
+			<!-- uncover -->
+			<do_if value="this.ship.owner != this.ship.trueowner">
+				<get_control_entities groupname="$Entities" object="this.ship"/>
+				<do_all exact="$Entities.count" counter="$i" > 
+					<set_cover_owner object="$Entities.{$i}"/>
+				</do_all> 
+				<set_cover_owner object="this.ship"/>
+				<remove_value name="$Entities"/>
+				<do_all exact="this.ship.subordinates.count" counter="$i">
+					<get_control_entities groupname="$Entities" object="this.ship.subordinates.{$i}"/>
+					<do_all exact="$Entities.count" counter="$j" > 
+						<set_cover_owner object="$Entities.{$j}"/>
+					</do_all> 
+					<set_cover_owner object="this.ship.subordinates.{$i}"/>
+					<remove_value name="$Entities"/>
+				</do_all>
+			</do_if>
+			<!-- process data -->
+			<do_if value="$found_stations?">
+				<do_all exact="$found_stations.count" counter="$i">
+					<set_value name="$target" exact="$found_stations.{$i}"/>
+					<do_if value="this.ship.isplayerowned">
+						<reveal_object object="$target" exact="25"/>
+						<add_encyclopedia_entry type="factions" item="$target.owner.id" chance="if $target.owner.knowntoplayer then 0 else 100" />
+						<set_faction_known faction="$target.owner" known="true" chance="if $target.owner.knowntoplayer then 0 else 100" />
+						<add_encyclopedia_entry type="stationtypes" item="$target.macro.id" chance="if $target.name == $target.knownname then 0 else 100" />
+						<set_known object="$target" known="true" chance="if $target.name == $target.knownname then 0 else 100" />
+						<set_object_radar_visible object="$target"/>
+						<store_trade_offer_snapshot object="$target" chance="if not $target.hastradesubscription and ($target.resources.list.count or $target.products.list.count or $target.tradewares.list.count) then 100 else 0" />
+						<add_trade_subscription object="$target" chance="if not $target.hastradesubscription and ($target.resources.list.count or $target.products.list.count or $target.tradewares.list.count) and ($target.owner.relationto.{this.ship.trueowner} ge $target.owner.relation.neutral.max or ($target.owner.relationto.{this.ship.trueowner} gt $target.owner.relation.neutral.min and this.ship.isclass.[class.ship_s, class.ship_m])) then 100 else 0" />
+						<reveal_object object="$target" exact="100"/>
+					</do_if>
+
+					<remove_value name="$target"/>
+				</do_all>
+				<!-- CWIR Invasion -->
+				<signal_objects object="player.galaxy" param="'CM_SCOUTREPORT'" param2="[this.ship.trueowner, $found_stations, $datapool]" />
+
+				<remove_value name="$found_stations"/>
+			</do_if>
+
+
+			<label name="end" />
+			<!-- remove ship -->
+			<do_if value="this.ship.jobexpired or (this.ship.pilot.$end_of_work? and this.ship.pilot.$end_of_work lt player.age)">
+				<debug_text text="'%1 doing job %2 has expired, die!'.[this.ship.knownname, this.ship.job]" chance="$debugchance" />
+				<run_script name="'move.die'">
+					<param name="byjump" value="this.ship.isclass.[class.ship_l, class.ship_xl]" />
+					<param name="byhostile" value="true" />
+				</run_script>
+			</do_if>
+
+			<do_if value="$continue">
+				<set_value name="$run" exact="1"/>
+				<do_if value="$zones.count">
+					<resume label="travel"/>
+				</do_if>
+				<resume label="start"/>
+			</do_if>
+
+			<set_command_action commandaction="commandaction.standingby" />
+			<wait min="120s" max="240s" />
+			<resume label="end" />
+
+
+			<label name="fin" />
+
+		</actions>
+	</attention>
+	<on_abort>
+		<do_if value="this.ship.owner != this.ship.trueowner">
+			<get_control_entities groupname="$Entities" object="this.ship"/>
+			<do_all exact="$Entities.count" counter="$i" > 
+				<set_cover_owner object="$Entities.{$i}"/>
+			</do_all> 
+			<set_cover_owner object="this.ship"/>
+			<remove_value name="$Entities"/>
+			<do_all exact="this.ship.subordinates.count" counter="$i">
+				<get_control_entities groupname="$Entities" object="this.ship.subordinates.{$i}"/>
+				<do_all exact="$Entities.count" counter="$j" > 
+					<set_cover_owner object="$Entities.{$j}"/>
+				</do_all> 
+				<set_cover_owner object="this.ship.subordinates.{$i}"/>
+				<remove_value name="$Entities"/>
+			</do_all>
+		</do_if>
+	</on_abort>
+</aiscript>

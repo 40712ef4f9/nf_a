@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Benedikt (192.168.3.146) at 02.11.2013_14-32-07-->
+<macros>
+  <macro name="struct_econ_ref_ar_pmc_u1_macro" class="radar">
+    <component ref="struct_econ_ref_ar_pmc_u" />
+    <properties>
+      <identification name="{20107,4201}" description="{20107,4202}" />
+      <explosiondamage value="100000" />
+      <radar range="50000" />
+      <hull max="4400000" />
+      <effects>
+        <explosion ref="explosion_station_01" />
+        <sefx_hack_disabled ref="hack_deactivated_m" />
+      </effects>
+    </properties>
+    <connections>
+      <connection ref="connection_dock_m01">
+        <macro ref="props_surf_ar_docks_size_m_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_shieldgenerator01">
+        <macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgenerator02">
+        <macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgenerator03">
+        <macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_turret_medium_pe01">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_medium_pe02">
+        <macro ref="turret_medium_pe_macro" connection="connection_component01" />
+      </connection>
+      <!--<connection ref="connection_turret_missile_df01">
+        <macro ref="turret_missile_df_macro" connection="turret_connection" />
+      </connection>-->
+      <connection ref="connection_turret_small_mg01">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg02">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg03">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg04">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

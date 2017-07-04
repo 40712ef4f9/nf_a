@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Benedikt (192.168.3.128) at 08.10.2013_12-49-09-->
+<macros>
+  <macro name="buildmodule_stations_cwirrei_macro" class="buildmodule">
+    <component ref="standardbuildmodule" />
+    <properties>
+      <identification unique="0" />
+      <builder>
+		<macro ref="struct_bt_dv_reivers_outpost_01_macro" />
+		<macro ref="struct_bt_dv_reivers_outpost_02_macro" />
+		<macro ref="struct_bt_dv_reivers_outpost_03_macro" />
+		
+      </builder>
+    </properties>
+  </macro>
+</macros>

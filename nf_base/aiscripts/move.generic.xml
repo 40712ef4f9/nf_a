@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff>
+    <replace sel="//do_if[@value='$jumppath.{1} == this.sector and $jumppath.{2}.isclass.gate']/@value">$jumppath.{1}? and $jumppath.{1} == this.sector and $jumppath.{2}.isclass.gate and (this.combinedskill lt 51 or not global.$nfconfig.$AdvJump)</replace>
+
+    <add sel="//label[@name='move']" pos="after">
+	  <signal_objects object="player.galaxy" param="'learned.something'" param2="[this, ware.inv_virtualseminarnavigation, 'move']" />
+	</add>
+</diff>

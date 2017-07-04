@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<components>
+	<component name="props_surf_ar_docks_size_s_floor_ext" class="dronelaunchpad">
+		<source geometry="assets\props\SurfaceElements\props_surf_ar_docks_size_s_floor_data"/>
+		<layers>
+			<layer>
+				<waypoints/>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="ship">
+				<offset/>
+			</connection>
+			<connection name="Connection03" tags="part animation  ">
+				<offset>
+					<position x="7.919312E-02" y="5.113074" z="-0.4986029"/>
+				</offset>
+				<animations>
+					<animation name="doors_closed" start="0" end="0"/>
+					<animation name="doors_opening" start="1" end="20"/>
+					<animation name="doors_open" start="20" end="20"/>
+					<animation name="doors_closing" start="20" end="40"/>
+				</animations>
+				<parts>
+					<part name="anim_dock" wreck="anim_dock_wreck">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="generic.generic_tech_01"/>
+								</materials>
+							</lod>
+							<lod index="1">
+								<materials>
+									<material id="1" ref="generic.generic_tech_01"/>
+								</materials>
+							</lod>
+							<lod index="2">
+								<materials>
+									<material id="1" ref="generic.generic_tech_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="25.91123" y="5.868401" z="27.83381"/>
+							<center x="-1.907349E-06" y="9.536743E-07" z="9.536743E-07"/>
+						</size>
+						<size_raw>
+							<max x="25.91123" y="5.8684" z="27.83381"/>
+							<center x="-1.907349E-06" y="9.536743E-07" z="9.536743E-07"/>
+						</size_raw>
+					</part>
+				</parts>
+				<waypoints/>
+			</connection>
+			<connection name="Connection04" tags="part iklink detail_s  " parent="anim_dock">
+				<offset>
+					<position x="0.1878884" y="-1.818851" z="2.313678"/>
+				</offset>
+				<parts>
+					<part name="door_a">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="generic.generic_tech_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="11.05348" y="6.212362" z="5.183148"/>
+							<center x="6.556511E-07" y="-3.100562" z="2.61815"/>
+						</size>
+						<size_raw>
+							<max x="11.05348" y="3.1118" z="2.564998"/>
+							<center x="-2.980232E-07" y="0" z="-8.34465E-07"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection05" tags="part iklink detail_s  " parent="anim_dock">
+				<offset>
+					<position x="0.1814426" y="1.95092" z="-0.6673236"/>
+				</offset>
+				<parts>
+					<part name="door_b">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="generic.generic_tech_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="11.10324" y="2.594622" z="2.561942"/>
+							<center x="-2.980232E-07" y="1.073175" z="-1.291162"/>
+						</size>
+						<size_raw>
+							<max x="11.10324" y="1.521447" z="1.27078"/>
+							<center x="-2.980232E-07" y="4.768372E-07" z="-1.192093E-07"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection06" tags="part animation  ">
+				<offset>
+					<position x="7.919312E-02" y="5.113074" z="67.83942"/>
+				</offset>
+				<animations/>
+				<parts/>
+			</connection>
+			<connection name="Connection_component" tags="component  dronelaunchpad">
+				<offset>
+					<quaternion qx="0.7071068" qy="-0" qz="-0" qw="-0.7071068"/>
+				</offset>
+			</connection>
+			<connection name="Connection02" tags="todock ">
+				<offset>
+					<position x="-2.815259" y="20.02799" z="83.74139"/>
+					<quaternion qx="-0.7071068" qy="0.7071068" qz="4.369228E-07" qw="-2.99244E-07"/>
+				</offset>
+			</connection>
+			<connection name="Connection01" tags="launchpos ">
+				<offset>
+					<position x="-2.720235" y="9.616747" z="15.73749"/>
+					<quaternion qx="4.361951E-02" qy="-0" qz="-0" qw="-0.9990482"/>
+				</offset>
+			</connection>
+		</connections>
+	</component>
+</components>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Matthias (192.168.3.141) at 19.11.2014_12-41-14-->
+<macros>
+  <macro name="shieldgenerator_ship_m_09s_macro" class="shieldgenerator">
+    <component ref="generic_shield_generator" />
+    <properties>
+      <identification name="{20104,1801}" description="{20104,1802}" unique="0" />
+      <boost duration="20" />
+      <recharge max="100000" rate="3000" delay="3" />
+      <hull integrated="1" />
+    </properties>
+  </macro>
+</macros>

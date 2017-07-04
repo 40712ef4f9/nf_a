@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="//macros/macro[@name='units_size_l_xenon_01_macro']/connections">
+		<connection ref="connection_dock_p01">
+			<macro ref="playerdock_capship01_macro" connection="connection_component01" />
+		</connection>
+		<connection ref="connection_dock_s01">
+			<macro ref="props_surf_ar_docks_size_s_floor_macro" connection="Connection_component" />
+		</connection>
+	</add>
+</diff>

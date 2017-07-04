@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="//cue[@name='CreateLawEnforcementNPCs']/actions/do_all/do_all/do_if/do_if[@value='not $sectors.{$i}.representative.{$faction}.{entitytype.lawenforcement}']" type="@chance" >if md.$police_factions.{'$%1'.[$sectors.{$i}.macro.id]}? and md.$police_factions.{'$%1'.[$sectors.{$i}.macro.id]} == $faction then 100 else 0</add>
+</diff>

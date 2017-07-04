@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="interrupt.ewc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" priority="10" version="1">
+  <params>
+    <param name="debugoutputchance" default="0" />
+  </params>
+  <interrupts>
+    <library>
+      <handler name="EarlyWarningSystem">
+        <conditions>
+		  <event_gravidar_has_scanned object="this.defensible" />
+		  <check_value value="this.defensible.isplayerowned" />
+          <check_value value="this.defensible.isclass.[class.ship_l, class.ship_xl]" />
+		  <check_value value="not this.$next_warning? or @this.$next_warning gt player.age" />
+		  <count_gravidar_contacts result="$RepairTargets" object="this.defensible" class="[class.ship_l, class.ship_xl]" min="1">
+			<match_distance object="this.defensible" max="30km"/>
+			<match_relation faction="this.defensible.trueowner" relation="enemy" />
+			<match_any>
+				<match primarypurpose="objectpurpose.fight"/>
+				<match macro="macro.units_size_xl_cargo_hauler_2_macro"/>									
+				<match macro="macro.units_size_l_pir_container_03_macro"/>
+			</match_any>
+		  </count_gravidar_contacts>
+        </conditions>
+        <actions>
+			<set_value name="this.$next_warning" exact="player.age + 1min"/>
+			<signal_objects object="player.computer" param="'CM_EWS'" param2="this.defensible" />
+        </actions>
+      </handler>
+    </library>
+  </interrupts>
+</aiscript>

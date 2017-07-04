@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Benedikt (192.168.3.128) at 08.10.2013_12-49-24-->
+<macros>
+  <macro name="buildmodule_stations_omicron_3_macro" class="buildmodule">
+    <component ref="standardbuildmodule" />
+    <properties>
+      <identification unique="0" />
+      <builder>
+        <macro ref="struct_bt_ol_bofu_plant_macro" />
+        <macro ref="struct_bt_ol_cell_refinery_macro" />
+        <macro ref="struct_bt_ol_drone_complex_macro" />
+        <macro ref="struct_bt_ol_farm_complex_macro" />
+        <macro ref="struct_bt_ol_high_energy_construction_macro" />
+        <macro ref="struct_bt_ol_medical_supplies_macro" />
+        <macro ref="struct_bt_ol_metalworks_macro" />
+        <macro ref="struct_bt_ol_drone_factory_macro" />
+        <macro ref="struct_bt_ol_laboratory_macro" />
+        <macro ref="struct_bt_ol_plankton_tank_macro" />
+        <macro ref="struct_bt_ol_soy_farm_macro" />
+        <macro ref="struct_bt_ol_spacefuel_production_macro" />
+        <macro ref="struct_bt_ol_spice_farm_macro" />
+        <macro ref="struct_bt_ol_tech_complex_macro" />
+        <macro ref="struct_bt_ol_water_destillery_macro" />
+        <macro ref="struct_bt_ol_weaponrycomplex_macro" />
+        <macro ref="struct_bt_ol_weaponryproduction_macro" />
+        <macro ref="struct_bt_ol_construction_material_macro" />
+        <macro ref="struct_bt_ol_crystal_refinement_macro" />
+        <macro ref="struct_bt_ol_solar_power_plant_macro" />
+        <macro ref="struct_bt_ol_hightec_construction_macro" />
+        <macro ref="struct_bt_ol_fuelstation_macro" />
+<!-- Small Shipyards -->
+        <macro ref="struct_bt_ol_small_ships_yard_macro" />
+        <macro ref="struct_bt_ol_small_ships_complex_macro" />
+		<macro ref="struct_econ_weapon_ar_defence_macro" />
+      </builder>
+    </properties>
+  </macro>
+</macros>

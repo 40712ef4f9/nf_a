@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Conquer_mod v020 -->
+<diff>
+	<remove sel="/macros/macro/properties/hull"/>
+	<add sel="/macros/macro/properties/storage" pos="after">
+		<hull max="100000" threshold="0.25" />
+		<!--<hull max="30000" threshold="0.25" />-->
+		<!--<hull integrated="1" />-->
+	</add>  
+</diff>	
+  

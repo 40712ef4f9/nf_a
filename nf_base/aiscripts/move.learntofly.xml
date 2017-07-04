@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="move.learntofly" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+	<!--
+
+Idle Random Movement Script
+
+with pilot skilling
+
+Generic routine for idle flying a ship around to random positions in its current zone.
+
+-->
+	<params>
+		<param name="TimeOut" default="null" comment="duration of the idle move"/>
+		<!--Defaults have the ship flying around its original position-->
+		<param name="Offset" default="this.ship.position" />
+		<param name="MaxDistance" default="10km"/>
+		<param name="debugchance" default="0"/>
+	</params>
+	<init>
+		<set_command command="command.explore" />
+	</init>
+	<patch sinceversion="1">
+		<!-- removed script param $Anchor, the caller needs to ensure the ship is in the correct zone before calling move.idle -->
+		<do_if value="this.ship.zone.isclass.highway">
+			<set_value name="$Anchor" exact="this.ship.zone.exit.zone" />
+		</do_if>
+		<do_else>
+			<set_value name="$Anchor" exact="this.ship.zone" />
+		</do_else>
+	</patch>
+	<attention min="unknown">
+		<actions>
+
+			<!-- Learn to fly -->
+			<set_value name="$exercise" exact="player.age + 5min"/>
+			<set_value name="$Skill" exact="[skilltype.leadership, skilltype.navigation, skilltype.combat, skilltype.engineering, skilltype.management, skilltype.morale, skilltype.science]" />
+			<set_value name="$iscapship" exact="this.ship.isclass.[class.ship_l, class.ship_xl]" />
+
+			<run_script name="'move.undock'" />
+
+			<do_if value="$TimeOut">
+				<do_if value="$TimeOut" min="1">
+					<!--Timeout is now the end time-->
+					<set_value name="$TimeOut" exact="player.age + $TimeOut"/>
+				</do_if>
+				<do_else>
+					<debug_text text="'Timeout is : ' + $TimeOut + 'Setting to null. Movement will be infinite'" chance="$debugchance" />
+					<set_value name="$TimeOut" exact="null"/>
+				</do_else>
+			</do_if>
+
+			<!-- Label to allow us to repeat indefinitely -->
+			<label name="start" />
+
+			<do_while value="true" comment="infinite loop">
+
+				<!-- If it has Time Out, set the remaining time-->
+				<set_value name="$DoMove" exact="true"/>
+				<do_if value="$TimeOut" min="1">
+					<set_value name="$RemainingTime" exact="$TimeOut - player.age"/>
+					<do_if value="$RemainingTime lt 0">
+						<set_value name="$DoMove" exact="false"/>
+					</do_if>
+					<do_else>
+						<debug_text text="'RemainingTime is:' + $RemainingTime" chance="$debugchance" />
+					</do_else>
+				</do_if>
+
+				<do_if value="$DoMove">
+
+					<!-- Learn to fly -->
+					<do_if value="$exercise le player.age">
+						<set_value name="$learnd" exact="false"/>
+						<do_all exact="$Skill.count" counter="$k">
+							<set_value name="$tmp" exact="this.skill.{$Skill.{$k}}"/>
+							<do_if value="this.skill.{$Skill.{$k}} le 4">
+								<add_skill entity="this" type="$Skill.{$k}" exact="[1, 5 - this.skill.{$Skill.{$k}}].min" />
+								<set_value name="$learnd" exact="true"/>
+								<do_if value="$tmp == this.skill.{$Skill.{$k}}">
+									<set_value name="$learnd" exact="false"/>
+								</do_if>
+							</do_if>
+							<remove_value name="$tmp" />
+						</do_all>
+						<do_if value="$learnd" negate="true">
+							<set_value name="$TimeOut" exact="player.age"/>
+							<do_if value="this.ship.commander.isclass.[class.ship_l, class.ship_xl]">
+								<set_value name="$home" exact="this.ship.commander"/>
+							</do_if>
+							<do_else>
+								<set_value name="$tmp" exact="this.ship.commander"/>
+								<do_if value="$tmp.commander.isclass.[class.ship_l, class.ship_xl]">
+									<set_value name="$home" exact="$tmp.commander"/>
+								</do_if>
+								<remove_value name="$tmp" />
+							</do_else>
+							<do_if value="$home?">
+								<run_script object="this.ship.pilot" name="'move.dockat'">
+									<param name="destination" value="$home" />
+								</run_script>
+							</do_if>
+							<!-- orphan? -->
+						</do_if>
+						<remove_value name="$learnd" />
+						<set_value name="$exercise" exact="player.age + 10min"/>
+						<debug_text text="'%1 (%2) skilled'.[this.knownname, this.ship.knownname]" filter="error" chance="$debugchance"/>
+					</do_if>
+					<!-- make sure this move_to won't cross zones -->
+					<do_if value="this.ship.zone.isclass.highway">
+						<set_value name="$Anchor" exact="this.ship.zone.exit.zone" />
+					</do_if>
+					<do_else>
+						<set_value name="$Anchor" exact="this.ship.zone" />
+					</do_else>
+
+					<do_if value="this.ship.primarypurpose == objectpurpose.fight and this.ship.dps.all gt 100.f" chance="25">
+						<find_object name="$match" space="this.ship.zone" class="class.asteroid" />
+						<do_if value="$match" negate="true">
+							<find_object name="$match" space="this.ship.zone" class="class.mine" />
+						</do_if>
+						<!--<find_gravidar_contact name="$match" object="this.ship">
+							<match_distance object="this.ship" max="this.ship.maxradarrange"/>
+							<match class="[class.asteroid, class.mine]"/>
+						</find_gravidar_contact>-->
+						<do_if value="$match">
+							<run_script name="'fight.attack.object'">
+								<param name="target" value="$match" />
+								<param name="checkrelation" value="false" />              
+							</run_script>
+						</do_if>
+						<remove_value name="$match"/>
+					</do_if>
+
+					<debug_text text="'moving ' + this.ship.knownname + ' to ' + $Anchor " chance="$debugchance" />
+
+					<!-- Create safe random position -->
+					<do_if value="$iscapship">
+						<create_position name="$temp" object="this.ship" x="$MaxDistance/2" z="$MaxDistance" space="$Anchor"/>
+						<get_safe_pos result="$randpos" x="$temp.x" y="this.ship.position.y" z="$temp.z" radius="this.ship.size" zone="$Anchor" angle="60deg" direction="quadrant.front" directionobject="this.ship"/>
+					</do_if>
+					<do_else>
+						<create_position name="$temp" value="$Offset" min="this.ship.size*2" max="$MaxDistance" space="$Anchor" />
+						<get_safe_pos result="$randpos" value="$temp" radius="this.ship.size" zone="$Anchor"/>
+					</do_else>
+
+					<!-- Make the random movement (with an interruption if necessary) -->
+					<do_if value="@$RemainingTime">
+						<move_to object="this.ship" destination="$Anchor" finishonapproach="true" forceposition="false" commandaction="false" usehighways="not $iscapship">
+							<position value="$randpos"/>
+							<interrupt_after_time time="$RemainingTime"/>
+						</move_to>
+					</do_if>
+					<do_else>
+						<!-- Infinite movevement -->
+						<move_to object="this.ship" destination="$Anchor" finishonapproach="true" forceposition="false" commandaction="false" usehighways="not $iscapship">
+							<position value="$randpos" />
+						</move_to>
+					</do_else>
+
+					<debug_text text="'reached position' " chance="$debugchance"  />
+				</do_if>
+
+				<!-- If there is no more remain time (<0), finish -->
+				<do_if value="@$RemainingTime" >
+					<do_if value="$RemainingTime lt 0" >
+						<debug_text text="'Finishing because RemainingTime:' + $RemainingTime" chance="$debugchance"  />
+						<return/>
+					</do_if>
+				</do_if>
+
+				<wait min="100ms" max="500ms" />
+
+			</do_while>
+
+		</actions>
+	</attention>
+</aiscript>
+

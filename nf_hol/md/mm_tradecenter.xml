@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<mdscript name="MM_Tradecenter" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+		<cue name="MM_Tradecenter_ini" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_cue_signalled cue="md.Setup.GameStart"/>
+					<event_game_loaded />
+				</check_any>
+			</conditions>
+			<delay min="200ms" />
+			<actions>
+				<do_if value="md.$todo_stations_moddlc?">
+						<set_value name="$todo" exact="
+							[
+								macro.masstraffic_station_03_macro
+							]
+						"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<append_to_list name="md.$todo_stations_moddlc" exact="$todo.{$j}"/>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+
+		  </actions>
+		</cue>
+	</cues>
+</mdscript>
+	

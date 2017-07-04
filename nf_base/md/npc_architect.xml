@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <add sel="/mdscript[@name='NPC_Architect']/cues/cue[@name='Base']/conditions">
+    <check_value value="((event.name == 'event_cue_signalled' and typeof event.param == datatype.list and event.param.{1}.isplayerowned) or (event.name == 'event_platform_actor_created' and event.param.isplayerowned))"/>
+  </add>
+
+  <add sel="//cue[@name='OnFired']/actions/do_if/start_actor_transport" pos="before">
+    <set_owner object="$actor" faction="faction.neutral" />
+    <signal_cue_instantly cue="md.NF_BASE.NF_kill_NPC" param="$actor" delay="20s"/>
+  </add>
+
+  <add sel="//cue[@name='BuildFinished_Active']/actions/do_if/create_ai_unit" pos="after">
+    <signal_objects object="player.galaxy" param="'check for new owner'" param2="$station.zone"/>
+    <do_if value="$station.tradenpc and ($station.canbuildships or $station.canproduceships)">
+      <signal_objects object="player.galaxy" param="'do.start.syscript'" param2="$station" />
+    </do_if>
+  </add>
+  <!-- prevent connect to incompatible stations -->
+  <replace sel="/mdscript[@name='NPC_Architect']/cues/cue/cues/cue[@name='SectionHandler']/actions/do_elseif[@value=&quot;event.param == 'cArch_deployatstation'&quot;]">
+    <do_elseif value="event.param == 'cArch_deployatstation'">
+      <debug_text text="event.param2"/>
+      <do_if value="event.param2.{3}.zone.npcbuildlocations.indexof.{event.param2.{3}.buildlocation} or event.param2.{3}.zone.buildlocations.indexof.{event.param2.{3}.buildlocation}">
+        <set_value name="$DeployedStation" exact="event.param2.{3}"/>
+        <add_npc_line line="1112" comment="Moving into position" />
+        <signal_cue cue="DeployToStation"/>
+      </do_if>
+      <do_else>
+        <show_help position="8" log="false" force="true" duration="2s" custom="'ERROR: station incompatible [missing buildspot]'" />
+      </do_else>
+    </do_elseif>
+  </replace>
+  <!-- automatic building -->
+  <add sel="//cue[@name='DefaultComm']/actions/do_else/add_player_choice_return" type="@chance" >if $actor.isplayerowned and $actor.container.buildmodule? and not @$station and player.primaryship.subordinates.indexof.{$actor.container} then 0 else 100</add>
+  <add sel="//cue[@name='DefaultComm']/actions/do_else/add_player_choice_return" pos="after">  
+    <add_player_choice text="{40002,161}" section="cArch_worksomewhere" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectzone', ['cArch_workat_contractor']]" position="bottom_right" chance="if $actor.isplayerowned and $actor.container.buildmodule? and not @$station and player.primaryship.subordinates.indexof.{$actor.container} then 100 else 0"/>
+  </add>
+  <add sel="//cue[@name='OnBoardComm']/actions//add_player_choice_return" type="@chance" >if $actor.isplayerowned and $actor.container.buildmodule? and not @$station and player.primaryship.subordinates.indexof.{$actor.container} then 0 else 100</add>
+  <add sel="//cue[@name='OnBoardComm']/actions//add_player_choice_return" pos="after">
+    <add_player_choice text="{40002,161}" section="cArch_worksomewhere" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectzone', ['cArch_workat_contractor']]" position="bottom_right" chance="if $actor.isplayerowned and $actor.container.buildmodule? and not @$station and player.primaryship.subordinates.indexof.{$actor.container} then 100 else 0"/>
+  </add>
+  <add sel="//do_elseif[@value=&quot;event.param == 'cArch_buildermacrosResult'&quot;]">
+    <add_player_choice text="{40002,150}" section="cArch_contractor_options" position="top_right" selectable="not $actor.container.macro.ismacro.units_size_xl_builder_ship_plot_01_macro" />
+  </add>
+  <add sel="/mdscript[@name='NPC_Architect']/cues/cue/cues/cue[@name='SectionHandler']/actions/do_elseif[@value=&quot;event.param == 'cArch_finalconfirm'&quot;]" pos="after">
+    <do_elseif value="event.param == 'cArch_contractor_options'">
+      <add_player_choice text="{40002,152}" tooltip="{40002,153}" section="cArch_deployatstation_contractor" position="top_left" choiceparam="[$location.component, $selectedMacro, player.primaryship.owner, 0, 0, false, $location]"/>
+      <add_player_choice text="{40002,154}" tooltip="{40002,155}" section="cArch_deployatstation_contractor" position="left" choiceparam="[$location.component, $selectedMacro, player.primaryship.owner, 100, 100, false, $location]"/>
+      <add_player_choice text="{40002,156}" tooltip="{40002,157}" section="cArch_deployatstation_contractor" position="bottom_left" choiceparam="[$location.component, $selectedMacro, player.primaryship.owner, 100, 100, true, $location]"/>
+      <add_player_choice_return text="{1002,20}" position="bottom_right" comment="(Back)"/>
+    </do_elseif>
+    <do_elseif value="event.param == 'cArch_deployatstation_contractor'">
+      <do_if value="event.param2? and event.param2.count">
+        <signal_cue_instantly cue="md.MM_Corps__Station_Const.MMCStationConst_contract" param="event.param2"/>
+        <add_npc_line line="1112" comment="Moving into position" />
+      </do_if>
+      <do_else>
+        <show_help position="8" log="false" force="true" duration="2s" custom="'ERROR: missing event.param2'" />
+      </do_else>
+    </do_elseif>
+    <do_elseif value="event.param == 'cArch_workat_contractor'">
+      <do_if value="event.param2? and event.param2.{3}.isclass.zone and event.param2.{3}.freebuildlocations.count">
+        <set_value name="$location" exact="event.param2.{3}.freebuildlocations.random" />
+        <open_conversation_menu menu="BuilderMacrosMenu" param="[0, 0, $actor, $actor.ship, 1]" param2="event.param3" />
+      </do_if>
+      <do_else>
+        <show_help position="8" log="false" force="true" duration="2s" custom="'ERROR: missing location'" />
+      </do_else>
+    </do_elseif>
+  </add>
+
+</diff>

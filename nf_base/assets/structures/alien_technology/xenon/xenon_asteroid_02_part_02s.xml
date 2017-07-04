@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<components>
+	<component name="xenon_asteroid_02_part_02s" class="destructible">
+		<properties>
+			<hull max="3600000"/>
+		</properties>
+		<source geometry="extensions\ego_dlc_2\assets\structures\landmarks\xenon_asteroid_02_part_02_data"/>
+		<layers>
+			<layer>
+				<waypoints/>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="Connection01" tags="part  ">
+				<offset>
+					<position x="-516.2717" y="300.0293" z="-821.4756"/>
+				</offset>
+				<parts>
+					<part name="part_main" wreck="part_main_wreck">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="xenon.xenon_small_pattern_01"/>
+								</materials>
+							</lod>
+							<lod index="1">
+								<materials>
+									<material id="1" ref="xenon.xenon_small_pattern_01"/>
+								</materials>
+							</lod>
+							<lod index="2">
+								<materials>
+									<material id="1" ref="xenon.xenon_small_pattern_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="845.4268" y="729.1356" z="505.8641"/>
+							<center x="-199.2984" y="-302.2125" z="191.891"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection02" tags="part animation textureanimation  ">
+				<offset>
+					<position x="-516.2717" y="300.0293" z="-821.4756"/>
+				</offset>
+				<animations>
+					<animation name="loop" start="1" end="10"/>
+				</animations>
+				<parts>
+					<part name="part_glow" wreck="part_glow_wreck">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="2" ref="effects.gradient_red"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="829.7698" y="713.0742" z="482.9255"/>
+							<center x="-201.5132" y="-307.7195" z="174.6808"/>
+						</size>
+						<size_raw>
+							<max x="1031.283" y="1020.794" z="308.2446"/>
+							<center x="-201.5132" y="-307.7195" z="174.6808"/>
+						</size_raw>
+						<uv_animations>
+							<uv_animation mapchannel="1">
+								<uv_property name="u_offset" controller="bezier_float">
+									<key frame="0" value="0" in_tangent_type="linear" out_tangent_type="linear"/>
+									<key frame="10" value="1" in_tangent_type="linear" out_tangent_type="linear"/>
+								</uv_property>
+							</uv_animation>
+						</uv_animations>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection03" tags="part  ">
+				<offset>
+					<position x="-516.2717" y="300.0293" z="635.7893"/>
+				</offset>
+				<parts/>
+			</connection>
+			<connection name="Connection04" tags="part  ">
+				<offset>
+					<position x="-516.2717" y="300.0293" z="635.7893"/>
+				</offset>
+				<parts/>
+			</connection>
+			<connection name="connection_cargobay01" tags="cargobay ">
+				<offset/>
+			</connection>
+		</connections>
+	</component>
+</components>

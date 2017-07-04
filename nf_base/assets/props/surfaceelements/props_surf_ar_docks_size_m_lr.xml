@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<components>
+	<component name="props_surf_ar_docks_size_m_lr" class="dockingbay">
+		<source geometry="assets\props\SurfaceElements\props_surf_ar_docks_size_m_data"/>
+		<layers>
+			<layer>
+				<waypoints/>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="dockingbay">
+				<offset/>
+			</connection>
+			<connection name="Connection02" tags="part animation  ">
+				<offset>
+					<position x="-2.458572E-03" y="-0.1810304" z="-85.74595"/>
+				</offset>
+				<animations>
+					<animation name="doors_closed" start="0" end="0"/>
+					<animation name="doors_opening" start="0" end="150"/>
+					<animation name="doors_open" start="150" end="150"/>
+					<animation name="doors_closing" start="200" end="350"/>
+				</animations>
+				<parts>
+					<part name="anim_prefab_dock_m_hangar">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+									<material id="2" ref="argon.ar_unique_04"/>
+								</materials>
+							</lod>
+							<lod index="1">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+									<material id="2" ref="argon.ar_unique_04"/>
+								</materials>
+							</lod>
+							<lod index="2">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+									<material id="2" ref="argon.ar_unique_04"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="43.36114" y="50.35461" z="107.781"/>
+							<center x="9.536743E-06" y="1.192093E-07" z="-7.629395E-06"/>
+						</size>
+						<size_raw>
+							<max x="43.36113" y="50.35461" z="107.781"/>
+							<center x="9.536743E-06" y="1.192093E-07" z="-7.629395E-06"/>
+						</size_raw>
+					</part>
+				</parts>
+				<waypoints/>
+			</connection>
+			<connection name="Connection06_launch" tags="launchpos" group="dock1 " parent="anim_prefab_dock_m_hangar">
+				<offset>
+					<position x="-1.33249E-05" y="0" z="-45.78042"/>
+				</offset>
+			</connection>
+			<connection name="Connection06_flyto" tags="todock" group="dock1 " parent="anim_prefab_dock_m_hangar">
+				<offset>
+					<position x="4.825648E-05" y="0" z="480"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+			</connection>
+			<connection name="Connection03" tags="part iklink  " parent="anim_prefab_dock_m_hangar">
+				<offset>
+					<position x="0.7677155" y="-6.868315" z="77.44759"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+				<parts>
+					<part name="iklink_prefab_dock_m_gated">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="35.35817" y="21.61015" z="2.500001"/>
+							<center x="1.847744E-06" y="-13.19336" z="1.907349E-06"/>
+						</size>
+						<size_raw>
+							<max x="35.35817" y="8.41679" z="2.500002"/>
+							<center x="1.847744E-06" y="0" z="1.907349E-06"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection04" tags="part iklink  " parent="anim_prefab_dock_m_hangar">
+				<offset>
+					<position x="0.7677155" y="5.540304" z="77.44759"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+				<parts>
+					<part name="iklink_prefab_dock_m_gatec">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="35.35817" y="23.91571" z="2.500001"/>
+							<center x="1.847744E-06" y="15.05494" z="1.907349E-06"/>
+						</size>
+						<size_raw>
+							<max x="35.35817" y="8.860767" z="2.500003"/>
+							<center x="1.847744E-06" y="4.768372E-07" z="1.907349E-06"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection05" tags="part iklink  " parent="anim_prefab_dock_m_hangar">
+				<offset>
+					<position x="0.7677144" y="-21.96597" z="77.55122"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+				<parts>
+					<part name="iklink_prefab_dock_m_gateb">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="35.35818" y="16.41321" z="4.893118"/>
+							<center x="-4.649162E-06" y="-7.068342" z="0"/>
+						</size>
+						<size_raw>
+							<max x="35.35818" y="9.344864" z="4.893118"/>
+							<center x="-8.34465E-07" y="0" z="0"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection06" tags="part iklink  " parent="anim_prefab_dock_m_hangar">
+				<offset>
+					<position x="0.7677144" y="21.25075" z="77.55122"/>
+					<quaternion qx="-0" qy="-1" qz="-0" qw="7.54979E-08"/>
+				</offset>
+				<parts>
+					<part name="iklink_prefab_dock_m_gatea">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="argon.ar_unique_01"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="35.35818" y="16.66267" z="4.893121"/>
+							<center x="-4.649162E-06" y="7.31781" z="9.536743E-07"/>
+						</size>
+						<size_raw>
+							<max x="35.35818" y="9.344864" z="4.893122"/>
+							<center x="-8.34465E-07" y="0" z="9.536743E-07"/>
+						</size_raw>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection01" tags="component dock_m dock_s ">
+				<offset/>
+			</connection>
+		</connections>
+	</component>
+</components>

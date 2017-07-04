@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="BR.move.escort" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="9">
+  <!--
+
+  Escort small ship
+  
+  Movement of a ship escorting a small ship (xs, s).
+  This will stay in a group with a formation (by parameter) while
+  target to escort is operational.
+    
+  Movement:
+  1 - Stay in formation
+  2 - Break formation to attack enemy if:
+    2.1 - Leader send a signal
+    2.2 - Leader under attack
+    2.3 - Escort group under attack
+
+  Will return to this formation if:
+  - enemy destroyed
+  - far away from escortee (if exists)
+
+  -->
+  <params>
+    <param name="target" default="this.ship.commander" comment="the escortee (mandatory). Either object or string 'commander'" />
+    <param name="timeout" default="-1" />
+    <param name="formation" default="formationshape.pointguard" comment="the formation to escort" />
+    <param name="formationparam" default="null" comment="First parameter for formation. Default: max 300m and ship length" />
+    <param name="formationparam2" default="null" comment="Second parameter for formation" />
+    <param name="rollformation" default="false" comment="Whether the entire formation shape should roll with the leader (optional, defaults to false)" />
+    <param name="rollmembers" default="true" comment="Whether individual members should mimic the roll orientation of the leader (optional, defaults to true)"/>
+    <param name="defendtarget" default="true" comment="Always defend the target, even if he is attacking the escorting ships" />
+    <param name="debugoutputchance" default="0"/>
+  </params>
+  <interrupts>
+    <handler ref="AttackBRHandler" />
+    <handler ref="ScannedHandler" />
+    <handler ref="TargetInvalidHandler" />
+
+    <handler>
+      <conditions>
+        <check_any>
+          <event_object_jump_completed  object="$target" check="false"/>
+          <event_object_signalled object="this.ship" param="'follow'" />
+        </check_any>
+        <check_value value="this.ship.isclass.[class.ship_m, class.ship_s]" />
+        <check_value value="[command.escort].indexof.{this.command.value}" />
+        <check_value value="$target.distanceto.{this.ship} gt 20km" />
+        <check_value value="$target.zone.isclass.highway" negate="true"/>
+      </conditions>
+      <delay min="200ms" max="600ms"/>
+      <actions>
+        <debug_text text="'Follow leader ' + this.ship + ' ' + this.ship.knownname + ' :: ' + this.ship.zone.knownname" />
+		<set_value name="$event_param" exact="if event.param == 'event_object_jump_completed' or (event.param2? and event.param2 == 'event_object_jump_completed') then 'event_object_jump_completed' else 'warp'"/>
+        <do_all exact="this.ship.subordinates.count" counter="$f" >
+          <signal_objects object="this.ship.subordinates.{$f}" param="'follow'" param2="$event_param" chance="if this.ship.subordinates.{$f}.isclass.[class.ship_m, class.ship_s] then 100 else 0"/>
+        </do_all>
+        <add_effect object="this.ship" effect="'jump_jumpout_l'" chance="if this.attention ge attention.visible and $event_param == 'event_object_jump_completed' then 100 else 0"/>
+        <warp object="this.ship" zone="$target.zone">
+          <safepos value="$target.position" radius="this.ship.size * 1.5f" allowyaxis="false"/>
+          <rotation value="$target.rotation"/>
+        </warp>
+        <add_effect object="this.ship" effect="'jump_jumpin_l'" chance="if this.attention ge attention.visible and $event_param == 'event_object_jump_completed' then 100 else 0"/>
+        <remove_value name="$event_param" />
+        <abort_called_scripts resume="ini" />
+      </actions>
+    </handler>
+
+    <handler>
+      <conditions>
+        <event_object_signalled object="this.ship" param="'reboot'" />
+      </conditions>
+      <actions>
+        <do_all exact="this.ship.subordinates.count" counter="$j">
+          <signal_objects object="this.ship.subordinates.{$j}" param="'reboot'" delay="10ms" comment="Wake Follower" />
+        </do_all>
+        <abort_called_scripts resume="ini" />
+      </actions>
+    </handler>
+
+    <handler>
+      <conditions>
+        <check_any>
+          <event_object_signalled object="this.ship" param="'checkexistence'" />
+          <event_object_destroyed object="$target" check="false" />
+        </check_any>
+        <check_value value="this.command.value == command.escort" />
+      </conditions>
+      <actions>
+        <abort_called_scripts resume="finish"/>
+      </actions>
+    </handler>
+  </interrupts>
+  <init>
+    <!-- From jobs -->
+    <do_if value="$target == 'commander'">
+      <set_value name="$target" exact="this.ship.commander"/>
+    </do_if>
+    <!-- Now is safe to set the command -->
+    <set_command command="command.escort" param="$target" />
+    <set_command_action commandaction="commandaction.flying" />
+    <!-- distance to check and abort attacks -->
+    <set_value name="$pursuedistance" exact="4km" />
+    <set_value name="this.$brattackhandler" exact="true" />
+  </init>
+  <patch sinceversion="6">
+    <do_if value="not $rollformation?">
+      <set_value name="$rollformation" exact="false" />
+    </do_if>
+    <do_if value="not $rollmembers?">
+      <set_value name="$rollmembers" exact="true" />
+    </do_if>
+  </patch>
+  <patch sinceversion="8">
+    <set_value name="$pursuedistance" exact="4km" />
+  </patch>
+  <patch sinceversion="9">
+    <do_if value="not $target.exists or $target == this.ship">
+      <signal_objects object="this.ship" param="'checkexistence'" delay="100ms" comment="Wake Follower" />
+    </do_if>
+  </patch>
+  <attention min="visible">
+    <actions>
+
+      <do_if value="$target == this.ship">
+        <debug_text text="'Ship is trying to escort itself.'" filter="error"/>
+      </do_if>
+
+      <run_script name="'move.undock'" sinceversion="4" />
+
+      <label name="ini" />
+      <label name="start" />
+
+      <wait min="200ms" max="400ms" />
+      <stop_moving object="this.ship" immediate="false" />
+      <cease_fire object="this.ship" />
+      <leave_formation object="this.ship" />
+
+      <set_value name="$enemy" exact="null" />
+      <do_if value="$target.isoperational and @$target.pilot" negate="true">
+        <resume label="finish" />
+      </do_if>
+      <set_value name="$starttime" exact="player.age" />
+      <set_value name="$capship" exact="this.ship.isclass.[class.ship_l, class.ship_xl]"/>
+
+      <!-- If far away/different zone - NOT SURE IF NEED THIS BR -->
+      <do_if value="$target.isoperational and ((@$target.pilot.commandaction.value == commandaction.flyingto and @$target.pilot.commandaction.param.isclass.zone and @$target.pilot.commandaction.param != this.zone) or this.zone != $target.zone)">
+        <!--<debug_text text="'leader in different zone'" chance="$debugoutputchance" />-->
+        <do_if value="$capship">
+          <run_script name="if @global.$WWX_mmcarrier_is_active then 'move.generic.carrier' else 'move.generic'">
+            <param name="destination" value="$target" />
+            <param name="endintargetzone" value="true" />
+          </run_script>
+        </do_if>
+        <do_elseif value="(not $capship)">
+          <signal_objects object="this.ship" param="'follow'"/>
+          <wait min="500ms" max="1s" />
+        </do_elseif>
+        <do_else>
+          <signal_objects object="this.ship" param="'follow'"/>
+          <wait min="500ms" max="1s" sinceversion="5"/>
+        </do_else>
+
+      </do_if>
+
+      <do_if value="$target.isoperational">
+        <!-- If CapShip -->
+        <do_if value="$target.isclass.[class.ship_l, class.ship_xl]">
+          <run_script name="'BR.move.escort.capital'">
+            <param name="target" value="$target" />
+            <param name="timeout" value="$timeout" />
+            <param name="formationparam" value="$formationparam"/>
+            <param name="formationparam2" value="$formationparam2"/>
+            <param name="debugoutputchance" value="$debugoutputchance" />
+          </run_script>
+
+          <resume label="finish" />
+        </do_if>
+      </do_if>
+
+
+
+      <!-- Create / add to escort group -->
+      <wait max="500ms" sinceversion="2" comment="delay to check leader, because there is no mutex" />
+      <do_if value="$target.isoperational and @$target.pilot">
+        <do_if value="not @$target.pilot.$escortgroup">
+          <create_group groupname="$target.pilot.$escortgroup" />
+        </do_if>
+        <!-- Default separation -->
+        <do_if value="not $formationparam">
+          <set_value name="$formationparam" exact="[1000m, this.ship.length].max" />
+        </do_if>
+        <create_formation object="$target" formation="$formation" param="$formationparam" param2="$formationparam2" rollformation="$rollformation" rollmembers="$rollmembers" />
+        <add_to_group groupname="$target.pilot.$escortgroup" object="this.ship" />
+        <join_formation leader="$target" object="this.ship" />
+      </do_if>
+
+      <!-- Attack flag -->
+      <set_value name="this.$goattack" exact="false" />
+
+      <!-- start Loop -->
+      <do_while value="$target.isoperational and @$target.pilot">
+        <!-- check if we got stuck in highway and warp to commander if so -->  
+
+        <do_if value="this.ship.zone == $target.zone and this.ship.distanceto.{$target} lt 60km" negate="true" chance="(not $target.zone.isclass.highway)*100">          
+          <signal_objects object="this.ship" param="'follow'"/>
+          <wait min="500ms" />
+        </do_if>
+        <wait>
+          <interrupt>
+            <conditions>
+              <check_any>
+                <check_all>
+                  <event_object_signalled object="this.ship" param="'attack'" />
+                  <check_value value="$target.isoperational and $target.pilot and event.param2.isoperational and $target.mayattack.{event.param2}" />
+                </check_all>
+                <check_all>
+                  <check_any>
+                    <event_object_attacked object="this.ship"/>
+                    <event_object_attacked object="$target" />
+                    <check_all>
+                      <event_object_enemy_found object="this.ship"/>
+                      <check_value value="[command.attackobject, command.attackenemies, command.patrol].indexof.{@$target.pilot.command.value} or $target.primarypurpose != objectpurpose.fight"/>
+                    </check_all>
+                  </check_any>
+                  <check_value value="event.param.isoperational"/>
+                  <check_value value="$target.isoperational and $target.pilot" />
+                  <check_value value="$target != event.param or not $defendtarget" comment="special check for attack (or not) the target" />
+                  <check_value value="this.mayattack.{event.param} or $target.mayattack.{event.param}" />
+                  <check_value value="($target.distanceto.{event.param} le $pursuedistance) and (this.ship.distanceto.{event.param} le $pursuedistance)" />
+                </check_all>
+                <event_object_changed_zone object="$target" />
+                <event_object_destroyed object="$target" />
+                <event_object_abandoned object="$target"/>
+              </check_any>
+            </conditions>
+            <actions>
+              <!-- Reset enemy -->
+              <set_value name="$enemy" exact="null" />
+
+              <!-- Commander signal this -->
+              <do_if value="event.name == 'event_object_signalled'">
+                <!-- enemy -->
+                <set_value name="$enemy" exact="event.param2" />
+                <!-- Shoot while in formation-->
+                <shoot_at object="this.ship" target="$enemy" slot="tag.primary_slot" tolerance="12deg" locktarget="true" weapontype="combat" />
+                <shoot_at object="this.ship" target="$enemy" slot="tag.secondary_slot" tolerance="5deg" locktarget="true" weapontype="combat" />
+                <!-- Escortee enemy relation-->
+                <do_if value="not this.mayattack.{$enemy}">
+                  <add_relation_boost object="this" otherobject="$enemy" value="this.owner.relation.kill.max" decay="1" delay="10min" silent="true" />
+                </do_if>
+              </do_if>
+              <do_elseif value="(event.name == 'event_object_changed_zone') or (event.name == 'event_object_destroyed') or (event.name == 'event_object_abandoned')">
+                <resume label="start" />
+              </do_elseif>
+              <do_else>
+                <!-- operational checks-->
+                <do_if value="event.param.isoperational and @$target.pilot.$escortgroup">
+                  <!-- enemy -->
+                  <set_value name="$enemy" exact="event.param" />
+
+                  <do_if value="event.name" exact="'event_object_attacked'">
+                    <!--  Me under attack, so attack him -->
+                    <do_if value="event.param3" exact="this.ship">
+                      <set_value name="$attackchance" exact="100"/>
+                    </do_if>
+                    <!-- Target under attack. Send 60% of ships -->
+                    <do_elseif value="event.param3" exact="$target">
+                      <set_value name="$attackchance" exact="60"/>
+                    </do_elseif>
+                    <do_else>
+                      <set_value name="$attackchance" exact="0"/>
+                    </do_else>
+                    <do_all chance="$attackchance">
+                      <set_value name="this.$goattack" exact="true"/>
+                      <remove_from_group group="$target.pilot.$escortgroup" object="this.ship"/>
+                    </do_all>
+                    <remove_value name="$attackchance"/>
+                  </do_if>
+                </do_if>
+              </do_else>
+            </actions>
+          </interrupt>
+        </wait>
+
+        <do_if value="$timeout gt 0">
+          <do_if value="player.age gt $starttime + $timeout">
+            <resume label="finish" />
+          </do_if>
+        </do_if>
+
+        <!-- Go into attack mode-->
+        <do_if value="this.$goattack">
+
+          <do_if value="$target.isoperational and @$target.pilot and $enemy.isoperational">
+            <do_if value="not this.mayattack.{$enemy}">
+              <add_relation_boost object="this" otherobject="$enemy" value="this.owner.relation.kill.max" decay="1" delay="10min" silent="true" />
+            </do_if>
+
+            <leave_formation object="this.ship" />
+            <remove_from_group group="$target.pilot.$escortgroup" object="this.ship" />
+
+            <run_script name="'fight.attack.object'" >
+              <param name="target" value="$enemy" />
+              <param name="escort" value="$target" />
+              <param name="pursuedistance" value="$pursuedistance" comment="make sure to be the same distance as max attack range" />
+              <param name="allowothertargets" value="false" />
+              <param name="debugoutputchance" value="$debugoutputchance" />
+            </run_script>
+
+            <remove_value name="this.$goattack" />
+
+            <!-- restart -->
+            <resume label="start" />
+
+          </do_if>
+        </do_if>
+
+        <!-- check if this is a jobship at the end of its lifetime -->
+        <do_if value="this.ship.jobexpired">
+          <resume label="die" />
+        </do_if>
+
+      </do_while>
+
+      <label name="finish" />
+
+      <debug_text text="'leader dead or timeout'" chance="$debugoutputchance" />
+
+      <do_if value="not $target.isoperational or $target == this.ship">
+        <set_value name="$runscript" exact="null" />
+        <do_if value="this.ship.commander.isoperational and @this.ship.commander.isclass.[class.ship_s, class.ship_m]" >
+          <set_value name="$target" exact="this.ship.commander" />
+          <do_if value="this.$whatido? and this.$params.$target?" >
+            <set_value name="this.$params.$target" exact="$target" />
+            <signal_objects object="this.ship" param="'CM REBOOT'"/>
+          </do_if>
+          <resume label="start" />
+        </do_if>
+        <do_elseif value="this.ship.isplayerowned">
+          <set_value name="$target" exact="this.ship" />
+          <set_value name="$runscript" exact="'move.patrol'" />
+        </do_elseif>
+        <do_elseif value="this.ship.subordinates.count or this.ship.isclass.[class.ship_l,class.ship_xl]">
+          <set_value name="$target" exact="this.ship" />
+          <set_value name="$runscript" exact="'BR.move.patrol'" />
+        </do_elseif>
+        <!-- one last job -->
+        <do_if value="$runscript and this.ship.isclass.[class.ship_s,class.ship_m,class.ship_l,class.ship_xl] and (this.ship.isplayerowned or @this.$end_of_work gt player.age) and this.ship.zone.ismapzone" >
+          <do_if value="this.$whatido? or this.$escort?" >
+            <resume label="die" />
+          </do_if>
+          <do_if value="this.$end_of_work?" negate="true" chance="(not this.ship.isplayerowned)*100">
+            <set_value name="this.$end_of_work" exact="player.age + 2h" />
+          </do_if>
+          <run_script name="$runscript" sinceversion="5" >
+            <param name="range" value="'zone'" />
+          </run_script>
+        </do_if>
+        <remove_value name="$runscript" />
+      </do_if>
+      <!-- operational, but no pilot -->
+      <do_elseif value="not $target.pilot and this.ship.isplayerowned">
+        <debug_text text="'%1 (%2) is operational, but there is no pilot, so wait for new pilot'.[$target.knownname, $target]" chance="$debugoutputchance" />
+        <wait min="8s" max="15s" sinceversion="9"/>
+        <resume label="start" />
+      </do_elseif>
+      <!-- missmatch finish -->
+      <do_elseif value="$target.exists and $target != this.ship">
+        <wait min="8s" max="15s" sinceversion="9"/>
+        <resume label="start" />
+      </do_elseif>
+
+      <label name="die" />
+      <!-- Auto destroy -->
+      <set_value name="$capship" exact="this.ship.isclass.[class.ship_l, class.ship_xl]"/>
+      <run_script name="'move.die'" chance="(not this.$whatido? and not this.$escort?)*100">
+        <param name="byjump" value="$capship" />
+        <param name="byhighway" value="not $capship" />
+        <param name="bydock" value="not $capship" />
+        <param name="byidle" value="true" />
+      </run_script>
+
+    </actions>
+  </attention>
+  <attention min="unknown">
+    <actions>
+
+      <do_if value="$target == this.ship">
+        <debug_text text="'Ship is trying to escort itself.'" filter="error"/>
+      </do_if>
+
+      <run_script name="'move.undock'" sinceversion="4" />
+
+      <label name="ini" />
+
+      <do_if value="not $target.isoperational">
+        <set_value name="$target" exact="this.ship.commander" />
+      </do_if>
+      <do_else>
+        <!-- If CapShip -->
+        <do_if value="$target.isclass.ship_l or $target.isclass.ship_xl">
+
+          <run_script name="'BR.move.escort.capital'" sinceversion="3">
+            <param name="target" value="$target" />
+            <param name="timeout" value="$timeout" />
+            <param name="formationparam" value="$formationparam"/>
+            <param name="formationparam2" value="$formationparam2"/>
+            <param name="debugoutputchance" value="$debugoutputchance" />
+          </run_script>
+
+          <resume label="finish" />
+        </do_if>
+      </do_else>
+
+      <label name="start" />
+
+      <wait min="1s" max="3s" />
+
+      <do_if value="not @$target.isoperational" comment="use @ to avoid errors if $target == 'commander'">
+        <resume label="finish" />
+      </do_if>
+
+      <!-- check if this is a jobship at the end of its lifetime -->
+      <do_if value="this.ship.jobexpired">
+        <resume label="die" />
+      </do_if>
+      <!-- check if we got stuck in highway and warp to commander if so  -->
+
+      <do_if value="$target.isoperational and ((@$target.pilot.commandaction.value == commandaction.flyingto and @$target.pilot.commandaction.param.isclass.zone and @$target.pilot.commandaction.param != this.zone) or this.zone != $target.zone)">
+        <signal_objects object="this.ship" param="'follow'"/>
+        <wait min="500ms" max="1s" />
+      </do_if>
+      <do_if value="this.ship.distanceto.{$target}" min="this.ship.size + $target.size + 500m">
+        <move_to object="this.ship" destination="$target.zone" sinceversion="3">
+          <position object="$target" min="this.ship.size + $target.size"/>
+        </move_to>
+      </do_if>
+
+      <resume label="start" />
+
+      <label name="finish" />
+
+      <!-- Target destroyed, and no commander -->
+      <do_if value="not $target.isoperational or $target == this.ship">
+        <set_value name="$runscript" exact="null" />
+        <do_if value="this.ship.commander.isoperational and (this.ship.isclass.[class.ship_l,class.ship_xl] or @this.ship.commander.isclass.[class.ship_s, class.ship_m])" >
+          <set_value name="$target" exact="this.ship.commander" />
+          <do_if value="this.$whatido? and this.$params.$target?" >
+            <set_value name="this.$params.$target" exact="$target" />
+            <signal_objects object="this.ship" param="'CM REBOOT'"/>
+          </do_if>
+          <resume label="start" />
+        </do_if>
+        <do_elseif value="this.ship.isplayerowned">
+          <set_value name="$target" exact="this.ship" />
+          <set_value name="$runscript" exact="'move.patrol'" />
+        </do_elseif>
+        <do_elseif value="this.ship.subordinates.count or this.ship.isclass.[class.ship_l,class.ship_xl]">
+          <set_value name="$target" exact="this.ship" />
+          <set_value name="$runscript" exact="'BR.move.patrol'" />
+        </do_elseif>
+        <!-- one last job -->
+        <do_if value="$runscript and this.ship.isclass.[class.ship_s,class.ship_m,class.ship_l,class.ship_xl] and (this.ship.isplayerowned or @this.$end_of_work gt player.age) and this.ship.zone.ismapzone" >
+          <do_if value="this.$whatido? or this.$escort?" >
+            <resume label="die" />
+          </do_if>
+          <do_if value="this.$end_of_work?" negate="true" chance="(not this.ship.isplayerowned)*100">
+            <set_value name="this.$end_of_work" exact="player.age + 2h" />
+          </do_if>
+          <run_script name="$runscript" sinceversion="5" >
+            <param name="range" value="'zone'" />
+          </run_script>
+        </do_if>
+        <remove_value name="$runscript" />
+      </do_if>
+      <!-- operational, but no pilot -->
+      <do_elseif value="not $target.pilot and this.ship.isplayerowned">
+        <debug_text text="'%1 (%2) is operational, but there is no pilot, so wait for new pilot'.[$target.knownname, $target]" chance="$debugoutputchance" />
+        <wait min="8s" max="15s" sinceversion="9"/>
+        <resume label="start" />
+      </do_elseif>
+      <!-- missmatch finish -->
+      <do_elseif value="$target.exists and $target != this.ship">
+        <wait min="8s" max="15s" sinceversion="9"/>
+        <resume label="start" />
+      </do_elseif>
+
+      <label name="die" />
+      <!-- Auto destroy -->
+      <set_value name="$capship" exact="this.ship.isclass.[class.ship_l,class.ship_xl]"/>
+      <run_script name="'move.die'" sinceversion="3"  chance="(not this.$whatido? and not this.$escort?)*100">
+        <param name="byjump" value="$capship" />
+        <param name="byhighway" value="not $capship" />
+        <param name="bydock" value="not $capship" />
+        <param name="byidle" value="true" />
+      </run_script>
+
+    </actions>
+  </attention>
+  <on_abort>
+    <remove_value name="this.$brattackhandler"/>
+  </on_abort>
+</aiscript>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="/mdscript/cues/library/actions/do_if/do_if/do_if/do_if/start_script[@name=&quot;'move.patrol'&quot;]">
+                    <param name="allowstations" value="false" />
+	</add>
+	<add sel="/mdscript/cues/library/actions/do_if/do_if/do_if/do_else/start_script[@name=&quot;'move.patrol'&quot;]">
+                    <param name="allowstations" value="false" />
+	</add>
+	<add sel="/mdscript/cues/library/actions/do_if/do_if/do_else/do_if/do_else/start_script[@name=&quot;'move.patrol'&quot;]">
+                    <param name="allowstations" value="false" />
+	</add>
+	<add sel="/mdscript/cues/library/actions/do_if/do_elseif/do_if/do_else/do_if/start_script[@name=&quot;'move.patrol'&quot;]">
+                    <param name="allowstations" value="false" />
+	</add>
+	<add sel="//library[@name='Start_Default_Script']/actions/do_if/do_if[@exact='entitytype.defencecontrol']/do_else/do_if/do_if[@value='$tradeships.count']" type="@chance" >if $Object.defencenpc.$patrol? and $Object.defencenpc.$patrol == 2 then 0 else 100</add>
+	<add sel="//library[@name='Start_Default_Script']/actions/do_if/do_if[@exact='entitytype.defencecontrol']/do_else/do_if/do_if[@value='$tradeships.count']/do_if[@value='$smalltraders.count']" pos="after" >
+              <do_elseif value="$Object.defencenpc.$patrol? and $Object.defencenpc.$patrol == 1">
+                  <debug_text text="'ship %1(%2) has nothing useful to do, default to patrol.'.[$subordinate.knownname, $subordinate]" chance="0" />
+                  <start_script name="'move.patrol'" object="$subordinate.pilot">
+                    <param name="range" value="'station'" comment="this Object" />
+                    <param name="allowstations" value="false" />
+                    <param name="range_max" value="$Object.size/2 + $subordinate.maxradarrange" />
+                  </start_script>
+              </do_elseif>
+	</add>
+</diff>

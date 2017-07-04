@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<!--<add sel="//move_docking[@dronedock='$dronelaunchpad']" pos="before">-->
+	<add sel="//actions/do_if[@value='not $dockfollowers']" pos="after">
+		
+		<do_if value="global.$mmcarrierconfig.$mm_carriers_sdockplus? and global.$mmcarrierconfig.$mm_carriers_sdockplus or this.ship.zone != $destination.zone">
+			<wait min="3s" max="7s" chance="if this.ship.primarypurpose == objectpurpose.fight then 100 else 0"/>
+			<do_all exact="this.ship.subordinates.count" counter="$i" chance="if $dockfollowers then 100 else 0">
+		          <dock_drone homebase="$destination" object="this.ship.subordinates.{$i}"/>
+			</do_all>
+			<dock_drone homebase="$destination" object="this.ship"/>
+		</do_if>
+	</add>
+</diff>

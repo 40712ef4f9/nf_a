@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Michael (192.168.3.145) at 18.07.2014_10-54-23-->
+<macros>
+  <macro name="units_size_l_canteran_frigate_macro" class="ship_l">
+    <component ref="units_size_l_canteran_frigate" />
+    <properties>
+      <identification name="{40000,11}" description="{40000,12}" mapicon="shipicon_frigate_l" />
+      <explosiondamage value="80000" />
+      <hull max="600000" />
+      <effects>
+        <explosion ref="explosion_l_01" />
+        <jumpin ref="jump_jumpin_l" />
+        <jumpout ref="jump_jumpout_l" />
+      </effects>
+      <purpose primary="fight" />
+    </properties>
+    <connections>
+      <connection ref="connection_cockpit01">
+        <macro ref="cockpit_bridge_size_l_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_p01">
+        <macro ref="playerdock_capship01_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_s01">
+        <macro ref="dronelaunchpad_invisible_ship_l_01_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_engine01">
+        <macro ref="engine_size_m_freighter_canteran_01_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_jumpdrive01">
+        <macro ref="props_surf_ar_jumpdrive_l_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_radar_external01">
+        <macro ref="radar_ship_l_freighter_01_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_radar_fallback01">
+        <macro ref="radar_ship_l_fallback_01_macro" connection="ship" />
+      </connection>
+      <connection ref="connection_shieldgen01">
+        <macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_shieldgen_external01">
+        <macro ref="shieldgenerator_size_l_mk1_macro" connection="connection_component" />
+      </connection>
+      <connection ref="connection_storage01">
+        <macro ref="storage_ship_l_fuel_01_macro" connection="ShipConnection" />
+      </connection> 
+	  
+		<connection ref="connection_turret_small_mg03">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
+	  <connection ref="connection_turret_small_mg04">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg01">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg02">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
+	  <connection ref="connection_turret_small_sg01">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+	  <connection ref="connection_turret_small_sg02">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+	  <connection ref="connection_turret_small_sg03">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+	  <connection ref="connection_turret_small_sg04">
+        <macro ref="turret_small_sg_macro" connection="connection_component01" />
+      </connection>
+	  <connection ref="connection_turret_missile_sm01">
+        <macro ref="turret_missile_sm_macro" connection="turret_connection" />
+      </connection>      
+	  <connection ref="connection_turret_missile_sm02">
+        <macro ref="turret_missile_sm_macro" connection="turret_connection" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

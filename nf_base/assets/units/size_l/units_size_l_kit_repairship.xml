@@ -1,0 +1,229 @@
+﻿<?xml version="1.0"?>
+<components>
+	<component name="units_size_l_kit_repairship" class="ship_xl">
+		<source geometry="assets\units\size_l\\units_size_l_kit_hybrid_02_data"/>
+		<layers>
+			<layer>
+				<waypoints>
+					<waypoint name="XU_Waypoint06" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-13.5" y="-17" z="990">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint05" tags="sizeLevel1 typedock start dynamicmasstraffic " x="-13.5" y="-17" z="790">
+						<links>
+							<link ref="XU_Waypoint06"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint04" tags="sizeLevel1 typedock end dynamicmasstraffic " x="13.5" y="17.25" z="790">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint03" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="13.5" y="17.25" z="990">
+						<links>
+							<link ref="XU_Waypoint04"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint02" tags="sizeLevel1 typedock end dynamicmasstraffic " x="-13.5" y="17.25" z="790">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint01" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="-13.5" y="17.25" z="990">
+						<links>
+							<link ref="XU_Waypoint02"/>
+						</links>
+					</waypoint>
+					<waypoint name="XU_Waypoint08" tags="typenormal sizeLevel1 blocklink dynamicmasstraffic " x="13.5" y="-17" z="990">
+						<links/>
+					</waypoint>
+					<waypoint name="XU_Waypoint07" tags="sizeLevel1 typedock start dynamicmasstraffic " x="13.5" y="-17" z="790">
+						<links>
+							<link ref="XU_Waypoint08"/>
+						</links>
+					</waypoint>
+				</waypoints>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="ship">
+				<offset/>
+			</connection>
+			<connection name="Connection01" tags="part nocollision  ">
+				<offset/>
+				<parts>
+					<part name="part_dummy" wreck="part_dummy_wreck">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="lensflares.vertexcolor_basis"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="10" y="0" z="10"/>
+							<center x="0" y="0" z="0"/>
+						</size>
+					</part>
+				</parts>
+			</connection>
+			<connection name="Connection02" tags="part  ">
+				<offset/>
+				<parts/>
+			</connection>
+			<connection name="connection_cockpit01" tags="cockpit cockpit_visible">
+				<offset>
+					<position x="-7.38188E-06" y="133.5" z="-716.1088"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen_external01" tags="shieldgenerator external ">
+				<offset>
+					<position x="0" y="90.77893" z="-562.509"/>
+					<quaternion qx="-6.600236E-15" qy="1.509958E-07" qz="-1" qw="4.371139E-08"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen_external02" tags="shieldgenerator external ">
+				<offset>
+					<position x="0" y="-93.77893" z="11"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_s01" tags="dock_s ">
+				<offset>
+					<position x="-2.655659E-07" y="-78" z="645.7432"/>
+					<quaternion qx="0.7071066" qy="-1.067702E-07" qz="-1.067701E-07" qw="-0.7071069"/>
+				</offset>
+			</connection>
+			<connection name="connection_radar_fallback01" tags="radar ">
+				<offset/>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_main_b" tags="destructible">
+				<offset>
+					<position x="0" y="58" z="-627"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_front_b" tags="destructible">
+				<offset>
+					<position x="0" y="44" z="652"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_main_b_2" tags="destructible">
+				<offset>
+					<position x="0" y="-58" z="-627"/>
+					<quaternion qx="0" qy="0" qz="1" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_front_b_2" tags="destructible">
+				<offset>
+					<position x="0" y="-44" z="652"/>
+					<quaternion qx="0" qy="0" qz="1" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_extender2_a" tags="destructible">
+				<offset>
+					<position x="-2.655659E-07" y="42" z="-265.9436"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_extender1_b" tags="destructible">
+				<offset>
+					<position x="-3.46553E-05" y="45" z="11.75758"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_extender2_a2" tags="destructible">
+				<offset>
+					<position x="-3.956582E-07" y="42" z="287.75758"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_extender2_a3" tags="destructible">
+				<offset>
+					<position x="-3.484308E-06" y="-42" z="-265.9436"/>
+					<quaternion qx="0" qy="0" qz="1" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_extender1_b_2" tags="destructible">
+				<offset>
+					<position x="-3.415958E-05" y="-45" z="11.75758"/>
+					<quaternion qx="0" qy="0" qz="1" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_units_size_l_carrier_kit_extender2_a4" tags="destructible">
+				<offset>
+					<position x="-4.522971E-07" y="-42" z="287.75758"/>
+					<quaternion qx="0" qy="0" qz="1" qw="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen01" group="group01 " tags="shieldgenerator ">
+				<offset>
+					<position x="0" y="-100" z="-665"></position>
+					<quaternion qx="" qy="0.70710678118" qz="0" qw="0.70710678118"></quaternion>
+				</offset>
+			</connection>
+			<connection name="connection_jumpdrive01" group="group01 " tags="jumpdrive_small ">
+				<offset>
+					<position x="0" y="-123" z="-725"></position>
+					<quaternion qx="0" qy="0" qz="1" qw="0"></quaternion>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_science_fuelstation_a" tags="destructible">
+				<offset>
+<!--
+					<position x="400" y="-50" z="450"/>
+					<rotation yaw="-90" pitch="0" roll="0"/>
+-->
+					<position x="140" y="-50" z="450"/>
+					<rotation yaw="-90" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_science_fuelstation_a2" tags="destructible">
+				<offset>
+<!--
+					<position x="400" y="-50" z="-420"/>
+					<rotation yaw="-90" pitch="0" roll="0"/>
+-->
+					<position x="140" y="-50" z="-420"/>
+					<rotation yaw="-90" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_prod_shipm_dock" tags="destructible">
+				<offset>
+					<position x="480" y="0" z="0"/>
+					<rotation yaw="-90" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_lxl01" tags="dock_l dock_xl ">
+				<offset>
+					<position x="0" y="-700" z="0"/>
+				</offset>
+			</connection>
+
+			<connection name="ConnectionFor_props_tradeoffer_buy_energy" tags="tradeofferdock">
+				<offset>
+					<position x="580" y="-20" z="-750"/>
+					<rotation yaw="-180" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_tradeoffer_sell_energy" tags="tradeofferdock">
+				<offset>
+					<position x="-580" y="-50" z="450"/>
+					<rotation yaw="-90" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+
+			<connection name="connection_storage01" tags="storage ">
+				<offset/>
+			</connection>
+			<connection name="connection_storage02" tags="storage ">
+				<offset/>
+			</connection>
+			<connection name="connection_storage03" tags="storage ">
+				<offset/>
+			</connection>
+			<connection name="connection_storage04" tags="storage ">
+				<offset/>
+			</connection>
+			<connection name="connection_storage05" tags="storage ">
+				<offset/>
+			</connection>
+			<connection name="connection_storage06" tags="storage ">
+				<offset/>
+			</connection>
+		</connections>
+	</component>
+</components>

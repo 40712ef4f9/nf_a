@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<remove sel="//connection[@ref='ConnectionFor_buildmodule_stations_cw_xen_macro']/macro/properties/build" silent="1" /> 	
+		<add sel="//connection[@ref='ConnectionFor_buildmodule_stations_cw_xen_macro']/macro/properties"> 	
+			<build method="universalparts" />
+		</add>   
+		<remove sel="//connection[@ref='ConnectionFor_buildmodule_stations_cw_xen_macro1']/macro/properties/build" silent="1" /> 	
+		<add sel="//connection[@ref='ConnectionFor_buildmodule_stations_cw_xen_macro1']/macro/properties"> 	
+			<build method="universalparts" />
+		</add>   
+		<remove sel="//connection[@ref='ConnectionFor_buildmodule_stations_cw_xen_macro2']/macro/properties/build" silent="1" /> 	
+		<add sel="//connection[@ref='ConnectionFor_buildmodule_stations_cw_xen_macro2']/macro/properties"> 	
+			<build method="universalparts" />
+		</add>   
+</diff>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
+	<add sel="/macros/macro/properties/builder"> 	
+		<macro ref="units_size_l_kit_minerl_03s_macro" />      
+		<macro ref="units_size_l_kit_miner_03s_macro" />
+		<macro ref="units_size_l_kit_cargo_03s_macro" />
+		<macro ref="units_size_l_kit_cargo_03e_macro" />
+		<macro ref="units_size_l_kit_cargo_03_macro" />
+		<macro ref="units_size_l_kit_fuel_03_macro" />
+		<macro ref="units_size_l_weaponplatform_macro" />
+		<macro ref="units_size_l_antifighter_01_macro" />
+		<macro ref="units_size_l_laserjet_01_macro" />
+		<macro ref="units_size_l_missileb_01_macro" />
+	</add>    
+	<remove sel="//macro[@ref='units_size_l_kit_container_01_macro']" /> 	
+	<remove sel="//macro[@ref='units_size_l_kit_energy_01_macro']" /> 	
+	<remove sel="//macro[@ref='units_size_l_kit_liquid_01_macro']" /> 	
+	<remove sel="//macro[@ref='units_size_l_kit_bulk_01_macro']" /> 	
+	<remove sel="//macro[@ref='units_size_l_kit_carrier_01_macro']" /> 	
+	<remove sel="//macro[@ref='units_size_l_kit_carrier_02_macro']" /> 	
+</diff> 
+ 

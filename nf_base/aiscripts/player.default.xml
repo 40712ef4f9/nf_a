@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="//handler/conditions/check_any/event_object_signalled[@param=&quot;'withdraw battle'&quot;]" pos="after" >
+          <event_object_signalled object="this.ship" param="'collect ship'" />
+          <event_object_signalled object="this.ship" param="'tender action'" />
+	</add>
+	<add sel="//handler/actions/do_elseif[@value=&quot;event.param == 'attack enemies'&quot;]" pos="after" >
+        <do_elseif value="event.param == 'collect ship'">
+          <run_interrupt_script name="'command.collect.ship'" abortscripts="true" resume="init">
+            <param name="target" value="event.param2" />
+            <param name="dockingslot" value="event.param3" />
+          </run_interrupt_script>
+        </do_elseif>
+        <do_elseif value="event.param == 'tender action'">
+          <run_interrupt_script name="'command.tender.ship'" abortscripts="true" resume="init">
+            <param name="target" value="event.param2" />
+            <param name="destination" value="event.param3" />
+          </run_interrupt_script>
+        </do_elseif>
+	</add>
+	<add sel="//handler/conditions/check_any/event_object_signalled[@param=&quot;'dock at'&quot;]" pos="after" >
+          <event_object_signalled object="this.ship" param="'undock'" />
+	</add>
+	<add sel="//handler/actions/do_if[@value=&quot;event.param == 'dock at'&quot;]" pos="after" >
+        <do_elseif value="event.param == 'undock'">
+          <run_interrupt_script name="'command.nothing'" abortscripts="true" resume="init" />
+        </do_elseif>
+	</add>
+	<add sel="//actions/label[@name=&quot;end&quot;]" pos="before" >
+	  <label name="wait" />
+	  <set_command_action commandaction="commandaction.standingby" />
+	  <wait />
+	</add>
+	<replace sel="//handler/actions/do_if[@value=&quot;event.param == 'dock at'&quot;]/run_interrupt_script/@resume">wait</replace>
+</diff>

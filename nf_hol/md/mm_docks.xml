@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<mdscript name="MM_DOCKS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../libraries/md.xsd">
+	<cues>
+		<cue name="MM_DOCKS_patch" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_cue_signalled cue="md.Setup.GameStart"/>
+					<event_game_loaded />
+				</check_any>
+			</conditions>
+			<delay min="220ms" />
+			<actions>
+				<do_if value="md.$todo_stations_moddlc?">
+						<set_value name="$todo" exact="
+							[
+								macro.struct_bt_alb_gatedefence_macro,
+								macro.struct_econ_weapon_ar_defence_2_macro,
+								macro.struct_bt_hol_dock_macro
+							]
+						"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<append_to_list name="md.$todo_stations_moddlc" exact="$todo.{$j}"/>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+				<do_if value="md.$shipdockversion?" negate="true">
+					<patch_macros macro="macro.struct_bt_hol_dock_macro" />
+					<set_value name="md.$shipdockversion" exact="102" />
+				</do_if>
+				<do_if value="md.$shipdockversion?" exact="101">
+					<patch_macros macro="macro.struct_bt_hol_dock_macro" />
+					<set_value name="md.$shipdockversion" exact="102" />
+				</do_if>
+		  </actions>
+		</cue>
+		<cue name="MM_defenceplatform_conv_docks" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_conversation_next_section section="MMDP_conv_more"/>
+					<event_conversation_returned_to_section section="MMDP_conv_more" />
+				</check_any>
+			</conditions>
+			<actions>
+				<add_player_choice text="'%1 %2'.[{1004,15}, macro.struct_bt_alb_gatedefence_macro.name]" selectable="player.entity.money ge 70000000Cr" tooltip="'%1: %2%3'.[{1001,2964}, [70000000Cr].{1}.formatted.default, {1001,101}]" section="mmdp_platform_do" choiceparam="['place', event.param2.{2}, macro.struct_bt_alb_gatedefence_macro, player.primaryship.owner, 70000000Cr, [[class.gate,class.highwayexitgate,class.jumpbeacon], 0,-2500m,0, 10km]]" />
+				<add_player_choice text="'%1 %2'.[{1004,15}, macro.struct_econ_weapon_ar_defence_2_macro.name]" selectable="player.entity.money ge 50000000Cr" tooltip="'%1: %2%3'.[{1001,2964}, [50000000Cr].{1}.formatted.default, {1001,101}]" section="mmdp_platform_do" choiceparam="['place', event.param2.{2}, macro.struct_econ_weapon_ar_defence_2_macro, player.primaryship.owner, 50000000Cr, [[class.gate,class.highwayexitgate,class.jumpbeacon], 0,-1000m,3000m, 10km]]" />
+			</actions>
+		</cue>
+		<cue name="MM_DOCKS_Engineer" instantiate="true" >
+			<conditions>
+				<event_object_docked object="player.primaryship" />
+				<check_value value="event.param.isplayerowned" />
+				<check_any>
+					<check_value value="event.param.macro.ismacro.struct_bt_hol_dock_macro" />
+					<check_value value="event.param.macro.ismacro.struct_bt_alb_gatedefence_macro" />
+				</check_any>
+				<check_value value="event.param.engineer.$Defensible?" negate="true" />
+			</conditions>
+			<actions>
+				<do_if value="event.param.engineer.exists" negate="true">
+					<find_dock_location name="$Stationdock" container="event.param" size="tag.dock_p" multiple="false" dockpopulationtype="dockpopulationtype.administrative"/>
+					<do_if value="not $Stationdock">
+						<find_dock_location name="$Stationdock" container="event.param" size="tag.dock_p" multiple="false"/>
+					</do_if>
+					<create_platform_actor name="$engineer" dockingbay="$Stationdock.component" group="devries.engineer" type="entitytype.engineer">
+						<owner exact="event.param.owner"/>
+						<skills>
+							<skill type="combat" exact="5"/>
+							<skill type="engineering" exact="5"/>
+							<skill type="leadership" exact="5"/>
+							<skill type="management" exact="5"/>
+							<skill type="morale" exact="5"/>
+							<skill type="navigation" exact="5"/>
+							<skill type="science" exact="5"/>
+						</skills>
+					</create_platform_actor>
+					<assign_engineer actor="$engineer" object="event.param"/>
+					<remove_value name="$Stationdock"/>
+					<remove_value name="$engineer"/>
+				</do_if>
+				<!-- Dock Engineer -->			
+				<start_script object="event.param.engineer" name="'engineer.ai.dock'"/>
+			</actions>
+		</cue>
+	</cues>
+</mdscript>
+	

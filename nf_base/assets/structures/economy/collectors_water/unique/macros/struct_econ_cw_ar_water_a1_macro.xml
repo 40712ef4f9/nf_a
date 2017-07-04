@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Benedikt (192.168.3.146) at 30.10.2013_15-17-33-->
+<macros>
+  <macro name="struct_econ_cw_ar_water_a1_macro" class="destructible">
+    <component ref="struct_econ_cw_ar_water_a" />
+    <properties>
+      <identification name="{20107,5301}" description="{20107,5302}" unique="0" />
+      <explosiondamage value="100000" />
+      <effects>
+        <explosion ref="explosion_station_01" />
+        <sefx_hack_disabled ref="hack_deactivated_m" />
+      </effects>
+      <efficiency bonus="0.03" />
+    </properties>
+  </macro>
+</macros>
