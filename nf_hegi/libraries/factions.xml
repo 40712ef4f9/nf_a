@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <add sel="/factions/faction[@id='acmecorp']/relations">
+    <relation faction="vacanaltd" relation="-0.008" />
+    <relation faction="dyssen" relation="-0.008" />
+    <relation faction="hungrill" relation="-0.008" />
+    <relation faction="homeland" relation="-0.008" />
+    <relation faction="ariashorde" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='vacanaltd']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='dyssen']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='hungrill']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='homeland']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='ariashorde']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+
+  <add sel="/factions/faction[@id='deepwater']/relations">
+    <relation faction="vacanaltd" relation="-0.008" />
+    <relation faction="dyssen" relation="-0.008" />
+    <relation faction="hungrill" relation="-0.008" />
+    <relation faction="homeland" relation="-0.008" />
+    <relation faction="ariashorde" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='vacanaltd']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='dyssen']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='hungrill']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='homeland']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='ariashorde']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+</diff>

@@ -132,14 +132,18 @@
 
 
 			<label name="work" />
+			<do_if value="$updateRange?">
+				<set_value name="this.$updateRange" exact="$updateRange"/>
+				<remove_value name="$updateRange"/>
+			</do_if>
 
-			<do_if value="( ['BR.move.patrol', 'move.patrol'].indexof.{$run_script_name} and this.$params.$range? and (['cluster','sector'].indexof.{this.$params.$range} or (typeof this.$params.$range == datatype.component and this.$params.$range.isclass.[class.sector, class.cluster] )) ) or $updateRange?" chance="this.ship.isclass.[class.ship_l, class.ship_xl] * 100">
-				<set_value name="$updateRange" exact="if this.$params.$range? and typeof this.$params.$range == datatype.component and this.$params.$range.isclass.[class.sector, class.cluster] then this.$params.$range else if this.$params.$range? and this.$params.$range == 'cluster' then this.ship.cluster else this.ship.sector"/>
-				<find_zone name="$zones" space="$updateRange" tempzone="false" mapzone="true" multiple="true">
+			<do_if value="( ['BR.move.patrol', 'move.patrol'].indexof.{$run_script_name} and this.$params.$range? and (['cluster','sector'].indexof.{this.$params.$range} or (typeof this.$params.$range == datatype.component and this.$params.$range.isclass.[class.sector, class.cluster] )) ) or this.$updateRange?" chance="this.ship.isclass.[class.ship_l, class.ship_xl] * 100">
+				<set_value name="this.$updateRange" exact="if this.$params.$range? and typeof this.$params.$range == datatype.component and this.$params.$range.isclass.[class.sector, class.cluster] then this.$params.$range else if this.$params.$range? and this.$params.$range == 'cluster' then this.ship.cluster else this.ship.sector" chance="(not this.$updateRange?)*100"/>
+				<find_zone name="$zones" space="this.$updateRange" tempzone="false" mapzone="true" multiple="true">
 					<match_relation faction="this.ship.owner" relation="friend" comparison="ge"/>
 				</find_zone>
 				<do_if value="$zones.count" negate="true">
-					<find_zone name="$zones" space="$updateRange" tempzone="false" mapzone="true" multiple="true">
+					<find_zone name="$zones" space="this.$updateRange" tempzone="false" mapzone="true" multiple="true">
 						<match_relation faction="this.ship.owner" relation="neutral" comparison="ge"/>
 					</find_zone>
 				</do_if>
@@ -226,7 +230,7 @@
 					<param name="onlyinrange" value="if this.$params.$onlyinrange? then this.$params.$onlyinrange else true" />
 					<param name="allowstations" value="if this.$params.$allowstations? then this.$params.$allowstations else true" />
 				</run_script>
-				<do_if value="not this.$params.$route? or (this.$params.$route? and this.$params.$route.count == 0) or (this.$params.$resetConf? and $updateRange? and this.$params.$resetConf le player.age)" comment="eat sleep rave repeat">
+				<do_if value="not this.$params.$route? or (this.$params.$route? and this.$params.$route.count == 0) or (this.$params.$resetConf? and (this.$updateRange? or $updateRange?) and this.$params.$resetConf le player.age)" comment="eat sleep rave repeat">
 					<resume label="work" />
 				</do_if>
 			</do_elseif>
@@ -343,6 +347,7 @@
 
 			<remove_value name="this.$whatido"/>
 			<remove_value name="this.$params"/>
+			<remove_value name="this.$updateRange"/>
 			<stop_boost object="this.ship" />
 			<stop_moving object="this.ship" />
 		</actions>
@@ -350,6 +355,7 @@
 	<on_abort>
 		<remove_value name="this.$whatido"/>
 		<remove_value name="this.$params"/>
+		<remove_value name="this.$updateRange"/>
 		<stop_boost object="this.ship" />
 		<stop_moving object="this.ship" />
 	</on_abort>

@@ -1692,262 +1692,267 @@
 		-->
 		<library name="MMCData_create_station">
 			<actions>
-				<do_if value="$BuildLocation" exact="'random'">
-					<set_value name="$temp_zone" exact="$BuildZone"/>
-					<include_actions ref="md.MM_Corps__Data.MMCData_do_validfreebuildspots" />
-					<do_if value="$temp_buildspots.count">
-						<set_value name="$BuildLocation" exact="$temp_buildspots.random"/>
+				<do_if value="$faction and typeof $faction == datatype.faction">
+					<do_if value="$BuildLocation" exact="'random'">
+						<set_value name="$temp_zone" exact="$BuildZone"/>
+						<include_actions ref="md.MM_Corps__Data.MMCData_do_validfreebuildspots" />
+						<do_if value="$temp_buildspots.count">
+							<set_value name="$BuildLocation" exact="$temp_buildspots.random"/>
+						</do_if>
+						<do_else>
+							<remove_value name="$BuildLocation"/>
+						</do_else>
+						<remove_value name="$temp_buildspots"/>
 					</do_if>
-					<do_else>
-						<remove_value name="$BuildLocation"/>
-					</do_else>
-					<remove_value name="$temp_buildspots"/>
-				</do_if>
-
-				<do_if value="not ($BuildLocation? and $BuildLocation) and (not $position? or  $position == 'auto')">
-					<get_safe_pos result="$position" x="0" y="5km" z="0" radius="14km" zone="$BuildZone"/>
-				</do_if>
-
-				<do_if value="$BuildLocation? and $BuildLocation">
-					<create_station name="$Object" macro="$Macro" owner="$faction" buildlocation="$BuildLocation" zone="$BuildLocation.component" >
-						<!-- just use the max possible for any station: -->
-						<position value="$BuildLocation.offset"/>
-						<rotation value="$BuildLocation.rotation"/>
-						<buildsequence sequence="'a'" stage="1"/>
-						<buildsequence sequence="'a'" stage="2"/>
-						<buildsequence sequence="'a'" stage="3"/>
-						<buildsequence sequence="'a'" stage="4"/>
-						<buildsequence sequence="'a'" stage="5"/>
-						<buildsequence sequence="'a'" stage="6"/>
-						<buildsequence sequence="'a'" stage="7"/>
-						<buildsequence sequence="'a'" stage="8"/>
-						<buildsequence sequence="'a'" stage="9"/>
-						<buildsequence sequence="'b'" stage="1"/>
-						<buildsequence sequence="'b'" stage="2"/>
-						<buildsequence sequence="'b'" stage="3"/>
-						<buildsequence sequence="'b'" stage="4"/>
-						<buildsequence sequence="'b'" stage="5"/>
-						<buildsequence sequence="'b'" stage="6"/>
-						<buildsequence sequence="'b'" stage="7"/>
-						<buildsequence sequence="'b'" stage="8"/>
-						<buildsequence sequence="'b'" stage="9"/>
-						<buildsequence sequence="'c'" stage="1"/>
-						<buildsequence sequence="'c'" stage="2"/>
-						<buildsequence sequence="'c'" stage="3"/>
-						<buildsequence sequence="'c'" stage="4"/>
-						<buildsequence sequence="'c'" stage="5"/>
-						<buildsequence sequence="'c'" stage="6"/>
-						<buildsequence sequence="'c'" stage="7"/>
-						<buildsequence sequence="'c'" stage="8"/>
-						<buildsequence sequence="'c'" stage="9"/>
-						<buildsequence sequence="'d'" stage="1"/>
-						<buildsequence sequence="'d'" stage="2"/>
-						<buildsequence sequence="'d'" stage="3"/>
-						<buildsequence sequence="'d'" stage="4"/>
-						<buildsequence sequence="'d'" stage="5"/>
-						<buildsequence sequence="'d'" stage="6"/>
-						<buildsequence sequence="'d'" stage="7"/>
-						<buildsequence sequence="'d'" stage="8"/>
-						<buildsequence sequence="'d'" stage="9"/>
-						<buildsequence sequence="'e'" stage="1"/>
-						<buildsequence sequence="'e'" stage="2"/>
-						<buildsequence sequence="'e'" stage="3"/>
-						<buildsequence sequence="'e'" stage="4"/>
-						<buildsequence sequence="'e'" stage="5"/>
-						<buildsequence sequence="'e'" stage="6"/>
-						<buildsequence sequence="'e'" stage="7"/>
-						<buildsequence sequence="'e'" stage="8"/>
-						<buildsequence sequence="'e'" stage="9"/>
-						<buildsequence sequence="'f'" stage="1"/>
-						<buildsequence sequence="'f'" stage="2"/>
-						<buildsequence sequence="'f'" stage="3"/>
-						<buildsequence sequence="'f'" stage="4"/>
-						<buildsequence sequence="'f'" stage="5"/>
-						<buildsequence sequence="'f'" stage="6"/>
-						<buildsequence sequence="'f'" stage="7"/>
-						<buildsequence sequence="'f'" stage="8"/>
-						<buildsequence sequence="'f'" stage="9"/>
-						<buildsequence sequence="'g'" stage="1"/>
-						<buildsequence sequence="'g'" stage="2"/>
-						<buildsequence sequence="'g'" stage="3"/>
-						<buildsequence sequence="'g'" stage="4"/>
-						<buildsequence sequence="'g'" stage="5"/>
-						<buildsequence sequence="'g'" stage="6"/>
-						<buildsequence sequence="'g'" stage="7"/>
-						<buildsequence sequence="'g'" stage="8"/>
-						<buildsequence sequence="'g'" stage="9"/>
-						<buildsequence sequence="'h'" stage="1"/>
-						<buildsequence sequence="'h'" stage="2"/>
-						<buildsequence sequence="'h'" stage="3"/>
-						<buildsequence sequence="'h'" stage="4"/>
-						<buildsequence sequence="'h'" stage="5"/>
-						<buildsequence sequence="'h'" stage="6"/>
-						<buildsequence sequence="'h'" stage="7"/>
-						<buildsequence sequence="'h'" stage="8"/>
-						<buildsequence sequence="'h'" stage="9"/>
-						<buildsequence sequence="'i'" stage="1"/>
-						<buildsequence sequence="'i'" stage="2"/>
-						<buildsequence sequence="'i'" stage="3"/>
-						<buildsequence sequence="'i'" stage="4"/>
-						<buildsequence sequence="'i'" stage="5"/>
-						<buildsequence sequence="'i'" stage="6"/>
-						<buildsequence sequence="'i'" stage="7"/>
-						<buildsequence sequence="'i'" stage="8"/>
-						<buildsequence sequence="'i'" stage="9"/>
-						<buildsequence sequence="'j'" stage="1"/>
-						<buildsequence sequence="'j'" stage="2"/>
-						<buildsequence sequence="'j'" stage="3"/>
-						<buildsequence sequence="'j'" stage="4"/>
-						<buildsequence sequence="'j'" stage="5"/>
-						<buildsequence sequence="'j'" stage="6"/>
-						<buildsequence sequence="'j'" stage="7"/>
-						<buildsequence sequence="'j'" stage="8"/>
-						<buildsequence sequence="'j'" stage="9"/>
-						<buildsequence sequence="'k'" stage="1"/>
-						<buildsequence sequence="'k'" stage="2"/>
-						<buildsequence sequence="'k'" stage="3"/>
-						<buildsequence sequence="'k'" stage="4"/>
-						<buildsequence sequence="'k'" stage="5"/>
-						<buildsequence sequence="'k'" stage="6"/>
-						<buildsequence sequence="'k'" stage="7"/>
-						<buildsequence sequence="'k'" stage="8"/>
-						<buildsequence sequence="'k'" stage="9"/>
-					</create_station>
-				</do_if>
-				<do_elseif value="$selectedMacro == macro.props_gates_jumpbeacon_macro">
-					<create_object name="$Object" macro="macro.props_gates_jumpbeacon_macro" zone="$BuildZone">
-						<position value="$position" />
-					</create_object>
-					<set_object_min_hull object="$Object" exact="5"/>
-				</do_elseif>
-				<do_else>
-					<create_station name="$Object" macro="$Macro" zone="$BuildZone" owner="$faction" >
-
-						<position value="$position" />
-						<!-- just use the max possible for any station: -->
-						<buildsequence sequence="'a'" stage="1"/>
-						<buildsequence sequence="'a'" stage="2"/>
-						<buildsequence sequence="'a'" stage="3"/>
-						<buildsequence sequence="'a'" stage="4"/>
-						<buildsequence sequence="'a'" stage="5"/>
-						<buildsequence sequence="'a'" stage="6"/>
-						<buildsequence sequence="'a'" stage="7"/>
-						<buildsequence sequence="'a'" stage="8"/>
-						<buildsequence sequence="'a'" stage="9"/>
-						<buildsequence sequence="'b'" stage="1"/>
-						<buildsequence sequence="'b'" stage="2"/>
-						<buildsequence sequence="'b'" stage="3"/>
-						<buildsequence sequence="'b'" stage="4"/>
-						<buildsequence sequence="'b'" stage="5"/>
-						<buildsequence sequence="'b'" stage="6"/>
-						<buildsequence sequence="'b'" stage="7"/>
-						<buildsequence sequence="'b'" stage="8"/>
-						<buildsequence sequence="'b'" stage="9"/>
-						<buildsequence sequence="'c'" stage="1"/>
-						<buildsequence sequence="'c'" stage="2"/>
-						<buildsequence sequence="'c'" stage="3"/>
-						<buildsequence sequence="'c'" stage="4"/>
-						<buildsequence sequence="'c'" stage="5"/>
-						<buildsequence sequence="'c'" stage="6"/>
-						<buildsequence sequence="'c'" stage="7"/>
-						<buildsequence sequence="'c'" stage="8"/>
-						<buildsequence sequence="'c'" stage="9"/>
-						<buildsequence sequence="'d'" stage="1"/>
-						<buildsequence sequence="'d'" stage="2"/>
-						<buildsequence sequence="'d'" stage="3"/>
-						<buildsequence sequence="'d'" stage="4"/>
-						<buildsequence sequence="'d'" stage="5"/>
-						<buildsequence sequence="'d'" stage="6"/>
-						<buildsequence sequence="'d'" stage="7"/>
-						<buildsequence sequence="'d'" stage="8"/>
-						<buildsequence sequence="'d'" stage="9"/>
-						<buildsequence sequence="'e'" stage="1"/>
-						<buildsequence sequence="'e'" stage="2"/>
-						<buildsequence sequence="'e'" stage="3"/>
-						<buildsequence sequence="'e'" stage="4"/>
-						<buildsequence sequence="'e'" stage="5"/>
-						<buildsequence sequence="'e'" stage="6"/>
-						<buildsequence sequence="'e'" stage="7"/>
-						<buildsequence sequence="'e'" stage="8"/>
-						<buildsequence sequence="'e'" stage="9"/>
-						<buildsequence sequence="'f'" stage="1"/>
-						<buildsequence sequence="'f'" stage="2"/>
-						<buildsequence sequence="'f'" stage="3"/>
-						<buildsequence sequence="'f'" stage="4"/>
-						<buildsequence sequence="'f'" stage="5"/>
-						<buildsequence sequence="'f'" stage="6"/>
-						<buildsequence sequence="'f'" stage="7"/>
-						<buildsequence sequence="'f'" stage="8"/>
-						<buildsequence sequence="'f'" stage="9"/>
-						<buildsequence sequence="'g'" stage="1"/>
-						<buildsequence sequence="'g'" stage="2"/>
-						<buildsequence sequence="'g'" stage="3"/>
-						<buildsequence sequence="'g'" stage="4"/>
-						<buildsequence sequence="'g'" stage="5"/>
-						<buildsequence sequence="'g'" stage="6"/>
-						<buildsequence sequence="'g'" stage="7"/>
-						<buildsequence sequence="'g'" stage="8"/>
-						<buildsequence sequence="'g'" stage="9"/>
-						<buildsequence sequence="'h'" stage="1"/>
-						<buildsequence sequence="'h'" stage="2"/>
-						<buildsequence sequence="'h'" stage="3"/>
-						<buildsequence sequence="'h'" stage="4"/>
-						<buildsequence sequence="'h'" stage="5"/>
-						<buildsequence sequence="'h'" stage="6"/>
-						<buildsequence sequence="'h'" stage="7"/>
-						<buildsequence sequence="'h'" stage="8"/>
-						<buildsequence sequence="'h'" stage="9"/>
-						<buildsequence sequence="'i'" stage="1"/>
-						<buildsequence sequence="'i'" stage="2"/>
-						<buildsequence sequence="'i'" stage="3"/>
-						<buildsequence sequence="'i'" stage="4"/>
-						<buildsequence sequence="'i'" stage="5"/>
-						<buildsequence sequence="'i'" stage="6"/>
-						<buildsequence sequence="'i'" stage="7"/>
-						<buildsequence sequence="'i'" stage="8"/>
-						<buildsequence sequence="'i'" stage="9"/>
-						<buildsequence sequence="'j'" stage="1"/>
-						<buildsequence sequence="'j'" stage="2"/>
-						<buildsequence sequence="'j'" stage="3"/>
-						<buildsequence sequence="'j'" stage="4"/>
-						<buildsequence sequence="'j'" stage="5"/>
-						<buildsequence sequence="'j'" stage="6"/>
-						<buildsequence sequence="'j'" stage="7"/>
-						<buildsequence sequence="'j'" stage="8"/>
-						<buildsequence sequence="'j'" stage="9"/>
-						<buildsequence sequence="'k'" stage="1"/>
-						<buildsequence sequence="'k'" stage="2"/>
-						<buildsequence sequence="'k'" stage="3"/>
-						<buildsequence sequence="'k'" stage="4"/>
-						<buildsequence sequence="'k'" stage="5"/>
-						<buildsequence sequence="'k'" stage="6"/>
-						<buildsequence sequence="'k'" stage="7"/>
-						<buildsequence sequence="'k'" stage="8"/>
-						<buildsequence sequence="'k'" stage="9"/>
-					</create_station>
-				</do_else>
-
-				<do_if value="$Object.exists" chance="(not $noInit?)*100">
-					<do_if value="$position? and $Object.distanceto.[$Object.zone, $position] gt 100m" chance="0">
-						<warp object="$Object" zone="$Object.zone">
+	
+					<do_if value="not ($BuildLocation? and $BuildLocation) and (not $position? or  $position == 'auto')">
+						<get_safe_pos result="$position" x="0" y="5km" z="0" radius="14km" zone="$BuildZone"/>
+					</do_if>
+	
+					<do_if value="$BuildLocation? and $BuildLocation">
+						<create_station name="$Object" macro="$Macro" owner="$faction" buildlocation="$BuildLocation" zone="$BuildLocation.component" >
+							<!-- just use the max possible for any station: -->
+							<position value="$BuildLocation.offset"/>
+							<rotation value="$BuildLocation.rotation"/>
+							<buildsequence sequence="'a'" stage="1"/>
+							<buildsequence sequence="'a'" stage="2"/>
+							<buildsequence sequence="'a'" stage="3"/>
+							<buildsequence sequence="'a'" stage="4"/>
+							<buildsequence sequence="'a'" stage="5"/>
+							<buildsequence sequence="'a'" stage="6"/>
+							<buildsequence sequence="'a'" stage="7"/>
+							<buildsequence sequence="'a'" stage="8"/>
+							<buildsequence sequence="'a'" stage="9"/>
+							<buildsequence sequence="'b'" stage="1"/>
+							<buildsequence sequence="'b'" stage="2"/>
+							<buildsequence sequence="'b'" stage="3"/>
+							<buildsequence sequence="'b'" stage="4"/>
+							<buildsequence sequence="'b'" stage="5"/>
+							<buildsequence sequence="'b'" stage="6"/>
+							<buildsequence sequence="'b'" stage="7"/>
+							<buildsequence sequence="'b'" stage="8"/>
+							<buildsequence sequence="'b'" stage="9"/>
+							<buildsequence sequence="'c'" stage="1"/>
+							<buildsequence sequence="'c'" stage="2"/>
+							<buildsequence sequence="'c'" stage="3"/>
+							<buildsequence sequence="'c'" stage="4"/>
+							<buildsequence sequence="'c'" stage="5"/>
+							<buildsequence sequence="'c'" stage="6"/>
+							<buildsequence sequence="'c'" stage="7"/>
+							<buildsequence sequence="'c'" stage="8"/>
+							<buildsequence sequence="'c'" stage="9"/>
+							<buildsequence sequence="'d'" stage="1"/>
+							<buildsequence sequence="'d'" stage="2"/>
+							<buildsequence sequence="'d'" stage="3"/>
+							<buildsequence sequence="'d'" stage="4"/>
+							<buildsequence sequence="'d'" stage="5"/>
+							<buildsequence sequence="'d'" stage="6"/>
+							<buildsequence sequence="'d'" stage="7"/>
+							<buildsequence sequence="'d'" stage="8"/>
+							<buildsequence sequence="'d'" stage="9"/>
+							<buildsequence sequence="'e'" stage="1"/>
+							<buildsequence sequence="'e'" stage="2"/>
+							<buildsequence sequence="'e'" stage="3"/>
+							<buildsequence sequence="'e'" stage="4"/>
+							<buildsequence sequence="'e'" stage="5"/>
+							<buildsequence sequence="'e'" stage="6"/>
+							<buildsequence sequence="'e'" stage="7"/>
+							<buildsequence sequence="'e'" stage="8"/>
+							<buildsequence sequence="'e'" stage="9"/>
+							<buildsequence sequence="'f'" stage="1"/>
+							<buildsequence sequence="'f'" stage="2"/>
+							<buildsequence sequence="'f'" stage="3"/>
+							<buildsequence sequence="'f'" stage="4"/>
+							<buildsequence sequence="'f'" stage="5"/>
+							<buildsequence sequence="'f'" stage="6"/>
+							<buildsequence sequence="'f'" stage="7"/>
+							<buildsequence sequence="'f'" stage="8"/>
+							<buildsequence sequence="'f'" stage="9"/>
+							<buildsequence sequence="'g'" stage="1"/>
+							<buildsequence sequence="'g'" stage="2"/>
+							<buildsequence sequence="'g'" stage="3"/>
+							<buildsequence sequence="'g'" stage="4"/>
+							<buildsequence sequence="'g'" stage="5"/>
+							<buildsequence sequence="'g'" stage="6"/>
+							<buildsequence sequence="'g'" stage="7"/>
+							<buildsequence sequence="'g'" stage="8"/>
+							<buildsequence sequence="'g'" stage="9"/>
+							<buildsequence sequence="'h'" stage="1"/>
+							<buildsequence sequence="'h'" stage="2"/>
+							<buildsequence sequence="'h'" stage="3"/>
+							<buildsequence sequence="'h'" stage="4"/>
+							<buildsequence sequence="'h'" stage="5"/>
+							<buildsequence sequence="'h'" stage="6"/>
+							<buildsequence sequence="'h'" stage="7"/>
+							<buildsequence sequence="'h'" stage="8"/>
+							<buildsequence sequence="'h'" stage="9"/>
+							<buildsequence sequence="'i'" stage="1"/>
+							<buildsequence sequence="'i'" stage="2"/>
+							<buildsequence sequence="'i'" stage="3"/>
+							<buildsequence sequence="'i'" stage="4"/>
+							<buildsequence sequence="'i'" stage="5"/>
+							<buildsequence sequence="'i'" stage="6"/>
+							<buildsequence sequence="'i'" stage="7"/>
+							<buildsequence sequence="'i'" stage="8"/>
+							<buildsequence sequence="'i'" stage="9"/>
+							<buildsequence sequence="'j'" stage="1"/>
+							<buildsequence sequence="'j'" stage="2"/>
+							<buildsequence sequence="'j'" stage="3"/>
+							<buildsequence sequence="'j'" stage="4"/>
+							<buildsequence sequence="'j'" stage="5"/>
+							<buildsequence sequence="'j'" stage="6"/>
+							<buildsequence sequence="'j'" stage="7"/>
+							<buildsequence sequence="'j'" stage="8"/>
+							<buildsequence sequence="'j'" stage="9"/>
+							<buildsequence sequence="'k'" stage="1"/>
+							<buildsequence sequence="'k'" stage="2"/>
+							<buildsequence sequence="'k'" stage="3"/>
+							<buildsequence sequence="'k'" stage="4"/>
+							<buildsequence sequence="'k'" stage="5"/>
+							<buildsequence sequence="'k'" stage="6"/>
+							<buildsequence sequence="'k'" stage="7"/>
+							<buildsequence sequence="'k'" stage="8"/>
+							<buildsequence sequence="'k'" stage="9"/>
+						</create_station>
+					</do_if>
+					<do_elseif value="$selectedMacro == macro.props_gates_jumpbeacon_macro">
+						<create_object name="$Object" macro="macro.props_gates_jumpbeacon_macro" zone="$BuildZone">
 							<position value="$position" />
-						</warp>
-					</do_if>
-					<signal_objects object="player.galaxy" param="'reinit station'" param2="$Object"/> <!-- player + NPC init -->
-					<do_if value="$Object.cargo.{ware.unknown}.count gt 0">
-						<remove_cargo object="$Object" ware="ware.unknown" exact="$Object.cargo.{ware.unknown}.count" />
-					</do_if>
-					<do_if value="$faction != faction.player and $Object.tradenpc and $CEO? and $CEO">
-						<share_actor_account actor="$Object.tradenpc" otherobject="$CEO"/>
-					</do_if>
-					<do_elseif value="$faction != faction.player and $Object.tradenpc and not $CEO? and global.$factionCEOs? and global.$factionCEOs.{'$' + $faction.id}?">
-						<share_actor_account actor="$Object.tradenpc" otherobject="global.$factionCEOs.{'$' + $faction.id}"/>
+						</create_object>
+						<set_object_min_hull object="$Object" exact="5"/>
 					</do_elseif>
+					<do_else>
+						<create_station name="$Object" macro="$Macro" zone="$BuildZone" owner="$faction" >
+	
+							<position value="$position" />
+							<!-- just use the max possible for any station: -->
+							<buildsequence sequence="'a'" stage="1"/>
+							<buildsequence sequence="'a'" stage="2"/>
+							<buildsequence sequence="'a'" stage="3"/>
+							<buildsequence sequence="'a'" stage="4"/>
+							<buildsequence sequence="'a'" stage="5"/>
+							<buildsequence sequence="'a'" stage="6"/>
+							<buildsequence sequence="'a'" stage="7"/>
+							<buildsequence sequence="'a'" stage="8"/>
+							<buildsequence sequence="'a'" stage="9"/>
+							<buildsequence sequence="'b'" stage="1"/>
+							<buildsequence sequence="'b'" stage="2"/>
+							<buildsequence sequence="'b'" stage="3"/>
+							<buildsequence sequence="'b'" stage="4"/>
+							<buildsequence sequence="'b'" stage="5"/>
+							<buildsequence sequence="'b'" stage="6"/>
+							<buildsequence sequence="'b'" stage="7"/>
+							<buildsequence sequence="'b'" stage="8"/>
+							<buildsequence sequence="'b'" stage="9"/>
+							<buildsequence sequence="'c'" stage="1"/>
+							<buildsequence sequence="'c'" stage="2"/>
+							<buildsequence sequence="'c'" stage="3"/>
+							<buildsequence sequence="'c'" stage="4"/>
+							<buildsequence sequence="'c'" stage="5"/>
+							<buildsequence sequence="'c'" stage="6"/>
+							<buildsequence sequence="'c'" stage="7"/>
+							<buildsequence sequence="'c'" stage="8"/>
+							<buildsequence sequence="'c'" stage="9"/>
+							<buildsequence sequence="'d'" stage="1"/>
+							<buildsequence sequence="'d'" stage="2"/>
+							<buildsequence sequence="'d'" stage="3"/>
+							<buildsequence sequence="'d'" stage="4"/>
+							<buildsequence sequence="'d'" stage="5"/>
+							<buildsequence sequence="'d'" stage="6"/>
+							<buildsequence sequence="'d'" stage="7"/>
+							<buildsequence sequence="'d'" stage="8"/>
+							<buildsequence sequence="'d'" stage="9"/>
+							<buildsequence sequence="'e'" stage="1"/>
+							<buildsequence sequence="'e'" stage="2"/>
+							<buildsequence sequence="'e'" stage="3"/>
+							<buildsequence sequence="'e'" stage="4"/>
+							<buildsequence sequence="'e'" stage="5"/>
+							<buildsequence sequence="'e'" stage="6"/>
+							<buildsequence sequence="'e'" stage="7"/>
+							<buildsequence sequence="'e'" stage="8"/>
+							<buildsequence sequence="'e'" stage="9"/>
+							<buildsequence sequence="'f'" stage="1"/>
+							<buildsequence sequence="'f'" stage="2"/>
+							<buildsequence sequence="'f'" stage="3"/>
+							<buildsequence sequence="'f'" stage="4"/>
+							<buildsequence sequence="'f'" stage="5"/>
+							<buildsequence sequence="'f'" stage="6"/>
+							<buildsequence sequence="'f'" stage="7"/>
+							<buildsequence sequence="'f'" stage="8"/>
+							<buildsequence sequence="'f'" stage="9"/>
+							<buildsequence sequence="'g'" stage="1"/>
+							<buildsequence sequence="'g'" stage="2"/>
+							<buildsequence sequence="'g'" stage="3"/>
+							<buildsequence sequence="'g'" stage="4"/>
+							<buildsequence sequence="'g'" stage="5"/>
+							<buildsequence sequence="'g'" stage="6"/>
+							<buildsequence sequence="'g'" stage="7"/>
+							<buildsequence sequence="'g'" stage="8"/>
+							<buildsequence sequence="'g'" stage="9"/>
+							<buildsequence sequence="'h'" stage="1"/>
+							<buildsequence sequence="'h'" stage="2"/>
+							<buildsequence sequence="'h'" stage="3"/>
+							<buildsequence sequence="'h'" stage="4"/>
+							<buildsequence sequence="'h'" stage="5"/>
+							<buildsequence sequence="'h'" stage="6"/>
+							<buildsequence sequence="'h'" stage="7"/>
+							<buildsequence sequence="'h'" stage="8"/>
+							<buildsequence sequence="'h'" stage="9"/>
+							<buildsequence sequence="'i'" stage="1"/>
+							<buildsequence sequence="'i'" stage="2"/>
+							<buildsequence sequence="'i'" stage="3"/>
+							<buildsequence sequence="'i'" stage="4"/>
+							<buildsequence sequence="'i'" stage="5"/>
+							<buildsequence sequence="'i'" stage="6"/>
+							<buildsequence sequence="'i'" stage="7"/>
+							<buildsequence sequence="'i'" stage="8"/>
+							<buildsequence sequence="'i'" stage="9"/>
+							<buildsequence sequence="'j'" stage="1"/>
+							<buildsequence sequence="'j'" stage="2"/>
+							<buildsequence sequence="'j'" stage="3"/>
+							<buildsequence sequence="'j'" stage="4"/>
+							<buildsequence sequence="'j'" stage="5"/>
+							<buildsequence sequence="'j'" stage="6"/>
+							<buildsequence sequence="'j'" stage="7"/>
+							<buildsequence sequence="'j'" stage="8"/>
+							<buildsequence sequence="'j'" stage="9"/>
+							<buildsequence sequence="'k'" stage="1"/>
+							<buildsequence sequence="'k'" stage="2"/>
+							<buildsequence sequence="'k'" stage="3"/>
+							<buildsequence sequence="'k'" stage="4"/>
+							<buildsequence sequence="'k'" stage="5"/>
+							<buildsequence sequence="'k'" stage="6"/>
+							<buildsequence sequence="'k'" stage="7"/>
+							<buildsequence sequence="'k'" stage="8"/>
+							<buildsequence sequence="'k'" stage="9"/>
+						</create_station>
+					</do_else>
+	
+					<do_if value="$Object.exists" chance="(not $noInit?)*100">
+						<do_if value="$position? and $Object.distanceto.[$Object.zone, $position] gt 100m" chance="0">
+							<warp object="$Object" zone="$Object.zone">
+								<position value="$position" />
+							</warp>
+						</do_if>
+						<signal_objects object="player.galaxy" param="'reinit station'" param2="$Object"/> <!-- player + NPC init -->
+						<do_if value="$Object.cargo.{ware.unknown}.count gt 0">
+							<remove_cargo object="$Object" ware="ware.unknown" exact="$Object.cargo.{ware.unknown}.count" />
+						</do_if>
+						<do_if value="$faction != faction.player and $Object.tradenpc and $CEO? and $CEO">
+							<share_actor_account actor="$Object.tradenpc" otherobject="$CEO"/>
+						</do_if>
+						<do_elseif value="$faction != faction.player and $Object.tradenpc and not $CEO? and global.$factionCEOs? and global.$factionCEOs.{'$' + $faction.id}?">
+							<share_actor_account actor="$Object.tradenpc" otherobject="global.$factionCEOs.{'$' + $faction.id}"/>
+						</do_elseif>
+					</do_if>
+	
+					<do_if value="$Object.exists and stat.nf_stations_spawned?">
+						<set_value name="stat.nf_stations_spawned" operation="add" />
+					</do_if>
 				</do_if>
-
-				<do_if value="$Object.exists and stat.nf_stations_spawned?">
-					<set_value name="stat.nf_stations_spawned" operation="add" />
-				</do_if>
+				<do_else>
+					<debug_text text="'ERROR MMCData_create_station: f:%1  Z:%2  M:%3'.[@$faction.id, @$BuildZone.macro.id, @$Macro.id]" filter="error" chance="100" />
+				</do_else>
 
 				<remove_value name="$Object"/>
 				<remove_value name="$CEO"/>
@@ -4779,6 +4784,9 @@
 					<do_elseif value="$Objects.{$y}.pilot.$params.$range? and typeof $Objects.{$y}.pilot.$params.$range == datatype.component">
 						<set_value name="$area" exact="$Objects.{$y}.pilot.$params.$range"/>
 					</do_elseif>
+					<do_elseif value="$Objects.{$y}.pilot.$updateRange? and typeof $Objects.{$y}.pilot.$updateRange == datatype.component">
+						<set_value name="$area" exact="$Objects.{$y}.pilot.$updateRange"/>
+					</do_elseif>
 					<do_elseif value="$Objects.{$y}.pilot.$whatido == 'move.patrol.route' or $Objects.{$y}.pilot.$params.$range? and typeof $Objects.{$y}.pilot.$params.$range == datatype.list">
 						<do_if value="$Objects.{$y}.pilot.$params.$route? and typeof $Objects.{$y}.pilot.$params.$route == datatype.list">
 							<set_value name="$spaces" exact="$Objects.{$y}.pilot.$params.$route.clone"/>
@@ -4876,6 +4884,7 @@
 									<transfer_money from="$temp_Stations.{$y}.tradenpc" to="$_CEO" amount="$donation"/>
 									<set_value name="$earnings" exact="$donation" operation="add"/>
 									<add_faction_relation faction="$temp_Stations.{$y}.owner" otherfaction="$_faction" value="$relationchange*2"/>
+									<write_to_logbook category="general" text="'%1 from %2 pay tax of %3Cr to %4.'.[$temp_Stations.{$y}.tradenpc.name, $temp_Stations.{$y}.knownname, $donation.formatted.default, $_faction.name]" chance="if $temp_Stations.{$y}.isplayerowned then 100 else 0"/>
 								</do_if>
 								<do_else>
 									<add_faction_relation faction="$temp_Stations.{$y}.owner" otherfaction="$_faction" value="$relationchange"/>
@@ -4902,6 +4911,7 @@
 									<transfer_money from="$temp_Stations.{$y}.tradenpc" to="$_CEO" amount="$donation"/>
 									<set_value name="$earnings" exact="$donation" operation="add"/>
 									<add_faction_relation faction="$temp_Stations.{$y}.owner" otherfaction="$_faction" value="$relationchange" chance="($temp_Stations.{$y}.owner.relationto.{$_faction} le $_faction.relation.friend.mid) *30"/>
+									<write_to_logbook category="general" text="'%1 from %2 pay tax of %3Cr to %4.'.[$temp_Stations.{$y}.tradenpc.name, $temp_Stations.{$y}.knownname, $donation.formatted.default, $_faction.name]" chance="if $temp_Stations.{$y}.isplayerowned then 100 else 0"/>
 								</do_if>
 								<do_elseif value="$temp_Stations.{$y}.owner and $temp_Stations.{$y}.owner.relationto.{$_faction} gt $_faction.relation.neutral.min">
 									<add_faction_relation faction="$temp_Stations.{$y}.owner" otherfaction="$_faction" value="$relationchange"/>
@@ -5036,7 +5046,18 @@
 						</do_else>
 					</do_elseif>
 					<do_elseif value="($shipDoPatrol.{$r}.pilot.$whatido? and $shipDoPatrol.{$r}.pilot.$whatido == 'move.patrol.route') or ($shipDoPatrol.{$r}.pilot.$params.$range? and typeof $shipDoPatrol.{$r}.pilot.$params.$range == datatype.list)">
-						<append_to_list name="$patrolRoute" exact="$shipDoPatrol.{$r}"/>
+						<do_if value="$shipDoPatrol.{$r}.pilot.$updateRange? and $shipDoPatrol.{$r}.pilot.$updateRange.isclass.zone">
+							<append_to_list name="$patrolZone" exact="$shipDoPatrol.{$r}"/>
+						</do_if>
+						<do_elseif value="$shipDoPatrol.{$r}.pilot.$updateRange? and $shipDoPatrol.{$r}.pilot.$updateRange.isclass.sector">
+							<append_to_list name="$patrolSector" exact="$shipDoPatrol.{$r}"/>
+						</do_elseif>
+						<do_elseif value="$shipDoPatrol.{$r}.pilot.$updateRange? and $shipDoPatrol.{$r}.pilot.$updateRange.isclass.cluster">
+							<append_to_list name="$patrolCluster" exact="$shipDoPatrol.{$r}"/>
+						</do_elseif>
+						<do_else>
+							<append_to_list name="$patrolRoute" exact="$shipDoPatrol.{$r}"/>
+						</do_else>
 					</do_elseif>
 					<do_else>
 						<append_to_list name="$patrolUnknown" exact="$shipDoPatrol.{$r}"/>

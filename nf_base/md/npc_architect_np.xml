@@ -1087,6 +1087,8 @@
 
                       <signal_cue_instantly cue="md.MM_Corps__Station_Const.MMCStationConst_refresh" param="$actor.container"/>
 
+                      <signal_cue_instantly cue="md.MM_Corps__Station_Const.MMCStationConst_wiki" param="$station"/>
+
                       <set_value name="$station" exact="null" />
 
                       <reset_cue cue="BuildFinished_Wait" />

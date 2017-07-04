@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<mdscript name="NF_HeGi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../libraries/md.xsd">
+	<cues>
+		<cue name="NF_HeGi_patch" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_cue_signalled cue="md.Setup.GameStart"/>
+					<event_game_loaded />
+				</check_any>
+			</conditions>
+			<delay min="190ms" />
+			<actions>
+				<do_if value="md.$NFMMprocessesdSectors? and player.age lt 3min and md.$NFMMprocessesdSectors.indexof.{'NF_HeGi'} == 0">
+					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_HeGi'"/>
+				</do_if>
+				<do_elseif value="md.$NFMMprocessesdSectors? and player.age ge 3min and md.$NFMMprocessesdSectors.indexof.{'NF_HeGi'} == 0">
+					<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
+					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_HeGi'"/>
+				</do_elseif>
+			</actions>
+		</cue>
+	</cues>
+</mdscript>
+	
