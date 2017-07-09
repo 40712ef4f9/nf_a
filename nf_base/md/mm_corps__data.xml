@@ -4511,7 +4511,7 @@
 				</do_if>
 				<do_elseif value="$ShipYardOfTrust" negate="true" chance="if $ShipYardOfTrust2? and $ShipYardOfTrust2.count then 100 else 0">
 					<do_all exact="$ShipYardOfTrust2.count" counter="$y">
-						<do_if value="@$ShipYardOfTrust2.{$y}.tradenpc.$orders.count gt 1 and not $ShipYardOfTrust2.{$y}.tradenpc.$denyBuildRandomNPC?" comment="cheat" chance="($tmpConfig.$cheat? or (not $ShipYardOfTrust2.{$y}.isplayerowned and $tmpConfig.$cheatNPC)) * 100">
+						<do_if value="@$ShipYardOfTrust2.{$y}.tradenpc.$orders.count gt 1 and not $ShipYardOfTrust2.{$y}.tradenpc.$denyBuildRandomNPC?" comment="cheat" chance="($tmpConfig.$cheat? or (not $ShipYardOfTrust2.{$y}.isplayerowned and $tmpConfig.$cheatNPC? and $tmpConfig.$cheatNPC)) * 100">
 							<find_buy_offer buyer="$ShipYardOfTrust2.{$y}" multiple="1" result="$buyoffers" wares="$ShipYardOfTrust2.{$y}.resources.list"/>
 							<set_value name="$price" exact="0"/>
 
@@ -4725,7 +4725,7 @@
 					<remove_value name="$fourthChoice"/>
 
 					<do_if value="typeof $macro == datatype.macro and $ShipYardOfTrust.exists">
-						<do_if value="@$ShipYardOfTrust.tradenpc.$orders.count gt 1 and not $ShipYardOfTrust.tradenpc.$denyBuildRandomNPC?" comment="cheat" chance="($tmpConfig.$cheat? or (not $ShipYardOfTrust.isplayerowned and $tmpConfig.$cheatNPC)) * 100">
+						<do_if value="@$ShipYardOfTrust.tradenpc.$orders.count gt 1 and not $ShipYardOfTrust.tradenpc.$denyBuildRandomNPC?" comment="cheat" chance="($tmpConfig.$cheat? or (not $ShipYardOfTrust.isplayerowned and $tmpConfig.$cheatNPC? and $tmpConfig.$cheatNPC)) * 100">
 							<find_buy_offer buyer="$ShipYardOfTrust" multiple="1" result="$buyoffers" wares="$ShipYardOfTrust.resources.list"/>
 							<set_value name="$price" exact="0"/>
 

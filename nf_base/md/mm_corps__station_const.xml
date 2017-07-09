@@ -492,6 +492,23 @@
 			</actions>
 		</cue>
 
+		<cue name="MMCStationConst_wiki" instantiate="true" namespace="this">
+			<conditions>
+				<event_cue_signalled/>
+				<check_value value="event.param? and event.param.exists and event.param.isclass.station and md.$stationwiki?" />
+			</conditions>
+			<delay min="10s" max="150s"/>
+			<actions>
+				<set_value name="$temp_station" exact="event.param" />
+				<do_if value="	not md.$stationwiki.{'$%1'.[$temp_station.macro.id]}? or
+								(md.$stationwiki.{'$%1'.[$temp_station.macro.id]}? and ( md.$stationwiki.{'$%1'.[$temp_station.macro.id]}.$resources.count lt $temp_station.resources.list.count or md.$stationwiki.{'$%1'.[$temp_station.macro.id]}.$products.count lt $temp_station.products.list.count ))
+							" chance="($temp_station? and $temp_station) *100">
+					<set_value name="md.$stationwiki.{'$%1'.[$temp_station.macro.id]}" exact="table[ $resources = $temp_station.resources.list, $products = $temp_station.products.list ]"/>
+				</do_if>
+				<remove_value name="$temp_station"/>
+			</actions>
+		</cue>
+
 		<cue name="MMCStationConst_MoveBuild_bridge" instantiate="true" namespace="this">
 			<conditions>
 				<event_cue_signalled/>

@@ -799,7 +799,7 @@
 				</do_elseif>
 				<do_else>
 					<create_cue_actor name="$tempActor" cue="this">
-						<select race="if @$temp_select.{2} then $temp_select.{2} else race.{$temp_faction.id}" tags="if @$temp_select.{3} then $temp_select.{3} else tag.{$temp_entitytype}"/>
+						<select race="if @$temp_select.{2} then $temp_select.{2} else if $temp_faction.id == 'player' then race.argon else race.{$temp_faction.id}" tags="if @$temp_select.{3} then $temp_select.{3} else tag.{$temp_entitytype}"/>
 						<owner exact="$temp_faction"/>
 					</create_cue_actor>
 				</do_else>

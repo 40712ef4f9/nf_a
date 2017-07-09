@@ -60,7 +60,7 @@
 						<set_value name="$_CEO" exact="global.$SONRAENERGY_CEO" />
 						<!-- load config -->
 						<set_value name="$build" exact="['ol','massenergy','energy']" comment="['massenergy','energy','food','drug','tech','ship','al','ol','warehouse']"/>
-						<set_value name="$build2" exact="['ol','massenergy','energy']" comment="['massenergy','energy','food','drug','tech','ship','al','ol','warehouse']"/>
+						<set_value name="$build2" exact="['ol','energy']" comment="['massenergy','energy','food','drug','tech','ship','al','ol','warehouse']"/>
 						<set_value name="$style" exact="['cooperative', 'pirate', 'domination']" comment="min 3 entries required"/>
 						
 						<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include" />
