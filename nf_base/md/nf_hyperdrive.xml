@@ -247,7 +247,7 @@
 				<do_all exact="$player_subordinates_level1.count" counter="$i">								
 					<do_if value="$player_subordinates_level1.{$i}.isclass.ship_s or $player_subordinates_level1.{$i}.isclass.ship_m">
 						<add_effect object="$player_subordinates_level1.{$i}" effect="'jump_activation_jumpdrive_l'" >
-							<position x="0m" y="$y" z="0" />
+							<position x="0m" y="20000m" z="0" />
 						</add_effect>
 						<!--<signal_objects object="$player_subordinates_level1.{$i}" param="'hold position'" />-->
 						<signal_cue_instantly cue="JumpSubordinates" param="[$player_subordinates_level1.{$i}, $player_subordinates_level1.{$i}, $destination, 0, 'jump_jumpin_l', position.[0m,20000m,0m], 1]"/>
@@ -522,7 +522,7 @@
 				<set_value name="$effect_in" exact="event.param.{5}" />
 				<set_value name="$position" exact="event.param.{6}" />				
 
-				<do_if value="$object.zone != $zone">
+				<do_if value="$zone.exists and $zone.isclass.zone and $object.zone != $zone">
 					<add_effect object="$object" effect="'jump_jumpout_xl'" />
 					<!--<add_effect object="$object" effect="'jump_jumpout_l'" />-->
 	
@@ -545,6 +545,7 @@
 		<cue name="JumpPlayer" instantiate="true" namespace="this"> 
 			<conditions>
 				<event_cue_signalled/>
+				<check_value value="event.param? and event.param and event.param.isclass.zone and event.param.exists"/>
 			</conditions>
 			<delay exact="20s"/>
 			<actions>
