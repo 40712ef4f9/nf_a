@@ -25,6 +25,7 @@
         <check_any>
           <check_all>      
             <event_object_attacked object="this.ship"/>
+            <check_value value="event.param.isoperational"/>
             <check_value value="event.param and (event.param.isclass.defensible or event.param.defensible.exists)"/>
             <check_value value="this.ship.mayattack.{event.param}" />
             <check_value value="not $attackers.indexof.{event.param} and not $enemies.indexof.{event.param}" />

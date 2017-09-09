@@ -1162,6 +1162,9 @@
               <set_value name="$newfaction" exact="$counterparty.owner" />
               <transfer_money from="$counterparty" to="$transfer_data.{2}" amount="$transfer_data.{3}" />
             </do_elseif>
+            <do_elseif value="$transfer_data.{1} == player.entity and not $transfer_data.{4} and not global.$nfconfig.$payOnUrSy">
+              <transfer_money from="$transfer_data.{1}" to="$transfer_data.{2}" amount="$transfer_data.{3}" chance="0"/>
+            </do_elseif>
             <do_else>
               <transfer_money from="$transfer_data.{1}" to="$transfer_data.{2}" amount="$transfer_data.{3}" />
             </do_else>

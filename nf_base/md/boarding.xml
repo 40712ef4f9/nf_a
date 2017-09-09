@@ -25,6 +25,12 @@
 		</do_if> 
 	</add>
 
+	<add sel="//set_object_boarder" pos="after">
+		<do_if value="not $isplayerprocess and $flyback">
+			<set_value name="$flyback" exact="false" />
+		</do_if> 
+	</add>
+
 	<add sel="//cue[@name='Finish']/actions" pos="prepend">
 		<remove_value name="$BoardingFleet"/>
 		<remove_value name="$isplayerprocess"/>
@@ -324,17 +330,17 @@
         </cue>
 	</add>
 
-	<add sel="//library[@name='CheckBoardingArrivalState']/actions/do_if/do_if/cancel_cue[@cue='BoardingPodDestroyed']" pos="after">
+	<add sel="//library[@name='CheckBoardingArrivalState']/actions/do_else/do_if/do_if/cancel_cue[@cue='BoardingPodDestroyed']" pos="after">
 		<cancel_cue cue="BoardingFleetShipDestroyed"/>
 		<cancel_cue cue="BoardingFleetShipLaunchBoardingPods"/>
 	</add>
-	<add sel="//library[@name='CheckBoardingArrivalState']/actions/do_if[@value='$boardingpodsinflight.count == 0']" pos="before">
+	<add sel="//library[@name='CheckBoardingArrivalState']/actions/do_else/do_if[@value='$boardingpodsinflight.count == 0']" pos="before">
 		<do_if value="$BoardingFleetIncludet?" negate="true"> 
 			<set_value name="$BoardingFleetIncludet" exact="0"/>
 		</do_if>
 		<debug_text text="'boardingpodsinflight: %1 BoardingFleetIncludet: %2'.[$boardingpodsinflight.count, $BoardingFleetIncludet]" filter="error" chance="0" />
 	</add>
-	<replace sel="//library[@name='CheckBoardingArrivalState']/actions/do_if[@value='$boardingpodsinflight.count == 0']/@value">$boardingpodsinflight.count == 0 and $BoardingFleetIncludet le 0</replace>
+	<replace sel="//library[@name='CheckBoardingArrivalState']/actions/do_else/do_if[@value='$boardingpodsinflight.count == 0']/@value">$boardingpodsinflight.count == 0 and $BoardingFleetIncludet le 0</replace>
 
 	<add sel="//library[@name='ClearOnFail']/actions/do_all/do_if[@value='$boardingpodsinflight.{$Counter}.pilot']/remove_units" type="@chance" >0</add>
 	<add sel="//library[@name='ClearOnFail']/actions/do_all/do_if[@value='$boardingpodsinflight.{$Counter}.pilot']/remove_units" pos="after">
@@ -390,18 +396,34 @@
 		</do_if> 
 	</add>
 
-	<add sel="//cue[@name='Success']/actions/do_all[@exact='$PromotedMarines.count']/add_units" type="@chance" >0</add>
-	<add sel="//cue[@name='Success']/actions/do_all[@exact='$PromotedMarines.count']/add_units" pos="after">
+	<add sel="//cue[@name='Success']/actions/do_if/do_all[@exact='$PromotedMarines.count']/add_units" type="@chance" >0</add>
+	<add sel="//cue[@name='Success']/actions/do_if/do_all[@exact='$PromotedMarines.count']/add_units" pos="after">
 		<do_if value="$PromotedMarines.{$i}?"> 
 			<set_value name="$objectmacro" exact="$PromotedMarines.{$i}" />
 			<include_actions ref="AddUnitFleet"/>
 		</do_if> 
 	</add>
 
-	<add sel="//cue[@name='Success']/actions/do_all[@exact='$ReturningMarines.count']/return_units" type="@chance" >0</add>
-	<add sel="//cue[@name='Success']/actions/do_all[@exact='$ReturningMarines.count']/return_units" pos="after">
+	<add sel="//cue[@name='Success']/actions/do_else/do_all[@exact='$PromotedMarines.count']/add_units" type="@chance" >0</add>
+	<add sel="//cue[@name='Success']/actions/do_else/do_all[@exact='$PromotedMarines.count']/add_units" pos="after">
+		<do_if value="$PromotedMarines.{$i}?"> 
+			<set_value name="$objectmacro" exact="$PromotedMarines.{$i}" />
+			<include_actions ref="AddUnitFleet"/>
+		</do_if> 
+	</add>
+
+	<add sel="//cue[@name='Success']/actions/do_else/do_all[@exact='$ReturningMarines.count']/return_units" type="@chance" >0</add>
+	<add sel="//cue[@name='Success']/actions/do_else/do_all[@exact='$ReturningMarines.count']/return_units" pos="after">
 		<do_if value="$ReturningMarines.{$i}?"> 
 			<set_value name="$objectmacro" exact="$ReturningMarines.{$i}" />
+			<include_actions ref="ReturnUnitFleet"/>
+		</do_if> 
+	</add>
+
+	<add sel="//cue[@name='ReturnBoardingPods_Arrived']/actions/return_units" type="@chance" >0</add>
+	<add sel="//cue[@name='ReturnBoardingPods_Arrived']/actions/return_units" pos="after">
+		<do_if value="event.object.pilot.macro?"> 
+			<set_value name="$objectmacro" exact="event.object.pilot.macro" />
 			<include_actions ref="ReturnUnitFleet"/>
 		</do_if> 
 	</add>
@@ -657,13 +679,21 @@ npc boarding
 	<add sel="//cue[@name='CheckTargetState']/actions/do_elseif[@value='PreScan.state == cuestate.waiting and $scannerdroneexists and not $skipscannerdrone' or @value='$cprescan and $scannerdroneexists and not $PreScanDone and not $PreScanFailed']" type="@chance" >$isplayerprocess * 100</add>
 	<!--add sel="//cue[@name='CheckTargetState']/actions/do_elseif[@value='$target.speed gt 50']" type="@chance" >$isplayerprocess * 100</add-->
 
+	<add sel="//cue[@name='ReturnBoardingPods']/actions/do_all[@exact='2']" type="@chance" >($isplayerprocess and not $BoardingFleetIncludet)  * 100</add>
+
+
 	<add sel="//actions/start_conversation[@conversation='BoardingSupport_Started_Conversation']" type="@chance" >$isplayerprocess * 100</add>
 	<add sel="//start_conversation[@conversation='BoardingFeedback_No_Scanner_Drone_Conversation']" type="@chance" >$isplayerprocess * 100</add>
 	<add sel="//start_conversation[@conversation='BoardingSupport_ProtectPods_Attacked_Conversation']" type="@chance" >$isplayerprocess * 100</add>
 	<add sel="//start_conversation[@conversation='BoardingSupport_ProtectPods_Destroyed_Conversation']" type="@chance" >$isplayerprocess * 100</add>
 	<add sel="//start_conversation[@conversation='BoardingSupport_ProtectPods_FirstArrived_Conversation']" type="@chance" >$isplayerprocess * 100</add>
+
+	<add sel="//start_conversation[@conversation='BoardingSupport_ProtectPods_Returned_Conversation']" type="@chance" >$isplayerprocess * 100</add>
+	<add sel="//do_if[@value='$returning']/do_if/do_else/start_conversation[@conversation='BoardingSupport_ProtectPods_AllDestroyed_Conversation']" type="@chance" >$isplayerprocess * 100</add>
+	<add sel="//start_conversation[@conversation='BoardingSupport_ProtectPods_AllArrived_Sabotage_Conversation']" type="@chance" >$isplayerprocess * 100</add>
+
 	<add sel="//start_conversation[@conversation='BoardingSupport_ProtectPods_AllArrived_Conversation']" type="@chance" >$isplayerprocess * 100</add>
-	<add sel="//start_conversation[@conversation='BoardingSupport_ProtectPods_AllDestroyed_Conversation']" type="@chance" >$isplayerprocess * 100</add>
+	<add sel="//do_else/do_if/do_else/start_conversation[@conversation='BoardingSupport_ProtectPods_AllDestroyed_Conversation']" type="@chance" >$isplayerprocess * 100</add>
 
 	<!--add sel="//cue[@name='LaunchBoardingPods']/actions/do_if/signal_cue_instantly[@cue='md.Notifications.PlayerBoarding']" type="@chance" >$isplayerprocess * 100</add-->
 	<!--add sel="//start_conversation[@conversation='BoardingSupport_ProtectPods_Started_Conversation']" type="@chance" >$isplayerprocess * 100</add-->
@@ -691,7 +721,8 @@ npc boarding
 	<add sel="//start_conversation[@conversation='BoardingProgress_Advance_Conversation']" type="@chance" >$isplayerprocess * 100</add>
 	<add sel="//start_conversation[@conversation='BoardingProgress_Stalemate_Conversation']" type="@chance" >$isplayerprocess * 100</add>
 	<add sel="//start_conversation[@conversation='BoardingProgress_Retreat_Conversation']" type="@chance" >$isplayerprocess * 100</add>
-	<add sel="//start_conversation[@conversation='BoardingResult_Retreat_Success_Conversation']" type="@chance" >$isplayerprocess * 100</add>
+	<add sel="///actions/start_conversation[@conversation='BoardingResult_Retreat_Success_Conversation']" type="@chance" >$isplayerprocess * 100</add>
+	<add sel="///do_else/start_conversation[@conversation='BoardingResult_Retreat_Success_Conversation']" type="@chance" >$isplayerprocess * 100</add>
 	<add sel="//start_conversation[@conversation='BoardingResult_Success_Conversation']" type="@chance" >$isplayerprocess * 100</add>
 	<add sel="//start_conversation[@conversation='BoardingResult_Failure_Conversation']" type="@chance" >$isplayerprocess * 100</add>
 

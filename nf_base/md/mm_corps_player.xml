@@ -46,7 +46,7 @@
 					
 					<start_script object="$Object.pilot" name="'player.default'"/>
 
-					<transfer_money from="$_CEO" to="$ShipYard.tradenpc" amount="$price" />
+					<transfer_money from="$_CEO" to="$ShipYard.tradenpc" amount="$price" chance="global.$nfconfig.$payOnUrSy *100"/>
 			
 					<write_to_logbook category="upkeep" text="{2802,2220}.[$ShipYard.knownname, $ShipYard.zone.knownname, $ShipYard.sector.knownname, $ShipYard.cluster.knownname, $Object.knownname, $Object.pilot.knownname, $price.formatted.default]" chance="if not $ShipYard.isplayerowned then 100 else 0"/>
 

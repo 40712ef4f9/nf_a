@@ -425,7 +425,7 @@
 		</handler>
 	</add>
 
-	<add sel="/aiscript[@name='trade.shipyard']/interrupts/handler/actions/do_all/do_if/do_if[@value='this.$BuildShips.indexof.{$ship}']" type="@chance" >if @this.$order and this.$order.money gt this.$invoice then 0 else 100</add>
+	<add sel="/aiscript[@name='trade.shipyard']/interrupts/handler/actions/do_all/do_if/do_if[@value='this.$BuildShips.indexof.{$ship}']" type="@chance" >if @this.$order and (this.$order.money gt this.$invoice or (this.$order == player.entity and not global.$nfconfig.$payOnUrSy)) then 0 else 100</add>
 	<add sel="/aiscript[@name='trade.shipyard']/interrupts/handler/actions/do_all/do_if/do_if[@value='this.$BuildShips.indexof.{$ship}']" pos="after">
 		<do_elseif value="this.$BuildShips.indexof.{$ship}" chance="if @this.$order then 100 else 0">
 		  <signal_objects object="this.$order" param="'INIT SHIP'" param2="[$ship, this.station, this.$invoice]" />

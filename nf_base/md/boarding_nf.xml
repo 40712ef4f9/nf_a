@@ -22,7 +22,7 @@ If ownerless, make easier/skip steps
       </actions>
     </cue>
 
-    <cue name="StartNF" namespace="this" instantiate="true" version="3">
+    <cue name="StartNF" namespace="this" instantiate="true" version="4">
       <documentation>
         <todo>
           <item author="Owen" description="Un-playerise this script"/>
@@ -67,6 +67,8 @@ If ownerless, make easier/skip steps
         <set_value name="$hitchance" exact="0.25" />
         <set_value name="$progress" exact="0" />
         <set_value name="$nummarines" exact="0" />
+        <set_value name="$nummarinesreturned" exact="0" />
+        <set_value name="$returning" exact="false"/>
         <set_value name="$attackstrength" exact="0.0f" />
         <set_value name="$defencestrength" exact="0.0f" />
         <set_value name="$mindefencestrength" exact="4" />
@@ -74,12 +76,29 @@ If ownerless, make easier/skip steps
         <set_value name="$scannerdroneexists" exact="false" />
         <set_value name="$hackerdroneexists" exact="false" />
         <set_value name="$playerdrones" exact="$boardership.drones" />
+        <set_value name="$sabotage" exact="false"/>
+        <do_if value="not md.$BoardingShipsToSabotage?">
+          <create_group groupname="md.$BoardingShipsToSabotage"/>
+        </do_if>
+        <do_elseif value="md.$BoardingShipsToSabotage.indexof.{$target}">
+          <set_value name="$sabotage" exact="true"/>
+        </do_elseif>
+        <do_if value="$sabotage or $training">
+          <set_value name="$flyback" exact="true"/>
+        </do_if>
+        <do_else>
+          <set_value name="$flyback" exact="false"/>
+        </do_else>
 
         <set_object_boarder object="$target" boarder="$boardership"/>
+        <do_if value="not $isplayerprocess and $flyback">
+          <set_value name="$flyback" exact="false" />
+        </do_if> 
 
         <!-- Mission objectives will be set below, depending on situation -->
         <debug_text text="'Creating boarding mission'" />
         <create_mission cue="StartNF" name="readtext.{static.$PageID}.{1}" description="readtext.{static.$PageID}.{2}" difficulty="level.medium" faction="faction.player" type="missiontype.fight" chance="$isplayerprocess * 100"/>
+        <signal_objects object="$target" param="'boarding_started'" param2="$faction" param3="Start"/>
         <do_if value="not $training">
           <set_value name="stat.boarding_attempts" operation="add" chance="$isplayerprocess * 100"/>
           <do_if value="stat.nf_stations_boarded?">
@@ -133,6 +152,10 @@ If ownerless, make easier/skip steps
           <set_value name="$LostMarines.{$i}" exact="[]"/>
           <set_value name="$RecentLostMarines.{$i}" exact="[]"/>
         </do_all>
+      </patch>
+      <patch sinceversion="4" state="complete">
+        <set_value name="$nummarinesreturned" exact="0" />
+        <set_value name="$returning" exact="false"/>
       </patch>
       <cues>
 
@@ -807,27 +830,46 @@ If ownerless, make easier/skip steps
 
                 <library name="CheckBoardingArrivalState">
                   <actions>
-                    <include_actions ref="CalculateNumMarines"/>
-                    <do_if value="$BoardingFleetIncludet?" negate="true"> 
-                      <set_value name="$BoardingFleetIncludet" exact="0"/>
-                    </do_if>
-                    <debug_text text="'boardingpodsinflight: %1 BoardingFleetIncludet: %2'.[$boardingpodsinflight.count, $BoardingFleetIncludet]" filter="error" chance="0" />
-                    <do_if value="$boardingpodsinflight.count == 0 and $BoardingFleetIncludet le 0">
-                      <do_if value="$ArrivedMarines.count" comment="How many marines successfully arrived?">
-                        <start_conversation actor="player.copilot" conversation="BoardingSupport_ProtectPods_AllArrived_Conversation" chance="$isplayerprocess * 100"/>
-                        <cancel_cue cue="static" />
-                        <cancel_cue cue="BoardingPodDestroyed"/>
-                        <cancel_cue cue="BoardingFleetShipDestroyed"/>
-                        <cancel_cue cue="BoardingFleetShipLaunchBoardingPods"/>
-                        <signal_cue cue="BeginBoardingCycle" />
+                    <do_if value="$returning">
+                      <do_if value="$boardingpodsinflight.count == 0">
+                        <do_if value="$nummarinesreturned">
+                          <start_conversation actor="player.copilot" conversation="BoardingSupport_ProtectPods_Returned_Conversation" chance="$isplayerprocess * 100"/>
+                        </do_if>
+                        <do_else>
+                          <start_conversation actor="$commander" conversation="BoardingSupport_ProtectPods_AllDestroyed_Conversation" chance="$isplayerprocess * 100"/>
+                        </do_else>
+                        <remove_mission cue="Start" />
+                        <cancel_cue cue="Start" />
                       </do_if>
-                      <do_else>
-                        <start_conversation actor="$commander" conversation="BoardingSupport_ProtectPods_AllDestroyed_Conversation" chance="$isplayerprocess * 100"/>
-                        <!-- TODO: Fail notification -->
-                        <remove_mission cue="StartNF" chance="$isplayerprocess * 100"/>
-                        <cancel_cue cue="StartNF" />
-                      </do_else>
                     </do_if>
+                    <do_else>
+                      <include_actions ref="CalculateNumMarines"/>
+                      <do_if value="$BoardingFleetIncludet?" negate="true"> 
+                        <set_value name="$BoardingFleetIncludet" exact="0"/>
+                      </do_if>
+                      <debug_text text="'boardingpodsinflight: %1 BoardingFleetIncludet: %2'.[$boardingpodsinflight.count, $BoardingFleetIncludet]" filter="error" chance="0" />
+                      <do_if value="$boardingpodsinflight.count == 0 and $BoardingFleetIncludet le 0">
+                        <do_if value="$nummarines" comment="How many marines successfully arrived?">
+                          <do_if value="$sabotage">
+                            <start_conversation actor="player.copilot" conversation="BoardingSupport_ProtectPods_AllArrived_Sabotage_Conversation" chance="$isplayerprocess * 100"/>
+                          </do_if>
+                          <do_else>
+                            <start_conversation actor="player.copilot" conversation="BoardingSupport_ProtectPods_AllArrived_Conversation" chance="$isplayerprocess * 100"/>
+                          </do_else>
+                          <cancel_cue cue="static" />
+                          <cancel_cue cue="BoardingPodDestroyed"/>
+                          <cancel_cue cue="BoardingFleetShipDestroyed"/>
+                          <cancel_cue cue="BoardingFleetShipLaunchBoardingPods"/>
+                          <signal_cue cue="BeginBoardingCycle" />
+                        </do_if>
+                        <do_else>
+                          <start_conversation actor="$commander" conversation="BoardingSupport_ProtectPods_AllDestroyed_Conversation" chance="$isplayerprocess * 100"/>
+                          <!-- TODO: Fail notification -->
+                          <remove_mission cue="StartNF" chance="$isplayerprocess * 100"/>
+                          <cancel_cue cue="StartNF" />
+                        </do_else>
+                      </do_if>
+                    </do_else>
                   </actions>
                 </library>
 
@@ -1240,6 +1282,9 @@ If ownerless, make easier/skip steps
                               </conditions>
                               <actions>
                                 <remove_object_boarder object="$target"/>
+                                <do_if value="md.$BoardingShipsToSabotage.indexof.{$target}">
+                                  <remove_value name="md.$BoardingShipsToSabotage.{md.$BoardingShipsToSabotage.indexof.{$target}}"/>
+                                </do_if>
 
                                 <do_if value="not $training">
                                   <set_value name="stat.ships_boarded" operation="add" chance="$isplayerprocess * 100"/>
@@ -1293,24 +1338,38 @@ If ownerless, make easier/skip steps
                                   </do_all>
                                 </do_all>
 
-                                <do_all exact="$PromotedMarines.count" counter="$i">
-                                  <!--add_units object="$boardership" macro="$PromotedMarines.{$i}" exact="1"/-->
-                                  <do_if value="$PromotedMarines.{$i}?"> 
-                                    <set_value name="$objectmacro" exact="$PromotedMarines.{$i}" />
-                                    <include_actions ref="AddUnitFleet"/>
-                                  </do_if> 
-                                  <debug_text text="'Adding 1 unit of newly promoted ' + $PromotedMarines.{$i} + ' to ' + $boardership.knownname" chance="$debugoutputchance"/>
-                                </do_all>
-                                <do_all exact="$ReturningMarines.count" counter="$i">
-                                  <!--return_units object="$boardership" macro="$ReturningMarines.{$i}" exact="1"/-->
-                                  <do_if value="$ReturningMarines.{$i}?"> 
-                                    <set_value name="$objectmacro" exact="$ReturningMarines.{$i}" />
-                                    <include_actions ref="ReturnUnitFleet"/>
-                                  </do_if> 
-                                  <debug_text text="'Returning 1 unit of ' + $ReturningMarines.{$i} + ' to ' + $boardership.knownname" chance="$debugoutputchance"/>
-                                </do_all>
+                                <do_if value="$flyback">
+                                  <!--Return after flying back-->
+                                  <do_all exact="$PromotedMarines.count" counter="$i">
+                                    <!--add_units object="$boardership" macro="$PromotedMarines.{$i}" exact="1"/-->
+                                    <do_if value="$PromotedMarines.{$i}?"> 
+                                      <set_value name="$objectmacro" exact="$PromotedMarines.{$i}" />
+                                      <include_actions ref="AddUnitFleet"/>
+                                    </do_if> 
+                                    <debug_text text="'Adding 1 unavailable unit of newly promoted ' + $PromotedMarines.{$i} + ' to ' + $boardership.knownname" chance="$debugoutputchance"/>
+                                  </do_all>
+                                </do_if>
+                                <do_else>
+                                  <!--Return immediatly-->
+                                  <do_all exact="$PromotedMarines.count" counter="$i">
+                                    <!--add_units object="$boardership" macro="$PromotedMarines.{$i}" exact="1"/-->
+                                    <do_if value="$PromotedMarines.{$i}?"> 
+                                      <set_value name="$objectmacro" exact="$PromotedMarines.{$i}" />
+                                      <include_actions ref="AddUnitFleet"/>
+                                    </do_if> 
+                                    <debug_text text="'Adding 1 unit of newly promoted ' + $PromotedMarines.{$i} + ' to ' + $boardership.knownname" chance="$debugoutputchance"/>
+                                  </do_all>
+                                  <do_all exact="$ReturningMarines.count" counter="$i">
+                                    <!--return_units object="$boardership" macro="$ReturningMarines.{$i}" exact="1"/-->
+                                    <do_if value="$ReturningMarines.{$i}?"> 
+                                      <set_value name="$objectmacro" exact="$ReturningMarines.{$i}" />
+                                      <include_actions ref="ReturnUnitFleet"/>
+                                    </do_if> 
+                                    <debug_text text="'Returning 1 unit of ' + $ReturningMarines.{$i} + ' to ' + $boardership.knownname" chance="$debugoutputchance"/>
+                                  </do_all>
+                                </do_else>
 
-                                <remove_value name="$ArrivedMarines"/>
+                                <clear_list list="$ArrivedMarines"/>
                                 <debug_text text="$boardership.knownname + ' has Total Marine Units: ' + $boardership.units.{unitcategory.marine}.count + ' - Available Marine Units: ' + $boardership.availableunits.{unitcategory.marine}.count"/>
 
                                 <do_if value="$training">
@@ -1318,6 +1377,12 @@ If ownerless, make easier/skip steps
                                   <debug_text text="'Training mission successful'" chance="$debugoutputchance" />
                                   <signal_cue cue="ReturnBoardingPods" />
                                 </do_if>
+                                <do_elseif value="$sabotage">
+                                  <signal_objects object="$target" param="'boarded_sabotaged'" param2="$faction"/>
+                                  <debug_text text="'Sabotage successful, escaping target'" chance="$debugoutputchance" />
+
+                                  <signal_cue cue="ReturnBoardingPods" />
+                                </do_elseif>
                                 <do_else>
                                   <start_conversation actor="$commander" conversation="BoardingResult_Success_Conversation" chance="$isplayerprocess * 100"/>
                                   <debug_text text="'Boarding successful, taking over target'" chance="$debugoutputchance" />
@@ -1639,6 +1704,38 @@ If ownerless, make easier/skip steps
                                 <!-- embark boarding pods -->
                                 <debug_text text="'ReturnBoardingPods'" chance="$debugoutputchance" />
 
+                                <assert value="$flyback" text="'Attempting to return marines via flying back but the flyback variable is not set. Unintended call? [Owen]'"/>
+                                <assert value="($PromotedMarines.count + $ReturningMarines.count) le $ArrivedBoardingpods.count" text="'More marines to return than there are boarding pods [Owen]'"/>
+
+                                <set_value name="$returning" exact="true"/>
+                                <!--First, process the promoted marines-->
+                                <set_value name="$MarineList" exact="$PromotedMarines"/>
+                                <do_all exact="2" chance="$isplayerprocess * 100">
+                                  <do_all exact="$MarineList.count" counter="$i">
+                                    <do_if value="$ArrivedBoardingpods.count">
+                                      <set_value name="$pod" exact="$ArrivedBoardingpods.{1}"/>
+                                      <restore_object object="$pod" recursive="true"/>
+                                      <create_pilot ship="$pod" macro="$MarineList.{$i}">
+                                        <owner exact="$faction"/>
+                                      </create_pilot>
+                                      <add_to_group groupname="$boardingpodsinflight" object="$pod"/>
+                                      <remove_from_group group="$ArrivedBoardingpods" object="$pod"/>
+                                      <debug_text text="'Set pod ' + $pod + ' pilot to ' + $pod.pilot + ' ' + $pod.pilot.macro" chance="$debugoutputchance"/>
+                                      <set_value name="$randomdelay" min="1s" max="4s"/>
+                                      <start_script object="$pod.pilot" name="'boarding.pod.return'">
+                                        <param name="target" value="$boardership"/>
+                                        <param name="initialwaittime" value="$randomdelay"/>
+                                        <param name="debugoutputchance" value="$debugoutputchance"/>
+                                      </start_script>
+                                    </do_if>
+                                    <do_else>
+                                      <break/>
+                                    </do_else>
+                                  </do_all>
+                                  <!--Second, process the other returning marines-->
+                                  <set_value name="$MarineList" exact="$ReturningMarines"/>
+                                </do_all>
+                                <!--TODO @Owen Commander-->
 
                                 <!-- TODO -->
                                 <!-- fly pods towards player ship -->
@@ -1647,9 +1744,35 @@ If ownerless, make easier/skip steps
                                 <!-- TODO -->
                                 <!-- disembark, move to player ship -->
                                 <!-- TODO -->
-                                <remove_mission cue="StartNF" chance="$isplayerprocess * 100"/>
-                                <signal_cue cue="Finish" />
+
+                                <do_if value="$boardingpodsinflight.count == 0">
+                                  <remove_mission cue="StartNF" />
+                                  <signal_cue cue="Finish"/>
+                                </do_if>
+                                <do_else>
+                                  <start_conversation actor="$commander" conversation="BoardingResult_Retreat_Success_Conversation" />
+                                  <set_objective cue="StartNF" action="objective.protect" group="$boardingpodsinflight" />
+                                </do_else>
                               </actions>
+                              <cues>
+                                <cue name="ReturnBoardingPods_Arrived" instantiate="true">
+                                  <conditions>
+                                    <event_object_signalled group="$boardingpodsinflight" param="'boarding.pod'" param2="'returned'"/>
+                                  </conditions>
+                                  <actions>
+                                    <debug_text text="'returning boarding pod with pilot ' + event.object.pilot.macro" chance="$debugoutputchance"/>
+                                    <!--return_units object="$boardership" macro="event.object.pilot.macro" exact="1"/-->
+                                    <do_if value="event.object.pilot.macro?"> 
+                                      <set_value name="$objectmacro" exact="event.object.pilot.macro" />
+                                      <include_actions ref="ReturnUnitFleet"/>
+                                    </do_if> 
+                                    <remove_from_group group="$boardingpodsinflight" object="event.object"/>
+                                    <set_value name="$nummarinesreturned" operation="add"/>
+                                    <destroy_object object="event.object" explosion="false"/>
+                                    <include_actions ref="CheckBoardingArrivalState"/>
+                                  </actions>
+                                </cue>
+                              </cues>
                             </cue>
                             <cue name="Finish">
                               <conditions>
@@ -1685,8 +1808,8 @@ If ownerless, make easier/skip steps
         <!-- end LaunchBoardingPods -->
       </cues>
     </cue>
-	
-	<!-- Boarding*_*_Conversation in original file -->
+
+    <!-- Boarding*_*_Conversation in original file -->
 
   </cues>
 </mdscript>

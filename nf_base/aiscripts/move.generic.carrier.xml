@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<aiscript name="move.generic.carrier" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="7" priority="1">
+<aiscript name="move.generic.carrier" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="8" priority="1">
   <!--
 
   Move to Script
@@ -14,6 +14,7 @@
     <param name="rotation" default="null" comment="rotation the ship should have - overrides lookat"/>
     <param name="lookat" default="null" comment="position the ship should point to - overridden by rotation"/>
     <param name="nojump" default="false" comment="set true to prevent Big ships from using their jumpdrive (only use for insector movement - for review when we have capship in-sector boosters)"/>
+    <param name="noboost" default="false" comment="set true to prevent Big ships boosting"/>
     <param name="skipcharge" default="false" comment="skip the jump drive charge time (only to be used in special cases e.g. plot missions)"/>
     <param name="ignorefuel" default="false" comment="ignore jump fuel requirements (only to be used in special cases e.g. plot missions)"/>
     <param name="autorefuel" default="true" comment="automatically take steps to re-fuel if necessary"/>
@@ -28,6 +29,9 @@
   <interrupts>
     <handler ref="TargetInvalidHandler" />
   </interrupts>
+  <patch sinceversion="8">
+    <set_value name="$noboost" exact="false"/>
+  </patch>
   <attention min="unknown">
     <actions>
       <do_if value="$disablecollisionavoidance">
@@ -158,14 +162,27 @@
           </do_if>
 
           <do_if value="(this.sector == $destination.sector) or ($nojump == true)">
-            <debug_text text="'Long distance trip. Using engine booster...'" chance="$debugchance" />
-            <run_script name="'move.nohighway'" result="$nohighwayresult">
-              <param name="target" value="$destination" />
-              <param name="position" value="$position" />
-              <param name="debugchance" value="$debugchance" />
-            </run_script>
-            <run_script name="'move.nohighway'" chance="0" />
-            <debug_text text="'boost complete. Moving into final position.'" chance="$debugchance" />
+            <do_if value="$noboost">
+              <debug_text text="'Long distance trip but do not use engine booster...'" chance="$debugchance" />
+              <move_to object="this.ship" destination="$destination" usehighways="false" abortpath="$abortpath" forcesteering="$forcesteering" forceposition="false" sinceversion="8">
+                <position value="$position" />
+                <interrupt>
+                  <conditions>
+                    <event_object_changed_zone object="this.ship" zone="$targetzone" />
+                  </conditions>
+                </interrupt>
+              </move_to>
+            </do_if>
+            <do_else>
+              <debug_text text="'Long distance trip. Using engine booster...'" chance="$debugchance" />
+              <run_script name="'move.nohighway'" result="$nohighwayresult">
+                <param name="target" value="$destination" />
+                <param name="position" value="$position" />
+                <param name="debugchance" value="$debugchance" />
+              </run_script>
+              <run_script name="'move.nohighway'" chance="0" />
+              <debug_text text="'boost complete. Moving into final position.'" chance="$debugchance" />
+            </do_else>
             <do_if value="@$nohighwayresult">
               <do_if value="$endintargetzone">
                 <!-- no need to move to a safepos now, we're happy just being here -->

@@ -4,17 +4,19 @@
 	<add sel="/aiscript/attention/actions/do_if[@value='not $CurrentElement.exists and this.defensible.hullpercentage ge $hulldamagelimit']" pos="prepend">
         <end_repair_mass_traffic object="this.defensible" />
 	</add>
-	<add sel="//attention[@min='unknown']/actions/do_if[@value='$repairratefactor == 0']/set_value" pos="after">
-		<do_if value="$Defensible.isclass.ship_l or $Defensible.isclass.ship_xl">
-			<set_value name="$repairratefactor" exact="[this.defensible.units.{unitcategory.welder}.count + this.defensible.availableunits.{unitcategory.marine}.count, 0.1f].max" />
+	<add sel="//attention[@min='unknown']/actions/do_if[@value='$repairratefactor == 0']">
+		<do_if value="$repairratefactor lt 1">
+			<do_if value="this.defensible.units.{unitcategory.welder}.count and ($Defensible.isclass.ship_l or $Defensible.isclass.ship_xl)">
+				<set_value name="$repairratefactor" exact="[this.defensible.units.{unitcategory.welder}.count + this.defensible.availableunits.{unitcategory.marine}.count, 0.1f].max" />
+			</do_if>
+			<do_elseif value="$Defensible.isclass.station">
+				<set_value name="$repairratefactor" exact="[[this.defensible.units.{unitcategory.welder}.count + this.defensible.availableunits.{unitcategory.marine}.count, 2].max, 40].min" />
+			</do_elseif>
+			<do_elseif value="this.ship.dockslot != null and ($Defensible.isclass.ship_m or $Defensible.isclass.ship_s)">
+				<!-- rate like a mk1 drone -->
+				<set_value name="$repairratefactor" exact="1" />
+			</do_elseif>
 		</do_if>
-		<do_elseif value="$Defensible.isclass.station">
-			<set_value name="$repairratefactor" exact="[[this.defensible.units.{unitcategory.welder}.count + this.defensible.availableunits.{unitcategory.marine}.count, 2].max, 40].min" />
-		</do_elseif>
-		<do_elseif value="$Defensible.isclass.ship_m or $Defensible.isclass.ship_s">
-			<!-- rate like a mk1 drone -->
-			<set_value name="$repairratefactor" exact="1" />
-		</do_elseif>
 	</add>
 	
 	<add sel="/aiscript/attention/actions/do_if[@value='not @$networkid']/launch_repair_drones" type="@chance" >if $Defensible.boarder then 100 else 0</add> 
