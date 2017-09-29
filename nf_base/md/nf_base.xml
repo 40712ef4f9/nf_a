@@ -77,11 +77,11 @@
 				<!--
 					Basics
 				-->
-				<do_if value="md.$EquipmentLists.{1}.indexof.{[ware.inv_probe, 2, 5, 85]}" negate="true">
-					<append_to_list name="md.$EquipmentLists.{1}" exact="[ware.inv_probe, 2, 5, 85]" />
+				<do_if value="param.itemtraderlists.equipmentlists.{1}.indexof.{[ware.inv_probe, 2, 5, 85]}" negate="true">
+					<append_to_list name="param.itemtraderlists.equipmentlists.{1}" exact="[ware.inv_probe, 2, 5, 85]" />
 				</do_if>
-				<do_if value="md.$EquipmentLists.{1}.indexof.{[ware.inv_hyperdrivecrystal, 8, 15, 85]}" negate="true">
-					<append_to_list name="md.$EquipmentLists.{1}" exact="[ware.inv_hyperdrivecrystal, 8, 15, 85]" />
+				<do_if value="param.itemtraderlists.equipmentlists.{1}.indexof.{[ware.inv_hyperdrivecrystal, 8, 15, 85]}" negate="true">
+					<append_to_list name="param.itemtraderlists.equipmentlists.{1}" exact="[ware.inv_hyperdrivecrystal, 8, 15, 85]" />
 				</do_if>
 
 				<set_value name="global.$MICT_mmcarrier_is_active" exact="true"/>

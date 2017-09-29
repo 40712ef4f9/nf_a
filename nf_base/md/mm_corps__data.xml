@@ -180,8 +180,8 @@
 
 						<append_to_list name="$temp_ships.$trade_sm" exact="macro.units_size_m_universal_transport_macro"/>
 
-						<append_to_list name="$temp_ships.$build" exact="macro.units_size_xl_builder_xenon_next_macro"/>
-						<!--append_to_list name="$temp_ships.$build" exact="macro.units_size_l_xenon_outk_macro"/-->
+						<!--append_to_list name="$temp_ships.$build" exact="macro.units_size_xl_builder_xenon_next_macro"/-->
+						<append_to_list name="$temp_ships.$build" exact="macro.units_size_l_xenon_outk_macro"/>
 					</do_if>
 					<do_if value="'tel'" list="$build">
 						<!--
@@ -719,6 +719,7 @@
 					<set_value name="$tmpConfig.$clusterPatrol" exact="0" />
 				</do_if>
 
+			<!--set_value name="$tmpConfig.$cheat" comment="for testing disable/remove later"/-->
 
 				<do_if value="$tmpConfig.$cheatEscorts?">
 					<set_value name="$_CEO.$cheatEscorts" exact="true" comment="cheat escortvessels"/>
@@ -4704,7 +4705,7 @@
 					<remove_value name="$blacklist"/>
 					<remove_value name="$primarypurpose"/>
 <set_value name="$text3" exact="'** macro-results: %1 - %2 - %3 - %4 \n'.[$firstChoice, $secondChoice, $thirdChoice, $fourthChoice]" operation="add"/>
-<set_value name="$text3" exact="'** macro-class: $%1 - $%2 - $%3 - $%4 \n'.[@$firstChoice.class, @$secondChoice.class, @$thirdChoice.class, @$fourthChoice.class]" operation="add"/>
+<set_value name="$text3" exact="'** macro-class: $%1 - $%2 - $%3 - $%4 \n'.[@$firstChoice.class, @$secondChoice.class, @$thirdChoice.class, @$fourthChoice.class]" operation="add" chance="0"/>
 					<!-- lets see what we have here -->
 					<set_value name="$macro" exact="null"/>
 					<do_if value="typeof $firstChoice == datatype.macro and $ShipYardOfTrust.tradenpc.{'$%1'.[$firstChoice.class]}?" chance="if typeof $firstChoice == datatype.macro and $_CEO.money lt ($tmpConfig.$minBuyShipTop *2) and $firstChoice.ware.maxprice? and $firstChoice.ware.maxprice gt $_CEO.money/4 then 100-( ( ($_CEO.money/4)/$firstChoice.ware.maxprice )*100 ) else 100">
