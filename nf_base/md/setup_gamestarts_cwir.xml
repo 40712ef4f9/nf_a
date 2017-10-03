@@ -10,7 +10,7 @@
 			<conditions>
 				<event_cue_signalled cue="md.Setup.GameStart"/>
 			</conditions>
-			<delay exact="10s"/>
+			<delay exact="30s"/>
 			<actions>
 				<!--
 				<show_help custom="'Welcome to Version 0.9 of Conquest and War in Rebirth!'" position="1" duration="5s"/>
@@ -26,6 +26,10 @@
 				<show_help custom="{40002,1051}" position="1" duration="10s"/>
 				<show_help custom="{40002,1052}" position="1" duration="10s"/>
 				-->
+				<find_object_component name="$settings" multiple="false" object="player.sector" entitytype="entitytype.lawenforcement" recursive="true"/>
+				<do_if value="$settings">
+					<start_conversation actor="$settings" conversation="default"/>
+				</do_if>
 			</actions>
 		</cue>
 
