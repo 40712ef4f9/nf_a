@@ -612,7 +612,7 @@
 					<set_value name="$Skill" exact="[skilltype.leadership, skilltype.navigation, skilltype.combat, skilltype.engineering, skilltype.management, skilltype.morale, skilltype.science]" />
 					<do_all exact="$Skill.count" counter="$k">
 						<do_if value="event.param2.{1}.skill.{$Skill.{$k}} lt 4">
-							<add_skill entity="event.param2.{1}" type="$Skill.{$k}" exact="1" />
+							<add_skill entity="event.param2.{1}" type="$Skill.{$k}" exact="1" chance="(80 - event.param2.{1}.combinedskill)" />
 							<break chance="if event.param2.{1}.skill.{$Skill.{$k}} == 4 then 100 else 0" />
 						</do_if>
 					</do_all>
