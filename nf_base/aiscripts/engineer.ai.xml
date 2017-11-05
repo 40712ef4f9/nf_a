@@ -6,13 +6,13 @@
 	</add>
 	<add sel="//attention[@min='unknown']/actions/do_if[@value='$repairratefactor == 0']">
 		<do_if value="$repairratefactor lt 1">
-			<do_if value="this.defensible.units.{unitcategory.welder}.count and ($Defensible.isclass.ship_l or $Defensible.isclass.ship_xl)">
+			<do_if value="$Defensible.isclass.[class.ship_l, class.ship_xl] and (this.defensible.units.{unitcategory.welder}.count or this.defensible.availableunits.{unitcategory.marine}.count)">
 				<set_value name="$repairratefactor" exact="[this.defensible.units.{unitcategory.welder}.count + this.defensible.availableunits.{unitcategory.marine}.count, 0.1f].max" />
 			</do_if>
 			<do_elseif value="$Defensible.isclass.station">
 				<set_value name="$repairratefactor" exact="[[this.defensible.units.{unitcategory.welder}.count + this.defensible.availableunits.{unitcategory.marine}.count, 2].max, 40].min" />
 			</do_elseif>
-			<do_elseif value="this.ship.dockslot != null and ($Defensible.isclass.ship_m or $Defensible.isclass.ship_s)">
+			<do_elseif value="$Defensible.isclass.[class.ship_s, class.ship_m] and this.ship.dockslot != null">
 				<!-- rate like a mk1 drone -->
 				<set_value name="$repairratefactor" exact="1" />
 			</do_elseif>

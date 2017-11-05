@@ -181,6 +181,8 @@
 
       <label name="FindEnemies" />
       <set_value name="$thiscombinedskill" exact="this.combinedskill"/> 
+      <set_value name="$doAttackenemies" exact="this.ship.owner == this.ship.trueowner and ((@this.$config_attackenemies == 1 and this.ship.isplayerowned) or not this.ship.isplayerowned)"/> 
+      <set_value name="$doAllowothertargets" exact="$doAttackenemies and $allowothertargets"/> 
 
       <do_if value="$target.exists and not @$target.isclass.defensible and @$target.container.isclass.defensible"> 
         <set_value name="$target" exact="$target.container" /> 
@@ -200,7 +202,8 @@
         <create_list name="$enemies" />
 
         <!-- Find (more) enemies if no target or other targets are allowed -->
-        <do_if value="not $target or @$allowothertargets or @$close_targets">
+        <do_if value="(not $target and $doAttackenemies) or @$doAllowothertargets or (@$close_targets and $doAttackenemies)">
+          <remove_value name="$close_targets" />
           <find_gravidar_contact name="$enemies" object="this.ship" functional="true" maybeattackedby="this.ship" multiple="true">
             <match_distance object="this.ship" max="$FiringRange"/>
           </find_gravidar_contact>
@@ -355,13 +358,13 @@
                         <add_to_group groupname="$dronetargets" object="$targetComps.list.{$j}" chance="if $result or not $droneShould or not $droneRange or $targetComps.list.{$j}.isclass.turret then 0 else 100"/>
                         <add_to_group groupname="$targets" object="$targetComps.list.{$j}"/>
                         <!--Adding LOS targets as valid for big guns for offensive DO + NPC-->
-                        <do_if value="@this.$config_attackenemies == 1 or not this.ship.isplayerowned or ($target == $enemies.{$i} and not $enemies.{$i}.boarder)">
+                        <do_if value="$doAttackenemies or ($target == $enemies.{$i} and not $enemies.{$i}.boarder)">
                           <add_to_group groupname="$validbigguntarget" object="$targetComps.list.{$j}"/>
                         </do_if>
                       </do_if>
                       <!--Adding LOS targets of opportunity for an offensive DO and NPC's. Also valid for big guns-->
                       <do_elseif value="$targetComps.list.{$j}.isclass.[class.dronelaunchpad, class.radar]">
-                        <do_if value="@this.$config_attackenemies == 1 or not this.ship.isplayerowned or ($target == $enemies.{$i} and not $enemies.{$i}.boarder)">
+                        <do_if value="$doAttackenemies or ($target == $enemies.{$i} and not $enemies.{$i}.boarder)">
                           <set_value name="$result" exact="false"/>
                           <check_line_of_sight name="$result" object="this.ship" target="$targetComps.list.{$j}" chance="if $skillpower ge 75 then 100 else 0"/>
                           <add_to_group groupname="$targetsInSight" object="$targetComps.list.{$j}" chance="if $result then 100 else 0"/>
@@ -378,7 +381,7 @@
                 <remove_value name="$targetComps" />
                 <remove_value name="$result" />
                 <!--Only do intentional targetting of hull if defence officer is in offensive mode or this is a NPC ship. Also send out drones + shoot IHC/torpedoes for sucellus/balor -->
-                <do_if value="@this.$config_attackenemies == 1 or not this.ship.isplayerowned or ($target == $enemies.{$i} and not $enemies.{$i}.boarder)">
+                <do_if value="$doAttackenemies or ($target == $enemies.{$i} and not $enemies.{$i}.boarder)">
                   <add_to_group groupname="$targets" object="$enemies.{$i}" />
                   <add_to_group groupname="$validbigguntarget" object="$enemies.{$i}"/>
                   <do_if value="this.ship.distanceto.{$enemies.{$i}} lt 10000m" chance="100-[$skillpower-this.ship.shieldpercentage,0].max">
@@ -711,6 +714,8 @@
 
       <label name="FindEnemies" />
       <set_value name="$thiscombinedskill" exact="this.combinedskill"/> 
+      <set_value name="$doAttackenemies" exact="this.ship.owner == this.ship.trueowner and ((@this.$config_attackenemies == 1 and this.ship.isplayerowned) or not this.ship.isplayerowned)"/> 
+      <set_value name="$doAllowothertargets" exact="$doAttackenemies and $allowothertargets"/> 
       <do_if value="$target.exists and not @$target.isclass.defensible and @$target.container.isclass.defensible"> 
         <set_value name="$target" exact="$target.container" /> 
       </do_if> 
@@ -744,7 +749,7 @@
       <create_list name="$enemies" />
 
       <!-- Find (more) enemies if no target or other targets are allowed -->
-      <do_if value="not $target or @$allowothertargets">
+      <do_if value="(not $target and $doAttackenemies) or @$doAllowothertargets">
         <find_gravidar_contact name="$enemies" object="this.ship" functional="true" maybeattackedby="this.ship" multiple="true">
           <match_distance object="this.ship" max="$FiringRange"/>
         </find_gravidar_contact>
@@ -757,7 +762,7 @@
       </do_all>
       <clear_group group="$attackers"/>
 
-      <do_if value="$target.isclass.station or @$allowothertargets"> 
+      <do_if value="$target.isclass.station or @$doAllowothertargets"> 
         <find_gravidar_contact name="$Capital" object="this.ship" class="[class.ship_l, class.ship_xl]" functional="true" maybeattackedby="this.ship" multiple="false">
           <match_distance object="this.ship" max="$FiringRange"/>
           <match primarypurpose="objectpurpose.fight"/>

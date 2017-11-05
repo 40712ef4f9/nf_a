@@ -1283,7 +1283,7 @@ If ownerless, make easier/skip steps
                               <actions>
                                 <remove_object_boarder object="$target"/>
                                 <do_if value="md.$BoardingShipsToSabotage.indexof.{$target}">
-                                  <remove_value name="md.$BoardingShipsToSabotage.{md.$BoardingShipsToSabotage.indexof.{$target}}"/>
+                                  <remove_from_group group="md.$BoardingShipsToSabotage" object="$target"/>
                                 </do_if>
 
                                 <do_if value="not $training">

@@ -42,13 +42,13 @@
     <actions>
       <!-- Job Engineers become MacGyvers -->
       <do_if value="this.combinedskill" max="90">
-		<set_value name="$Skill" exact="[skilltype.leadership, skilltype.navigation, skilltype.combat, skilltype.engineering, skilltype.management, skilltype.morale, skilltype.science]" />
-		<do_all exact="$Skill.count" counter="$k">
-			<do_if value="this.skill.{$Skill.{$k}} le 4">
-				<add_skill entity="this" type="$Skill.{$k}" exact="5 - this.skill.{$Skill.{$k}}" />
-			</do_if>
-		</do_all>
-		<remove_value name="$Skill"/>
+        <set_value name="$Skill" exact="[skilltype.leadership, skilltype.navigation, skilltype.combat, skilltype.engineering, skilltype.management, skilltype.morale, skilltype.science]" />
+        <do_all exact="$Skill.count" counter="$k">
+          <do_if value="this.skill.{$Skill.{$k}} le 4">
+            <add_skill entity="this" type="$Skill.{$k}" exact="5 - this.skill.{$Skill.{$k}}" />
+          </do_if>
+        </do_all>
+        <remove_value name="$Skill"/>
       </do_if>
 
       <wait exact="0s" chance="0"/>
@@ -78,98 +78,98 @@
         <set_value name="$hulldamagelimit" exact="60 + (40 * this.combinedskill / 100)" comment="below what percentage hull is a component considered damaged (ship engineer repairs up to a value between 60% and 100%, dependent on skill)"/>
       </do_else>
 
-	  <!--MICT start-->
-	  <do_if value="not this.$Defensible? or not this.$Defensible.exists or this.$Defensible.iswreck or	this.defensible.hullpercentage lt $hulldamagelimit or 
-	  				(this.$Defensible != this.defensible and this.defensible.distanceto.{this.$Defensible} gt this.defensible.maxradarrange*0.55f)
-		">
-		  <end_repair_mass_traffic object="this.defensible" />
-          <remove_value name="$networkid" />
-		  <set_value name="this.$Defensible" exact="this.defensible"/>
-		  <set_command command="command.repair" />
-	  </do_if>
-	  <!--MICT end-->
-	  
-	  <do_if value="player.age le @this.$hacked">
+      <!--MICT start-->
+      <do_if value="not this.$Defensible? or not this.$Defensible.exists or this.$Defensible.iswreck or  this.defensible.hullpercentage lt $hulldamagelimit or 
+            (this.$Defensible != this.defensible and this.defensible.distanceto.{this.$Defensible} gt this.defensible.maxradarrange*0.55f)
+    ">
+        <end_repair_mass_traffic object="this.defensible" />
+        <remove_value name="$networkid" />
+        <set_value name="this.$Defensible" exact="this.defensible"/>
+        <set_command command="command.repair" />
+      </do_if>
+      <!--MICT end-->
+
+      <do_if value="player.age le @this.$hacked">
         <wait exact="@this.$hacked - player.age" sinceversion="4" />
       </do_if>
 
       <!-- If no elements or main hull to repair -->
       <do_if value="not $CurrentElement.exists and this.$Defensible.hullpercentage ge $hulldamagelimit">
-		  <!--MICT start-->
-		  <end_repair_mass_traffic object="this.defensible" />
-          <remove_value name="$networkid" />
-		  <set_value name="this.$Defensible" exact="this.defensible"/>
-		  <set_command command="command.repair" />
-		  <wait min="5min" max="10min">
-			  <interrupt>
-				  <conditions>
-					  <event_gravidar_has_scanned object="this.defensible" />
-					  <check_value value="not this.zone.isclass.highway" />
-					  <check_value value="this.defensible.units.{unitcategory.welder}.count gt 0"/>
-					  <count_gravidar_contacts result="$RepairTargets" object="this.defensible" class="[class.ship_l, class.ship_xl, class.ship_s, class.ship_m]" repairable="true" min="1">
-						  <match_distance object="this.defensible" max="this.defensible.maxradarrange*0.5f"/>
-						  <match_relation faction="this.defensible.trueowner" relation="neutral" comparison="ge" />
-						  <match_hull max="$hulldamagelimit" />
-					  </count_gravidar_contacts>
-				  </conditions>
-				  <actions>
-					  <do_if value="event.name" exact="'event_gravidar_has_scanned'">
-						  <!-- Select target based on the count gravidar already triggered -->
-						  <do_all exact="$RepairTargets.count" counter="$i">
-							  <do_if value="this.$Defensible == this.defensible">
-								  <set_value name="this.$Defensible" exact="$RepairTargets.{$i}"/>
-							  </do_if>
-							  <do_elseif value="this.defensible.trueowner == this.$Defensible.owner and this.defensible.trueowner == $RepairTargets.{$i}.owner and $RepairTargets.{$i}.hullpercentage lt @this.$Defensible.hullpercentage">
-								  <set_value name="this.$Defensible" exact="$RepairTargets.{$i}"/>
-							  </do_elseif>
-							  <do_elseif value="this.defensible.trueowner != this.$Defensible.owner and ($RepairTargets.{$i}.hullpercentage lt @this.$Defensible.hullpercentage or this.defensible.trueowner == $RepairTargets.{$i}.owner)">
-								  <set_value name="this.$Defensible" exact="$RepairTargets.{$i}"/>
-							  </do_elseif>
-						  </do_all>
-						  <remove_value name="$RepairTargets"/>
-					  </do_if>
-				  </actions>
-			  </interrupt>
-		  </wait>
-		  <do_if value="this.$Defensible == this.defensible">
-			  <find_gravidar_contact name="$RepairTargets" object="this.defensible" class="[class.station]" multiple="true">
-				  <match_distance object="this.defensible" max="this.defensible.maxradarrange*0.25f"/>
-				  <match_relation faction="this.defensible.trueowner" relation="neutral" comparison="ge" />
-			  </find_gravidar_contact>
-			  <do_all exact="$RepairTargets.count" counter="$i">
-				  <do_if value="$RepairTargets.{$i}.hullpercentage ge $hulldamagelimit">
-					  <continue />
-				  </do_if>
-				  <do_if value="this.$Defensible == this.defensible">
-					  <set_value name="this.$Defensible" exact="$RepairTargets.{$i}"/>
-				  </do_if>
-				  <do_elseif value="this.defensible.trueowner == this.$Defensible.owner and this.defensible.trueowner == $RepairTargets.{$i}.owner and $RepairTargets.{$i}.hullpercentage lt @this.$Defensible.hullpercentage">
-					  <set_value name="this.$Defensible" exact="$RepairTargets.{$i}"/>
-				  </do_elseif>
-				  <do_elseif value="this.defensible.trueowner != this.$Defensible.owner and ($RepairTargets.{$i}.hullpercentage lt @this.$Defensible.hullpercentage or this.defensible.trueowner == $RepairTargets.{$i}.owner)">
-					  <set_value name="this.$Defensible" exact="$RepairTargets.{$i}"/>
-				  </do_elseif>
-			  </do_all>
-			  <remove_value name="$RepairTargets"/>
-		  </do_if>
-	  </do_if>
-	  <set_command command="command.support" param="this.$Defensible" chance="if this.$Defensible == this.defensible then 0 else 100"/>
-	  <set_command command="command.repair" chance="if this.$Defensible == this.defensible then 100 else 0"/>
-	  <!--MICT end-->
+        <!--MICT start-->
+        <end_repair_mass_traffic object="this.defensible" />
+        <remove_value name="$networkid" />
+        <set_value name="this.$Defensible" exact="this.defensible"/>
+        <set_command command="command.repair" />
+        <wait min="5min" max="10min">
+          <interrupt>
+            <conditions>
+              <event_gravidar_has_scanned object="this.defensible" />
+              <check_value value="not this.zone.isclass.highway" />
+              <check_value value="this.defensible.units.{unitcategory.welder}.count gt 0"/>
+              <count_gravidar_contacts result="$RepairTargets" object="this.defensible" class="[class.ship_l, class.ship_xl, class.ship_s, class.ship_m]" repairable="true" min="1">
+                <match_distance object="this.defensible" max="this.defensible.maxradarrange*0.5f"/>
+                <match_relation faction="this.defensible.trueowner" relation="neutral" comparison="ge" />
+                <match_hull max="$hulldamagelimit" />
+              </count_gravidar_contacts>
+            </conditions>
+            <actions>
+              <do_if value="event.name" exact="'event_gravidar_has_scanned'">
+                <!-- Select target based on the count gravidar already triggered -->
+                <do_all exact="$RepairTargets.count" counter="$i">
+                  <do_if value="this.$Defensible == this.defensible">
+                    <set_value name="this.$Defensible" exact="$RepairTargets.{$i}"/>
+                  </do_if>
+                  <do_elseif value="this.defensible.trueowner == this.$Defensible.owner and this.defensible.trueowner == $RepairTargets.{$i}.owner and $RepairTargets.{$i}.hullpercentage lt @this.$Defensible.hullpercentage">
+                    <set_value name="this.$Defensible" exact="$RepairTargets.{$i}"/>
+                  </do_elseif>
+                  <do_elseif value="this.defensible.trueowner != this.$Defensible.owner and ($RepairTargets.{$i}.hullpercentage lt @this.$Defensible.hullpercentage or this.defensible.trueowner == $RepairTargets.{$i}.owner)">
+                    <set_value name="this.$Defensible" exact="$RepairTargets.{$i}"/>
+                  </do_elseif>
+                </do_all>
+                <remove_value name="$RepairTargets"/>
+              </do_if>
+            </actions>
+          </interrupt>
+        </wait>
+        <do_if value="this.$Defensible == this.defensible">
+          <find_gravidar_contact name="$RepairTargets" object="this.defensible" class="[class.station]" multiple="true">
+            <match_distance object="this.defensible" max="this.defensible.maxradarrange*0.25f"/>
+            <match_relation faction="this.defensible.trueowner" relation="neutral" comparison="ge" />
+          </find_gravidar_contact>
+          <do_all exact="$RepairTargets.count" counter="$i">
+            <do_if value="$RepairTargets.{$i}.hullpercentage ge $hulldamagelimit">
+              <continue />
+            </do_if>
+            <do_if value="this.$Defensible == this.defensible">
+              <set_value name="this.$Defensible" exact="$RepairTargets.{$i}"/>
+            </do_if>
+            <do_elseif value="this.defensible.trueowner == this.$Defensible.owner and this.defensible.trueowner == $RepairTargets.{$i}.owner and $RepairTargets.{$i}.hullpercentage lt @this.$Defensible.hullpercentage">
+              <set_value name="this.$Defensible" exact="$RepairTargets.{$i}"/>
+            </do_elseif>
+            <do_elseif value="this.defensible.trueowner != this.$Defensible.owner and ($RepairTargets.{$i}.hullpercentage lt @this.$Defensible.hullpercentage or this.defensible.trueowner == $RepairTargets.{$i}.owner)">
+              <set_value name="this.$Defensible" exact="$RepairTargets.{$i}"/>
+            </do_elseif>
+          </do_all>
+          <remove_value name="$RepairTargets"/>
+        </do_if>
+      </do_if>
+      <set_command command="command.support" param="this.$Defensible" chance="if this.$Defensible == this.defensible then 0 else 100"/>
+      <set_command command="command.repair" chance="if this.$Defensible == this.defensible then 100 else 0"/>
+      <!--MICT end-->
 
       <debug_text text="'Begin wait'" chance="$debugoutputchance2"/>
       <wait min="$repairfrequency" max="$repairfrequency + 1s" sinceversion="2"/>
 
       <!--MICT after coffee break check-->
       <do_if value="this.$Defensible.iswreck">
-		  <!--nothing gets wrecked under my watch, maybe-->
-		  <do_if value="this.defensible.isclass.[class.ship_l, class.ship_xl] and this.$Defensible.size gt 500m" chance="0">
-			<restore_object object="this.$Defensible" hull="5" recursive="true" />
-			<set_owner object="this.$Defensible" faction="faction.ownerless" />
-		  </do_if>
-		  <do_else>
-			<resume label="checkforrepair"/>
-		  </do_else>
+        <!--nothing gets wrecked under my watch, maybe-->
+        <do_if value="this.defensible.isclass.[class.ship_l, class.ship_xl] and this.$Defensible.size gt 500m" chance="0">
+          <restore_object object="this.$Defensible" hull="5" recursive="true" />
+          <set_owner object="this.$Defensible" faction="faction.ownerless" />
+        </do_if>
+        <do_else>
+          <resume label="checkforrepair"/>
+        </do_else>
       </do_if>
 
       <do_if value="$CurrentElement.exists">
@@ -303,6 +303,7 @@
 
       <!-- calculate repair speed -->
       <set_value name="$repairratefactor" exact="0" />
+
       <do_if value="@$networkid" chance="0">
         <find_active_repair_mass_traffic object="this.defensible" result="$networkid" />
         <get_units_in_mass_traffic masstraffic="$networkid" category="unitcategory.welder" amounts="$unitamounts" />
@@ -315,6 +316,7 @@
           <remove_value name="$unitamounts" />
         </do_if>
       </do_if>
+
       <do_if value="$repairratefactor == 0">
         <do_if value="@$networkid">
           <debug_text text="this.defensible.knownname + ' is ending mass traffic (no more units are flying)'" chance="$debugoutputchance" />
@@ -322,7 +324,22 @@
           <remove_value name="$networkid" />
         </do_if>
 
-		<set_value name="$repairratefactor" exact="if this.defensible.units.{unitcategory.welder}.count then this.defensible.units.{unitcategory.welder}.count else 5" comment="special repair ship get a bonus" />
+        <do_if value="this.defensible.isclass.[class.ship_l, class.ship_xl]">
+          <set_value name="$repairratefactor" exact="[this.defensible.units.{unitcategory.welder}.count + this.defensible.availableunits.{unitcategory.marine}.count, 5].max" />
+        </do_if>
+        <do_elseif value="this.defensible.isclass.station">
+          <set_value name="$repairratefactor" exact="[[this.defensible.units.{unitcategory.welder}.count + this.defensible.availableunits.{unitcategory.marine}.count, 6].max, 40].min" />
+        </do_elseif>
+        <do_elseif value="this.defensible.isclass.[class.ship_s, class.ship_m] and this.ship.dockslot != null">
+          <!-- rate like a mk1 drone -->
+          <set_value name="$repairratefactor" exact="1" />
+        </do_elseif>
+        <do_elseif value="this.isclass.computer">
+          <set_value name="$repairratefactor" exact="0.6" />
+        </do_elseif>
+        <do_else>
+          <set_value name="$repairratefactor" exact="0.2" />
+        </do_else>
       </do_if>
       <set_value name="$repairratefactor" operation="add" exact="$repairratefactor * this.combinedskill / 25" comment="engineer speeds up repair by up to 400% (meaning a fifth of the normal repair time)" />
 
@@ -418,6 +435,6 @@
     </actions>
   </attention>
   <on_abort>
-	<remove_value name="this.$Defensible"/>
+    <remove_value name="this.$Defensible"/>
   </on_abort>
 </aiscript>
