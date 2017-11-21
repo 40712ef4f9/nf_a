@@ -12,9 +12,9 @@
         <sefx_hack_disabled ref="hack_deactivated_l" />
       </effects>
       <secrecy level="5" />
-      <production wares="shippart shippartcomp">
-        <queue ware="shippart" method="fieldsofop" />
+      <production wares="shippartcomp shippart">
         <queue ware="shippartcomp" method="fieldsofop" />
+        <queue ware="shippart" method="fieldsofop" />
       </production>
     </properties>
     <connections>

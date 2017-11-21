@@ -67,6 +67,19 @@
 									<set_value name="$chance" exact="100" />
 								</do_all>
 							</do_all>
+							<do_all exact="4" counter="$j">
+								<find_dock_location container="$target" size="[tag.dock_xl, tag.dock_l, tag.dock_m, tag.dock_s].{$j}" name="$dock" multiple="true"/>
+								<do_all exact="$dock.count" counter="$i">
+									<do_if value="$dock.{$i}.component.docked.count">
+										<do_all exact="$dock.{$i}.component.docked.count" counter="$k">
+											<do_if value="not $dock.{$i}.component.docked.{$k}.isjobship">
+												<start_script object="$dock.{$i}.component.docked.{$k}" name="'move.undock'" />
+											</do_if>
+										</do_all>
+									</do_if>
+								</do_all>
+								<remove_value name="$dock"/>
+							</do_all>
 							<!--find_dock_location name="$Stationdock" container="$target" size="tag.dock_p" multiple="true"/>
 							<do_all exact="$Stationdock.count" counter="$Counter" reverse="true">
 								<destroy_object object="$Stationdock.{$Counter}" explosion="true" chance="$Stationdock.{$Counter}.exists * 100"/>

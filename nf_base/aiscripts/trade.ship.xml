@@ -98,4 +98,5 @@
         </run_script>
       </do_if>
   </add>
+  <replace sel="//set_value[@exact=&quot;'trade.findsimpletraderun'&quot;]/@exact">'trade.findsimpletraderun.nf'</replace>
 </diff>

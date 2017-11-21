@@ -3446,7 +3446,7 @@
 				<do_else>
 					<do_if value="$tmpSum lt $tmp" chance="if $_CEO.money gt $tmpConfig.$minBuyShipTop then 100 else 0">
 						<set_value name="$chance" exact="
-														if $_CEO.$style == 'cooperative' and $requiredUnits.count then 60 else
+														if $_CEO.$style == 'cooperative' and $requiredUnits.count then 30 else
 														if $_CEO.$style == 'pirate' and $requiredUnits.count then 40 else 
 														100"/>
 						<do_all exact="$tmp - $tmpSum">
@@ -4327,10 +4327,10 @@
 						<do_elseif value="($w == 2 or $w == 4) and $possibleChoice.count">
 							<set_value name="$temp_todo" exact="$possibleChoice.clone"/>
 						</do_elseif>
-						<do_elseif value="($w == 3 or $w == 4) and $badChoice.count">
+						<do_elseif value="($w == 3 or $w == 4) and $badChoice.count" chance="20">
 							<set_value name="$temp_todo" exact="$badChoice.clone"/>
 						</do_elseif>
-						<do_elseif value="$w == 4 and $skipped.count">
+						<do_elseif value="$w == 4 and $skipped.count" chance="if ($goodChoice.count + $possibleChoice.count + $badChoice.count) gt 0 then 0 else 100">
 							<set_value name="$temp_todo" exact="$skipped.clone"/>
 						</do_elseif>
 						<do_elseif value="$w == 3">
@@ -4431,7 +4431,7 @@
 					<remove_value name="$fuelstations"/>
 				</do_if>
 				<!-- select by .random -->
-				<do_elseif value="not $stationToBuild and $tmpConfig.$build.count">
+				<do_elseif value="not $stationToBuild and $tmpConfig.$build.count" chance="(not $doNotSimple?) * 100">
 					<set_value name="$stationToBuild" exact="$tmpConfig.$build.random"/>
 				</do_elseif>
 
