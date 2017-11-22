@@ -13,8 +13,10 @@
       </effects>
       <secrecy level="5" />
       <production wares="shippartcomp shippart">
-        <queue ware="shippartcomp" />
-        <queue ware="shippart" />
+        <queue>
+          <item ware="shippartcomp" />
+          <item ware="shippart" />
+        </queue>
       </production>
     </properties>
     <connections>

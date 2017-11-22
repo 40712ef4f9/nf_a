@@ -4,7 +4,7 @@
 		<method id="universalparts" />
 	</add>
 	<add sel="/wares">
-		<ware id="shippart" name="{2802,2051}" description="{2802,2052}" group="shiptech" transport="container" size="extralarge" specialist="specialistpowersupply" volume="4000" tags="container economy">
+		<ware id="shippart" name="{2802,2051}" description="{2802,2052}" group="shiptech" transport="container" size="extralarge" specialist="specialistpowersupply" volume="2000" tags="container economy">
 			<price min="326436" average="351273" max="376193" />
 			<!--price min="304674" average="374691" max="451431" /-->
 			<production time="900" amount="3" method="default" name="{20206,101}">
@@ -99,7 +99,7 @@
 			<restriction sell="-0.01" />
 		</ware>
 
-		<ware id="shippartcomp" name="{2802,2055}" description="{2802,2056}" group="shiptech" transport="container" size="extralarge" specialist="specialistsurfacesystems" volume="140" tags="container economy">
+		<ware id="shippartcomp" name="{2802,2055}" description="{2802,2056}" group="shiptech" transport="container" size="extralarge" specialist="specialistsurfacesystems" volume="100" tags="container economy">
 			<price min="30467" average="37469" max="45143" />
 			<production time="90" amount="3" method="default" name="{20206,101}">
 				<primary>

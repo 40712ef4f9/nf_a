@@ -13,8 +13,10 @@
       </effects>
       <secrecy level="5" />
       <production wares="shippartcomp shippart">
-        <queue ware="shippartcomp" method="omicron" />
-        <queue ware="shippart" method="omicron" />
+        <queue>
+          <item ware="shippartcomp" method="omicron" />
+          <item ware="shippart" method="omicron" />
+        </queue>
       </production>
     </properties>
     <connections>
