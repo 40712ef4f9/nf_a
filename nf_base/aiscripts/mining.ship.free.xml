@@ -1,16 +1,56 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <diff>
-  <add sel="/aiscript/attention[@min='unknown']/actions/do_if[@value='this.ship.jobexpired']" pos="after">
-      <do_if value="this.ship.pilot.$end_of_work? and this.ship.pilot.$end_of_work lt player.age">
-        <debug_text text="'%1 doing job %2 has expired, die!'.[this.ship.knownname, this.ship.job]" chance="$debugchance" />
-		<write_to_logbook category="general" text="'EOL: %1 [%2 / %3]'.[this.ship.knownname, @this.ship.pilot.$end_of_work, player.age]" chance="100"/>
-        <set_value name="$bigship" exact="this.ship.isclass.ship_l or this.ship.isclass.ship_xl" />
-        <run_script name="'move.die'">
-          <param name="byjump" value="$bigship" />
-          <param name="byhighway" value="not $bigship" />
-          <param name="bydock" value="not $bigship" />
-          <param name="byidle" value="true" />
-        </run_script>
-      </do_if>
-</add>
+	<replace sel="//find_buy_offer[@result='$buyoffers']">
+		<find_buy_offer tradepartner="this.ship" space="$sectors.{$s}" multiple="true" result="$buyoffers" wares="$availablewares" excludeempty="false" >
+			<match_buyer owner="this.ship.trueowner" />
+		</find_buy_offer>
+		<find_buy_offer tradepartner="this.ship" space="$sectors.{$s}" multiple="true" result="$buyoffers" wares="$availablewares" excludeempty="false" chance="if $buyoffers.count then 0 else 100"/>
+	</replace>
+
+	<replace sel="//do_while/find_buy_offer[@result='$buyoffer']">
+		<find_buy_offer tradepartner="this.ship" space="$sectors.{$s}" result="$buyoffer" wares="$availablewares">
+			<offeramount min="this.ship.cargo.capacity / 20" entity="this" />
+			<!-- NOTE: relevant ware volumes are range from 14 to 18 so this fills at least 70% of our cargo -->
+			<match_buyer owner="this.ship.trueowner" />
+		</find_buy_offer>
+		<find_buy_offer tradepartner="this.ship" space="$sectors.{$s}" result="$buyoffer" wares="$availablewares" chance="if $buyoffer.available then 0 else 100">
+			<offeramount min="this.ship.cargo.capacity / 20" entity="this" />
+			<!-- NOTE: relevant ware volumes are range from 14 to 18 so this fills at least 70% of our cargo -->
+		</find_buy_offer>
+	</replace>
+
+	<replace sel="//actions/do_all/find_buy_offer[@result='$buyoffer']">
+		<find_buy_offer tradepartner="this.ship" space="$preferredsector" result="$buyoffer" wares="$Ware">
+			<offeramount min="$Amount_To_Sell" entity="this"/>
+			<match_buyer owner="this.ship.trueowner" />
+		</find_buy_offer>
+		<find_buy_offer tradepartner="this.ship" space="$preferredsector" result="$buyoffer" wares="$Ware" chance="if $buyoffer.available then 0 else 100">
+			<offeramount min="$Amount_To_Sell" entity="this"/>
+		</find_buy_offer>
+	</replace>
+
+	<replace sel="//do_while/do_all/find_buy_offer[@result='$buyoffer']">
+		<find_buy_offer tradepartner="this.ship" space="$sectors.{$s}" result="$buyoffer" wares="$Ware">
+			<offeramount min="$Amount_To_Sell" entity="this"/>
+			<match_buyer owner="this.ship.trueowner" />
+		</find_buy_offer>
+		<find_buy_offer tradepartner="this.ship" space="$sectors.{$s}" result="$buyoffer" wares="$Ware" chance="if $buyoffer.available then 0 else 100">
+			<offeramount min="$Amount_To_Sell" entity="this"/>
+		</find_buy_offer>
+	</replace>
+
+
+	<add sel="/aiscript/attention[@min='unknown']/actions/do_if[@value='this.ship.jobexpired']" pos="after">
+		<do_if value="this.ship.pilot.$end_of_work? and this.ship.pilot.$end_of_work lt player.age">
+			<debug_text text="'%1 doing job %2 has expired, die!'.[this.ship.knownname, this.ship.job]" chance="$debugchance" />
+			<write_to_logbook category="general" text="'EOL: %1 [%2 / %3]'.[this.ship.knownname, @this.ship.pilot.$end_of_work, player.age]" chance="100"/>
+			<set_value name="$bigship" exact="this.ship.isclass.ship_l or this.ship.isclass.ship_xl" />
+			<run_script name="'move.die'">
+				<param name="byjump" value="$bigship" />
+				<param name="byhighway" value="not $bigship" />
+				<param name="bydock" value="not $bigship" />
+				<param name="byidle" value="true" />
+			</run_script>
+		</do_if>
+	</add>
 </diff>

@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-		<remove sel="//properties/production" silent="1" /> 	
-		<add sel="//properties"> 	
-			<production wares="shippart">
-				<queue ware="shippart" method="xenon" />
-			</production>
-		</add>   
+	<remove sel="//properties/production" silent="1" /> 	
+	<add sel="//properties"> 	
+		<!--production wares="shippart shippartcomp"-->
+		<production wares="shippart">
+			<queue>
+				<item ware="shippart" method="xenon" />
+				<!--item ware="shippartcomp" method="xenon" /-->
+			</queue>
+		</production>
+	</add>   
 </diff>

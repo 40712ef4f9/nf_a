@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<diff>
+	<add sel="//create_build_plan" pos="after">
+		<do_if value="@$selected_macro and $buildmodule.buildmacros.indexof.{$selected_macro} == 0 and this.station.cargo.{ware.shippartcomp}.target lt 10 and this.station.cargo.{ware.shippartcomp}.count lt 550">
+			<add_cargo ware="ware.shippartcomp" exact="[550-this.station.cargo.{ware.shippartcomp}.count, this.station.cargo.{ware.shippartcomp}.free].min" object="this.station" chance="if this.station.cargo.{ware.shippartcomp}.free then 100 else 0"/>
+		</do_if>
+	</add>
+</diff>

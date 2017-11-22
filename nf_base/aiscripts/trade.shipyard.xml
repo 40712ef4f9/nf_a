@@ -579,9 +579,9 @@
 		<do_if value="$selected_macro.ware and @$selected_macro.ware.maxprice and this.$order? and this.relationto.{this.$order} ge this.station.owner.relation.friend.min">
 			<set_value name="this.$invoice" exact="[$buildcost*1.1f, $selected_macro.ware.averageprice].max" operation="add"/>
 		</do_if>
-		<do_if value="$selected_macro.ware and @$selected_macro.ware.maxprice">
+		<do_elseif value="$selected_macro.ware and @$selected_macro.ware.maxprice">
 			<set_value name="this.$invoice" exact="[$buildcost*1.5f, $selected_macro.ware.maxprice].max" operation="add"/>
-		</do_if>
+		</do_elseif>
 		<do_else>
 			<set_value name="this.$invoice" exact="$buildcost*2f" operation="add"/>
 		</do_else>
