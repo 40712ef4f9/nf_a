@@ -934,6 +934,8 @@
 			
 					<remove_value name="$tmpConfig"/>
 					<remove_value name="$faction"/>
+					<!-- Status INIT -->
+					<include_actions ref="md.MM_Corps__Data.MMCData_CEO_status" />
 				</do_if>
 			</actions>
 		</library>
@@ -967,7 +969,7 @@
 				<remove_value name="$Patsy"/>
 				<remove_value name="$startmoney"/>
 
-				<write_to_logbook category="general" text="'%1 CEO init: %2Cr.'.[$_faction, $_CEO.money.formatted.default]"/>
+				<!--write_to_logbook category="general" text="'%1 CEO init: %2Cr.'.[$_faction, $_CEO.money.formatted.default]"/-->
 		
 				<do_if value="$_faction.id" list="['xenon','khaak']">
 					<set_value name="$_CEO.$isInvader" />
@@ -3255,6 +3257,9 @@
 						<set_value name="$all" />
 						<include_actions ref="md.MM_Corps__Data.MMCData_disable_jobs" />
 					</do_elseif>
+					<do_elseif value="$_CEO.$style == 'cooperative' and not $noBelongings?">
+						<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_cooperative_future" />
+					</do_elseif>
 					<do_else>
 						<set_value name="$noBelongings" exact="$style.{2}"/>
 					</do_else>
@@ -3273,6 +3278,11 @@
 				</do_if>
 				<do_if value="$validZones? and $validZones.count">
 					<set_value name="$_CEO.$JOB_SPACES" exact="$validZones.clone"/>
+				</do_if>
+				<!-- Statusupdates -->
+				<do_if value="player.age ge 2h and (not $nextCEOupdate? or ($nextCEOupdate? and $nextCEOupdate lt player.age))">
+					<include_actions ref="md.MM_Corps__Data.MMCData_CEO_status" />
+					<set_value name="$nextCEOupdate" exact="player.age + 6h" />
 				</do_if>
 				<!-- clear -->
 				<remove_value name="$CEO"/>
@@ -4450,6 +4460,83 @@
 		
 				<remove_value name="$doNotSimple"/>
 				<remove_value name="$searchReq"/>
+			</actions>
+		</library>
+
+		<!--
+		<set_value name="$_CEO" exact="$actorCEO" />
+		<include_actions ref="md.MM_Corps__Data.MMCData_CEO_status" />
+		-->
+		<library name="MMCData_CEO_status">
+			<actions>
+				<set_value name="$doStatusChance" exact="0"/>
+
+				<do_if value="[level.veryhard, level.impossible].indexof.{player.difficulty} or $_CEO.owner.hasrelation.enemy.{player.faction}" chance="0">
+					<set_value name="$doStatusChance" exact="0"/>
+				</do_if>
+				<do_elseif value="[level.hard].indexof.{player.difficulty} and $_CEO.owner.relationto.{player.faction} ge player.faction.relation.member.min">
+					<set_value name="$doStatusChance" exact="90"/>
+				</do_elseif>
+				<do_elseif value="[level.hard].indexof.{player.difficulty} and $_CEO.owner.relationto.{player.faction} gt player.faction.relation.friend.min">
+					<set_value name="$doStatusChance" exact="30"/>
+				</do_elseif>
+				<do_else>
+					<set_value name="$doStatusChance" exact="100"/>
+				</do_else>
+
+				<do_if value="true" chance="$doStatusChance">
+					<set_value name="$faction" exact="$_CEO.owner" />
+					<set_value name="$tempText" exact="'%1 CEO: %2Cr \n'.[$faction, $_CEO.money.formatted.default]" />
+	
+					<find_zone name="$temp" space="player.galaxy" multiple="true" owner="$faction" tempzone="false" mapzone="true" chance="if $temp_zones? and $temp_zones.count then 0 else 100"/>
+					<set_value name="$tempText" exact="'%1 Owned Zones\n'.[$temp.count]" operation="add" />
+					<remove_value name="$temp"/>
+	
+					<find_station name="$temp" space="player.galaxy" functional="true" multiple="true">
+						<match owner="$faction"/>
+					</find_station>
+					<set_value name="$tempText" exact="'%1 Stations\n'.[$temp.count]" operation="add" />
+					<remove_value name="$temp"/>
+	
+					<find_ship name="$temp" class="[class.ship_l, class.ship_xl]" functional="true" space="player.galaxy" multiple="true">
+						<match owner="$faction"/>
+					</find_ship>
+					<find_ship name="$temp_sm" class="[class.ship_s, class.ship_m]" functional="true" space="player.galaxy" multiple="true">
+						<match owner="$faction"/>
+					</find_ship>
+					<set_value name="$tempText" exact="'%1 Capital-, %2 Smallships'.[$temp.count, $temp_sm.count]" operation="add" />
+					<remove_value name="$temp"/>
+					<remove_value name="$temp_sm"/>
+	
+					<write_to_logbook category="general" text="$tempText"/>
+	
+					<remove_value name="$faction"/>
+					<remove_value name="$tempText"/>
+				</do_if>
+			</actions>
+		</library>
+
+		<!-- 
+		<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_cooperative_future" />
+		-->
+		<library name="MMCData_doworker_include_cooperative_future">
+			<actions>
+				<find_station name="$tmp_stations" space="player.galaxy" functional="true" multiple="true" recursive="true" chance="if not ($tmp_stations? and $tmp_stations.count) then 100 else 0">
+					<match owner="$_faction"/>
+				</find_station>
+				<do_if value="$tmp_stations.count gt 3 and $tmp_stations.{1}.engineer.exists">
+					<transfer_money from="$tmp_stations.{1}.engineer" to="$_CEO" amount="20000000Cr - $_CEO.money"/>
+				</do_if>
+				<do_elseif value="$tmp_stations.count == 0 and $shipDoTrade.count and $validSectors.count and $style.{2} == 'pirate'">
+					<set_value name="$noBelongings" exact="$style.{2}"/>
+					
+					<do_all exact="$shipDoTrade.count" counter="$r">
+						<set_value name="$plunder" exact="true"/>
+						<set_value name="$Object" exact="$shipDoTrade.{$r}" />
+						<set_value name="$sectors" exact="$validSectors.clone" />
+						<include_actions ref="md.MM_Corps__Data.MMCData_ship_job" />
+					</do_all>
+				</do_elseif>
 			</actions>
 		</library>
 

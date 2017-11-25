@@ -98,7 +98,13 @@
       <set_value name="$separation" exact="$formationparam"/>
       <set_value name="$nmax" exact="$formationparam2"/>
       <do_if value="not $separation">
-        <set_value name="$separation" exact="[400m, this.ship.length].max"/>
+        <do_if value="$capship">
+          <set_value name="$separation" exact="[400m + $target.length, 400m + this.ship.length, [this.ship.maxcombatrange.turrets, 4000m].min].max"/>
+          <!--set_value name="$separation" exact="[400m + $target.length, 400m + this.ship.length].max"/-->
+        </do_if>
+        <do_else>
+          <set_value name="$separation" exact="[400m, this.ship.length].max"/>
+        </do_else>
       </do_if>
       <set_value name="$nmax" exact="$formationparam2"/>
       <do_if value="not $nmax">
@@ -205,18 +211,17 @@
           <create_group groupname="$target.pilot.$escortgroup"/>
         </do_if>
         <add_to_group groupname="$target.pilot.$escortgroup" object="this.ship"/>
-        <do_if value="$MICT_InFormation? or $MICT_SquadAttack? or this.ship.distanceto.{$target} gt 5km or $target.isboostactive" negate="true">
+        <do_if value="$MICT_InFormation? or $MICT_SquadAttack? or this.ship.distanceto.{$target} gt 9km or $target.isboostactive" negate="true">
           <do_if value="not $capship and $MICT_capescort" negate="true">
-            <!--<do_if value="not @$MICT_formation">-->
             <do_if value="$capship">
               <set_value name="$MICT_formation" exact="formationshape.invpointguard"/>
             </do_if>
             <do_else>
               <set_value name="$MICT_formation" exact="formationshape.xshapeforward"/>
             </do_else>
-            <!--</do_if>-->
             <do_if value="$capship">
-              <set_value name="$formationparam" exact="[400m + $target.length, 400m + this.ship.length].max"/>
+              <set_value name="$formationparam" exact="[400m + $target.length, 400m + this.ship.length, [this.ship.maxcombatrange.turrets, 4000m].min].max"/>
+              <!--set_value name="$formationparam" exact="[400m + $target.length, 400m + this.ship.length].max"/-->
             </do_if>
             <do_else>
               <set_value name="$formationparam" exact="[100m, this.ship.length].max"/>
@@ -687,7 +692,8 @@
             </do_else>
             <!--</do_if>-->
             <do_if value="$capship">
-              <set_value name="$formationparam" exact="[400m + $target.length, 400m + this.ship.length].max"/>
+              <set_value name="$formationparam" exact="[400m + $target.length, 400m + this.ship.length, [this.ship.maxcombatrange.turrets, 4000m].min].max"/>
+              <!--set_value name="$formationparam" exact="[400m + $target.length, 400m + this.ship.length].max"/-->
             </do_if>
             <do_else>
               <set_value name="$formationparam" exact="[100m, this.ship.length].max"/>
