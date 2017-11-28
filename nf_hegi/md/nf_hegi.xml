@@ -17,6 +17,20 @@
 					<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
 					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_HeGi'"/>
 				</do_elseif>
+
+				<do_if value="global.$mmpiratesy_pfactions?">
+					<set_value name="$todo" exact="
+						[
+								faction.ariashorde
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="global.$mmpiratesy_pfactions.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="global.$mmpiratesy_pfactions" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
 			</actions>
 		</cue>
 	</cues>

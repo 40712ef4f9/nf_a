@@ -98,7 +98,7 @@ If ownerless, make easier/skip steps
         <!-- Mission objectives will be set below, depending on situation -->
         <debug_text text="'Creating boarding mission'" />
         <create_mission cue="StartNF" name="readtext.{static.$PageID}.{1}" description="readtext.{static.$PageID}.{2}" difficulty="level.medium" faction="faction.player" type="missiontype.fight" chance="$isplayerprocess * 100"/>
-        <signal_objects object="$target" param="'boarding_started'" param2="$faction" param3="Start"/>
+        <signal_objects object="$target" param="'boarding_started'" param2="$faction" param3="StartNF"/>
         <do_if value="not $training">
           <set_value name="stat.boarding_attempts" operation="add" chance="$isplayerprocess * 100"/>
           <do_if value="stat.nf_stations_boarded?">
@@ -122,6 +122,12 @@ If ownerless, make easier/skip steps
         <set_value name="$PromotionLists" exact="[[[macro.character_argon_male_marine_mk1_macro, 25], [macro.character_argon_male_marine_mk2_macro, 2], [macro.character_argon_male_marine_mk3_macro, 0]]]"/>
 
         <start_conversation actor="player.copilot" conversation="BoardingSupport_Started_Conversation" chance="$isplayerprocess * 100"/>
+
+        <do_if value="$target.isclass.station" negate="true">
+          <find_ship groupname="$tmpShips" class="[class.ship_l, class.ship_xl]" space="$target.zone" multiple="true"/> 
+          <signal_objects group="$tmpShips" param="'update enemies'" param2="$faction" delay="5s"/>
+          <remove_value name="$tmpShips"/>
+        </do_if> 
 
       </actions>
       <patch sinceversion="2" state="complete">
@@ -838,8 +844,8 @@ If ownerless, make easier/skip steps
                         <do_else>
                           <start_conversation actor="$commander" conversation="BoardingSupport_ProtectPods_AllDestroyed_Conversation" chance="$isplayerprocess * 100"/>
                         </do_else>
-                        <remove_mission cue="Start" />
-                        <cancel_cue cue="Start" />
+                        <remove_mission cue="StartNF" />
+                        <cancel_cue cue="StartNF" />
                       </do_if>
                     </do_if>
                     <do_else>
