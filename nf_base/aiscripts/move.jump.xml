@@ -10,7 +10,19 @@
 	  </do_if>
 	  <set_value name="$nonstop" exact="if $nonstop then $nonstop else ($autorefuel and global.$nfconfig.$AdvJump == 2 and this.combinedskill gt 70)"/>
 	  <set_value name="$forcejump" exact="if $forcejump then $forcejump else ($autorefuel and global.$nfconfig.$AdvJump == 2 and this.combinedskill ge 100)" chance="0"/>
+
+	  <do_if value="this.$skipRefuel?">
+	    <do_if value="player.difficulty" list="[level.veryeasy, level.easy, level.medium]">
+	      <set_value name="$ignorefuel" exact="true" />
+	    </do_if>
+	    <do_elseif value="this.ship.trueowner" exact="faction.player" negate="true">
+	      <set_value name="$ignorefuel" exact="true" />
+	    </do_elseif>
+		<set_value name="$autorefuel" exact="false" />
+	  </do_if>
 	</add>
+
+    <replace sel="//do_if[@value='this.ship.cargo.{ware.fuelcells}.count lt this.ship.cargo.{ware.fuelcells}.max * 0.2f']/@value">this.ship.cargo.{ware.fuelcells}.count lt [this.ship.cargo.{ware.fuelcells}.max, 2500].min * 0.2f</replace>
 
     <add sel="//label[@name='checkpath']" pos="after">
 	  <set_value name="$startsector" exact="this.ship.sector"/>

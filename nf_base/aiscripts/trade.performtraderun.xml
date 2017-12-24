@@ -72,6 +72,20 @@
 			<resume label="finish" />
 		</do_if>
 	</add-->
+	<add sel="//label[@name='move to target object']" pos="after">
+		<do_if value="$tradeware == ware.fuelcells">		
+			<set_value name="this.$skipRefuel" />
+		</do_if>
+		<do_else>		
+			<remove_value name="this.$skipRefuel" />
+		</do_else>
+	</add>
+	<add sel="//label[@name='finish']" pos="after">
+		<remove_value name="this.$skipRefuel" />
+	</add>
+	<add sel="/aiscript/on_abort">
+		<remove_value name="this.$skipRefuel" />
+	</add>
 
 
 	<add sel="//label[@name='check trade offers']" pos="after">
