@@ -923,11 +923,20 @@
 						<remove_value name="$escorts_profile"/>
 						<remove_value name="$escorts_master_cap"/>
 					</do_if>
+
+					<!--
+					<set_value name="$do_stations" exact="true" />
+					<set_value name="$do_ships" exact="true" />
+					<set_value name="$CEO" exact="$_CEO" />
+					<set_value name="$target_space" exact="player.galaxy" />
+					<include_actions ref="md.MM_Corps__Data.MMCData_setaccount_space" />
+					-->
 			
 					<remove_value name="$validCluster"/>
 					<remove_value name="$validSectors"/>
 					<remove_value name="$validZones"/>
 					<remove_value name="$validZonesCore"/>
+					<remove_value name="$validZonesHotZone"/>
 					<remove_value name="$tmp_stations"/>
 					<remove_value name="$tmpConfig"/>
 					<remove_value name="$nogo"/>
@@ -995,11 +1004,13 @@
 		<remove_value name="$validSectors"/>
 		<remove_value name="$validZones"/>
 		<remove_value name="$validZonesCore"/>
+		<remove_value name="$validZonesHotZone"/>
 		-->
 		<library name="MMCData_find_space">
 			<actions>
 				<create_list name="$validZones"/>
 				<create_list name="$validZonesCore"/>
+				<create_list name="$validZonesHotZone"/>
 				<create_list name="$validSectors"/>
 				<create_list name="$validCluster"/>
 				<set_value name="$coreZchance" exact="100" />
@@ -1065,6 +1076,7 @@
 						
 						<do_if value="$validZonesCore.indexof.{$temp_object.{$y}.zone} == 0" chance="$coreZchance">
 							<append_to_list name="$validZonesCore" exact="$temp_object.{$y}.zone" chance="if $temp_object.{$y}.zone.owner and $temp_object.{$y}.zone.owner.relationto.{$faction} gt $faction.relation.neutral.max then 100 else 0"/>
+							<append_to_list name="$validZonesHotZone" exact="$temp_object.{$y}.zone" chance="if $temp_object.{$y}.isclass.gate and $validZonesHotZone.indexof.{$temp_object.{$y}.zone} == 0 and $temp_object.{$y}.zone.owner == $faction then 100 else 0"/>
 						</do_if>
 						<do_if value="$validZones.indexof.{$temp_object.{$y}.destination} == 0">
 							<append_to_list name="$validZones" exact="$temp_object.{$y}.destination"/>
@@ -1077,6 +1089,14 @@
 						</do_if>
 					</do_all>
 					<remove_value name="$temp_object"/>
+
+					<find_object name="$temp_object" space="$temp_zones.{$x}" class="[class.jumpbeacon]" multiple="false"/>
+					<do_if value="$temp_object and $validZonesCore.indexof.{$temp_zones.{$x}} == 0">
+						<append_to_list name="$validZonesCore" exact="$temp_zones.{$x}" chance="if $validZonesCore.indexof.{$temp_zones.{$x}} == 0 then 100 else 0"/>
+						<append_to_list name="$validZonesHotZone" exact="$temp_zones.{$x}" chance="if $validZonesHotZone.indexof.{$temp_zones.{$x}} == 0 and $temp_zones.{$x}.owner == $faction then 100 else 0"/>
+					</do_if>
+					<remove_value name="$temp_object"/>
+
 					<find_object name="$temp_object" space="$temp_zones.{$x}" class="[class.highwayexitgate]" multiple="true"/>
 					<do_all exact="$temp_object.count" counter="$y">
 						<do_if value="$temp_object.{$y}.exists" negate="true">
@@ -1090,6 +1110,7 @@
 						</do_if>
 						<do_if value="$validZonesCore.indexof.{$temp_object.{$y}.zone} == 0" chance="$coreZchance">
 							<append_to_list name="$validZonesCore" exact="$temp_object.{$y}.zone" chance="if $temp_object.{$y}.zone.owner and $temp_object.{$y}.zone.owner.relationto.{$faction} gt $faction.relation.neutral.max then 100 else 0"/>
+							<append_to_list name="$validZonesHotZone" exact="$temp_object.{$y}.zone" chance="if $validZonesHotZone.indexof.{$temp_object.{$y}.zone} == 0 and $temp_object.{$y}.zone.owner == $faction then 100 else 0"/>
 						</do_if>
 					</do_all>
 					<remove_value name="$temp_object"/>
@@ -1107,8 +1128,25 @@
 						<append_to_list name="$validZones" exact="$temp_zones.{$x}"/>
 					</do_if>
 				</do_all>
+
+				<set_value name="$temp_HZ" exact="false" />
+				<do_all exact="$validZonesCore.count" counter="$x">
+					<do_all exact="$validZonesCore.{$x}.adjacentzones.count" counter="$y">
+						<do_if value="$validZonesCore.{$x}.adjacentzones.{$y}.istemporaryzone or $validZonesCore.{$x}.adjacentzones.{$y}.isclass.highway or not $validZonesCore.{$x}.adjacentzones.{$y}.ismapzone">
+							<continue />
+						</do_if>
+						<do_if value="$validZonesHotZone.indexof.{$validZonesCore.{$x}} == 0 and $validZonesCore.{$x}.adjacentzones.{$y}.owner and $validZonesCore.{$x}.adjacentzones.{$y}.owner.hasrelation.enemy.{$faction}">
+							<append_to_list name="$validZonesHotZone" exact="$validZonesCore.{$x}"/>
+							<set_value name="$temp_HZ" exact="true" />
+						</do_if>
+					</do_all>
+				</do_all>
+				<do_if value="$temp_HZ" negate="true">
+					<clear_list list="$validZonesHotZone" />
+				</do_if>
 				<remove_value name="$coreZchance"/>
 				<remove_value name="$temp_zones"/>
+				<remove_value name="$temp_HZ"/>
 				<remove_value name="$faction"/>
 			</actions>
 		</library>
@@ -1136,7 +1174,7 @@
 				<create_list name="$shipDoPlunder"/>
 				<create_list name="$shipDoEscort"/>
 
-				<find_ship groupname="$tmpShips" class="[class.ship_m, class.ship_s, class.ship_l, class.ship_xl]" owner="$faction" space="player.galaxy" multiple="true"/> 
+				<find_ship name="$tmpShips" class="[class.ship_m, class.ship_s, class.ship_l, class.ship_xl]" owner="$faction" space="player.galaxy" multiple="true"/> 
 				<do_all exact="$tmpShips.count" counter="$x"> 
 					<do_if value="$tmpShips.{$x}.trueowner == $faction and $tmpShips.{$x}.pilot.exists" negate="true">
 						<continue />
@@ -1217,7 +1255,7 @@
 		<library name="MMCData_setaccount_space">
 			<actions>
 				<do_if value="not $do_stations? or ($do_stations? and $do_stations)">
-					<find_station groupname="$Stations" multiple="true" space="$target_space" owner="$faction"/>
+					<find_station name="$Stations" multiple="true" space="$target_space" owner="$faction"/>
 					<do_all exact="$Stations.count" counter="$x" >
 						<set_value name="$Object" exact="$Stations.{$x}" />
 						<include_actions ref="md.MM_Corps__Data.MMCData_setaccount_station" />
@@ -1226,7 +1264,7 @@
 				</do_if>
 
 				<do_if value="not $do_ships? or ($do_ships? and $do_ships)">
-					<find_ship groupname="$tmpShips" multiple="true" class="[class.ship]" space="$target_space" owner="$faction"/>
+					<find_ship name="$tmpShips" multiple="true" class="[class.ship]" space="$target_space" owner="$faction"/>
 					<do_all exact="$tmpShips.count" counter="$x" >
 						<do_if value="$tmpShips.{$x}.ismasstraffic">
 							<continue />
@@ -2207,7 +2245,7 @@
 					</create_pilot>
 				</do_else>
 				<do_if value="$pilot.exists and $ShipYard?">
-					<find_sector groupname="$sectors" space="$ShipYard.cluster" multiple="true" />
+					<find_sector name="$sectors" space="$ShipYard.cluster" multiple="true" />
 					<set_value name="$Station" exact="if $overrideStation? then $overrideStation else $ShipYard" />
 					<include_actions ref="md.MM_Corps__Data.MMCData_ship_job" />
 				</do_if>
@@ -2352,7 +2390,7 @@
 					<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_tmp" />
 
 					<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_runscript" />
-					<remove_value name="$warebasket"/>    
+					<remove_value name="$warebasket"/>
 				</do_elseif>
 				<do_elseif value="($Object.cargo.{ware.ore}.max or $Object.cargo.{ware.plasma}.max) and $Object.primarypurpose == objectpurpose.mine" chance="if $pirat then 50 else 100">
 					<create_list name="$basketoverride" />
@@ -2362,11 +2400,46 @@
 						<append_to_list name="$basketoverride" exact="ware.silicon"/>
 						<append_to_list name="$basketoverride" exact="ware.nividium" chance="50"/>
 						<append_to_list name="$basketoverride" exact="ware.crystals" chance="50"/>
+						<!-- fallback new unexpected minerals -->
+						<set_value name="$tmp_warebasket" exact="warebasket.minerals.list"/>
+						<do_all exact="$tmp_warebasket.count" counter="$xj">
+							<do_if value="[ware.ice, ware.ore, ware.silicon, ware.nividium, ware.crystals].indexof.{$tmp_warebasket.{$xj}} == 0">
+								<do_if value="$Object.cargo.{$tmp_warebasket.{$xj}}.max gt 0">
+									<do_if value="$basketoverride.indexof.{$tmp_warebasket.{$xj}}" exact="0">
+										<append_to_list name="$basketoverride" exact="$tmp_warebasket.{$xj}" />
+									</do_if>
+								</do_if>
+							</do_if>
+						</do_all>
+						<remove_value name="$tmp_warebasket"/>
+						<set_value name="$tmp_warebasket" exact="warebasket.xenon_minerals.list"/>
+						<do_all exact="$tmp_warebasket.count" counter="$xj">
+							<do_if value="[ware.ice, ware.ore, ware.silicon, ware.nividium, ware.crystals].indexof.{$tmp_warebasket.{$xj}} == 0">
+								<do_if value="$Object.cargo.{$tmp_warebasket.{$xj}}.max gt 0">
+									<do_if value="$basketoverride.indexof.{$tmp_warebasket.{$xj}}" exact="0">
+										<append_to_list name="$basketoverride" exact="$tmp_warebasket.{$xj}" />
+									</do_if>
+								</do_if>
+							</do_if>
+						</do_all>
+						<remove_value name="$tmp_warebasket"/>
 					</do_if>
 					<do_if value="$Object.cargo.{ware.plasma}.max">
 						<append_to_list name="$basketoverride" exact="ware.plasma" chance="50"/>
 						<append_to_list name="$basketoverride" exact="ware.ions"/>
 						<append_to_list name="$basketoverride" exact="ware.hydrogen" chance="50"/>
+						<!-- fallback new unexpected gases -->
+						<set_value name="$tmp_warebasket" exact="warebasket.gases.list"/>
+						<do_all exact="$tmp_warebasket.count" counter="$xj">
+							<do_if value="[ware.plasma, ware.ions, ware.hydrogen].indexof.{$tmp_warebasket.{$xj}} == 0">
+								<do_if value="$Object.cargo.{$tmp_warebasket.{$xj}}.max gt 0">
+									<do_if value="$basketoverride.indexof.{$tmp_warebasket.{$xj}}" exact="0">
+										<append_to_list name="$basketoverride" exact="$tmp_warebasket.{$xj}" />
+									</do_if>
+								</do_if>
+							</do_if>
+						</do_all>
+						<remove_value name="$tmp_warebasket"/>
 					</do_if>
 					<do_if value="$mining_basketoverride? and $mining_basketoverride.count">
 						<clear_list list="$basketoverride" />
@@ -2387,7 +2460,7 @@
 					<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_runscript" />
 					<remove_value name="$basketoverride"/>
 				</do_elseif>
-				<do_elseif value="$Object.cargo.{ware.fusionreactor}.max or $Object.cargo.{ware.water}.max or $Object.cargo.{ware.energycells}.max or $Object.cargo.{ware.ore}.max">
+				<do_elseif value="$Object.cargo.{ware.fusionreactor}.max or $Object.cargo.{ware.water}.max or $Object.cargo.{ware.energycells}.max or $Object.cargo.{ware.ore}.max"  chance="if $pirat and $Object.primarypurpose == objectpurpose.fight then 0 else if $Object.primarypurpose != objectpurpose.fight then 100 else 70">
 					<create_list name="$warebasket" />
 					<do_if value="$trade_warebasket? and $trade_warebasket.count">
 						<do_all exact="$trade_warebasket.count" counter="$xj">
@@ -2488,7 +2561,32 @@
 								<set_value name="$param" exact="[['range', 'zone'], ['allowstations', true]]" weight="50"/>
 							</do_any>
 						</do_else>
-						<set_value name="$destination" exact="if $sectors.indexof.{$Object.sector} then $Object.sector else $sectors.random" chance="if $destination? and $destination.exists then 0 else 100"/>
+						<!--set_value name="$destination" exact="if $sectors.indexof.{$Object.sector} then $Object.sector else $sectors.random" chance="if $destination? and $destination.exists then 0 else 100"/-->
+						<create_list name="$closerSector" />
+						<do_if value="$validZonesHotZone? and $validZonesHotZone.count">
+							<create_list name="$closerSectorHZ" />
+							<do_all exact="$validZonesHotZone.count" counter="$xj" >
+								<append_to_list name="$closerSectorHZ" exact="$validZonesHotZone.{$xj}.sector" chance="if $closerSectorHZ.indexof.{$validZonesHotZone.{$xj}.sector} then 100 else 0"/>
+							</do_all>
+							<do_all exact="$closerSectorHZ.count" counter="$xj" >
+								<do_if value="$sectors.indexof.{$closerSectorHZ.{$xj}}">
+									<append_to_list name="$closerSector" exact="$closerSectorHZ.{$xj}" />
+								</do_if>
+							</do_all>
+							<remove_value name="$closerSectorHZ"/>
+						</do_if>
+						<do_all exact="$sectors.count" counter="$xj" reverse="true" chance="if $closerSector.count then 0 else 100">
+							<do_if value="$Object.cluster == $sectors.{$xj}.cluster">
+								<append_to_list name="$closerSector" exact="$sectors.{$xj}" />
+							</do_if>
+						</do_all>
+						<do_if value="$closerSector.count">
+							<set_value name="$destination" exact="if $closerSector.indexof.{$Object.sector} then $Object.sector else $closerSector.random" chance="if $destination? and $destination.exists then 0 else 100"/>
+						</do_if>
+						<do_else>
+							<set_value name="$destination" exact="if $sectors.indexof.{$Object.sector} then $Object.sector else $sectors.random" chance="if $destination? and $destination.exists then 0 else 100"/>
+						</do_else>
+						<!-- $destination -->
 						<set_value name="$script" exact="if global.$nfconfig.$Check? then 'BR.move.patrol' else 'move.patrol'"/>
 						<set_value name="$test" exact="false"/>
 						<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_tmp" />
@@ -2522,7 +2620,14 @@
 										<set_value name="$param" exact="[['range', 'zone'], ['allowstations', true]]" weight="50"/>
 									</do_any>
 								</do_else>
-								<set_value name="$destination" exact="$sectors.random" chance="if $destination? and $destination.exists then 0 else 100"/>
+								<!--set_value name="$destination" exact="$sectors.random" chance="if $destination? and $destination.exists then 0 else 100"/-->
+								<do_if value="$closerSector.count">
+									<set_value name="$destination" exact="$closerSector.random" chance="if $destination? and $destination.exists then 0 else 100"/>
+								</do_if>
+								<do_else>
+									<set_value name="$destination" exact="$sectors.random" chance="if $destination? and $destination.exists then 0 else 100"/>
+								</do_else>
+								<!-- $destination -->
 								<set_value name="$script" exact="if global.$nfconfig.$Check? then 'BR.move.patrol' else 'move.patrol'"/>
 							</do_if>
 						</do_if>
@@ -2530,6 +2635,7 @@
 							<remove_value name="$test"/>
 							<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_tmp" />
 						</do_else>
+						<remove_value name="$closerSector"/>
 					</do_if>
 
 					<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_runscript" />
@@ -2907,7 +3013,7 @@
 					<remove_value name="$temp_stations"/>
 					<!-- fallback -->
 					<do_if value="$temp_warelist.count == 0 or ($temp_warelist.count == 1 and $temp_warelist.indexof.{ware.fuelcells})">
-						<set_value name="$temp_warelist" exact="[ware.fuelcells, ware.scanningarray, ware.bioopticwiring, ware.reinforcedmetalplating, ware.holtzmanfieldgenerator, ware.ioncells, ware.antimattercells, ware.bioelectricneurongel, ware.bofu, ware.chemicalcompounds, ware.crystals, ware.cutcrystals, ware.drp_assault, ware.drp_cargolifter, ware.drp_construction, ware.drp_interceptor_mk1, ware.drp_interceptor_mk2, ware.drp_intrepid_mk1, ware.drp_intrepid_mk2, ware.drp_overrun_mk1, ware.drp_overrun_mk2, ware.drp_scoopcollector_mk1, ware.drp_scoopcollector_mk2, ware.drp_surfaceminer_mk1, ware.drp_surfaceminer_mk2, ware.dumbfiremissile, ware.dumbfireturret, ware.emspectrometer, ware.energycells, ware.foodrations, ware.fusionreactor, ware.hydrogen, ware.ice, ware.ions, ware.laserturret, ware.machinegunturret, ware.meat, ware.medicalsupplies, ware.microchips, ware.narcotics, ware.nividium, ware.nividiumgems, ware.ore, ware.plankton, ware.plasma, ware.plasmacells, ware.plasmaflowregulator, ware.plasmapumps, ware.plasmaturret, ware.quantumtubes, ware.refinedmetals, ware.shieldgenerator, ware.shotgunturret, ware.silicon, ware.siliconwafers, ware.soybeans, ware.spacefuel, ware.spaceweed, ware.spices, ware.swarmmissile, ware.swarmturret, ware.teladianium, ware.warheads, ware.water, ware.wheat]" />
+						<set_value name="$temp_warelist" exact="warebasket.all.list" />
 					</do_if>
 	
 					<do_if value="$tmpConfig? and typeof $tmpConfig == datatype.table" negate="true">
@@ -2926,7 +3032,7 @@
 		-->
 		<library name="MMCData_doHandler_include">
 			<actions>
-				<debug_text text="'Start'" />
+				<debug_text chance="0" text="'Start'" />
 				<set_value name="$faction" exact="$_CEO.trueowner" />
 
 				<do_if value="event.param" exact="'INIT SHIP'">
@@ -2965,6 +3071,7 @@
 						<remove_value name="$validSectors"/>
 						<remove_value name="$validZones"/>
 						<remove_value name="$validZonesCore"/>
+						<remove_value name="$validZonesHotZone"/>
 					</do_if>
 
 					<set_value name="$overrideStation" exact="null" comment="prevent use of SY warelist"/>
@@ -3017,7 +3124,7 @@
 				<remove_value name="$price"/>
 				<remove_value name="$faction"/>
 				<remove_value name="$_faction"/>
-				<debug_text text="'end'" />
+				<debug_text chance="0" text="'end'" />
 			</actions>
 		</library>
 
@@ -3030,7 +3137,7 @@
 		-->
 		<library name="MMCData_doworker_include">
 			<actions>
-				<debug_text text="'Start'" />
+				<debug_text chance="0" text="'Start'" />
 				<set_value name="$_CEO.$style" exact="if $noBelongings? and ['domination','cooperative','pirate','outofbusiness','mercenary'].indexof.{$noBelongings} then $noBelongings else $style.{1}" comment="'domination','cooperative','pirate'"/>
 				<set_value name="$_faction" exact="$_CEO.trueowner" />
 				<set_value name="$stationToBuild" exact="null"/>
@@ -3137,7 +3244,7 @@
 					<set_value name="$fallback" exact="true"/>
 					<include_actions ref="md.MM_Corps__Data.MMCData_find_space" />
 				</do_if>
-<set_value name="$text2" exact="' AP n:%1 u:%2 spaces vz:%3 [cz:%6] . vS:%4 . vC:%5 \n'.[$shipNothingTodo.count, $shipDoUnknown.count, @$validZones.count, @$validSectors.count, @$validCluster.count, @$validZonesCore.count]" operation="add" />
+<set_value name="$text2" exact="' AP n:%1 u:%2 spaces vz:%3 [cz:%6 h:%7] . vS:%4 . vC:%5 \n'.[$shipNothingTodo.count, $shipDoUnknown.count, @$validZones.count, @$validSectors.count, @$validCluster.count, @$validZonesCore.count, @$validZonesHotZone.count]" operation="add" />
 
 				<!-- TODO assign (worker) to stations? [intelligent] -->
 				<do_if value="not $nextJobCheck? or ($nextJobCheck? and $nextJobCheck lt player.age)">
@@ -3315,8 +3422,9 @@
 				<remove_value name="$validSectors"/>
 				<remove_value name="$validZones"/>
 				<remove_value name="$validZonesCore"/>
+				<remove_value name="$validZonesHotZone"/>
 				<remove_value name="$zone"/>
-				<debug_text text="'end'" />
+				<debug_text chance="0" text="'end'" />
 			</actions>
 		</library>
 
@@ -3517,7 +3625,7 @@
 
 				<remove_value name="$tempC"/>
 				<do_if value="$special_musthave? and $special_musthave.count" chance="if $_CEO.money gt $tmpConfig.$minBuildSpecial then 100 else 0">
-					<find_ship groupname="$Builders" primarypurpose="objectpurpose.build" owner="$_faction" space="player.galaxy" multiple="true" chance="if $Builders? then 0 else 100"/>
+					<find_ship name="$Builders" primarypurpose="objectpurpose.build" owner="$_faction" space="player.galaxy" multiple="true" chance="if $Builders? then 0 else 100"/>
 					<do_all exact="$Builders.count" counter="$x"> 
 						<do_if value="$Builders.{$x}.pilot.$param? and $Builders.{$x}.pilot.$params.$macro? and $Builders.{$x}.pilot.$params.$macro"> 
 							<do_if value="$special_musthave.indexof.{macro.{$Builders.{$x}.pilot.$params.$macro.id}}">
@@ -3543,34 +3651,43 @@
 						<do_if value="$tmp_stations and $tmp_stations.count">
 							<continue />
 						</do_if>
-						<find_sector groupname="$tmp_sectors" space="$validCluster.{$x}" multiple="true" />
+						<find_sector name="$tmp_sectors" space="$validCluster.{$x}" multiple="true" />
 						<do_all exact="$tmp_sectors.count" counter="$y"> 
 							<find_zone name="$tmp_zones" space="$tmp_sectors.{$y}" tempzone="false" mapzone="true" multiple="true" min="4">
 								<match class="class.highway" negate="true"/>
 								<match owner="$_faction"/>
 							</find_zone>
 							<do_if value="$tmp_zones and $tmp_zones.count ge 4">
-								<set_value name="$stationToBuild" exact="$special_musthave_sy"/>
 								<set_value name="$zone_m1" exact="$tmp_zones.random"/>
 								<set_value name="$zone_m2" exact="null"/>
 								<do_all exact="$tmp_zones.count" counter="$z"> 
 									<do_if value="$zone_m1 != $tmp_zones.{$z} and $tmp_zones.{$z}.adjacentzones.indexof.{$zone_m1}">
 										<set_value name="$buildZone" exact="$zone_m1"/>
-										<break />
 									</do_if>
 									<do_elseif value="not $zone_m2 and $zone_m1 != $tmp_zones.{$z}">
 										<set_value name="$zone_m2" exact="$tmp_zones.{$z}"/>
 									</do_elseif>
 									<do_elseif value="$zone_m2 != $tmp_zones.{$z} and $tmp_zones.{$z}.adjacentzones.indexof.{$zone_m2}">
 										<set_value name="$buildZone" exact="$zone_m2"/>
-										<break />
 									</do_elseif>
+									<do_if value="$buildZone? and $buildZone">
+										<set_value name="$stationToBuild" exact="$special_musthave_sy"/>
+										<break />
+									</do_if>
 								</do_all>
-								<do_if value="$buildZone">
+								<do_if value="$buildZone? and $buildZone and $stationToBuild">
 									<break />
 								</do_if>
+								<do_elseif value="$zone_m1? and $zone_m1 and $special_musthave_sy" chance="33">
+									<set_value name="$stationToBuild" exact="$special_musthave_sy"/>
+									<set_value name="$buildZone" exact="if $zone_m2 then $zone_m2 else $zone_m1"/>
+									<break />
+								</do_elseif>
 							</do_if>
 						</do_all>
+						<do_if value="$buildZone? and $buildZone and $stationToBuild">
+							<break />
+						</do_if>
 					</do_all>
 					<remove_value name="$tmp_stations"/>
 					<remove_value name="$tmp_sectors"/>
@@ -3584,6 +3701,14 @@
 					<!--set_value name="$stationToBuild" exact="$tmpConfig.$build.random"/-->
 				</do_if>
 				<do_elseif value="$tmpConfig.$build.count == 0" chance="if $_CEO.$style == 'domination' then 100 else 0">
+					<do_if value="$build2? and typeof $build2 == datatype.list" negate="true">
+						<create_list name="$build2" />
+					</do_if>
+
+					<do_if value="$build2.count" exact="0">
+						<set_value name="$buildOutpost" exact="true"/>
+					</do_if>
+					
 					<do_if value="$build.indexof.{'ol'}">
 						<append_to_list name="$build2" exact="'ol'"/>
 					</do_if>
@@ -3609,9 +3734,6 @@
 
 					<include_actions ref="md.MM_Corps__Data.MMCData_config" />
 
-					<do_if value="$tmpConfig.$build.count == 1">
-						<set_value name="$buildOutpost" exact="true"/>
-					</do_if>
 				</do_elseif>
 				<do_elseif value="$build2? and $build2.count" chance="if $_CEO.$style != 'domination' then 100 else 0">
 					<set_value name="$build" exact="$build2"/>
@@ -3666,8 +3788,44 @@
 				</do_elseif>
 				<do_elseif value="$tmpConfig.$build.count">
 					<remove_value name="$special_musthave"/>
+					<set_value name="$regular" />
 					<include_actions ref="md.MM_Corps__Data.MMCData_do_buildstations" />
 				</do_elseif>
+
+				<do_if value="$regular? and not @$stationToBuild" chance="($_CEO.$isInvader? and $_CEO.money gt 1000000000Cr) *100">
+					<remove_value name="$regular"/>
+					<remove_value name="$build2"/>
+					<create_list name="$build2"/>
+					<do_if value="$build.indexof.{'ol'}">
+						<append_to_list name="$build2" exact="'ol'"/>
+					</do_if>
+					<do_if value="$build.indexof.{'al'}">
+						<append_to_list name="$build2" exact="'al'"/>
+					</do_if>
+					<do_if value="$build.indexof.{'xen'}">
+						<append_to_list name="$build2" exact="'xen'"/>
+					</do_if>
+					<do_if value="$build.indexof.{'tel'}">
+						<append_to_list name="$build2" exact="'tel'"/>
+					</do_if>
+					<do_if value="$build.indexof.{'spl'}">
+						<append_to_list name="$build2" exact="'spl'"/>
+					</do_if>
+
+					<do_if value="$build2.count == 0">
+						<append_to_list name="$build2" exact="'al'"/>
+					</do_if>
+
+					<append_to_list name="$build2" exact="'outpost'"/>
+					<set_value name="$build" exact="$build2"/>
+
+					<include_actions ref="md.MM_Corps__Data.MMCData_config" />
+
+					<do_if value="$tmpConfig.$build.count">
+						<set_value name="$buildOutpost" exact="true"/>
+						<include_actions ref="md.MM_Corps__Data.MMCData_do_buildstations" />
+					</do_if>
+				</do_if>
 				<remove_value name="$buildZone"/>
 			</actions>
 		</library>
@@ -3682,9 +3840,9 @@
 		<library name="MMCData_do_buildstations">
 			<actions>
 				<do_if value="$buildZone? and $buildZone">
-					<find_ship groupname="$Builders" primarypurpose="objectpurpose.build" owner="$_faction" space="$buildZone.cluster" multiple="true"/>
+					<find_ship name="$Builders" primarypurpose="objectpurpose.build" owner="$_faction" space="$buildZone.cluster" multiple="true"/>
 				</do_if>
-				<find_ship groupname="$Builders" primarypurpose="objectpurpose.build" owner="$_faction" space="player.galaxy" multiple="true" chance="if $Builders? then 0 else 100"/>
+				<find_ship name="$Builders" primarypurpose="objectpurpose.build" owner="$_faction" space="player.galaxy" multiple="true" chance="if $Builders? then 0 else 100"/>
 
 				<set_value name="$CVShip" exact="null"/>
 				<set_value name="$zone" exact="null"/>
@@ -3729,7 +3887,7 @@
 					<set_value name="$object" exact="$CVShip"/>
 				</do_if>
 
-				<do_if value="$buildZone">
+				<do_if value="$buildZone? and $buildZone">
 					<set_value name="$temp_zone" exact="$buildZone"/>
 					<include_actions ref="md.MM_Corps__Data.MMCData_do_validfreebuildspots" />
 					<set_value name="$BuildLocation" exact="$temp_buildspots.random"/>
@@ -3753,7 +3911,7 @@
 					<include_actions ref="md.MM_Corps__Data.MMCData_do_findbuildzone" />
 				</do_else>
 		
-				<do_if value="$zone and not $stationToBuild">
+				<do_if value="$zone and not @$stationToBuild">
 					<do_if value="$buildOutpost" negate="true">
 						<set_value name="$doNotSimple"/>
 						<set_value name="$searchReq" chance="if $_CEO.$style == 'cooperative' then 100 else 0"/>
@@ -3761,9 +3919,13 @@
 					<include_actions ref="md.MM_Corps__Data.MMCData_do_selectstation" />
 				</do_if>
 
-				<do_if value="$stationToBuild and (not $buildZone or ($buildZone and $buildZone.cluster == $zone.cluster))">
-					<set_value name="$cheatquote" exact="if $tmpConfig.$cheat? or $tmpConfig.$cheatNPC? then 100 else 50"/>
-					<set_value name="$cheatall" exact="if $tmpConfig.$cheat? then 100 else 0"/>
+				<do_if value="$zone and not @$buildZone">
+					<set_value name="$buildZone" exact="$zone"/>
+				</do_if>
+
+				<do_if value="$stationToBuild? and $stationToBuild and ((not $buildZone and $zone) or (@$buildZone and $buildZone.cluster == $zone.cluster))">
+					<set_value name="$cheatquote" exact="if $tmpConfig.$cheat? or $tmpConfig.$cheatNPC? or $buildOutpost then 100 else 50"/>
+					<set_value name="$cheatall" exact="if $tmpConfig.$cheat? or $buildOutpost then 100 else 0"/>
 					<set_value name="$cheatquote" exact="if $special_musthave? and $special_musthave.indexof.{$stationToBuild} then 100 else $cheatquote"/>
 					<set_value name="$cheatall" exact="if $special_musthave? and $special_musthave.indexof.{$stationToBuild} then 100 else $cheatall"/>
 					<do_if value="$zone and $CVShip.exists">
@@ -3783,8 +3945,8 @@
 				<do_else>
 					<remove_value name="$stationToBuild"/>
 				</do_else>
+
 				<remove_value name="$buildOutpost"/>
-				<remove_value name="$buildZone"/>
 			</actions>
 		</library>
 		<!-- 
@@ -5163,7 +5325,15 @@
 <set_value name="$text3" exact="'\n** Check : [%1] '.[$check.{$r}]" operation="add" />
 					<do_if value="$check.{$r} == 'zone' or $check.{$r} == 'corezone'">
 						<set_value name="$Objects" exact="$patrolZone.clone"/>
-						<set_value name="$validSpaces" exact="$validZonesCore.clone"/>
+						<do_if value="$validZonesHotZone.count" chance="if $validZonesHotZone.count and $validZonesCore.count lt $validZonesHotZone.count*3 then 70 else 0">
+							<set_value name="$validSpaces" exact="$validZonesHotZone.clone"/>
+							<do_all exact="$validZonesCore.count - $validZonesHotZone.count">
+								<append_to_list name="$validSpaces" exact="$validZonesHotZone.random"/>
+							</do_all>
+						</do_if>
+						<do_else>
+							<set_value name="$validSpaces" exact="$validZonesCore.clone"/>
+						</do_else>
 						<set_value name="$amount" exact="$tmpConfig.$zonePatrol"/>
 					</do_if>
 					<do_elseif value="$check.{$r} == 'sector'">
@@ -5188,7 +5358,15 @@
 					</do_elseif>
 					<do_elseif value="$check.{$r} == 'route' or $check.{$r} == 'station'">
 						<set_value name="$Objects" exact="$patrolRoute.clone"/>
-						<set_value name="$validSpaces" exact="$validZonesCore.clone"/>
+						<do_if value="$validZonesHotZone.count" chance="if $validZonesHotZone.count and $validZonesCore.count lt $validZonesHotZone.count*3 then 70 else 0">
+							<set_value name="$validSpaces" exact="$validZonesHotZone.clone"/>
+							<do_all exact="$validZonesCore.count - $validZonesHotZone.count">
+								<append_to_list name="$validSpaces" exact="$validZonesHotZone.random"/>
+							</do_all>
+						</do_if>
+						<do_else>
+							<set_value name="$validSpaces" exact="$validZonesCore.clone"/>
+						</do_else>
 						<set_value name="$amount" exact="$tmpConfig.$stationPatrol"/>
 
 						<do_if value="$amount and $Objects.count and $validSpaces.count">

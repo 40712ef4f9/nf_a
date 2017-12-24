@@ -1,101 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
 <diff>
-<replace sel="//faction[@id='sovereignsyndicate']">
+<!--
   <faction id="sovereignsyndicate" name="{20203,2401}" description="{20203,2402}" shortname="{20203,2403}" primaryrace="argon" behaviourset="default" known="1">
     <icon active="faction_sovereignsyndicate" inactive="faction_sovereignsyndicate" />
     <relations>
-      <relation faction="albionenergy" relation="0.0" />
-      <relation faction="aquarius" relation="0.0" />
+      <relation faction="albionenergy" relation="-0.009" />
+      <relation faction="aquarius" relation="-0.009" />
       <relation faction="argongovernment" relation="-0.5" />
       <relation faction="beryll" relation="0.0" />
       <relation faction="canteran" relation="-0.5" />
-      <relation faction="chow" relation="0.0" />
+      <relation faction="chow" relation="-0.009" />
       <relation faction="civilian" relation="0.0" />
       <relation faction="criminal" relation="0.0" />
       <relation faction="enemy" relation="-0.5" />
       <relation faction="familyryak" relation="-0.5" />
       <relation faction="fijiargnu" relation="-0.5" />
-      <relation faction="frantonpharma" relation="0.0" />
+      <relation faction="frantonpharma" relation="-0.009" />
       <relation faction="friend" relation="0.5" />
       <relation faction="heartofalbion" relation="-0.5" />
       <relation faction="hereticvanguards" relation="-0.5" />
-      <relation faction="jonferson" relation="0.0" />
-      <relation faction="leddaindustrial" relation="0.0" />
+      <relation faction="jonferson" relation="-0.1" />
+      <relation faction="leddaindustrial" relation="-0.009" />
       <relation faction="nolimits" relation="0.5" />
-      <relation faction="player" relation="0.0" />
+      <relation faction="player" relation="-0.009" />
       <relation faction="plutarch" relation="-0.5" />
       <relation faction="reivers" relation="0.0" />
       <relation faction="smuggler" relation="0.0" />
-      <relation faction="sonraenergy" relation="0.0" />
-      <relation faction="wholesomefoods" relation="0.0" />
+      <relation faction="sonraenergy" relation="-0.009" />
+      <relation faction="wholesomefoods" relation="-0.009" />
       <relation faction="xenon" relation="-0.5" />
     </relations>
   </faction>
- </replace>
- <replace sel="/factions/faction[@id='albionenergy']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
- <replace sel="/factions/faction[@id='aquarius']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ -->
+ <remove sel="/factions/faction[@id='sovereignsyndicate']/relations/@locked"/>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='albionenergy']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='aquarius']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='argongovernment']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='beryll']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='canteran']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='chow']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='civilian']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='criminal']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='enemy']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='familyryak']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='fijiargnu']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='frantonpharma']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='friend']/@relation">0.5</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='heartofalbion']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='hereticvanguards']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='jonferson']/@relation">-0.1</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='leddaindustrial']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='nolimits']/@relation">0.5</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='player']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='plutarch']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='reivers']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='smuggler']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='sonraenergy']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='wholesomefoods']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='xenon']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='teladi']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='teladidrugrunner']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='teladigunrunner']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='terracorp']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='terran']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='sovereignsyndicate']/relations/relation[@faction='atlas']/@relation" silent="1">-0.008</replace>
+
+ <replace sel="/factions/faction[@id='albionenergy']/relations/relation[@faction='sovereignsyndicate']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='aquarius']/relations/relation[@faction='sovereignsyndicate']/@relation">-0.009</replace>
  <replace sel="/factions/faction[@id='beryll']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
- <replace sel="/factions/faction[@id='chow']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='chow']/relations/relation[@faction='sovereignsyndicate']/@relation">-0.009</replace>
  <replace sel="/factions/faction[@id='civilian']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
  <replace sel="/factions/faction[@id='criminal']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
- <replace sel="/factions/faction[@id='frantonpharma']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
- <replace sel="/factions/faction[@id='jonferson']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
- <replace sel="/factions/faction[@id='leddaindustrial']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
- <replace sel="/factions/faction[@id='player']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='frantonpharma']/relations/relation[@faction='sovereignsyndicate']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='jonferson']/relations/relation[@faction='sovereignsyndicate']/@relation">-0.1</replace>
+ <replace sel="/factions/faction[@id='leddaindustrial']/relations/relation[@faction='sovereignsyndicate']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='player']/relations/relation[@faction='sovereignsyndicate']/@relation">-0.009</replace>
  <replace sel="/factions/faction[@id='reivers']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
  <replace sel="/factions/faction[@id='smuggler']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
- <replace sel="/factions/faction[@id='sonraenergy']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
- <replace sel="/factions/faction[@id='wholesomefoods']/relations/relation[@faction='sovereignsyndicate']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='sonraenergy']/relations/relation[@faction='sovereignsyndicate']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='wholesomefoods']/relations/relation[@faction='sovereignsyndicate']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='teladi']/relations/relation[@faction='sovereignsyndicate']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='teladidrugrunner']/relations/relation[@faction='sovereignsyndicate']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='teladigunrunner']/relations/relation[@faction='sovereignsyndicate']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='terracorp']/relations/relation[@faction='sovereignsyndicate']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='terran']/relations/relation[@faction='sovereignsyndicate']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='atlas']/relations/relation[@faction='sovereignsyndicate']/@relation" silent="1">-0.008</replace>
 
- <replace sel="//faction[@id='hereticvanguards']">
+ <!--
   <faction id="hereticvanguards" name="{20203,2501}" description="{20203,2502}" shortname="{20203,2503}" primaryrace="argon" behaviourset="default" known="1">
     <icon active="faction_hereticvanguards" inactive="faction_hereticvanguards" />
     <relations>
-      <relation faction="albionenergy" relation="0.0" />
-      <relation faction="aquarius" relation="0.0" />
+      <relation faction="albionenergy" relation="-0.009" />
+      <relation faction="aquarius" relation="-0.009" />
       <relation faction="argongovernment" relation="-0.5" />
       <relation faction="beryll" relation="0.0" />
       <relation faction="canteran" relation="-0.5" />
-      <relation faction="chow" relation="0.0" />
+      <relation faction="chow" relation="-0.009" />
       <relation faction="civilian" relation="0.0" />
       <relation faction="criminal" relation="0.0" />
       <relation faction="enemy" relation="-0.5" />
       <relation faction="familyryak" relation="-0.5" />
       <relation faction="fijiargnu" relation="-0.5" />
-      <relation faction="frantonpharma" relation="0.0" />
+      <relation faction="frantonpharma" relation="-0.009" />
       <relation faction="friend" relation="0.5" />
       <relation faction="heartofalbion" relation="0.0" />
-      <relation faction="jonferson" relation="0.0" />
+      <relation faction="jonferson" relation="-0.009" />
       <relation faction="leddaindustrial" relation="0.0" />
       <relation faction="nolimits" relation="0.0" />
       <relation faction="player" relation="0.0" />
       <relation faction="plutarch" relation="-0.5" />
       <relation faction="reivers" relation="-0.5" />
       <relation faction="smuggler" relation="-0.5" />
-      <relation faction="sonraenergy" relation="0.0" />
+      <relation faction="sonraenergy" relation="-0.009" />
       <relation faction="sovereignsyndicate" relation="-0.5" />
       <relation faction="wholesomefoods" relation="0.0" />
       <relation faction="xenon" relation="-0.5" />
     </relations>
   </faction>
- </replace>
- <replace sel="/factions/faction[@id='albionenergy']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
- <replace sel="/factions/faction[@id='aquarius']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ -->
+ <remove sel="/factions/faction[@id='hereticvanguards']/relations/@locked"/>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='albionenergy']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='aquarius']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='argongovernment']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='beryll']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='canteran']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='chow']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='civilian']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='criminal']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='enemy']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='familyryak']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='fijiargnu']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='frantonpharma']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='friend']/@relation">0.5</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='heartofalbion']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='jonferson']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='leddaindustrial']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='nolimits']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='player']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='plutarch']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='reivers']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='smuggler']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='sonraenergy']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='sovereignsyndicate']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='wholesomefoods']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='xenon']/@relation">-0.5</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='teladi']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='teladidrugrunner']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='teladigunrunner']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='terracorp']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='terran']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='hereticvanguards']/relations/relation[@faction='atlas']/@relation" silent="1">-0.008</replace>
+
+ <replace sel="/factions/faction[@id='albionenergy']/relations/relation[@faction='hereticvanguards']/@relation">-0.009</replace>
+ <replace sel="/factions/faction[@id='aquarius']/relations/relation[@faction='hereticvanguards']/@relation">-0.009</replace>
  <replace sel="/factions/faction[@id='beryll']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
- <replace sel="/factions/faction[@id='chow']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='chow']/relations/relation[@faction='hereticvanguards']/@relation">-0.009</replace>
  <replace sel="/factions/faction[@id='civilian']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
  <replace sel="/factions/faction[@id='criminal']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
- <replace sel="/factions/faction[@id='frantonpharma']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='frantonpharma']/relations/relation[@faction='hereticvanguards']/@relation">-0.009</replace>
  <replace sel="/factions/faction[@id='heartofalbion']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
- <replace sel="/factions/faction[@id='jonferson']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='jonferson']/relations/relation[@faction='hereticvanguards']/@relation">-0.009</replace>
  <replace sel="/factions/faction[@id='leddaindustrial']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
  <replace sel="/factions/faction[@id='nolimits']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
  <replace sel="/factions/faction[@id='player']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
- <replace sel="/factions/faction[@id='sonraenergy']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='sonraenergy']/relations/relation[@faction='hereticvanguards']/@relation">-0.009</replace>
  <replace sel="/factions/faction[@id='wholesomefoods']/relations/relation[@faction='hereticvanguards']/@relation">0.0</replace>
+ <replace sel="/factions/faction[@id='teladi']/relations/relation[@faction='hereticvanguards']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='teladidrugrunner']/relations/relation[@faction='hereticvanguards']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='teladigunrunner']/relations/relation[@faction='hereticvanguards']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='terracorp']/relations/relation[@faction='hereticvanguards']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='terran']/relations/relation[@faction='hereticvanguards']/@relation" silent="1">-0.008</replace>
+ <replace sel="/factions/faction[@id='atlas']/relations/relation[@faction='hereticvanguards']/@relation" silent="1">-0.008</replace>
 
   <add sel="/factions">
-    <faction id="acmecorp" name="ACME Corp" description="A Company that Make Everything" shortname="ACME" primaryrace="argon" behaviourset="default" known="1">
+    <faction id="acmecorp" name="{20203,55}" description="{20203,56}" shortname="{20203,57}" primaryrace="argon" behaviourset="default" known="1">
       <relations locked="1">
         <relation faction="albionenergy" relation="-0.008" />
         <relation faction="aquarius" relation="-0.008" />
@@ -237,7 +315,7 @@
   </add>
 
   <add sel="/factions">
-    <faction id="deepwater" name="Deepwater" description="Mercenaries probably founded by Borons ^^" shortname="DW" primaryrace="argon" behaviourset="default" known="1">
+    <faction id="deepwater" name="{20203,65}" description="{20203,66}" shortname="{20203,67}" primaryrace="argon" behaviourset="default">
       <relations locked="1">
         <relation faction="albionenergy" relation="-0.008" />
         <relation faction="aquarius" relation="-0.008" />

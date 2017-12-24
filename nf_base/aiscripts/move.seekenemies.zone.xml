@@ -49,7 +49,7 @@
       </do_if>
 
       <do_if value="$destination.isclass.zone and this.zone != $destination">
-        <run_script name="if @global.$WWX_mmcarrier_is_active and not (not @global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad) then 'move.generic.carrier' else 'move.generic'" >
+        <run_script name="if not global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad then 'move.generic' else if this.ship.macro.ismacro.{global.$mmcarriers} then 'move.generic.carrier' else 'move.generic'" >
           <param name="destination" value="$destination" />
           <param name="endintargetzone" value="true" />
         </run_script>

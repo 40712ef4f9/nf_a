@@ -50,43 +50,43 @@
 
 	<replace sel="//job[@id='hol_ranged_special_universal_trader']/ship/@macro">units_size_l_kit_cargo_03_macro</replace>
 	<replace sel="//job[@id='hol_ranged_special_universal_trader']/ship/units">
-				<units>
-					<unit category="defence" mk="3" min="40" max="60"/>
-					<unit category="transport" mk="1" min="60" max="80"/>
-					<unit category="welder" mk="1" min="10" max="20"/>
-				</units>
+		<units>
+			<unit category="defence" mk="3" min="40" max="60"/>
+			<unit category="transport" mk="1" min="60" max="80"/>
+			<unit category="welder" mk="1" min="10" max="20"/>
+		</units>
 	</replace>
 	<replace sel="//job[@id='hol_ranged_special_universal_trader']/ship/@macro">units_size_l_kit_cargo_03_macro</replace>
 	<replace sel="//job[@id='hol_ranged_special_universal_trader']/ship/units">
-				<units>
-					<unit category="defence" mk="3" min="40" max="60"/>
-					<unit category="transport" mk="1" min="60" max="80"/>
-					<unit category="welder" mk="1" min="10" max="20"/>
-				</units>
+		<units>
+			<unit category="defence" mk="3" min="40" max="60"/>
+			<unit category="transport" mk="1" min="60" max="80"/>
+			<unit category="welder" mk="1" min="10" max="20"/>
+		</units>
 	</replace>
 	<replace sel="//job[@id='tor_ranged_special_universal_trader']/ship/@macro">units_size_l_kit_cargo_03_macro</replace>
 	<replace sel="//job[@id='tor_ranged_special_universal_trader']/ship/units">
-				<units>
-					<unit category="defence" mk="3" min="40" max="60"/>
-					<unit category="transport" mk="1" min="60" max="80"/>
-					<unit category="welder" mk="1" min="10" max="20"/>
-				</units>
+		<units>
+			<unit category="defence" mk="3" min="40" max="60"/>
+			<unit category="transport" mk="1" min="60" max="80"/>
+			<unit category="welder" mk="1" min="10" max="20"/>
+		</units>
 	</replace>
 	<replace sel="//job[@id='cs_ranged_special_universal_trader']/ship/@macro">units_size_l_kit_cargo_03_macro</replace>
 	<replace sel="//job[@id='cs_ranged_special_universal_trader']/ship/units">
-				<units>
-					<unit category="defence" mk="3" min="40" max="60"/>
-					<unit category="transport" mk="1" min="60" max="80"/>
-					<unit category="welder" mk="1" min="10" max="20"/>
-				</units>
+		<units>
+			<unit category="defence" mk="3" min="40" max="60"/>
+			<unit category="transport" mk="1" min="60" max="80"/>
+			<unit category="welder" mk="1" min="10" max="20"/>
+		</units>
 	</replace>
 	<replace sel="//job[@id='led_special_construction_trader_3']/ship/@macro">units_size_l_kit_cargo_03_macro</replace>
 	<replace sel="//job[@id='led_special_construction_trader_3']/ship/units">
-				<units>
-					<unit category="defence" mk="3" min="40" max="60"/>
-					<unit category="transport" mk="1" min="60" max="80"/>
-					<unit category="welder" mk="1" min="10" max="20"/>
-				</units>
+		<units>
+			<unit category="defence" mk="3" min="40" max="60"/>
+			<unit category="transport" mk="1" min="60" max="80"/>
+			<unit category="welder" mk="1" min="10" max="20"/>
+		</units>
 	</replace>
 
 
@@ -180,7 +180,7 @@
 			<time interval="1200"/>
 			<ship ref="cruises"/>
 		</job>
-		
+
 		<!--cluster_M sector_03 -->
 		<job id="cruises_sector03_route1" name="{20204,10014}">
 			<task task="move.patrol.route">
@@ -226,7 +226,7 @@
 			<time interval="1200"/>
 			<ship ref="cruises"/>
 		</job>
-		
+
 		<!--cluster_M sector_04 -->
 		<job id="cruises_sector04_route1" name="{20204,10014}">
 			<task task="move.patrol.route">
@@ -272,6 +272,7 @@
 			<time interval="1200"/>
 			<ship ref="cruises"/>
 		</job>
+		<!--Prayer -->
 		<job id="gonerjob_hol" name="{20204,2811}">
 			<expirationtime min="43200" max="86400" />
 			<task task="move.voyager" />
@@ -282,5 +283,165 @@
 				<owner exact="acmecorp" overridenpc="true"/>
 			</ship>
 		</job>
+
+
+		<!-- ACME tradesupport -->
+		<job id="acmecorp_special_refined_trader" name="{20204,501}">
+			<expirationtime min="86400" max="259200"/>
+			<task task="trade.ship.ranged">
+				<param name="minbuy" int="0"/>
+				<param name="maxbuy" int="4"/>
+				<param name="minsell" int="0"/>
+				<param name="maxsell" int="4"/>
+			</task>
+			<basket basket="refined"/>
+			<quota cluster="2" sector="1" zone="1"/>
+			<location class="cluster" macro="cluster_m_macro"/>
+			<ship ref="acmecorp_trader_bulk_large">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+
+		<job id="acmecorp_special_water_trader" name="{20204,1501}">
+			<expirationtime min="86400" max="259200"/>
+			<task task="trade.ship.ranged">
+				<param name="minbuy" int="0"/>
+				<param name="maxbuy" int="4"/>
+				<param name="minsell" int="0"/>
+				<param name="maxsell" int="4"/>
+			</task>
+			<basket basket="water"/>
+			<quota cluster="2" sector="1" zone="1"/>
+			<location class="cluster" macro="cluster_m_macro"/>
+			<ship ref="acmecorp_trader_liquid_large">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+
+		<job id="acmecorp_special_construction_trader" name="{20204,4401}">
+			<expirationtime min="86400" max="259200"/>
+			<task task="trade.ship.ranged">
+				<param name="minbuy" int="0"/>
+				<param name="maxbuy" int="4"/>
+				<param name="minsell" int="0"/>
+				<param name="maxsell" int="4"/>
+			</task>
+			<basket basket="albion_construction"/>
+			<quota cluster="2" sector="1" zone="1"/>
+			<location class="cluster" macro="cluster_m_macro"/>
+			<ship ref="acmecorp_trader_container_energy_large">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+
+		<job id="acmecorp_special_universal_trader" name="{20204,4501} {20402,1}">
+			<expirationtime min="86400" max="259200"/>
+			<task task="trade.ship.ranged">
+				<param name="minbuy" int="0"/>
+				<param name="maxbuy" int="4"/>
+				<param name="minsell" int="0"/>
+				<param name="maxsell" int="4"/>
+			</task>
+			<quota cluster="2" sector="1" zone="1"/>
+			<location class="cluster" macro="cluster_m_macro"/>
+			<ship ref="acmecorp_trader_uni">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+
+		<job id="acmecorp_special_energy_trader" name="{20204,4701}">
+			<expirationtime min="86400" max="259200"/>
+			<task task="trade.ship.ranged">
+				<param name="minbuy" int="0"/>
+				<param name="maxbuy" int="4"/>
+				<param name="minsell" int="0"/>
+				<param name="maxsell" int="4"/>
+			</task>
+			<quota cluster="1" sector="1" zone="1"/>
+			<basket basket="energycells"/>
+			<location class="cluster" macro="cluster_m_macro"/>
+			<ship ref="acmecorp_trader_energy_large">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+
+		<job id="acmecorp_special_energy_trader_2" name="{20204,4601}">
+			<expirationtime min="86400" max="259200"/>
+			<task task="trade.ship.ranged">
+				<param name="minbuy" int="0"/>
+				<param name="maxbuy" int="4"/>
+				<param name="minsell" int="0"/>
+				<param name="maxsell" int="4"/>
+			</task>
+			<quota cluster="1" sector="1" zone="1"/>
+			<basket basket="energy"/>
+			<location class="cluster" macro="cluster_m_macro"/>
+			<ship ref="acmecorp_trader_energy_large">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+
+		<job id="acmecorp_special_universal_trader_2" name="{20204,4501} {20402,2}">
+			<expirationtime min="86400" max="259200"/>
+			<task task="trade.ship.ranged">
+				<param name="minbuy" int="0"/>
+				<param name="maxbuy" int="4"/>
+				<param name="minsell" int="0"/>
+				<param name="maxsell" int="4"/>
+			</task>
+			<quota cluster="2" sector="2" zone="1"/>
+			<location class="cluster" macro="cluster_n_macro"/>
+			<ship ref="acmecorp_trader_uni">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+
+		<job id="acmecorp_special_energy_trader_3" name="{20204,4601}">
+			<expirationtime min="86400" max="259200"/>
+			<task task="trade.ship.ranged">
+				<param name="minbuy" int="0"/>
+				<param name="maxbuy" int="4"/>
+				<param name="minsell" int="0"/>
+				<param name="maxsell" int="4"/>
+			</task>
+			<quota cluster="1" sector="1" zone="1"/>
+			<basket basket="energy"/>
+			<location class="cluster" macro="cluster_l_macro"/>
+			<ship ref="acmecorp_trader_energy_large">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+
+		<job id="acmecorp_special_universal_trader_3" name="{20204,501}">
+			<expirationtime min="86400" max="259200"/>
+			<task task="trade.ship.ranged">
+				<param name="minbuy" int="0"/>
+				<param name="maxbuy" int="4"/>
+				<param name="minsell" int="0"/>
+				<param name="maxsell" int="4"/>
+			</task>
+			<quota cluster="1" sector="1" zone="1"/>
+			<location class="cluster" macro="cluster_l_macro"/>
+			<ship ref="acmecorp_trader_uni">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+
+		<job id="acmecorp_special_energy_trader_4" name="{20204,4601}">
+			<expirationtime min="86400" max="259200"/>
+			<task task="trade.ship.ranged">
+				<param name="minbuy" int="0"/>
+				<param name="maxbuy" int="4"/>
+				<param name="minsell" int="0"/>
+				<param name="maxsell" int="4"/>
+			</task>
+			<quota cluster="1" sector="1" zone="1"/>
+			<basket basket="energy"/>
+			<location class="cluster" macro="cluster_l_macro"/>
+			<ship ref="acmecorp_trader_energy_large">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+
 	</add>
 </diff>

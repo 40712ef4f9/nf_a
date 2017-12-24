@@ -3,6 +3,7 @@
 	<add sel="/aiscript/attention[@min='unknown']/actions/do_if[@value='this.station.owner != faction.player']/set_value[@name='$tradingstations']" pos="after">
 		<append_to_list name="$tradingstations" exact="macro.struct_bt_alb_servicedock_macro"/>
 	</add>
+
 	<add sel="//find_sell_offer[@tradepartner='this.station']" type="@chance" >if this.station.subordinates.{entitytype.manager}.count then 0 else 100</add>
 	<add sel="//find_sell_offer[@tradepartner='this.station']"  pos="before" >
 		<create_list name="$selloffers"/>
@@ -19,4 +20,21 @@
 			<signal_objects object="player.galaxy" param="'do.start.syscript'" param2="this.station" />
 		</do_if>
 	</add>
+
+	<!--add sel="/aiscript/attention[@min='unknown']/actions/resume[@label='loop']"  pos="before" >
+		<label name="collecting"/>
+		<do_if value="this.station.units.{unitcategory.gascollector}.count and this.station.zone.yield.count and not (this.station.canbuildships or this.station.canproduceships)" chance="(not $nextCollect? or ($nextCollect and $nextCollect lt player.age)) *100">
+			<set_value name="$nextCollect" exact="player.age + 60min" />
+			<do_all exact="this.station.zone.yield.count" counter="$i">
+				<do_if value="warebasket.gases.list.indexof.{this.station.zone.yield.{$i}}">
+					<set_value name="$whatsThatsSmell" />
+				</do_if>
+			</do_all>
+			<do_if value="$whatsThatsSmell?">
+				<run_script name="'lib.station.collect'" />
+				<set_value name="$nextCollect" exact="player.age + 10min" />
+			</do_if>
+			<remove_value name="$whatsThatsSmell" />
+		</do_if>
+	</add-->
 </diff>

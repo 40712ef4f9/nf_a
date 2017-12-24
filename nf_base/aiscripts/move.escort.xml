@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <diff>
-	<add sel="/aiscript/interrupts">
+  <add sel="/aiscript/interrupts">
     <handler>
       <conditions>
         <check_any>
@@ -14,8 +14,8 @@
       </conditions>
       <delay min="200ms" max="600ms"/>
       <actions>
-        <debug_text text="'Follow leader ' + this.ship + ' ' + this.ship.knownname + ' :: ' + this.ship.zone.knownname" />
-		<set_value name="$event_param" exact="if event.param == 'event_object_jump_completed' or (event.param2? and event.param2 == 'event_object_jump_completed') then 'event_object_jump_completed' else 'warp'"/>
+        <debug_text text="'Follow leader ' + this.ship + ' ' + this.ship.knownname + ' :: ' + this.ship.zone.knownname" chance="$debugoutputchance"/>
+        <set_value name="$event_param" exact="if event.param == 'event_object_jump_completed' or (event.param2? and event.param2 == 'event_object_jump_completed') then 'event_object_jump_completed' else 'warp'"/>
         <do_all exact="this.ship.subordinates.count" counter="$f" >
           <signal_objects object="this.ship.subordinates.{$f}" param="'follow'" param2="$event_param" chance="if this.ship.subordinates.{$f}.isclass.[class.ship_m, class.ship_s] then 100 else 0"/>
         </do_all>
@@ -29,22 +29,22 @@
         <abort_called_scripts resume="ini" />
       </actions>
     </handler>
-	</add>
-	<add sel="//attention[@min='visible']/actions/run_script[@name=&quot;'move.undock'&quot;]" pos="after">
-		<label name="ini" />
-	</add>
-	<add sel="//attention[@min='visible']/actions/do_if[@value='this.zone != $target.zone']" pos="prepend">
-		<signal_objects object="this.ship" param="'follow'"/>
-	</add>
-	<add sel="//attention[@min='unknown']/actions/run_script[@name=&quot;'move.undock'&quot;]" pos="after">
-		<label name="ini" />
-	</add>
-	<add sel="//init" pos="prepend">
-		<do_if value="not $target? or $target? and not $target">
-		  <set_value name="$target" exact="this.ship.commander"/>
-		</do_if>
-		<do_elseif value="$target == 'commander'">
-		  <set_value name="$target" exact="this.ship.commander"/>
-		</do_elseif>
-	</add>
+  </add>
+  <add sel="//attention[@min='visible']/actions/run_script[@name=&quot;'move.undock'&quot;]" pos="after">
+    <label name="ini" />
+  </add>
+  <add sel="//attention[@min='visible']/actions/do_if[@value='this.zone != $target.zone']" pos="prepend">
+    <signal_objects object="this.ship" param="'follow'"/>
+  </add>
+  <add sel="//attention[@min='unknown']/actions/run_script[@name=&quot;'move.undock'&quot;]" pos="after">
+    <label name="ini" />
+  </add>
+  <add sel="//init" pos="prepend">
+    <do_if value="not $target? or $target? and not $target">
+      <set_value name="$target" exact="this.ship.commander"/>
+    </do_if>
+    <do_elseif value="$target == 'commander'">
+      <set_value name="$target" exact="this.ship.commander"/>
+    </do_elseif>
+  </add>
 </diff>

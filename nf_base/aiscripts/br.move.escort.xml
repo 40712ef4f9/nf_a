@@ -49,7 +49,7 @@
       </conditions>
       <delay min="200ms" max="600ms"/>
       <actions>
-        <debug_text text="'Follow leader ' + this.ship + ' ' + this.ship.knownname + ' :: ' + this.ship.zone.knownname" />
+        <debug_text text="'Follow leader ' + this.ship + ' ' + this.ship.knownname + ' :: ' + this.ship.zone.knownname" chance="$debugoutputchance"/>
 		<set_value name="$event_param" exact="if event.param == 'event_object_jump_completed' or (event.param2? and event.param2 == 'event_object_jump_completed') then 'event_object_jump_completed' else 'warp'"/>
         <do_all exact="this.ship.subordinates.count" counter="$f" >
           <signal_objects object="this.ship.subordinates.{$f}" param="'follow'" param2="$event_param" chance="if this.ship.subordinates.{$f}.isclass.[class.ship_m, class.ship_s] then 100 else 0"/>

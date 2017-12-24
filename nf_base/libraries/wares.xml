@@ -3,6 +3,11 @@
 	<add sel="/wares/production"> 
 		<method id="br_xenon" /> 
 	</add> 
+
+	<replace sel="//wares/ware[@id='energycells']/production[@method='fieldsofop']/secondary/ware[@ware='hydrogen']/@amount" >40</replace>
+	<replace sel="//wares/ware[@id='energycells']/price" ><price min="10" average="15" max="20" /></replace>
+	<replace sel="//wares/ware[@id='fuelcells']/price" ><price min="35" average="43" max="51" /></replace>
+
 	<add sel="/wares">   
 		<ware id="inv_acmevisa" name="{20201,10601} ACME" description="{20201,10603}" transport="inventory" licence="intelligence" size="small" volume="1" illegal="argongovernment heartofalbion plutarch" tags="crafting inventory rare">
 			<price min="1106" average="1382" max="1658" />

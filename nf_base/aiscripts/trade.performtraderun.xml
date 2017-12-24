@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <diff>
 	<add sel="//execute_trade" pos="before">
+<!--
+<debug_text text="'%1 [%3] do trade %2'.[this.ship.knownname, $tradeoffer.ware.id, this.ship.isjobship]" filter="error" chance="($tradeoffer.ware == ware.shippart or $tradeoffer.ware == ware.shippartcomp)*100" />
+-->
 		<do_if value="global.$factionCEOs.{'$' + this.ship.trueowner.id}? or ($tradeoffer.buyer and global.$factionCEOs.{'$' + $tradeoffer.buyer.owner.id}?) or ($tradeoffer.seller and global.$factionCEOs.{'$' + $tradeoffer.seller.owner.id}?)">
 		  <set_value name="$Corp_factionBuy" exact="if $tradeoffer.buyer then $tradeoffer.buyer.owner else this.ship.trueowner" />
 		  <set_value name="$Corp_factionSell" exact="if $tradeoffer.seller then $tradeoffer.seller.owner else this.ship.trueowner" />

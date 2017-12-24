@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="//jobs">
+		<!-- ACME tradesupport -->
+		<job id="acmecorp_special_refined_trader_to" name="{20204,501}">
+			<expirationtime min="86400" max="259200"/>
+			<task task="trade.ship.ranged">
+				<param name="minbuy" int="0"/>
+				<param name="maxbuy" int="4"/>
+				<param name="minsell" int="0"/>
+				<param name="maxsell" int="4"/>
+			</task>
+			<basket basket="refined"/>
+			<quota cluster="2" sector="1" zone="1"/>
+			<location class="cluster" macro="cluster_t_macro"/>
+			<ship ref="acmecorp_trader_bulk_large">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+
+		<job id="acmecorp_special_water_trader_to" name="{20204,1501}">
+			<expirationtime min="86400" max="259200"/>
+			<task task="trade.ship.ranged">
+				<param name="minbuy" int="0"/>
+				<param name="maxbuy" int="4"/>
+				<param name="minsell" int="0"/>
+				<param name="maxsell" int="4"/>
+			</task>
+			<basket basket="water"/>
+			<quota cluster="2" sector="1" zone="1"/>
+			<location class="cluster" macro="cluster_t_macro"/>
+			<ship ref="acmecorp_trader_liquid_large">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+
+		<job id="acmecorp_special_construction_trader_to" name="{20204,4401}">
+			<expirationtime min="86400" max="259200"/>
+			<task task="trade.ship.ranged">
+				<param name="minbuy" int="0"/>
+				<param name="maxbuy" int="4"/>
+				<param name="minsell" int="0"/>
+				<param name="maxsell" int="4"/>
+			</task>
+			<basket basket="albion_construction"/>
+			<quota cluster="2" sector="1" zone="1"/>
+			<location class="cluster" macro="cluster_t_macro"/>
+			<ship ref="acmecorp_trader_container_energy_large">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+
+		<job id="acmecorp_special_energy_trader_to" name="{20204,4701}">
+			<expirationtime min="86400" max="259200"/>
+			<task task="trade.ship.ranged">
+				<param name="minbuy" int="0"/>
+				<param name="maxbuy" int="4"/>
+				<param name="minsell" int="0"/>
+				<param name="maxsell" int="4"/>
+			</task>
+			<quota cluster="1" sector="1" zone="1"/>
+			<basket basket="energycells"/>
+			<location class="cluster" macro="cluster_t_macro"/>
+			<ship ref="acmecorp_trader_energy_large">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+
+		<job id="acmecorp_special_ol_hightech_trader_to" name="{20204,401} {20402,3}">
+			<expirationtime min="86400" max="259200"/>
+			<task task="trade.ship.ranged">
+				<param name="minbuy" int="0"/>
+				<param name="maxbuy" int="2"/>
+				<param name="minsell" int="0"/>
+				<param name="maxsell" int="2"/>
+			</task>
+			<quota cluster="1"/>
+			<basket basket="omicron_hightech"/>
+			<location class="cluster" macro="cluster_t_macro"/>
+			<ship ref="acmecorp_trader_container_heavy_large">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+		<job id="acmecorp_special_hightech_trader_to" name="{20204,401} {20402,4}">
+			<expirationtime min="86400" max="259200"/>
+			<task task="trade.ship.ranged">
+				<param name="minbuy" int="0"/>
+				<param name="maxbuy" int="2"/>
+				<param name="minsell" int="0"/>
+				<param name="maxsell" int="2"/>
+			</task>
+			<quota cluster="1"/>
+			<basket basket="albion_hightech"/>
+			<location class="cluster" macro="cluster_t_macro"/>
+			<ship ref="acmecorp_trader_container_heavy_large">
+				<owner exact="acmecorp" overridenpc="true"/>
+			</ship>
+		</job>
+	</add>
+</diff>

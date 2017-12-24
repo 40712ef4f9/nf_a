@@ -187,6 +187,8 @@
     <set_value name="$nextenemycheck" exact="player.age"/>
     <set_value name="$FiringRange" exact="this.ship.maxcombatrange.all"/>
     <create_group groupname="$attackers"/>
+    <create_group groupname="$targets" />
+    <create_group groupname="$dronetargets" />
     <create_list name="$enemies" />
   </init>
   <attention min="visible">
@@ -596,12 +598,20 @@
             </do_if>
           </do_else>
           <!-- secondary_slot-->
+          <set_value name="$tmpDeg" exact="120.0deg"/>
+          <do_if value="$thiscombinedskill ge 80">
+            <set_value name="$tmpDeg" exact="360.0deg"/>
+          </do_if>
+          <do_elseif value="$thiscombinedskill ge 50">
+            <set_value name="$tmpDeg" exact="240.0deg"/>
+          </do_elseif>
+ 
           <do_if  value="$MainTarget.isoperational and $flagT and $flagTc">
             <do_if value="$LRShip and this.ship.distanceto.{$MainTarget} le $FiringRange" chance="if $MainTarget.isclass.[class.ship_xs, class.ship_s, class.ship_m] then 0 else 100">
-              <shoot_at object="this.ship" target="$MainTarget" slot="tag.secondary_slot" tolerance="360.0deg" locktarget="true" weapontype="combat" />
+              <shoot_at object="this.ship" target="$MainTarget" slot="tag.secondary_slot" tolerance="$tmpDeg" locktarget="true" weapontype="combat" />
             </do_if>
             <do_elseif value="$LRShip" negate="true">
-              <shoot_at object="this.ship" target="$MainTarget" slot="tag.secondary_slot" tolerance="360.0deg" locktarget="true" weapontype="combat" />
+              <shoot_at object="this.ship" target="$MainTarget" slot="tag.secondary_slot" tolerance="$tmpDeg" locktarget="true" weapontype="combat" />
             </do_elseif>
             <do_else>
               <stop_shooting object="this.ship" slot="tag.secondary_slot" chance="50"/>
@@ -609,14 +619,15 @@
           </do_if>
           <do_elseif value="$targetsInSight.count and $LRShip and this.ship.distanceto.{$targetsInSight.{1}} le $FiringRange" chance="if $target.isclass.station then 100 else 0">
             <set_value name="this.ship.pilot.$priotarget" exact="$targetsInSight.{1}"/>
-            <shoot_at object="this.ship" target="$targetsInSight.{1}" slot="tag.secondary_slot" tolerance="360.0deg" weapontype="combat" />
+            <shoot_at object="this.ship" target="$targetsInSight.{1}" slot="tag.secondary_slot" tolerance="$tmpDeg" weapontype="combat" />
           </do_elseif>
           <do_elseif value="$validbigguntarget.count and ($targetsInSight.indexof.{$validbigguntarget.{1}} or $thiscombinedskill le 70)">
-            <shoot_at object="this.ship" target="$validbigguntarget.{1}" slot="tag.secondary_slot" tolerance="360.0deg" weapontype="combat" />
+            <shoot_at object="this.ship" target="$validbigguntarget.{1}" slot="tag.secondary_slot" tolerance="$tmpDeg" weapontype="combat" />
           </do_elseif>
           <do_else>
             <stop_shooting object="this.ship" slot="tag.secondary_slot"/>
           </do_else>
+          <remove_value name="$tmpDeg" />
           <!-- turrets -->
           <do_if value="not ($prioTarget and $prioTarget.isoperational) and $target.isoperational and not $target.boarder and $targetsInSight.list.count lt 10">
             <set_turret_targets object="this.ship" preferredtarget="$MainTarget" target="if $targetsInSight.list.count then $targetsInSight.list else $targets.list" />
@@ -854,6 +865,9 @@
           </do_if>
 
           <do_if value="@$enemies.{$i}.isoperational">
+            <do_if value="@$enemies.{$i}.boarder and @this.ship.relationto.{$enemies.{$i}.boarder} ge 0 and $enemies.{$i}.hullpercentage le 70">
+              <continue />
+            </do_if>
             <set_value name="$target" exact="$enemies.{$i}" />
             <!-- exclude the player ship in OOS case, this scenario wouldn't make any sense anyway -->
             <do_if value="$target != player.primaryship and ($target.isclass.defensible or ($target.container? and $target.container.isclass.defensible))">

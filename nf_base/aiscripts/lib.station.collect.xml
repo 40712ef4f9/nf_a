@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="lib.station.collect" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd">
+  <params>
+    <param name="debugchance" default="100" />
+  </params>
+  <attention min="visible">
+    <actions>
+      <set_value name="$dronelaunchdelay" exact="3s" comment="the minimum delay between two drone launches"/>
+      <set_value name="$gathertime" min="172s" max="188s" comment="the time spent to gather resources at a certain location (gases only)"/>
+      <set_value name="$traveltime" min="176s" max="184s" comment="the time between gathering at two different locations (gases only)"/>
+
+      <set_value name="$zone" exact="this.station.zone"/>
+      <set_value name="$ware" exact="null"/>
+
+      <find_buy_offer buyer="this.station" multiple="true" result="$wareOffers" wares="warebasket.gases.list"/>
+
+      <create_list name="$secwares" />
+      <do_all exact="$wareOffers.count" counter="$x">
+        <do_if value="$zone.yield.indexof.{$wareOffers.{$x}.ware} and this.station.cargo.{$wareOffers.{$x}.ware}.count lt ( 0.8f * this.station.cargo.{$wareOffers.{$x}.ware}.target)">
+          <append_to_list name="$secwares" exact="$wareOffers.{$x}.ware"/>
+          <do_if value="$ware" negate="true">
+            <set_value name="$ware" exact="$wareOffers.{$x}.ware"/>
+          </do_if>
+          <do_elseif value="((this.station.cargo.{$wareOffers.{$x}.ware}.count)f/(this.station.cargo.{$wareOffers.{$x}.ware}.target)f)f lt ((this.station.cargo.{$ware}.count)f/(this.station.cargo.{$ware}.target)f)f">
+            <set_value name="$ware" exact="$wareOffers.{$x}.ware"/>
+          </do_elseif>
+        </do_if>
+      </do_all>
+
+      <do_if value="$ware" negate="true">
+        <return />
+      </do_if>
+      <remove_value name="$secwares.{$secwares.indexof.{$ware}}"/>
+
+
+      <label name="start" />
+
+      <wait min="8s" max="12s" />
+	  <!-- gas mining -->
+      <do_if value="$ware.tags.indexof.{tag.liquid}">
+        <!-- chance to skip initial movement -->
+        <set_value name="$skipmovement" exact="true"/>
+        <set_value name="$gathercounter" exact="0s"/>
+
+        <!-- loop as long as there is at least 20% free cargo target -->
+        <do_while value="this.station.cargo.{$ware}.count le (0.8 * this.station.cargo.{$ware}.target)">
+
+          <!-- Command action -->
+          <set_command_action commandaction="commandaction.searchingresources" />
+          <!-- Zone no longer exists -->
+          <do_if value="not $zone.exists">
+            <return value="'aborted'" />
+          </do_if>
+          <!-- Drone launchpad/drones destroyed -->
+          <do_if value="not this.station.units.collect.{$ware}.count">
+            <return value="'nodrones'" />
+          </do_if>
+
+          <!-- launch drones to collect gas -->
+          <debug_text text="player.age+' starting to launch drones'" chance="$debugchance"/>
+          <set_value name="$gatherstart" exact="player.age"/>
+          <do_while value="player.age lt ($gatherstart + $gathertime)">
+            <do_if value="this.station.cargo.{$ware}.count ge (0.8 * this.station.cargo.{$ware}.target)">
+              <break/>
+            </do_if>
+            <launch_drone name="$drone" object="this.station" group="unitcategory.gascollector" exact="1"/>
+            <do_if value="$drone.isoperational">
+              <start_script name="'mining.ship.drone'" object="$drone.pilot">
+                <param name="homebase" value="this.station"/>
+                <param name="ware" value="$ware"/>
+              </start_script>
+            </do_if>
+            <wait exact="$dronelaunchdelay"/>
+            <set_value name="$gathercounter" exact="$gathercounter + $dronelaunchdelay" />
+            <!-- gas gathering uses low attention mechanic -->
+            <do_if value="$gathercounter ge 150s">
+              <set_value name="$gathercounter" exact="150s" />
+              <do_if value="($gatherstart + $traveltime) lt player.age">
+                <get_resource_gatherrate name="$gatherrate" refobject="this.station" zone="$zone" ware="$ware"/>
+                <set_value name="$gathered" min="$gatherrate * $gathercounter * 0.75" max="$gatherrate * $gathercounter * 1.25"/>
+                <deplete_yield  zone="$zone" container="this.station" ware="$ware" amount="$gathered"/>
+                <debug_text text="player.age + ' collected %1 units of %2 (%3 units/s on average)'.[$gathered, $ware, $gatherrate]" chance="$debugchance"/>
+                <set_value name="$gathercounter" exact="0"/>
+              </do_if>
+            </do_if>
+          </do_while>
+          <debug_text text="player.age+' stop launching drones'" chance="$debugchance"/>
+        </do_while>
+        <debug_text text="player.age+' less than 5% free cargo space'" chance="$debugchance"/>
+      </do_if>
+      <do_else>
+        <!-- mineral mining -->
+      </do_else>
+
+
+      <return value="'cargofull'" />
+
+    </actions>
+  </attention>
+  <attention min="unknown">
+    <actions>
+
+      <set_value name="$dronelaunchdelay" exact="3s" comment="the minimum delay between two drone launches"/>
+      <set_value name="$gathertime" min="172s" max="188s" comment="the time spent to gather resources at a certain location (gases only)"/>
+      <set_value name="$traveltime" min="76s" max="84s" comment="the time between gathering at two different locations (gases only)"/>
+
+      <set_value name="$zone" exact="this.station.zone"/>
+      <set_value name="$ware" exact="null"/>
+
+      <find_buy_offer buyer="this.station" multiple="true" result="$wareOffers" wares="warebasket.gases.list"/>
+
+      <create_list name="$secwares" />
+      <do_all exact="$wareOffers.count" counter="$x">
+        <do_if value="$zone.yield.indexof.{$wareOffers.{$x}.ware} and this.station.cargo.{$wareOffers.{$x}.ware}.count lt ( 0.8f * this.station.cargo.{$wareOffers.{$x}.ware}.target)">
+          <append_to_list name="$secwares" exact="$wareOffers.{$x}.ware"/>
+          <do_if value="$ware" negate="true">
+            <set_value name="$ware" exact="$wareOffers.{$x}.ware"/>
+          </do_if>
+          <do_elseif value="((this.station.cargo.{$wareOffers.{$x}.ware}.count)f / (this.station.cargo.{$wareOffers.{$x}.ware}.target)f)f lt ((this.station.cargo.{$ware}.count)f / (this.station.cargo.{$ware}.target)f)f">
+            <set_value name="$ware" exact="$wareOffers.{$x}.ware"/>
+          </do_elseif>
+        </do_if>
+      </do_all>
+
+      <do_if value="$ware" negate="true">
+        <return />
+      </do_if>
+      <remove_value name="$secwares.{$secwares.indexof.{$ware}}"/>
+
+      <label name="start" />
+
+      <wait min="8s" max="12s" />
+      <do_while value="this.station.cargo.{$ware}.count ge (0.8 * this.station.cargo.{$ware}.target)">
+
+        <!-- command action simulation -->
+        <set_command_action commandaction="commandaction.searchingresources" />
+
+        <!-- Zone no longer exists -->
+        <do_if value="not $zone.exists">
+          <return value="'aborted'" />
+        </do_if>
+        <!-- Drone launchpad/drones destroyed -->
+        <do_if value="not this.station.units.collect.{$ware}.count">
+          <return value="'nodrones'" />
+        </do_if>
+
+        <set_value name="$currentware" exact="$ware" />
+        <!-- 20% chance that we try to collect one of the other resources that can be gathered in this zone if they are useful to our homebase, $tryware can be the same as $ware -->
+        <do_if value="@$secwares.count" chance="10">
+          <set_value name="$tryware" exact="$secwares.random"/>
+          <!-- evaluate if should use a secondary ware -->
+          <do_if value="(this.station.units.collect.{$tryware}.count and this.station.cargo.{$tryware}.free)">
+            <debug_text text="'OOZ mining: try other ware (%1)'.[$tryware]" chance="$debugchance" />
+            <set_value name="$currentware" exact="$tryware"/>
+          </do_if>
+          <remove_value name="$tryware" />
+        </do_if>
+        <get_resource_gatherrate name="$gatherrate" refobject="this.station" zone="$zone" ware="$currentware" />
+        <do_if value="$gatherrate" max="0">
+          <debug_text text="player.age + ' WARNING: gatherrate for %1 in zone %2 is %4'.[$currentware, $zone.knownname, $gatherrate]" chance="$debugchance" />
+        </do_if>
+        <set_value name="$gatherstart" exact="player.age" />
+        <!-- smaller mining ships need some time to gather more than zero resources -->
+        <wait min="112s" max="128s"/>
+
+        <set_value name="$currentgathertime" exact="player.age - $gatherstart" />
+        <set_value name="$gathered" exact="$currentgathertime * $gatherrate" />
+        <do_if value="this.station.cargo.{$currentware}.free lt $gathered">
+          <set_value name="$gathered" exact="this.station.cargo.{$currentware}.free" />
+        </do_if>
+        <deplete_yield zone="$zone" container="this.station" ware="$currentware" amount="$gathered" />
+        <debug_text text="player.age + ' collected %1 units of %2 in zone %3 in %4 seconds (%5 units/s)'.[$gathered, $currentware, $zone.knownname, $currentgathertime, $gatherrate]" chance="$debugchance" />
+
+      </do_while>
+
+      <debug_text text="player.age + ' %1(job: \'%2\') completed gather-run of %3 in %4. Cargo: %5'.[this.station.knownname, 'none', $ware, $zone.knownname, this.station.cargo.list]" chance="$debugchance" />
+
+      <return value="'cargofull'" />
+
+    </actions>
+  </attention>
+</aiscript>

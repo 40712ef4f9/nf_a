@@ -15,7 +15,7 @@
 						<check_value value="$watchedObjects_helper.indexof.{event.param2} == 0" />
 					</conditions>
 					<actions>
-						<debug_text text="event.param2.knownname + ' ' + event.param2.zone.knownname + ' -- ' + event.param2.hullpercentage" />
+						<debug_text chance="0" text="event.param2.knownname + ' ' + event.param2.zone.knownname + ' -- ' + event.param2.hullpercentage" />
 						<do_if value="event.param2? and event.param2.exists and $watchedObjects_helper.indexof.{event.param2} == 0">
 							<set_value name="$target" exact="event.param2" />
 
@@ -181,7 +181,7 @@
 
 							<remove_value name="$target" />
 						</do_if>
-						<debug_text text="'end'" />
+						<debug_text chance="0" text="'end'" />
 					</actions>
 				</cue>
 
@@ -318,7 +318,7 @@
 							<include_actions ref="md.NF_StationDestruct.SD_owner_check_sector" />
 							<set_value name="$SectorCheck" exact="player.age + 5h" />
 						</do_if>
-						<debug_text text="'end'" />
+						<debug_text chance="0" text="'end'" />
 					</actions>
 				</cue>
 			</cues>
@@ -330,7 +330,7 @@
 			</conditions>
 			<delay min="10s" max="15s"/>
 			<actions>
-				<debug_text text="'Start'" />
+				<debug_text chance="0" text="'Start'" />
 				<set_value name="$pre_reinit" exact="'reinit station'"/>
 				<do_if value="event.param2? and event.param2.isclass.zone and event.param2.ismapzone and not event.param2.isclass.highway" negate="true"> 
 					<debug_text text="'ERROR event.param2 missing or wrong'" filter="error" chance="0" />
@@ -350,7 +350,7 @@
 					<remove_value name="$thisTargetZone"/>
 				</do_else>
 				<remove_value name="$pre_reinit"/>
-				<debug_text text="'end'" />
+				<debug_text chance="0" text="'end'" />
 			</actions>
 		</cue>
 		<!--

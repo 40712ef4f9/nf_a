@@ -25,14 +25,20 @@
       <set_value name="$currentcargo" exact="this.ship.cargo.list" />
 
       <!-- strip fuel cells for own need from the list -->
-      <do_if value="not $warelist.indexof.{ware.fuelcells}">
+      <do_if value="$warelist.indexof.{ware.fuelcells} and ((this.ship.isclass.[class.ship_l, class.ship_xl] and this.ship.cargo.{ware.fuelcells}.max gt 2500) or (this.ship.isclass.[class.ship_m, class.ship_s] and this.ship.cargo.{ware.fuelcells}.max))">
+        <!-- TODO: fuel trade ship needs to keep some for own use and the rest for trading -->
+      </do_if>
+      <do_elseif value="not $warelist.indexof.{ware.fuelcells}">
         <set_value name="$fuelindex" exact="$currentcargo.indexof.{ware.fuelcells}" />
         <do_if value="$fuelindex">
           <remove_value name="$currentcargo.{$fuelindex}" />
         </do_if>
-      </do_if>
+      </do_elseif>
       <do_else>
-        <!-- TODO: fuel trade ship needs to keep some for own use and the rest for trading -->
+        <set_value name="$fuelindex" exact="$currentcargo.indexof.{ware.fuelcells}" />
+        <do_if value="$fuelindex and this.ship.cargo.{ware.fuelcells}.count le 500">
+          <remove_value name="$currentcargo.{$fuelindex}" />
+        </do_if>
       </do_else>
 
       <debug_text text="player.age + ' finding trade offer; range: ' + $range.knownname" chance="$debugchance" />
@@ -45,18 +51,20 @@
         <!-- own CV -->
 		<find_buy_offer tradepartner="this.ship" wares="$currentcargo" space="$range" result="$buyoffers">
 		  <match_buyer owner="this.ship.trueowner">
-			<match negate="true" class="class.ship_xl" />
+			<match class="class.ship_xl" />
 		  </match_buyer>
 		</find_buy_offer>
         <!-- any CV -->
 		<find_buy_offer tradepartner="this.ship" wares="$currentcargo" space="$range" result="$buyoffers" chance="100 - $buyoffer.available*100">
 		  <match_buyer>
-			<match negate="true" class="class.ship_xl" />
+			<match class="class.ship_xl" />
 		  </match_buyer>
 		</find_buy_offer>
         <!-- own trades any -->
         <find_buy_offer tradepartner="this.ship" wares="$currentcargo" result="$buyoffer" space="$range" chance="100 - $buyoffer.available*100">
-		  <match_buyer owner="this.ship.trueowner" />
+		  <match_buyer owner="this.ship.trueowner">
+			<match negate="true" class="class.ship_xl" />
+		  </match_buyer>
           <stocklevel max="0.5f" />
         </find_buy_offer>
         <!-- default -->
