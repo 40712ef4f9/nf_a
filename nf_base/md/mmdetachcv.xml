@@ -35,7 +35,7 @@
 						<remove_value name="$Skill"/>
 						<destroy_object object="event.object.container.architect"/>
 
-						<set_value name="$temp_select" exact="[argon.architect, null, null, null, null]" />
+						<set_value name="$temp_select" exact="[null, race.argon, tag.architect, null, null]" />
 						<set_value name="$temp_object" exact="event.object.container" />
 						<set_value name="$temp_entitytype" exact="entitytype.architect" />
 						<set_value name="$temp_assign" exact="'architect'"/>
