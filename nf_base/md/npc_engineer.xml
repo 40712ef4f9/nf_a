@@ -5,5 +5,5 @@
     <signal_cue_instantly cue="md.NF_BASE.NF_kill_NPC" param="$actor" delay="20s"/>
   </add>
   <replace sel="//do_if[@value='@player.platform.container.isplayerowned and @player.platform.container.isclass.ship']/@value">@player.platform.container.isplayerowned and @player.platform.container.isclass.[class.ship, class.station]</replace>
-  <replace sel="//add_player_choice[@choiceparam=&quot;[0, 0, 'zone', player.primaryship.zone, null, null, 'selectplayerobject', ['cEngineer_worksomewhere_objectselected', null, null, true, false, true, false, true]]&quot;]/@choiceparam">[0, 0, 'zone', player.primaryship.zone, null, null, 'selectplayerobject', ['cEngineer_worksomewhere_objectselected', null, null, true, false, true, true, true]]</replace>
+  <replace sel="//add_player_choice[@choiceparam=&quot;[0, 0, 'zone', player.primaryship.zone, null, null, 'selectplayerobject', ['cEngineer_worksomewhere_objectselected', null, null, true, false, true, false, true]]&quot;]/@choiceparam">[0, 0, 'zone', player.primaryship.zone, null, null, 'selectplayerobject', ['cEngineer_worksomewhere_objectselected', null, null, true, false, false, false, true]]</replace>
 </diff>

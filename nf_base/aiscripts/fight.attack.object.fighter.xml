@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<remove sel="//set_turret_targets" silent="1"/>
+	<add sel="//attention[@min='visible']/actions/do_while/move_to[@flightbehaviour='$Behaviour']" pos="before">
+	  <do_if value="this.ship.dps.turrets.all">
+		<set_turret_targets object="this.ship" preferredtarget="$target" target="if $additionaltargets and $additionaltargets.count then $additionaltargets else [$target]" />
+	  </do_if>
+	</add>
+</diff>

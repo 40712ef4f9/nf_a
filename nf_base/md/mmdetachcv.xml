@@ -48,6 +48,7 @@
 						<remove_value name="$shiparch"/>
 					</do_if>
 					<remove_object_commander object="event.object.container" />
+					<start_script object="event.object" name="'player.default'"/>
 
 				</do_if>
 				<do_else>

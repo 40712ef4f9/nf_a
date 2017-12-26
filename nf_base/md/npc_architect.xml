@@ -20,15 +20,26 @@
     <do_elseif value="event.param == 'cArch_deployatstation'">
       <debug_text text="event.param2"/>
       <do_if value="event.param2.{3}.zone.npcbuildlocations.indexof.{event.param2.{3}.buildlocation} or event.param2.{3}.zone.buildlocations.indexof.{event.param2.{3}.buildlocation}">
-        <set_value name="$DeployedStation" exact="event.param2.{3}"/>
-        <add_npc_line line="1112" comment="Moving into position" />
-        <signal_cue cue="DeployToStation"/>
+        <do_if value="event.param2.{3}.buildingmodule">
+          <show_help position="8" log="false" force="true" duration="2s" custom="'INFO: CV already exists'" />
+        </do_if>
+        <do_elseif value="event.param2.{3}.owner.relationto.{$actor.owner} lt $actor.owner.relation.friend.min">
+          <show_help position="8" log="false" force="true" duration="2s" custom="'INFO: Reputation to low'" />
+        </do_elseif>
+        <do_else>
+          <set_value name="$DeployedStation" exact="event.param2.{3}"/>
+          <add_npc_line line="1112" comment="Moving into position" />
+          <signal_cue cue="DeployToStation"/>
+        </do_else>
       </do_if>
       <do_else>
         <show_help position="8" log="false" force="true" duration="2s" custom="'ERROR: station incompatible [missing buildspot]'" />
       </do_else>
     </do_elseif>
   </replace>
+  <add sel="/mdscript[@name='NPC_Architect']/cues/cue/cues/cue/actions/do_else/do_if/do_if/do_else/do_else/add_player_choice_sub[@section='gAssign_selectmap']" pos="after">
+    <add_player_choice_sub text="{1002,4009} + ' NPC'" tooltip="'Connect to another faction with min. friend -relation'" position="bottom_left" section="gAssign_selectmap" choiceparam="[0, 0, 'zone', $actor.zone, null, null, 'selectobject', ['cArch_deployatstation', null, true, false, false, false, true, true, null, null, null, null, null, false, false]]" comment="Deploy to station" selectable="$shoppinglistentry == null" chance="100"/>
+  </add>
   <!-- automatic building -->
   <add sel="//cue[@name='DefaultComm']/actions/do_else/add_player_choice_return" type="@chance" >if $actor.isplayerowned and $actor.container.buildmodule? and not @$station and player.primaryship.subordinates.indexof.{$actor.container} then 0 else 100</add>
   <add sel="//cue[@name='DefaultComm']/actions/do_else/add_player_choice_return" pos="after">  

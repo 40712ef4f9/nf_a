@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-<aiscript name="fight.attack.object.plus" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+<aiscript name="fight.attack.object.plus" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
   <!--
 
   Script to decide which fight.attack.object.foo script is suitable to be called
@@ -28,6 +28,7 @@
     <param name="end" default="false" comment="Ending script. Default: false" />
     <param name="idle" default="false" comment="Not to be used if rejoinformation is true. Default: false
            When finished attacking enemy - Ships: Idle around looking for enemies. Stations: Start fight.attack.object.station"/>
+    <param name="squad_attack" default="false" comment="Command the whole squadron to attack, Default: false"/>
     <param name="debugoutputchance" default="0"/>
   </params>
 
@@ -51,6 +52,9 @@
   </init>
   <patch sinceversion="1">
     <set_value name="$checkrelation" exact="true" />
+  </patch>
+  <patch sinceversion="2">
+    <set_value name="$squad_attack" exact="false"/>
   </patch>
   <attention min="unknown">
     <actions>
@@ -76,12 +80,59 @@
         <set_value name="$Defensible" exact="this.defensible"/>
 
         <do_if value="$Defensible.isclass.ship">
+          <do_if value="$squad_attack">
+            <do_if value="this.ship.subordinates.count and this.$escortgroup?">
+              <set_value name="$subordinates" exact="this.ship.subordinates"/>
+              <!-- NB: if this.ship is a small ship, escorts are going to move.escort where the wing should stay together and attack as a group, so do not disperse the group. -->
+              <do_if value="$allowothertargets and this.ship.isclass.[class.ship_xl, class.ship_l] and $target.sector">
+                <find_ship name="$bigtargets" space="$target.sector" class="[class.ship_xl, class.ship_l]" owner="$target.owner" multiple="true">
+                  <match_distance object="this.ship" max="this.ship.maxradarrange"/>
+                </find_ship>
+                <find_ship name="$smalltargets" space="$target.sector" class="[class.ship_m, class.ship_s]" owner="$target.owner" multiple="true">
+                  <match_distance object="this.ship" max="this.ship.maxradarrange"/>
+                </find_ship>
+                <do_all exact="$subordinates.count" counter="$i">
+                  <do_if value="this.$escortgroup.indexof.{$subordinates.{$i}}">
+                    <do_if value="$subordinates.{$i}.isclass.[class.ship_xl, class.ship_l, class.ship_m, class.ship_s]">
+                      <do_if value="$subordinates.{$i}.isclass.[class.ship_xl, class.ship_l] and $bigtargets.count gt 0">
+                        <set_value name="$subtarget" exact="$bigtargets.random"/>
+                      </do_if>
+                      <do_elseif value="$subordinates.{$i}.isclass.[class.ship_m, class.ship_s] and $smalltargets.count gt 0">
+                        <set_value name="$subtarget" exact="$smalltargets.random"/>
+                      </do_elseif>
+
+                      <do_if value="not $subtarget?">
+                        <set_value name="$subtarget" exact="$target"/>
+                      </do_if>
+
+                      <debug_text text="'%1 (%2) sending %3 (%4) to attack %5 (%6). Multiple targets.'.[this.ship.knownname, this.ship, $subordinates.{$i}.knownname, $subordinates.{$i}, $subtarget.knownname, $subtarget]" chance="$debugoutputchance"/>
+                      <signal_objects object="$subordinates.{$i}" param="'attack'" param2="$subtarget" param3="[true, $checkrelation]" delay="1ms"/>
+                    </do_if>
+                    <remove_value name="$subtarget"/>
+                  </do_if>
+                </do_all>
+                <remove_value name="$bigtargets"/>
+                <remove_value name="$smalltargets"/>
+              </do_if>
+              <do_else>
+                <do_all exact="$subordinates.count" counter="$i">
+                  <do_if value="this.$escortgroup.indexof.{$subordinates.{$i}}">
+                    <debug_text text="'%1 (%2) ordering %3 (%4) to attack %5 (%6). Focus fire.'.[this.ship.knownname, this.ship, $subordinates.{$i}.knownname, $subordinates.{$i}, $target.knownname, $target]" chance="$debugoutputchance"/>
+                    <signal_objects object="$subordinates.{$i}" param="'attack'" param2="$target" param3="[true, $checkrelation]" delay="1ms"/>
+                  </do_if>
+                </do_all>
+              </do_else>
+            </do_if>
+          </do_if>
+
           <do_if value="this == $Defensible.pilot">
             <!--If you're in a formation, leave-->
-            <!--TODO: Alert your formation leader and commander that you're going solo-->
             <set_value name="$WasInFormation" exact="false"/>
             <do_if value="$Defensible.formationleader">
               <do_if value="$Defensible.formationleader" exact="$Defensible" negate="true">
+                <do_if value="@$Defensible.formationleader.pilot.$escortgroup and $Defensible.formationleader.pilot.$escortgroup.indexof.{this.ship}">
+                  <remove_from_group group="$Defensible.formationleader.pilot.$escortgroup" object="this.ship"/>
+                </do_if>
                 <leave_formation object="$Defensible"/>
                 <set_value name="$WasInFormation" exact="true"/>
               </do_if>
@@ -98,7 +149,7 @@
             <!-- Small ships -->
             <do_elseif value="$Defensible.isclass.ship_xs or $Defensible.isclass.ship_s or $Defensible.isclass.ship_m">
               <do_if value="not $primarytargets">
-				<add_to_group groupname="$primarytargets" object="$target" check="false" />
+                <add_to_group groupname="$primarytargets" object="$target" check="false" />
               </do_if>
               <run_script name="'fight.attack.object.fighter'">
                 <param name="primarytargets" value="$primarytargets"/>
@@ -136,6 +187,9 @@
             <do_if value="$WasInFormation">
               <do_if value="this.ship.commander.exists">
                 <do_if value="not this.ship.commander.isclass.station">
+                  <do_if value="@$Defensible.formationleader.pilot.$escortgroup">
+                    <add_to_group groupname="$Defensible.formationleader.pilot.$escortgroup" object="this.ship"/>
+                  </do_if>
                   <join_formation object="this.ship" leader="this.ship.commander"/>
                 </do_if>
               </do_if>
@@ -173,8 +227,6 @@
         <do_else>
           <debug_text text="'Error: Defensible is not of a class which has a suitable script'"/>
         </do_else>
-
-
       </do_if>
       <do_else>
         <debug_text text="'Error: fight.attack.object was called on an entity without a \'defensible\' class parent'"/>
@@ -182,12 +234,12 @@
 
       <label name="finish" />
       <do_if value="this.defensible.exists and not $end">
-            <do_if value="not $escort">
-              <set_value name="$escort" exact="this.ship.commander" />
-            </do_if>
-            <run_script name="'move.patrol'">
-              <param name="patrolobject" value="$escort" />
-            </run_script>
+        <do_if value="not $escort">
+          <set_value name="$escort" exact="this.ship.commander" />
+        </do_if>
+        <run_script name="'move.patrol'">
+          <param name="patrolobject" value="$escort" />
+        </run_script>
       </do_if>
     </actions>
   </attention>
