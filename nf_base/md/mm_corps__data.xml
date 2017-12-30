@@ -4633,13 +4633,13 @@
 			<actions>
 				<set_value name="$doStatusChance" exact="0"/>
 
-				<do_if value="[level.veryhard, level.impossible].indexof.{player.difficulty} or $_CEO.owner.hasrelation.enemy.{player.faction}" chance="0">
+				<do_if value="[level.veryhard, level.impossible].indexof.{player.difficulty} or $_CEO.owner.hasrelation.enemy.{faction.player}" chance="0">
 					<set_value name="$doStatusChance" exact="0"/>
 				</do_if>
-				<do_elseif value="[level.hard].indexof.{player.difficulty} and $_CEO.owner.relationto.{player.faction} ge player.faction.relation.member.min">
+				<do_elseif value="[level.hard].indexof.{player.difficulty} and $_CEO.owner.relationto.{faction.player} ge faction.player.relation.member.min">
 					<set_value name="$doStatusChance" exact="90"/>
 				</do_elseif>
-				<do_elseif value="[level.hard].indexof.{player.difficulty} and $_CEO.owner.relationto.{player.faction} gt player.faction.relation.friend.min">
+				<do_elseif value="[level.hard].indexof.{player.difficulty} and $_CEO.owner.relationto.{faction.player} gt faction.player.relation.friend.min">
 					<set_value name="$doStatusChance" exact="30"/>
 				</do_elseif>
 				<do_else>
