@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone53_macro']/connections/connection[@name='landmarks_canteran_refugee_camp_macro1']" />
+
+	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone50_macro']/connections/connection[@name='struct_bt_alb_cell_refinery_macro7']" />
+
+	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone45_macro']/connections/connection[@name='struct_bt_alb_weaponry_complex_macro7']" />
+
+	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone46_macro']/connections/connection[@name='struct_bt_alb_medical_supplies_macro7']" />
+
+	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone49_macro']/connections/connection[@name='struct_bt_alb_high_energy_construction_macro7']" />
+
+	<remove sel="//macro[@name='tzoneCluster_D_Sector20_Zone56_macro']/connections/connection[@name='struct_bt_alb_laboratory_macro']" />
+
+	<remove sel="//macro[@name='tzoneCluster_D_Sector20_Zone57_macro']/connections/connection[@name='struct_bt_alb_crystal_refinement_macro']" />
+
+	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone80_macro']/connections/connection[@ref='buildcon1']" />
+	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone80_macro']/connections/connection[@ref='buildcon2']" />
+	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone80_macro']/connections/connection[@ref='buildconnpc1']" />
+	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone80_macro']/connections/connection[@name='struct_econ_agri_ar_unique_megafarmlands_macro']" />
+	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone80_macro']/connections/connection[@name='struct_bt_alb_solar_power_plant_macro']" />
+	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone80_macro']/connections/connection[@name='struct_bt_alb_water_destillery_macro']" />
+
+	<add sel="//macro[@name='tzoneCluster_D_Sector18_Zone80_macro']/connections">
+		<connection ref="buildcon1">
+			<offset>
+				<position x="30207.03125" y="-14000" z="9023.4375" />
+			</offset>
+		</connection>
+		<connection ref="buildcon2">
+			<offset>
+				<position x="24113.28125" y="17000" z="-31414.0625" />
+			</offset>
+		</connection>
+		<connection ref="buildcon3">
+			<offset>
+				<position x="-8265.625" y="27000" z="-13601.5625" />
+			</offset>
+		</connection>
+		<connection ref="buildcon4">
+			<offset>
+				<position x="-10730.46875" y="-7000" z="-15000" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc1">
+			<offset>
+				<position x="15000" y="7000" z="9023.4375" />
+			</offset>
+		</connection>
+		<connection ref="buildconnpc2">
+			<offset>
+				<position x="11000" y="-27000" z="-31414.0625" />
+			</offset>
+		</connection>		
+		<connection ref="buildconnpc3">
+			<offset>
+				<position x="-8265.625" y="-17000" z="-23601.5625" />
+			</offset>
+		</connection>		
+		<connection ref="buildconnpc4">
+			<offset>
+				<position x="-10730.46875" y="17000" z="11468.75" />
+			</offset>
+		</connection>		
+	</add>
+
+</diff>

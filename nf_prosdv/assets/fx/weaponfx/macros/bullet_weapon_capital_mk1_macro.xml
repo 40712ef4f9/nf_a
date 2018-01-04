@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Enhance Suceller Primary Weapon-->
+<diff>
+	<remove sel="//bullet[2]" />
+	<remove sel="//reload[2]" />
+	<remove sel="//areadamage[2]" />
+	<remove sel="//damage[2]" />
+	<remove sel="//explosiondamage" />
+	<replace sel="//ammunition">
+		<ammunition value="1" reload="7" />
+	</replace>
+</diff>

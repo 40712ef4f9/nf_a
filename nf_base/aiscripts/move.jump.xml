@@ -1,133 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <diff>
-    <add sel="/aiscript[@name='move.jump']/attention[1]/actions[1]/label[@name='fuelcheck']" pos="after">
-	  <do_if value="this.ship.trueowner" exact="faction.player">
-		<set_value name="$ignorefuel" exact="true" chance="global.$nfconfig.$ignoreFuel*100" /> <!-- remove fuel use -->
-		<do_if value="this.$config_autorefuel?" negate="true">
-		  <set_value name="this.$config_autorefuel" exact="1"/>
-		  <debug_text text="'Set Autorefuel On at ' + this.ship.knownname"/>
-		</do_if>
-	  </do_if>
-	  <set_value name="$nonstop" exact="if $nonstop then $nonstop else ($autorefuel and global.$nfconfig.$AdvJump == 2 and this.combinedskill gt 70)"/>
-	  <set_value name="$forcejump" exact="if $forcejump then $forcejump else ($autorefuel and global.$nfconfig.$AdvJump == 2 and this.combinedskill ge 100)" chance="0"/>
+  <add sel="/aiscript[@name='move.jump']/attention[1]/actions[1]/label[@name='fuelcheck']" pos="after">
+    <do_if value="this.ship.trueowner" exact="faction.player">
+      <set_value name="$ignorefuel" exact="true" chance="global.$nfconfig.$ignoreFuel*100" /> <!-- remove fuel use -->
+      <do_if value="this.$config_autorefuel?" negate="true">
+        <set_value name="this.$config_autorefuel" exact="1"/>
+        <debug_text text="'Set Autorefuel On at ' + this.ship.knownname"/>
+      </do_if>
+    </do_if>
+    <set_value name="$nonstop" exact="if $nonstop then $nonstop else ($autorefuel and global.$nfconfig.$AdvJump == 2 and this.combinedskill ge 75 and this.skill.{skilltype.navigation} ge 5)"/>
+    <set_value name="$forcejump" exact="if $forcejump then $forcejump else ($autorefuel and global.$nfconfig.$AdvJump == 2 and this.combinedskill ge 100)" chance="0"/>
 
-	  <do_if value="this.$skipRefuel?">
-	    <do_if value="player.difficulty" list="[level.veryeasy, level.easy, level.medium]">
-	      <set_value name="$ignorefuel" exact="true" />
-	    </do_if>
-	    <do_elseif value="this.ship.trueowner" exact="faction.player" negate="true">
-	      <set_value name="$ignorefuel" exact="true" />
-	    </do_elseif>
-		<set_value name="$autorefuel" exact="false" />
-	  </do_if>
-	</add>
+    <do_if value="this.$skipRefuel?">
+      <do_if value="player.difficulty" list="[level.veryeasy, level.easy, level.medium]">
+        <set_value name="$ignorefuel" exact="true" />
+      </do_if>
+      <do_elseif value="this.ship.trueowner" exact="faction.player" negate="true">
+        <set_value name="$ignorefuel" exact="true" />
+      </do_elseif>
+      <set_value name="$autorefuel" exact="false" />
+    </do_if>
+  </add>
 
-    <replace sel="//do_if[@value='this.ship.cargo.{ware.fuelcells}.count lt this.ship.cargo.{ware.fuelcells}.max * 0.2f']/@value">this.ship.cargo.{ware.fuelcells}.count lt [this.ship.cargo.{ware.fuelcells}.max, 2500].min * 0.2f</replace>
+  <replace sel="//do_if[@value='this.ship.cargo.{ware.fuelcells}.count lt this.ship.cargo.{ware.fuelcells}.max * 0.2f']/@value">this.ship.cargo.{ware.fuelcells}.count lt [this.ship.cargo.{ware.fuelcells}.max, 2500].min * 0.2f</replace>
 
-    <add sel="//label[@name='checkpath']" pos="after">
-	  <set_value name="$startsector" exact="this.ship.sector"/>
-	  <do_if value="not $runOne? and this.ship.zone == $targetzone and $position == position.[0,0,0]">
-		<set_value name="$runOne" />
-	  </do_if>
-	  <do_elseif value="$runOne? and this.ship.zone == $targetzone and $position == position.[0,0,0]">
-		<debug_text text="'ERROR 1' + this.ship.knownname"/>
-		<resume label="finish"/>
-	  </do_elseif>
+  <add sel="//label[@name='checkpath']" pos="after">
+    <do_if value="not $ignorefuel and $startsector? and global.$nfconfig.$AdvJump and this.ship.gatedistance.{$startsector}">
+      <remove_cargo ware="ware.fuelcells" object="this.ship" exact="this.ship.gatedistance.{$startsector} * 100" />
+    </do_if>
+    <set_value name="$startsector" exact="this.ship.sector"/>
+    <set_value name="$canJumpGate" exact="global.$nfconfig.$AdvJump and this.combinedskill ge 50"/>
+    <do_if value="not $runOne? and this.ship.zone == $targetzone and $position == position.[0,0,0]">
+      <set_value name="$runOne" />
+    </do_if>
+    <do_elseif value="$runOne? and this.ship.zone == $targetzone and $position == position.[0,0,0]">
+      <debug_text text="'ERROR 1' + this.ship.knownname"/>
+      <resume label="finish"/>
+    </do_elseif>
 
-	  <signal_objects object="player.galaxy" param="'learned.something'" param2="[this, ware.inv_virtualseminarnavigation, 'jump']" />
-	</add>
+    <signal_objects object="player.galaxy" param="'learned.something'" param2="[this, ware.inv_virtualseminarnavigation, 'jump']" />
+  </add>
 
-    <add sel="//do_elseif[@value='$nextstep.isclass.gate']" pos="before">
-        <do_elseif value="$nextstep.isclass.gate and global.$nfconfig.$AdvJump and this.combinedskill ge 50">
-          <resume label="jump" />
-        </do_elseif>
-	</add>
-    <add sel="//do_if[@value='$nextstep == $targetsector']" pos="after">
-        <do_elseif value="$nextstep.isclass.gate">
-            <set_value name="$forcesafepos" exact="true" />
-            <set_value name="$beacon" exact="null" />
-        </do_elseif>
-	</add>
-    <add sel="//do_if[@value='$beacon.exists']" pos="after">
-        <do_elseif value="$nextstep.isclass.gate">
-            <set_value name="$forcesafepos" exact="true" />
-            <set_value name="$beaconpos" exact="position.[0,0,0]" />
-            <set_value name="$beaconzone" exact="$nextstep.destination" />
-        </do_elseif>
-	</add>
+  <add sel="//do_elseif[@value='$nextstep.isclass.gate']" pos="before">
+    <do_elseif value="$nextstep.isclass.gate and $canJumpGate">
+      <resume label="jump" />
+    </do_elseif>
+  </add>
+  <add sel="//do_if[@value='$nextstep == $targetsector']" pos="after">
+    <do_elseif value="$nextstep.isclass.gate">
+      <set_value name="$forcesafepos" exact="true" />
+      <set_value name="$beacon" exact="null" />
+    </do_elseif>
+  </add>
+  <add sel="//do_if[@value='$beacon.exists']" pos="after">
+    <do_elseif value="$nextstep.isclass.gate">
+      <set_value name="$forcesafepos" exact="true" />
+      <set_value name="$beaconpos" exact="position.[0,0,0]" />
+      <set_value name="$beaconzone" exact="$nextstep.destination" />
+    </do_elseif>
+  </add>
 
-    <add sel="//do_if[@value='$forcejump and @$jumppath.count == 0']" pos="after">
-        <do_elseif value="@$jumppath.count lt 1">
-            <resume label="finish"/>
-        </do_elseif>
-	</add>
+  <add sel="//do_if[@value='$forcejump and @$jumppath.count == 0']" pos="after">
+    <do_elseif value="@$jumppath.count lt 1">
+      <resume label="finish"/>
+    </do_elseif>
+  </add>
 
-    <add sel="//do_if[@value='this.ship.cargo.{ware.fuelcells}.count lt this.ship.jumpcostto.[$targetsector, $jumpposition]']" pos="before">
-        <set_value name="$additionalFuel" exact="0" />
-		<do_if value="not $ignorefuel and global.$nfconfig.$AdvJump and this.ship.gatedistance.{$targetsector}">
-            <set_value name="$additionalFuel" exact="this.ship.gatedistance.{$targetsector} * 100"/>
-        </do_if>
-	</add>
+  <add sel="//do_if[@value='this.ship.cargo.{ware.fuelcells}.count lt this.ship.jumpcostto.[$targetsector, $jumpposition]']" pos="before">
+    <set_value name="$baseFuel" exact="this.ship.jumpcostto.[$targetsector, $jumpposition]" />
+    <set_value name="$requiredFuel" exact="$baseFuel" />
+    <set_value name="$additionalFuel" exact="0" />
+    <do_if value="not $ignorefuel and global.$nfconfig.$AdvJump and this.ship.gatedistance.{$targetsector}">
+      <set_value name="$additionalFuel" exact="this.ship.gatedistance.{$targetsector} * 100"/>
+    </do_if>
 
-    <replace sel="//do_if[@value='this.ship.cargo.{ware.fuelcells}.count lt this.ship.jumpcostto.[$targetsector, $jumpposition]']/@value">this.ship.cargo.{ware.fuelcells}.count lt (this.ship.jumpcostto.[$targetsector, $jumpposition] + $additionalFuel)</replace>
+    <do_if value="$additionalFuel and this.ship.cargo.{ware.fuelcells}.count lt ($baseFuel + $additionalFuel)">
+      <set_value name="$requiredFuel" exact="$baseFuel + $additionalFuel" />
+    </do_if>
+    <do_elseif value="$additionalFuel and this.ship.cargo.{ware.fuelcells}.count lt ($baseFuel + $additionalFuel) and this.ship.cargo.{ware.fuelcells}.count lt $baseFuel">
+      <set_value name="$requiredFuel" exact="$baseFuel" />
+      <set_value name="$canJumpGate" exact="false"/>
+    </do_elseif>
+    <remove_value name="$baseFuel"/>
+    <remove_value name="$additionalFuel"/>
+  </add>
 
-    <add sel="//run_script[@name=&quot;'move.jumpgate'&quot;]" pos="after">
-	  <set_value name="$startsector" exact="this.ship.sector"/>
-	</add>
-    <add sel="//label[@name='finish']" pos="after">
-		<do_if value="not $ignorefuel and $startsector? and global.$nfconfig.$AdvJump and $startsector.gatedistance.{$targetsector}">
-			<remove_cargo ware="ware.fuelcells" object="this.ship" exact="$startsector.gatedistance.{$targetsector} * 100" />
-        </do_if>
-	</add>
+  <replace sel="//do_if[@value='this.ship.cargo.{ware.fuelcells}.count lt this.ship.jumpcostto.[$targetsector, $jumpposition]']/@value">this.ship.cargo.{ware.fuelcells}.count lt $requiredFuel</replace>
 
-    <add sel="//do_if[@value='$nextstep == $targetsector']/get_closest_jumpbeacon" pos="after">
-        <do_if value="this.combinedskill ge 40 and this.ship.trueowner == faction.xenon">
-			<find_object name="$Objects"  functional="true" space="$targetsector" multiple="true">
-				<match_any>
-					<match macro="macro.props_gates_jumpbeacon_macro"/>
-					<match macro="macro.props_gates_anc_gate_macro"/>
-					<match macro="macro.props_gates_anc_gate_b_macro"/>
-					<match macro="macro.props_gates_anc_gate_inactive_macro"/>
-					<match macro="macro.unit_size_xs_probe_macro"/>
-				</match_any>
-				<match_relation faction="this.ship.trueowner" relation="neutral" comparison="ge"/>
-			</find_object>
-			<do_if value="$Objects.count">
-				<set_value name="$beacon" exact="if $beacon? and $beacon.exists then $beacon else $Objects.{1}" />
-				<set_value name="$dist" exact="$beacon.distanceto.[$targetsector, $jumpposition]" />
-				<do_all exact="$Objects.count" counter="$b">
-					<do_if value="$Objects.{$b}.distanceto.[$targetsector, $jumpposition] lt $dist">
-						<set_value name="$beacon" exact="$Objects.{$b}" />
-						<set_value name="$dist" exact="$beacon.distanceto.[$targetsector, $jumpposition]" />
-					</do_if>
-				</do_all>
-			</do_if>
-			<remove_value name="$Objects"/>
-			<remove_value name="$dist"/>
-        </do_if>
-        <do_elseif value="this.combinedskill ge 40 and global.$nfconfig.$HyperDrive" chance="(not global.$nfconfig.$plotSafe?) *100">
-			<find_object name="$Objects"  functional="true" space="$targetsector" multiple="true">
-				<match_any>
-					<match macro="macro.props_gates_jumpbeacon_macro"/>
-					<match macro="macro.props_gates_anc_gate_macro"/>
-					<match macro="macro.props_gates_anc_gate_b_macro"/>
-					<match macro="macro.props_gates_anc_gate_inactive_macro"/>
-					<match macro="macro.unit_size_xs_probe_macro"/>
-				</match_any>
-				<match_relation faction="this.ship.owner" relation="neutral" comparison="ge"/>
-			</find_object>
-			<do_if value="$Objects.count">
-				<set_value name="$beacon" exact="if $beacon? and $beacon.exists then $beacon else $Objects.{1}" />
-				<set_value name="$dist" exact="$beacon.distanceto.[$targetsector, $jumpposition]" />
-				<do_all exact="$Objects.count" counter="$b">
-					<do_if value="$Objects.{$b}.distanceto.[$targetsector, $jumpposition] lt $dist">
-						<set_value name="$beacon" exact="$Objects.{$b}" />
-						<set_value name="$dist" exact="$beacon.distanceto.[$targetsector, $jumpposition]" />
-					</do_if>
-				</do_all>
-			</do_if>
-			<remove_value name="$Objects"/>
-			<remove_value name="$dist"/>
-        </do_elseif>
-	</add>
+  <add sel="//run_script[@name=&quot;'move.jumpgate'&quot;]" pos="after">
+    <set_value name="$startsector" exact="this.ship.sector"/>
+  </add>
+  <add sel="//label[@name='finish']" pos="after">
+    <do_if value="not $ignorefuel and $startsector? and global.$nfconfig.$AdvJump and $startsector.gatedistance.{$targetsector}">
+      <remove_cargo ware="ware.fuelcells" object="this.ship" exact="$startsector.gatedistance.{$targetsector} * 100" />
+    </do_if>
+  </add>
+
+  <add sel="//do_if[@value='$nextstep == $targetsector']/get_closest_jumpbeacon" pos="after">
+    <do_if value="this.combinedskill ge 40 and this.ship.trueowner == faction.xenon">
+      <set_value name="$officialFaction" exact="this.ship.trueowner"/>
+    </do_if>
+    <do_elseif value="this.combinedskill ge 40 and global.$nfconfig.$HyperDrive" chance="(not global.$nfconfig.$plotSafe?) *100">
+      <set_value name="$officialFaction" exact="this.ship.owner"/>
+    </do_elseif>
+
+    <do_if value="$officialFaction? and $officialFaction">
+      <find_object name="$Objects" functional="true" space="$targetsector" multiple="true">
+        <match_any>
+          <match macro="macro.props_gates_jumpbeacon_macro"/>
+          <match macro="macro.props_gates_anc_gate_macro"/>
+          <match macro="macro.props_gates_anc_gate_b_macro"/>
+          <match macro="macro.props_gates_anc_gate_inactive_macro"/>
+          <match macro="macro.unit_size_xs_probe_macro"/>
+        </match_any>
+        <match_relation faction="$officialFaction" relation="neutral" comparison="ge"/>
+      </find_object>
+      <do_if value="$Objects.count">
+        <set_value name="$beacon" exact="if $beacon? and $beacon.exists then $beacon else $Objects.{1}" />
+        <set_value name="$dist" exact="$beacon.distanceto.[$targetsector, $jumpposition]" />
+        <do_all exact="$Objects.count" counter="$b">
+          <do_if value="$Objects.{$b}.distanceto.[$targetsector, $jumpposition] lt $dist">
+            <set_value name="$beacon" exact="$Objects.{$b}" />
+            <set_value name="$dist" exact="$beacon.distanceto.[$targetsector, $jumpposition]" />
+          </do_if>
+        </do_all>
+      </do_if>
+      <remove_value name="$Objects"/>
+      <remove_value name="$dist"/>
+      <remove_value name="$officialFaction"/>
+    </do_if>
+  </add>
 </diff>

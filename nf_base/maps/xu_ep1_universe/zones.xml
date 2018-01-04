@@ -3784,6 +3784,7 @@
 	</add>
 	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone52_macro']/connections/connection[@ref='buildcon1']" />
 	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone52_macro']/connections/connection[@ref='buildcon2']" />
+	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone52_macro']/connections/connection[@ref='buildcon3']" silent="1" /><!-- prosper devries -->
 	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone52_macro']/connections/connection[@name='struct_bt_dv_wheat_farm_macro']" />
 	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone52_macro']/connections/connection[@name='struct_bt_dv_wheat_farm_macro1']" />
 	<remove sel="//macro[@name='tzoneCluster_D_Sector18_Zone52_macro']/connections/connection[@name='struct_bt_dv_wheat_farm_macro2']" />

@@ -39,6 +39,12 @@
       <connection ref="connection_weaponprim01">
         <macro ref="missilelauncher_invisible_guided_mk1_macro" connection="connection_component01" />
       </connection>
+      <connection ref="connection_turret_small_mg01">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_turret_small_mg02">
+        <macro ref="turret_small_mg_macro" connection="connection_component01" />
+      </connection>
     </connections>
   </macro>
 </macros>

@@ -526,7 +526,7 @@
 	<add sel="//do_if[@value='$buildmodule.exists']" pos="before" >
 		<set_value name="$customer_faction" exact="this.station.owner" />
 		<set_value name="$orderID" exact="null" />
-		<do_if value="this.$orders? and this.$orders.count">
+		<do_if value="this.$orders? and this.$orders.count and $buildmodule? and $buildmodule.exists">
 			<do_all counter="$o" exact="this.$orders.count">
 				<set_value name="$orderMacro" exact="this.$orders.{$o}.{1}" />
 				<set_value name="$orderFaction" exact="this.$orders.{$o}.{2}" />
@@ -549,7 +549,7 @@
 					</do_all>
 				</do_if>
 
-				<do_if value="$buildmodule.buildmacros.indexof.{$orderMacro} or $buildmodule.buildmacros.{1}.class == $orderMacro.class" chance="($buildmodule? and $buildmodule.exists) *100">
+				<do_if value="$buildmodule.buildmacros.indexof.{$orderMacro} or $buildmodule.buildmacros.{1}.class == $orderMacro.class">
 					<set_value name="$orderID" exact="$o" />
 					<break />
 				</do_if>

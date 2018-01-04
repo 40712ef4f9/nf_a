@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <diff>
 <!-- Conquer_mod v018s -->
-	<replace sel="//bullet/@range">10000</replace>
+	<replace sel="//bullet[1]/@range">10000</replace>
 	<!--<replace sel="//bullet/@lifetime">23</replace>-->
 
-	<replace sel="//bullet/@speed">1800</replace>
-	<replace sel="//ammunition/@value">1</replace>
-	<replace sel="//areadamage/@value">93225</replace>
-	<replace sel="//damage/@value">93225</replace>
+	<replace sel="//bullet[1]/@speed">1800</replace>
+	<replace sel="//ammunition[1]/@value">1</replace>
+	<replace sel="//areadamage[1]/@value">93225</replace>
+	<replace sel="//damage[1]/@value">93225</replace>
 </diff>

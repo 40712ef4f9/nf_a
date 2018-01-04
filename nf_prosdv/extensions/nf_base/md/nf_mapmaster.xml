@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="//library[@name='NFMM_Basic']/actions/do_if[@value='$differentWorld?']">
+				<do_if value="true">
+					<!--
+					faction.canteran
+					-->
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_D_Sector18_Zone53_macro, macro.landmarks_canteran_refugee_camp_macro, faction.canteran]"/>
+					<!--
+					faction.argongovernment
+					-->
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_D_Sector18_Zone80_macro, macro.struct_bt_ol_farm_complex_macro, faction.argongovernment]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_D_Sector18_Zone80_macro, macro.struct_bt_ol_bofu_plant_macro, faction.argongovernment]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_D_Sector18_Zone80_macro, macro.struct_bt_ol_fuelstation_macro, faction.argongovernment]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_D_Sector18_Zone80_macro, macro.struct_bt_ol_water_destillery_macro, faction.argongovernment]"/>
+				</do_if>
+	</add>
+
+	<!--
+	vanilla MAP
+	-->
+	<add sel="//library[@name='NFMM_Basic']/actions/do_else">
+				<do_if value="true">
+					<!--
+					faction.canteran
+					-->
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_D_Sector18_Zone53_macro, macro.landmarks_canteran_refugee_camp_macro, faction.canteran]"/>
+					<!--
+					faction.argongovernment
+					-->
+				</do_if>
+	</add>
+</diff>

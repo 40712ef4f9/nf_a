@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <diff>
-    <add sel="//do_if[@value='this.combinedskill ge 40 and this.ship.trueowner == faction.xenon']/find_object/match_any">
+    <add sel="//do_if[@value='$officialFaction? and $officialFaction']/find_object/match_any">
 			<match macro="macro.struct_at_xen_xenon_portal_macro"/>
 	</add>
 </diff>

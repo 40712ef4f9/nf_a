@@ -174,6 +174,17 @@
 			<connection name="connection_radar01" tags="radar">
 				<offset/>
 			</connection>
+			<connection name="connection_turret_small_mg01" tags="turret_small_mg ">
+				<offset>
+					<position x="0" y="-21" z="-52.3"/>
+				</offset>
+			</connection>
+			<connection name="connection_turret_small_mg02" tags="turret_small_mg ">
+				<offset>
+					<position x="-2.425313E-02" y="15.4" z="70"/>
+					<rotation yaw="180" pitch="0" roll="180"/>
+				</offset>
+			</connection>
 		</connections>
 	</component>
 </components>
