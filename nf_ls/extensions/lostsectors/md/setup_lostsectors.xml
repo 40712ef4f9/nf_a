@@ -12,4 +12,11 @@
 	<add sel="//cue[@name='LSJobs']/actions/set_job_active[@job=&quot;'arg_fighter_patrol_maelstrom'&quot;]" type="@chance" >0</add>
 	<add sel="//cue[@name='LSJobs']/actions/set_job_active[@job=&quot;'ls_trader_guest_ryak_large'&quot;]" type="@chance" >0</add>
 -->
+	<replace sel="//cue[@name='Add_Drone']/actions">
+		<actions>
+			<do_if value="param.itemtraderlists.dronetraderlists.{1}.indexof.{[ware.spe_drone_interceptor_ls, 1, 1, 30]}" negate="true">
+				<append_to_list name="param.itemtraderlists.dronetraderlists.{1}" exact="[ware.spe_drone_interceptor_ls, 1, 1, 30]" />
+			</do_if>
+		</actions>
+	</replace>
 </diff>

@@ -131,6 +131,12 @@
             </actions>
           </interrupt>
         </wait>
+
+        <do_if value="this.defensible.units.maxcount and this.defensible.units.count == 0 and (not $nextUnitCheck? or ($nextUnitCheck? and $nextUnitCheck lt player.age))" chance="this.defensible.isclass.ship *100">
+          <signal_objects object="player.galaxy" param="'Reload.Units'" param2="this.defensible" />
+          <set_value name="$nextUnitCheck" exact="player.age + 12h"/>
+        </do_if>
+
         <do_if value="this.$Defensible == this.defensible">
           <find_gravidar_contact name="$RepairTargets" object="this.defensible" class="[class.station]" multiple="true">
             <match_distance object="this.defensible" max="this.defensible.maxradarrange*0.25f"/>
@@ -152,6 +158,7 @@
           </do_all>
           <remove_value name="$RepairTargets"/>
         </do_if>
+
       </do_if>
       <set_command command="command.support" param="this.$Defensible" chance="if this.$Defensible == this.defensible then 0 else 100"/>
       <set_command command="command.repair" chance="if this.$Defensible == this.defensible then 100 else 0"/>

@@ -428,7 +428,7 @@
 		</do_if> 
 	</add>
 
-	<add sel="//cue[@name='Success']/actions/do_else/do_if/find_dock_location" pos="after">
+	<add sel="//cue[@name='Success']/actions/do_else/do_if/find_dock_location[1]" pos="after">
 		<do_if value="$target.isclass.station">
 			<find_dock_location name="$target_dock" container="$target" freemissionactorslot="true" size="tag.dock_p"/>
 		</do_if> 

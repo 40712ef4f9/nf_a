@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<remove sel="//cue[@name='create_defenceship02']/@instantiate" />
+	<remove sel="//cue[@name='create_defenceship02']/@checkinterval" />
+	<add sel="//cue[@name='create_defenceship02']">
+		<conditions>
+			<event_cue_signalled cue="md.Setup.GameStart"/>
+			<check_value value="false"/> 
+		</conditions>
+	</add>
+
+	<remove sel="//cue[@name='create_defenceship04']/@instantiate" />
+	<remove sel="//cue[@name='create_defenceship04']/@checkinterval" />
+	<add sel="//cue[@name='create_defenceship04']">
+		<conditions>
+			<event_cue_signalled cue="md.Setup.GameStart"/>
+			<check_value value="false"/> 
+		</conditions>
+	</add>
+
+	<remove sel="//cue[@name='create_defenceship05']/@instantiate" />
+	<remove sel="//cue[@name='create_defenceship05']/@checkinterval" />
+	<add sel="//cue[@name='create_defenceship05']">
+		<conditions>
+			<event_cue_signalled cue="md.Setup.GameStart"/>
+			<check_value value="false"/> 
+		</conditions>
+	</add>
+</diff>

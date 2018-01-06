@@ -80,8 +80,14 @@
 				<do_if value="param.itemtraderlists.equipmentlists.{1}.indexof.{[ware.inv_probe, 2, 5, 85]}" negate="true">
 					<append_to_list name="param.itemtraderlists.equipmentlists.{1}" exact="[ware.inv_probe, 2, 5, 85]" />
 				</do_if>
+				<do_if value="param.itemtraderlists.equipmentlists2.{1}.indexof.{[ware.inv_probe, 2, 5, 85]}" negate="true">
+					<append_to_list name="param.itemtraderlists.equipmentlists2.{1}" exact="[ware.inv_probe, 2, 5, 85]" />
+				</do_if>
 				<do_if value="param.itemtraderlists.equipmentlists.{1}.indexof.{[ware.inv_hyperdrivecrystal, 8, 15, 85]}" negate="true">
 					<append_to_list name="param.itemtraderlists.equipmentlists.{1}" exact="[ware.inv_hyperdrivecrystal, 8, 15, 85]" />
+				</do_if>
+				<do_if value="param.itemtraderlists.equipmentlists2.{1}.indexof.{[ware.inv_hyperdrivecrystal, 8, 15, 85]}" negate="true">
+					<append_to_list name="param.itemtraderlists.equipmentlists2.{1}" exact="[ware.inv_hyperdrivecrystal, 8, 15, 85]" />
 				</do_if>
 
 				<set_value name="global.$MICT_mmcarrier_is_active" exact="true"/>
@@ -638,6 +644,7 @@
 			</conditions>
 			<delay min="10s" max="20s"/>
 			<actions>
+				<set_value name="$done" exact="0"/>
 				<do_if value="event.param2? and typeof event.param2 == datatype.list">
 					<set_value name="$todo" exact="event.param2"/>
 				</do_if>
@@ -646,10 +653,18 @@
 				</do_else>
 
 				<do_all exact="$todo.count" counter="$count"> 
-					<do_if value="$todo.{$count} and $todo.{$count}.exists">
-						<patch_macro object="$todo.{$count}"/>
+					<do_if value="$todo.{$count} and typeof $todo.{$count} == datatype.macro">
+						<patch_macros macro="$todo.{$count}"/>
+						<set_value name="$done" operation="add"/>
 					</do_if>
-				</do_all> 
+					<do_elseif value="$todo.{$count} and $todo.{$count}.exists">
+						<patch_macro object="$todo.{$count}"/>
+						<set_value name="$done" operation="add"/>
+					</do_elseif>
+				</do_all>
+				<debug_text text="'Patch: %2 of %1 done'.[$todo.count, $done]" filter="error" chance="100" />
+				<remove_value name="$todo"/>
+				<remove_value name="$done"/>
 			</actions>
 		</cue>
 
@@ -667,7 +682,7 @@
 						<start_script object="event.param2.tradenpc" name="'trade.shipyard'"/>
 					</do_if>
 				</do_if>
-				<debug_text text="$text" filter="error" chance="100"/>
+				<debug_text text="$text" filter="error" chance="0"/>
 				<remove_value name="$text"/>
 				<find_dock_location container="event.param2" name="$ShiptraderDocks" dockpopulationtype="dockpopulationtype.ships" multiple="true" />
 				<do_if value="$ShiptraderDocks.count and event.param2.tradenpc">
@@ -737,6 +752,111 @@
 				<add_inventory entity="event.param2.{1}" ware="event.param2.{2}" exact="1" />
 			  </do_elseif>
 			  <debug_text text="'%4 %5 %1 skilled inv:%2 cs:%3 :: %6'.[event.param2.{1}.knownname, event.param2.{1}.inventory.{event.param2.{2}}.count, event.param2.{1}.combinedskill, event.param2.{1}, event.param2.{1}.typename, @event.param2.{3}]" chance="0"/>
+			</actions>
+		</cue>
+
+		<!--
+			<signal_objects object="player.galaxy" param="'Reload.Units'" param2="this.ship" />
+		-->
+		<cue name="NF_BASE_ReloadUnits" instantiate="true" namespace="this">
+			<conditions>
+				<event_object_signalled object="player.galaxy" param="'Reload.Units'" />
+				<check_value value="event.param2.isoperational" />
+				<check_value value="event.param2.units.count == 0" />
+				<check_value value="event.param2.isplayerowned" negate="true" />
+			</conditions>
+			<actions>
+				<set_value name="$Object" exact="event.param2"/>
+				<set_value name="$Unitcapacity" exact="$Object.units.maxcount - $Object.units.count" />
+				<do_if value="$Object.macro.ismacro.{global.$boardingvessel_cap} or $Object.macro.ismacro.{md.$boardingvessel_small}">
+					<do_if  value="$Unitcapacity">
+						<do_if value="$Object.isclass.[class.ship_xl, class.ship_l]">
+							<add_units object="$Object" macro="macro.units_size_xs_transp_empty_macro" exact="1"/>
+							<add_units object="$Object" macro="macro.units_size_xs_welder_drone_macro" min="1" max="[$Unitcapacity/6, 10].min"/>
+							<set_value name="$Unitcapacity" exact="$Object.units.maxcount - $Object.units.count" />
+						</do_if>
+
+						<do_if value="($Object.isclass.[class.ship_xl, class.ship_l] and $Object.defencenpc) or $Object.isclass.[class.ship_m, class.ship_s]">
+							<do_if value="$Unitcapacity">
+								<do_any>
+									<add_units object="$Object" category="unitcategory.marine" mk="3" min="1" max="$Unitcapacity/2" weight="40"/>
+									<add_units object="$Object" category="unitcategory.marine" mk="2" min="1" max="$Unitcapacity/2" weight="60"/>
+								</do_any>
+								<set_value name="$Unitcapacity" exact="$Object.units.maxcount - $Object.units.count" />
+							</do_if>
+	
+							<do_if value="$Unitcapacity">
+								<add_units object="$Object" category="unitcategory.marine" mk="1" min="$Unitcapacity/2" max="$Unitcapacity"/>
+							</do_if>
+						</do_if>
+					</do_if>
+				</do_if>	
+				<do_elseif value="$Object.isclass.[class.ship_m, class.ship_s]">
+					<do_if  value="$Unitcapacity and $Object.primarypurpose == objectpurpose.mine and $Object.cargo.{ware.ore}.max or $Object.cargo.{ware.plasma}.max">
+						<do_if value="$Object.cargo.{ware.ore}.max gt 0">
+							<add_units object="$Object" category="unitcategory.orecollector" mk="2" exact="$Unitcapacity" /> 
+						</do_if>
+						<do_elseif  value="$Object.cargo.{ware.plasma}.max gt 0">
+							<add_units object="$Object" category="unitcategory.gascollector" mk="2" exact="$Unitcapacity" /> 
+						</do_elseif>
+					</do_if>
+				</do_elseif>	
+				<do_elseif value="$Object.units.maxcount" chance="$Object.isclass.ship *100">
+					<set_value name="$Unitcapacity" exact="[$Object.units.maxcount - $Object.units.count, 1000].min" />
+					<do_if value="$Unitcapacity">
+						<do_if value="$Object.cargo.{ware.ore}.max and $Object.cargo.{ware.plasma}.max and $Object.primarypurpose == objectpurpose.mine">
+							<add_units object="$Object" macro="macro.units_size_drone_attackdrone_plasma_mk2_macro" min="$Unitcapacity/6/2" max="$Unitcapacity/6"/>
+							<add_units object="$Object" macro="macro.units_size_drone_rubble_collector_mk2_macro" min="3" max="$Unitcapacity/6" chance="50"/>
+							<add_units object="$Object" macro="macro.units_size_drone_rubble_collector_mk1_macro" min="3" max="$Unitcapacity/6"/>
+							<add_units object="$Object" macro="macro.units_size_drone_liquid_collector_mk2_macro" min="3" max="$Unitcapacity/6" chance="50"/>
+							<add_units object="$Object" macro="macro.units_size_drone_liquid_collector_mk1_macro" min="3" max="$Unitcapacity/6"/>
+							<add_units object="$Object" macro="macro.units_size_xs_transp_empty_macro" min="1" max="$Unitcapacity/6/2"/>
+							<add_units object="$Object" macro="macro.units_size_xs_welder_drone_macro" min="1" max="$Unitcapacity/6/2"/>
+						</do_if>
+						<do_elseif value="$Object.cargo.{ware.ore}.max and $Object.primarypurpose == objectpurpose.mine">
+							<add_units object="$Object" macro="macro.units_size_drone_attackdrone_plasma_mk2_macro" min="$Unitcapacity/4/2" max="$Unitcapacity/4"/>
+							<add_units object="$Object" macro="macro.units_size_drone_rubble_collector_mk2_macro" min="3" max="$Unitcapacity/4" chance="50"/>
+							<add_units object="$Object" macro="macro.units_size_drone_rubble_collector_mk1_macro" min="3" max="$Unitcapacity/4"/>
+							<add_units object="$Object" macro="macro.units_size_xs_transp_empty_macro" min="1" max="$Unitcapacity/4/2"/>
+							<add_units object="$Object" macro="macro.units_size_xs_welder_drone_macro" min="1" max="$Unitcapacity/4/2"/>
+						</do_elseif>
+						<do_elseif value="$Object.cargo.{ware.plasma}.max and $Object.primarypurpose == objectpurpose.mine">
+							<add_units object="$Object" macro="macro.units_size_drone_attackdrone_plasma_mk2_macro" min="$Unitcapacity/4/2" max="$Unitcapacity/4"/>
+							<add_units object="$Object" macro="macro.units_size_drone_liquid_collector_mk2_macro" min="3" max="$Unitcapacity/4" chance="50"/>
+							<add_units object="$Object" macro="macro.units_size_drone_liquid_collector_mk1_macro" min="3" max="$Unitcapacity/4"/>
+							<add_units object="$Object" macro="macro.units_size_xs_transp_empty_macro" min="1" max="$Unitcapacity/4/2"/>
+							<add_units object="$Object" macro="macro.units_size_xs_welder_drone_macro" min="1" max="$Unitcapacity/4/2"/>
+						</do_elseif>
+						<do_elseif value="$Object.primarypurpose == objectpurpose.build">
+							<add_units object="$Object" macro="macro.units_size_drone_attackdrone_plasma_mk2_macro" min="$Unitcapacity/4/2" max="$Unitcapacity/4"/>
+							<add_units object="$Object" macro="macro.units_size_xs_welder_drone_macro" min="$Unitcapacity/4" max="$Unitcapacity/4"/>
+							<add_units object="$Object" macro="macro.units_size_xs_transp_empty_macro" min="$Unitcapacity/4/3" max="$Unitcapacity/4/2"/>
+							<add_units object="$Object" macro="macro.units_size_drone_missiledrone_dumbfire_mk2_macro" min="$Unitcapacity/4/3" max="$Unitcapacity/4/2"/>
+						</do_elseif>
+						<do_elseif value="$Object.cargo.{ware.fusionreactor}.max or $Object.cargo.{ware.water}.max or $Object.cargo.{ware.energycells}.max or $Object.cargo.{ware.ore}.max">								
+	
+							<add_units object="$Object" macro="macro.units_size_drone_attackdrone_plasma_mk1_macro" min="5" max="$Unitcapacity/2/3"/>
+							<add_units object="$Object" macro="macro.units_size_drone_attackdrone_impulse_mk1_macro" min="5" max="$Unitcapacity/2/3"/>
+							<add_units object="$Object" macro="macro.units_size_drone_missiledrone_dumbfire_mk2_macro" min="5" max="$Unitcapacity/2/3"/>
+							<add_units object="$Object" macro="macro.units_size_xs_welder_drone_macro" min="3" max="$Unitcapacity/2/2"/>
+							<add_units object="$Object" macro="macro.units_size_xs_transp_empty_macro" min="5" max="$Unitcapacity/2/2"/>
+						</do_elseif>
+						<do_elseif value="$Object.primarypurpose == objectpurpose.fight or (not $Object.cargo.{ware.water}.max and not $Object.cargo.{ware.energycells}.max and not $Object.cargo.{ware.fusionreactor}.max and not $Object.cargo.{ware.ore}.max)">
+							<add_units object="$Object" macro="macro.units_size_drone_attackdrone_plasma_mk2_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7" chance="50"/>
+							<add_units object="$Object" macro="macro.units_size_drone_attackdrone_plasma_mk1_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7"/>
+							<add_units object="$Object" macro="macro.units_size_drone_attackdrone_impulse_mk2_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7" chance="50"/>
+							<add_units object="$Object" macro="macro.units_size_drone_attackdrone_impulse_mk1_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7"/>
+							<add_units object="$Object" macro="macro.units_size_drone_missiledrone_dumbfire_mk2_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7" chance="50"/>
+							<add_units object="$Object" macro="macro.units_size_drone_missiledrone_dumbfire_mk1_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7"/>		
+	
+							<add_units object="$Object" macro="macro.units_size_xs_welder_drone_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7"/>
+							<add_units object="$Object" macro="macro.units_size_xs_transp_empty_macro" min="1" max="1"/>
+						</do_elseif>
+					</do_if>
+				</do_elseif>
+				<remove_value name="$Unitcapacity" />
+				<remove_value name="$Object" />
+				<debug_text text="'%1 processed [%2 / %3]'.[event.param2.knownname, event.param2.units.count, event.param2.units.maxcount]" filter="error" chance="0"/>
 			</actions>
 		</cue>
 

@@ -18,6 +18,13 @@
 			</do_elseif>
 		</do_if>
 	</add>
+
+	<add sel="//attention[@min='unknown']/actions/do_if[@value='not $CurrentElement.exists and this.defensible.hullpercentage ge $hulldamagelimit']">
+        <do_if value="this.defensible.units.maxcount and this.defensible.units.count == 0 and (not $nextUnitCheck? or ($nextUnitCheck? and $nextUnitCheck lt player.age))" chance="this.defensible.isclass.ship *100">
+          <signal_objects object="player.galaxy" param="'Reload.Units'" param2="this.defensible" />
+          <set_value name="$nextUnitCheck" exact="player.age + 12h"/>
+        </do_if>
+	</add>
 	
 	<add sel="/aiscript/attention/actions/do_if[@value='not @$networkid']/launch_repair_drones" type="@chance" >if $Defensible.boarder then 100 else 0</add> 
 	<add sel="/aiscript/attention/actions/do_if[@value='@$networkid']" type="@chance" >if $Defensible.boarder then 100 else 0</add> 

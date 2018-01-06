@@ -2129,9 +2129,30 @@
 							</do_if>
 						</do_all>
 					</do_if>
-					<do_if value="[$Object.units.maxcount, 1000].min">
+					<do_if value="$Object.units.maxcount">
 						<set_value name="$Unitcapacity" exact="[$Object.units.maxcount, 1000].min" />
-						<do_if value="$Object.cargo.{ware.ore}.max and $Object.cargo.{ware.plasma}.max and $Object.primarypurpose == objectpurpose.mine">
+						<do_if value="$Object.macro.ismacro.{global.$boardingvessel_cap} or $Object.macro.ismacro.{md.$boardingvessel_small}" chance="if (global.$boardingvessel_cap? and md.$boardingvessel_small?) then 100 else 0">
+							<do_if  value="$Unitcapacity ge 3">
+								<do_if value="$Object.isclass.[class.ship_xl, class.ship_l]">
+									<add_units object="$Object" macro="macro.units_size_xs_transp_empty_macro" exact="1"/>
+									<add_units object="$Object" macro="macro.units_size_xs_welder_drone_macro" min="1" max="[$Unitcapacity/6, 10].min"/>
+									<set_value name="$Unitcapacity" exact="$Object.units.maxcount - $Object.units.count" />
+								</do_if>
+		
+								<do_if value="$Unitcapacity">
+									<do_any>
+										<add_units object="$Object" category="unitcategory.marine" mk="3" min="1" max="$Unitcapacity/2" weight="40"/>
+										<add_units object="$Object" category="unitcategory.marine" mk="2" min="1" max="$Unitcapacity/2" weight="60"/>
+									</do_any>
+									<set_value name="$Unitcapacity" exact="$Object.units.maxcount - $Object.units.count" />
+								</do_if>
+		
+								<do_if value="$Unitcapacity">
+									<add_units object="$Object" category="unitcategory.marine" mk="1" min="$Unitcapacity/2" max="$Unitcapacity"/>
+								</do_if>
+							</do_if>
+						</do_if>	
+						<do_elseif value="$Object.cargo.{ware.ore}.max and $Object.cargo.{ware.plasma}.max and $Object.primarypurpose == objectpurpose.mine">
 							<add_units object="$Object" macro="macro.units_size_drone_attackdrone_plasma_mk2_macro" min="$Unitcapacity/6/2" max="$Unitcapacity/6"/>
 							<add_units object="$Object" macro="macro.units_size_drone_rubble_collector_mk2_macro" min="3" max="$Unitcapacity/6" chance="if macro.units_size_drone_rubble_collector_mk2_macro.ware? and (not $ShipYard? or $ShipYard? and $ShipYard.cargo.{macro.units_size_drone_rubble_collector_mk2_macro.ware}.count) then 100 else 0"/>
 							<add_units object="$Object" macro="macro.units_size_drone_rubble_collector_mk1_macro" min="3" max="$Unitcapacity/6"/>
@@ -2139,7 +2160,7 @@
 							<add_units object="$Object" macro="macro.units_size_drone_liquid_collector_mk1_macro" min="3" max="$Unitcapacity/6"/>
 							<add_units object="$Object" macro="macro.units_size_xs_transp_empty_macro" min="1" max="$Unitcapacity/6/2"/>
 							<add_units object="$Object" macro="macro.units_size_xs_welder_drone_macro" min="1" max="$Unitcapacity/6/2"/>
-						</do_if>
+						</do_elseif>
 						<do_elseif value="$Object.cargo.{ware.ore}.max and $Object.primarypurpose == objectpurpose.mine">
 							<add_units object="$Object" macro="macro.units_size_drone_attackdrone_plasma_mk2_macro" min="$Unitcapacity/4/2" max="$Unitcapacity/4"/>
 							<add_units object="$Object" macro="macro.units_size_drone_rubble_collector_mk2_macro" min="3" max="$Unitcapacity/4" chance="if macro.units_size_drone_rubble_collector_mk2_macro.ware? and  (not $ShipYard? or $ShipYard? and $ShipYard.cargo.{macro.units_size_drone_rubble_collector_mk2_macro.ware}.count) then 100 else 0"/>

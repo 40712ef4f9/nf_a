@@ -38,7 +38,8 @@
 				<do_if value="global.$boardingvessel_cap?">
 					<set_value name="$todo" exact="
 						[
-								macro.units_size_l_cruise2_macro
+								macro.units_size_l_cruise2_macro,
+								macro.units_size_l_ad_zeppelin_01_macro
 						]
 					"/>
 					<do_all exact="$todo.count" counter="$j" >
