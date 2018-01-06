@@ -1947,7 +1947,7 @@
 			<component ref="units_size_l_xenon_01_cargo_macro" amount="1" />
 			<icon video="units_size_l_xenon_01_cargo_macro" />
 		</ware>
-		<ware id="shp_l_xenon_01_builder" name="{20101,4001} {20101,7101}" description="{20101,7102}" transport="ship" size="ship" volume="1" tags="ship">
+		<ware id="shp_l_xenon_01_builder" name="{20101,4001} {20101,7101}" description="{20101,4002}" transport="ship" size="ship" volume="1" tags="ship">
 			<price min="19088121" average="25450828" max="31813535" />
 			<production time="476" amount="1" method="default" name="{20206,101}">
 				<primary>
@@ -3427,7 +3427,7 @@
 			<icon video="units_size_xl_xenon_newi_macro" />
 		</ware>
 
-		<ware id="shp_xl_builder_ship_xenon_next" name="shp_xl_builder_ship_xenon_next" transport="ship" size="ship" volume="1" tags="ship">
+		<ware id="shp_xl_builder_ship_xenon_next" name="{20101,4001} {20007,3001}" description="{20101,4002}" transport="ship" size="ship" volume="1" tags="ship">
 			<price min="1936777" average="2249036" max="2561295" />
 			<production time="106" amount="1" method="default" name="{20206,201}">
 				<primary>
@@ -3468,6 +3468,17 @@
 					<ware ware="teladianium" amount="100" />
 				</primary>
 			</production>
+			<production time="106" amount="1" method="xenon" name="{20206,701}">
+				<primary>
+					<ware ware="ions" amount="5000"/>
+					<ware ware="plasma" amount="5000"/>
+					<ware ware="hydrogen" amount="5000"/>
+					<ware ware="ore" amount="5000"/>
+					<ware ware="silicon" amount="5000"/>
+					<ware ware="nividium" amount="5000"/>
+					<ware ware="crystals" amount="5000"/>
+				</primary>
+			</production>      
 			<production time="106" amount="1" method="br_xenon" name="{20206,701}">
 				<primary>
 					<ware ware="ions" amount="5000"/>
@@ -3483,7 +3494,7 @@
 			<icon video="units_size_xl_builder_xenon_next_macro" />
 		</ware>
 
-		<ware id="shp_xl_builder_ship_xenon" name="Xenon Construction Vessel" transport="ship" size="ship" volume="1" tags="ship">
+		<ware id="shp_xl_builder_ship_xenon" name="Xenon Construction Vessel" description="{20101,4002}" transport="ship" size="ship" volume="1" tags="ship">
 			<price min="1936777" average="2249036" max="2561295" />
 			<production time="106" amount="1" method="default" name="{20206,201}">
 				<primary>
@@ -3524,6 +3535,19 @@
 					<ware ware="teladianium" amount="100" />
 				</primary>
 			</production>
+			<production time="106" amount="1" method="xenon" name="{20206,701}">
+				<!--<production time="106" amount="1" method="xenon" name="Xenon">-->
+				<primary>
+					<ware ware="ions" amount="5000"/>
+					<ware ware="plasma" amount="5000"/>
+					<ware ware="hydrogen" amount="5000"/>
+					<ware ware="ore" amount="5000"/>
+					<ware ware="silicon" amount="5000"/>
+					<ware ware="nividium" amount="5000"/>
+					<ware ware="crystals" amount="5000"/>
+
+				</primary>
+			</production>      
 			<production time="106" amount="1" method="br_xenon" name="{20206,701}">
 				<!--<production time="106" amount="1" method="xenon" name="Xenon">-->
 				<primary>
@@ -3541,7 +3565,7 @@
 			<icon video="units_size_xl_builder_ship_macro" />
 		</ware>
 
-		<ware id="shp_xl_builder_ship_xenon_1" name="Xenon Construction Vessel" transport="ship" size="ship" volume="1" tags="ship">
+		<ware id="shp_xl_builder_ship_xenon_1" name="Xenon Construction Vessel" description="{20101,4002}" transport="ship" size="ship" volume="1" tags="ship">
 			<price min="1936777" average="2249036" max="2561295" />
 			<production time="106" amount="1" method="default" name="{20206,201}">
 				<primary>
