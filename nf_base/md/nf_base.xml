@@ -1015,109 +1015,66 @@
 				<do_if value="$temp_faction?" negate="true">
 					<set_value name="$temp_faction" exact="$temp_object.trueowner" />
 				</do_if>
-
-				<do_if value="@$temp_select.{1}">
-					<create_cue_actor name="$tempActor" cue="this">
-						<select group="$temp_select.{1}"/>
-						<owner exact="$temp_faction"/>
-					</create_cue_actor>
+				<do_if value="$temp_assign? and $temp_assign and not ($temp_script? and $temp_script)">
+					<set_value name="$temp_script" exact="'default'" />
 				</do_if>
-				<do_elseif value="@$temp_select.{2} and @$temp_select.{3}">
-					<create_cue_actor name="$tempActor" cue="this">
-						<select race="$temp_select.{2}" tags="$temp_select.{3}"/>
-						<owner exact="$temp_faction"/>
-					</create_cue_actor>
-				</do_elseif>
-				<do_elseif value="@$temp_select.{4}">
-					<create_cue_actor name="$tempActor" cue="this">
-						<select ref="$temp_select.{4}"/>
-						<owner exact="$temp_faction"/>
-					</create_cue_actor>
-				</do_elseif>
+
+				<do_if value="$temp_dock? and $temp_dock and ['pilot', 'defence', 'engineer', 'manager'].indexof.{$temp_assign} and @$temp_select.{2} and [race.argon, race.split, race.terran, race.teladi].indexof.{$temp_select.{2}}" chance="0">
+					<!-- -->
+					<set_value name="$temp_setCueChance" exact="0" />
+				</do_if>
 				<do_else>
-					<create_cue_actor name="$tempActor" cue="this">
-						<select race="if @$temp_select.{2} then $temp_select.{2} else if $temp_faction.id == 'player' then race.argon else race.{$temp_faction.id}" tags="if @$temp_select.{3} then $temp_select.{3} else tag.{$temp_entitytype}"/>
-						<owner exact="$temp_faction"/>
-					</create_cue_actor>
+					<set_value name="$temp_setCueChance" exact="100" />
+
+					<do_if value="@$temp_select.{1}">
+						<create_cue_actor name="$tempActor" cue="this">
+							<select group="$temp_select.{1}"/>
+							<owner exact="$temp_faction"/>
+						</create_cue_actor>
+					</do_if>
+					<do_elseif value="@$temp_select.{2} and @$temp_select.{3}">
+						<include_actions ref="md.NF_BASE.NF_create_actor_race"/>
+						<create_cue_actor name="$tempActor" cue="this">
+							<select race="$temp_select.{2}" tags="$temp_select.{3}"/>
+							<owner exact="$temp_faction"/>
+						</create_cue_actor>
+					</do_elseif>
+					<do_elseif value="@$temp_select.{4}">
+						<create_cue_actor name="$tempActor" cue="this">
+							<select ref="$temp_select.{4}"/>
+							<owner exact="$temp_faction"/>
+						</create_cue_actor>
+					</do_elseif>
+					<do_else>
+						<include_actions ref="md.NF_BASE.NF_create_actor_race" />
+						<create_cue_actor name="$tempActor" cue="this">
+							<select race="if @$temp_select.{2} then $temp_select.{2} else if $temp_faction.id == 'player' then race.argon else race.{$temp_faction.id}" tags="if @$temp_select.{3} then $temp_select.{3} else tag.{$temp_entitytype}"/>
+							<owner exact="$temp_faction"/>
+						</create_cue_actor>
+					</do_else>
+	
+					<do_if value="$tempActor" negate="true" comment="fallback">
+						<create_cue_actor name="$tempActor" cue="this">
+							<select race="race.argon" tags="if @$temp_select.{3} then $temp_select.{3} else tag.{$temp_entitytype}"/>
+							<owner exact="$temp_faction"/>
+						</create_cue_actor>
+					</do_if>
+					
+					<do_if value="$tempActor">
+						<set_entity_type entity="$tempActor" type="$temp_entitytype"/>
+		
+						<do_if value="$temp_dock? and $temp_dock">
+							<add_actor_to_platform actor="$tempActor" dockingbay="$temp_dock.component"/>
+						</do_if>
+						<do_else>
+							<add_actor_to_room actor="$tempActor" object="$temp_object" />
+						</do_else>
+					</do_if>
 				</do_else>
 
-				<do_if value="$tempActor" negate="true" comment="fallback">
-					<create_cue_actor name="$tempActor" cue="this">
-						<select race="race.argon" tags="if @$temp_select.{3} then $temp_select.{3} else tag.{$temp_entitytype}"/>
-						<owner exact="$temp_faction"/>
-					</create_cue_actor>
-				</do_if>
-				
 				<do_if value="$tempActor">
-					<do_if value="$temp_Skill? and typeof $temp_Skill == datatype.list">
-						<!-- fine -->
-					</do_if>
-					<do_elseif value="$temp_Skill? and $temp_Skill == 'max'">
-						<set_value name="$temp_Skill" exact="
-							[	
-								[skilltype.leadership,	'exact'],
-								[skilltype.navigation,	'exact'],
-								[skilltype.combat,		'exact'],
-								[skilltype.engineering,	'exact'],
-								[skilltype.management,	'exact'],
-								[skilltype.morale,		'exact'],
-								[skilltype.science,		'exact']
-							]" />
-					</do_elseif>
-					<do_elseif value="$temp_Skill? and $temp_Skill">
-						<set_value name="$temp_Skill" exact="
-							[	
-								[skilltype.leadership,	'random', 3, 5],
-								[skilltype.navigation,	'random', 3, 5],
-								[skilltype.combat,		'random', 3, 5],
-								[skilltype.engineering,	'random', 3, 5],
-								[skilltype.management,	'random', 3, 5],
-								[skilltype.morale,		'random', 3, 5],
-								[skilltype.science,		'random', 3, 5]
-							]" />
-					</do_elseif>
-					<do_elseif value="$temp_Skill? and not $temp_Skill">
-						<remove_value name="$temp_Skill"/>
-						<create_list name="$temp_Skill"/>
-					</do_elseif>
-					<do_else>
-						<set_value name="$temp_Skill" exact="
-							[	
-								[skilltype.leadership,	'random', 1, 3],
-								[skilltype.navigation,	'random', 1, 3],
-								[skilltype.combat,		'random', 1, 3],
-								[skilltype.engineering,	'random', 1, 3],
-								[skilltype.management,	'random', 1, 3],
-								[skilltype.morale,		'random', 1, 3],
-								[skilltype.science,		'random', 1, 3]
-							]" />
-					</do_else>
-	
-					<do_all exact="$temp_Skill.count" counter="$k">
-						<do_if value="$temp_Skill.{$k}.{2}" exact="'random'">
-							<set_value name="$skillvalue" min="if $temp_Skill.{$k}.{3}? then $temp_Skill.{$k}.{3} else 1" max="if $temp_Skill.{$k}.{4}? then $temp_Skill.{$k}.{4} else 5" />
-						</do_if>
-						<do_elseif value="$temp_Skill.{$k}.{2}" exact="'exact'">
-							<set_value name="$skillvalue" exact="if $temp_Skill.{$k}.{3}? then $temp_Skill.{$k}.{3} else 5" />
-						</do_elseif>
-						<do_else>
-							<set_value name="$skillvalue" min="if $temp_Skill.{$k}.{3}? then $temp_Skill.{$k}.{3} else 1" max="if $temp_Skill.{$k}.{4}? then $temp_Skill.{$k}.{4} else 3" />
-						</do_else>
-	
-						<do_if value="typeof $temp_Skill.{$k}.{1} == datatype.skilltype and $skillvalue ge 0 and $skillvalue le 5">
-							<set_skill entity="$tempActor" type="$temp_Skill.{$k}.{1}" exact="$skillvalue"/>
-						</do_if>
-					</do_all>
-	
-					<set_entity_type entity="$tempActor" type="$temp_entitytype"/>
-	
-					<do_if value="$temp_dock? and $temp_dock">
-						<add_actor_to_platform actor="$tempActor" dockingbay="$temp_dock.component"/>
-					</do_if>
-					<do_else>
-						<add_actor_to_room actor="$tempActor" object="$temp_object" />
-					</do_else>
-	
+					<include_actions ref="md.NF_BASE.NF_skill_actor" />
+			
 					<do_if value="$temp_assign" exact="'pilot'">
 						<assign_pilot actor="$tempActor" object="$temp_object" />
 					</do_if>
@@ -1173,9 +1130,10 @@
 					</do_if>
 	
 					<set_value name="$newActor" exact="$tempActor"/>
-					<remove_cue_actor actor="$tempActor" cue="this"/>
+					<remove_cue_actor actor="$tempActor" cue="this" chance="$temp_setCueChance"/>
 				</do_if>
 
+				<remove_value name="$temp_setCueChance"/>
 				<remove_value name="$temp_script"/>
 				<remove_value name="$temp_assign"/>
 				<remove_value name="$temp_select"/>
@@ -1186,5 +1144,138 @@
 				<remove_value name="$temp_Skill"/>
 			</actions>
 		</library>
+
+		<!--
+		<set_value name="$temp_object" exact="$Object" />
+		<set_value name="$temp_Skill" exact="
+			[	
+				[skilltype.leadership,	'random', 3, 5],
+				[skilltype.navigation,	'random', 3, 5],
+				[skilltype.combat,		'random', 3, 5],
+				[skilltype.engineering,	'random', 3, 5],
+				[skilltype.management,	'random', 3, 5],
+				[skilltype.morale,		'random', 3, 5],
+				[skilltype.science,		'random', 3, 5]
+			]" />
+		<include_actions ref="md.NF_BASE.NF_skill_actor" />
+		<remove_value name="$temp_object"/>
+		<remove_value name="$temp_Skill"/>
+		-->
+		<library name="NF_skill_actor">
+			<actions>
+				<do_if value="$temp_Skill? and typeof $temp_Skill == datatype.list">
+					<!-- fine -->
+				</do_if>
+				<do_elseif value="$temp_Skill? and $temp_Skill == 'max'">
+					<set_value name="$temp_Skill" exact="
+						[	
+							[skilltype.leadership,	'exact'],
+							[skilltype.navigation,	'exact'],
+							[skilltype.combat,		'exact'],
+							[skilltype.engineering,	'exact'],
+							[skilltype.management,	'exact'],
+							[skilltype.morale,		'exact'],
+							[skilltype.science,		'exact']
+						]" />
+				</do_elseif>
+				<do_elseif value="$temp_Skill? and $temp_Skill">
+					<set_value name="$temp_Skill" exact="
+						[	
+							[skilltype.leadership,	'random', 3, 5],
+							[skilltype.navigation,	'random', 3, 5],
+							[skilltype.combat,		'random', 3, 5],
+							[skilltype.engineering,	'random', 3, 5],
+							[skilltype.management,	'random', 3, 5],
+							[skilltype.morale,		'random', 3, 5],
+							[skilltype.science,		'random', 3, 5]
+						]" />
+				</do_elseif>
+				<do_elseif value="$temp_Skill? and not $temp_Skill">
+					<remove_value name="$temp_Skill"/>
+					<create_list name="$temp_Skill"/>
+				</do_elseif>
+				<do_else>
+					<set_value name="$temp_Skill" exact="
+						[	
+							[skilltype.leadership,	'random', 1, 3],
+							[skilltype.navigation,	'random', 1, 3],
+							[skilltype.combat,		'random', 1, 3],
+							[skilltype.engineering,	'random', 1, 3],
+							[skilltype.management,	'random', 1, 3],
+							[skilltype.morale,		'random', 1, 3],
+							[skilltype.science,		'random', 1, 3]
+						]" />
+				</do_else>
+
+				<do_all exact="$temp_Skill.count" counter="$k">
+					<do_if value="$temp_Skill.{$k}.{2}" exact="'random'">
+						<set_value name="$skillvalue" min="if $temp_Skill.{$k}.{3}? then $temp_Skill.{$k}.{3} else 1" max="if $temp_Skill.{$k}.{4}? then $temp_Skill.{$k}.{4} else 5" />
+					</do_if>
+					<do_elseif value="$temp_Skill.{$k}.{2}" exact="'exact'">
+						<set_value name="$skillvalue" exact="if $temp_Skill.{$k}.{3}? then $temp_Skill.{$k}.{3} else 5" />
+					</do_elseif>
+					<do_else>
+						<set_value name="$skillvalue" min="if $temp_Skill.{$k}.{3}? then $temp_Skill.{$k}.{3} else 1" max="if $temp_Skill.{$k}.{4}? then $temp_Skill.{$k}.{4} else 3" />
+					</do_else>
+
+					<do_if value="typeof $temp_Skill.{$k}.{1} == datatype.skilltype and $skillvalue ge 0 and $skillvalue le 5">
+						<set_skill entity="$tempActor" type="$temp_Skill.{$k}.{1}" exact="$skillvalue"/>
+					</do_if>
+				</do_all>
+			</actions>
+		</library>
+
+		<!--
+		<set_value name="$temp_faction" exact="faction.player" />
+		<set_value name="$temp_select" exact="['group', race., tag., 'ref']" />
+		<include_actions ref="md.NF_BASE.NF_create_actor_race" />
+		-->
+		<library name="NF_create_actor_race">
+			<actions>
+				<set_value name="$temp_factionId" exact="$temp_faction.id" />
+
+				<do_if value="$temp_select? and typeof $temp_select == datatype.list" negate="true">
+					<set_value name="$temp_select" exact="[null, null, null]" />
+				</do_if>
+
+				<do_if value="$temp_entitytype? and $temp_entitytype == entitytype.architect">
+					<set_value name="$temp_select.{2}" exact="race.argon" />
+				</do_if>
+				<do_elseif value="$temp_select.{3}? and $temp_select.{3} == tag.architect">
+					<set_value name="$temp_select.{2}" exact="race.argon" />
+				</do_elseif>
+				<do_elseif value="$temp_factionId" list="['familyryak']">
+					<set_value name="$temp_select.{2}" exact="race.split" />
+				</do_elseif>
+				<do_elseif value="$temp_factionId" list="['teladi','teladidrugrunner','teladigunrunner']">
+					<set_value name="$temp_select.{2}" exact="race.teladi" />
+				</do_elseif>
+				<do_elseif value="$temp_factionId" list="['xenon', 'khaak']">
+					<set_value name="$temp_select.{2}" exact="race.{$temp_factionId}" />
+				</do_elseif>
+				<do_elseif value="$temp_factionId" list="['terran','heartofalbion','wholesomefoods','canteran','beryll','nolimits','leddaindustrial','albionenergy']">
+					<do_any>
+						<set_value name="$temp_select.{2}" exact="race.argon" weight="40"/>
+						<set_value name="$temp_select.{2}" exact="race.split" weight="10"/>
+						<set_value name="$temp_select.{2}" exact="race.terran" weight="20"/>
+						<set_value name="$temp_select.{2}" exact="race.teladi" weight="30"/>
+					</do_any>
+				</do_elseif>
+				<do_elseif value="$temp_factionId" list="['atlas','sovereignsyndicate','reivers']">
+					<set_value name="$temp_select.{2}" exact="[race.argon, race.terran].random" />
+				</do_elseif>
+				<do_elseif value="$temp_factionId" list="['hereticvanguards']">
+					<set_value name="$temp_select.{2}" exact="[race.argon, race.split, race.terran].random" />
+				</do_elseif>
+				<do_elseif value="$temp_factionId" list="['sonraenergy','aquarius','frantonpharma','chow']">
+					<set_value name="$temp_select.{2}" exact="[race.argon, race.split, race.terran, race.teladi].random" />
+				</do_elseif>
+				<do_elseif value="$temp_factionId" list="['argongovernment','jonferson','terracorp','plutarch']">
+					<set_value name="$temp_select.{2}" exact="race.argon" />
+				</do_elseif>
+				<remove_value name="$temp_factionId"/>
+			</actions>
+		</library>
+
 	</cues>
 </mdscript>

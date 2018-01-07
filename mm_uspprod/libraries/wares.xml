@@ -122,7 +122,7 @@
 					<effect type="defencecontrol" product="0.03" />
 				</effects>
 			</production>
-			<production time="30" amount="1" method="omicron" name="{20206,301}">
+			<!--production time="30" amount="1" method="omicron" name="{20206,301}">
 				<primary>
 					<ware ware="bioelectricneurongel" amount="1" />
 					<ware ware="bofu" amount="1" />
@@ -132,6 +132,25 @@
 				</primary>
 				<secondary>
 					<ware ware="medicalsupplies" amount="1" />
+				</secondary>
+				<effects>
+					<effect type="secondaryresource" product="0.15" />
+					<effect type="specialist" product="0.1" />
+					<effect type="manager" product="0.03" />
+					<effect type="engineer" product="0.03" />
+					<effect type="defencecontrol" product="0.03" />
+				</effects>
+			</production-->
+			<production time="300" amount="10" method="omicron" name="{20206,301}">
+				<primary>
+					<ware ware="bioelectricneurongel" amount="10" />
+					<ware ware="bofu" amount="10" />
+					<ware ware="energycells" amount="10" />
+					<ware ware="plasmapumps" amount="10" />
+					<ware ware="reinforcedmetalplating" amount="10" />
+				</primary>
+				<secondary>
+					<ware ware="medicalsupplies" amount="10" />
 				</secondary>
 				<effects>
 					<effect type="secondaryresource" product="0.15" />

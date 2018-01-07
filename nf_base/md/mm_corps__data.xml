@@ -2254,10 +2254,25 @@
 				<create_ai_unit object="$Object" />
 				<set_value name="$race" exact="if $faction? and ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else if ['xenon','khaak'].indexof.{$Object.owner.id} then race.{$Object.owner.id} else [race.argon, race.split, race.terran, race.teladi].random" />
 				<do_if value="$Object.isclass.[class.ship_l, class.ship_xl]">
-					<create_pilot name="$pilot" ship="$Object">
-						<select race="$race" tags="tag.commander"/>
-						<owner exact="if $faction? then $faction else $Object.owner"/>
-					</create_pilot>
+					<find_dock_location name="$tempDock"  container="$Object" size="tag.dock_p" />
+					<do_if value="$tempDock">
+						<set_value name="$temp_dock" exact="$tempDock" />
+						<set_value name="$temp_select" exact="[null, $race, tag.commander, null, null]" />
+						<set_value name="$temp_object" exact="$Object" />
+						<set_value name="$temp_entitytype" exact="entitytype.commander" />
+						<set_value name="$temp_Skill" exact="true" chance="if $Object.primarypurpose == objectpurpose.fight then 75 else 33"/>
+						<set_value name="$temp_Skill" exact="false" chance="if not $temp_Skill? then 66 else 0"/>
+						<set_value name="$temp_assign" exact="'pilot'"/>
+						<include_actions ref="md.NF_BASE.NF_create_actor" />
+						<set_value name="$pilot" exact="$newActor" />
+						<remove_value name="$newActor"/>
+					</do_if>
+					<do_else>
+						<create_pilot name="$pilot" ship="$Object">
+							<select race="$race" tags="tag.commander"/>
+							<owner exact="if $faction? then $faction else $Object.owner"/>
+						</create_pilot>
+					</do_else>
 				</do_if>
 				<do_else>
 					<create_pilot name="$pilot" ship="$Object">
@@ -2278,26 +2293,57 @@
 				</do_else>
 
 				<do_if value="$Object.isclass.[class.ship_l, class.ship_xl]">
-					<create_engineer name="$engineer" ship="$Object">
-						<select race="$race" tags="tag.engineer"/>
-						<owner exact="if $faction? then $faction else $Object.owner"/>
-					</create_engineer>
-					<do_if value="$engineer.exists">
-						<start_script object="$engineer" name="'engineer.ai'"/>
+					<find_dock_location name="$tempDock"  container="$Object" size="tag.dock_p" chance="if not $tempDock? then 100 else 0" />
+					<set_value name="$race" exact="if $faction? and ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else if ['xenon','khaak'].indexof.{$Object.owner.id} then race.{$Object.owner.id} else [race.argon, race.split, race.terran, race.teladi].random" />
+					<do_if value="$tempDock">
+						<set_value name="$temp_dock" exact="$tempDock" />
+						<set_value name="$temp_select" exact="[null, $race, tag.engineer, null, null]" />
+						<set_value name="$temp_object" exact="$Object" />
+						<set_value name="$temp_entitytype" exact="entitytype.engineer" />
+						<set_value name="$temp_Skill" exact="true" chance="if $Object.primarypurpose == objectpurpose.fight then 90 else 50" />
+						<set_value name="$temp_Skill" exact="false" chance="if not $temp_Skill? then 66 else 0"/>
+						<set_value name="$temp_assign" exact="'engineer'"/>
+						<include_actions ref="md.NF_BASE.NF_create_actor" />
+						<remove_value name="$newActor"/>
 					</do_if>
-					<create_defence_officer name="$defencenpc" ship="$Object">
-						<select race="$race" tags="tag.defencecontrol"/>
-						<owner exact="if $faction? then $faction else $Object.owner"/>
-					</create_defence_officer>
-					<do_if value="$defencenpc.exists">
-						<start_script object="$defencenpc" name="'fight.defend.capital'"/>
+					<do_else>
+						<create_engineer name="$engineer" ship="$Object">
+							<select race="$race" tags="tag.engineer"/>
+							<owner exact="if $faction? then $faction else $Object.owner"/>
+						</create_engineer>
+						<do_if value="$engineer.exists">
+							<start_script object="$engineer" name="'engineer.ai'"/>
+						</do_if>
+					</do_else>
+
+					<set_value name="$race" exact="if $faction? and ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else if ['xenon','khaak'].indexof.{$Object.owner.id} then race.{$Object.owner.id} else [race.argon, race.split, race.terran, race.teladi].random" />
+					<do_if value="$tempDock">
+						<set_value name="$temp_dock" exact="$tempDock" />
+						<set_value name="$temp_select" exact="[null, $race, tag.defencecontrol, null, null]" />
+						<set_value name="$temp_object" exact="$Object" />
+						<set_value name="$temp_entitytype" exact="entitytype.defencecontrol" />
+						<set_value name="$temp_Skill" exact="if $Object.primarypurpose == objectpurpose.fight then true else false" />
+						<set_value name="$temp_assign" exact="'defence'"/>
+						<include_actions ref="md.NF_BASE.NF_create_actor" />
+						<remove_value name="$newActor"/>
 					</do_if>
+					<do_else>
+						<create_defence_officer name="$defencenpc" ship="$Object">
+							<select race="$race" tags="tag.defencecontrol"/>
+							<owner exact="if $faction? then $faction else $Object.owner"/>
+						</create_defence_officer>
+						<do_if value="$defencenpc.exists">
+							<start_script object="$defencenpc" name="'fight.defend.capital'"/>
+						</do_if>
+					</do_else>
+
 					<check_object result="$isbuildership" object="$Object">
 						<match_content class="class.buildmodule" min="1"/>
 					</check_object>
 					<do_if value="$isbuildership">
-						<find_dock_location name="$temp_dock"  container="$Object" size="tag.dock_p" />
+						<find_dock_location name="$tempDock"  container="$Object" size="tag.dock_p" chance="if not $tempDock? then 100 else 0"/>
 
+						<set_value name="$temp_dock" exact="$tempDock" />
 						<set_value name="$temp_select" exact="[null, race.argon, tag.architect, null, null]" />
 						<set_value name="$temp_object" exact="$Object" />
 						<set_value name="$temp_entitytype" exact="entitytype.architect" />
@@ -2310,9 +2356,10 @@
 						<set_value name="$Object.pilot.$free4newjob" exact="player.age"/>
 					</do_if>
 					<remove_value name="$isbuildership"/>
-					<remove_value name="$temp_dock"/>
 				</do_if>
 
+				<remove_value name="$tempDock"/>
+				<remove_value name="$temp_dock"/>
 				<remove_value name="$race"/>
 				<remove_value name="$amount"/>
 				<remove_value name="$missilewares"/>

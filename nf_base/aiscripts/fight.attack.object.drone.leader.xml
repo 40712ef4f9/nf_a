@@ -12,7 +12,7 @@
 			</conditions>
 			<delay min="50ms" max="500ms"/>
 			<actions>
-				<do_if value="$additionaltargets? or typeof $additionaltargets == datatype.group" negate="true">
+				<do_if value="$additionaltargets? and typeof $additionaltargets == datatype.group" negate="true">
 					<remove_value name="$additionaltargets" />
 					<create_group groupname="$additionaltargets" />
 				</do_if>
@@ -36,6 +36,17 @@
 	<add sel="//attention[@min='visible']/actions/label[@name='fireandmaneuver']" pos="after">
 		<remove_value name="$additionalmissiles" />
 		<do_if value="this.ship.commander.defencenpc.$missiles? and this.ship.commander.defencenpc.$missiles.count">
+			<do_if value="$additionaltargets? and typeof $additionaltargets == datatype.group" negate="true">
+				<do_if value="$additionaltargets? and typeof $additionaltargets == datatype.list">
+					<set_value name="$additionaltargetsTMP" exact="$additionaltargets" />
+				</do_if>
+				<remove_value name="$additionaltargets" />
+				<create_group groupname="$additionaltargets" />
+				<do_if value="$additionaltargetsTMP?">
+					<add_to_group groupname="$additionaltargets" list="$additionaltargetsTMP" />
+					<remove_value name="$additionaltargetsTMP" />
+				</do_if>
+			</do_if>
 			<do_if value="$target.isoperational and $additionaltargets and $additionaltargets.list.indexof.{$target} == 0">
 			  <add_to_group groupname="$additionaltargets" object="$target" />
 			</do_if>

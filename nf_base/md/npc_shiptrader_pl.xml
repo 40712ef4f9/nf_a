@@ -770,61 +770,51 @@
               <do_if value="$ship.isclass.[class.ship_xl, class.ship_l]">
                 <create_platform_actor name="$pilomander" dockingbay="$target_dock.component" group="argon.commander" type="entitytype.commander">
                   <owner exact="$customer_faction"/>
-                  <skills>
-                    <skill type="combat" exact="5"/>
-                    <skill type="engineering" exact="5"/>
-                    <skill type="leadership" exact="5"/>
-                    <skill type="management" exact="5"/>
-                    <skill type="morale" exact="5"/>
-                    <skill type="navigation" exact="5"/>
-                    <skill type="science" exact="5"/>
-                  </skills>
                 </create_platform_actor>
+
+                <set_value name="$temp_object" exact="$pilomander" />
+                <set_value name="$temp_Skill" exact="if $actor.container.owner == $customer_faction then if $customer_faction == faction.player then 'max' else true else false" />
+                <include_actions ref="md.NF_BASE.NF_skill_actor" />
+                <remove_value name="$temp_object"/>
+                <remove_value name="$temp_Skill"/>
               </do_if>
               <do_else>
                 <create_platform_actor name="$pilomander" dockingbay="$target_dock.component" group="argon.commander" type="entitytype.pilot">
                   <owner exact="$customer_faction"/>
-                  <skills>
-                    <skill type="combat" exact="5"/>
-                    <skill type="engineering" exact="5"/>
-                    <skill type="leadership" exact="5"/>
-                    <skill type="management" exact="5"/>
-                    <skill type="morale" exact="5"/>
-                    <skill type="navigation" exact="5"/>
-                    <skill type="science" exact="5"/>
-                  </skills>
                 </create_platform_actor>
+
+                <set_value name="$temp_object" exact="$pilomander" />
+                <set_value name="$temp_Skill" exact="if $actor.container.owner == $customer_faction then if $customer_faction == faction.player then 'max' else true else false" />
+                <include_actions ref="md.NF_BASE.NF_skill_actor" />
+                <remove_value name="$temp_object"/>
+                <remove_value name="$temp_Skill"/>
               </do_else>
               <assign_control_entity object="$ship" actor="$pilomander"/>
               <do_if value="$ship.isclass.[class.ship_xl, class.ship_l]">
                 <!-- Engineer -->
                 <create_platform_actor name="$shipeng" dockingbay="$target_dock.component" group="devries.engineer" type="entitytype.engineer">
                   <owner exact="$customer_faction"/>
-                  <skills>
-                    <skill type="combat" exact="5"/>
-                    <skill type="engineering" exact="5"/>
-                    <skill type="leadership" exact="5"/>
-                    <skill type="management" exact="5"/>
-                    <skill type="morale" exact="5"/>
-                    <skill type="navigation" exact="5"/>
-                    <skill type="science" exact="5"/>
-                  </skills>
                 </create_platform_actor>
+
+                <set_value name="$temp_object" exact="$shipeng" />
+                <set_value name="$temp_Skill" exact="if $actor.container.owner == $customer_faction then if $customer_faction == faction.player then 'max' else true else false" />
+                <include_actions ref="md.NF_BASE.NF_skill_actor" />
+                <remove_value name="$temp_object"/>
+                <remove_value name="$temp_Skill"/>
+
                 <assign_engineer object="$ship" actor="$shipeng" />
                 <start_script object="$shipeng" name="'engineer.ai'"/>
                 <!-- Defense argon.defence -->
                 <create_platform_actor name="$shipdefence" dockingbay="$target_dock.component" group="split.generic" type="entitytype.defencecontrol"> 
                   <owner exact="$customer_faction"/>
-                  <skills>
-                    <skill type="combat" exact="5"/>
-                    <skill type="engineering" exact="5"/>
-                    <skill type="leadership" exact="5"/>
-                    <skill type="management" exact="5"/>
-                    <skill type="morale" exact="5"/>
-                    <skill type="navigation" exact="5"/>
-                    <skill type="science" exact="5"/>
-                  </skills>
                 </create_platform_actor>
+
+                <set_value name="$temp_object" exact="$shipdefence" />
+                <set_value name="$temp_Skill" exact="if $actor.container.owner == $customer_faction then if $customer_faction == faction.player then 'max' else true else false" />
+                <include_actions ref="md.NF_BASE.NF_skill_actor" />
+                <remove_value name="$temp_object"/>
+                <remove_value name="$temp_Skill"/>
+
                 <assign_defence_manager object="$ship" actor="$shipdefence" />
                 <start_script object="$shipdefence" name="'fight.defend.capital'"/>
               </do_if>
@@ -836,16 +826,14 @@
                 <do_if value="$customer_faction == faction.player">
                   <create_platform_actor name="$shiparch" dockingbay="$target_dock.component" group="argon.architect" type="entitytype.architect">
                     <owner exact="$customer_faction"/>
-                    <skills>
-                      <skill type="combat" exact="5"/>
-                      <skill type="engineering" exact="5"/>
-                      <skill type="leadership" exact="5"/>
-                      <skill type="management" exact="5"/>
-                      <skill type="morale" exact="5"/>
-                      <skill type="navigation" exact="5"/>
-                      <skill type="science" exact="5"/>
-                    </skills>
                   </create_platform_actor>
+
+                  <set_value name="$temp_object" exact="$shiparch" />
+                  <set_value name="$temp_Skill" exact="if $actor.container.owner == $customer_faction then 'max' else true" />
+                  <include_actions ref="md.NF_BASE.NF_skill_actor" />
+                  <remove_value name="$temp_object"/>
+                  <remove_value name="$temp_Skill"/>
+
                   <assign_architect actor="$shiparch" object="$ship"/>
                   <remove_value name="$shiparch"/>
                 </do_if>
@@ -855,13 +843,12 @@
                     <owner exact="$customer_faction"/>
                   </create_cue_actor>
 
-                  <set_skill entity="$shiparch" type="combat" min="3" max="5"/>
-                  <set_skill entity="$shiparch" type="engineering" exact="5"/>
-                  <set_skill entity="$shiparch" type="leadership" exact="5"/>
-                  <set_skill entity="$shiparch" type="management" exact="5"/>
-                  <set_skill entity="$shiparch" type="morale" min="3" max="5"/>
-                  <set_skill entity="$shiparch" type="navigation" min="3" max="5"/>
-                  <set_skill entity="$shiparch" type="science" min="3" max="5"/>
+                  <set_value name="$temp_object" exact="$shiparch" />
+                  <set_value name="$temp_Skill" exact="if $actor.container.owner == $customer_faction then 'max' else true" />
+                  <include_actions ref="md.NF_BASE.NF_skill_actor" />
+                  <remove_value name="$temp_object"/>
+                  <remove_value name="$temp_Skill"/>
+
                   <set_entity_type entity="$shiparch" type="entitytype.architect"/>
                   <add_actor_to_platform actor="$shiparch" dockingbay="$target_dock.component"/>
                   <assign_architect actor="$shiparch" object="$ship"/>
