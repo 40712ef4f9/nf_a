@@ -2403,6 +2403,9 @@
 				<do_elseif value="$Object.commander.exists and $Object.commander.isclass.ship and @$Station != $Object.commander">
 					<remove_object_commander object="$Object" />
 				</do_elseif>
+				<do_if value="$sectors? and $sectors.count" negate="true">
+					<set_value name="$sectors" exact="[$Station.sector]" />
+				</do_if>
 <set_value name="$text" exact="'Destination ' + @$destination.knownname + ' Jobs:' + $tmp_jobs.count"/>
 
 				<do_if value="$Object.primarypurpose == objectpurpose.build and not $Object.pilot.$traderNow?">
@@ -3413,6 +3416,13 @@
 				<do_if value="not $nextDonationCheck? or ($nextDonationCheck? and $nextDonationCheck lt player.age)" chance="if $_CEO.$style != 'cooperative' then 100 else 0">
 					<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_donation" />
 					<set_value name="$nextDonationCheck" exact="if $next_Check? and $next_Check.{5} then player.age + $next_Check.{5} else player.age + 12h" />
+				</do_if>
+
+				<!-- Smallships for Stations -->
+				<do_if value="not $ships4StationsCheck? or ($ships4StationsCheck? and $ships4StationsCheck lt player.age)" chance="if $_CEO.money gt $tmpConfig.$minBuyShip then 100 else 0">
+					<set_value name="$faction" exact="$_faction"/>
+					<include_actions ref="md.MM_Corps__Data.MMCData_do_station_ships" />
+					<set_value name="$ships4StationsCheck" exact="if $next_Check? and $next_Check.{5} then player.age + $next_Check.{5} else player.age + 12h" />
 				</do_if>
 
 				<do_if value="not $nextRelationCheck? or ($nextRelationCheck? and $nextRelationCheck lt player.age)" chance="0">
@@ -6424,9 +6434,9 @@
 					<remove_value name="$ControlEntities"/>
 				</do_if>
 
-				<do_if value="$createdShip.pilot.$end_of_work?" negate="true">
+				<!--do_if value="$createdShip.pilot.$end_of_work?" negate="true">
 					<set_value name="$createdShip.pilot.$end_of_work" exact="if $defineEOL? and $defineEOL gt player.age then $defineEOL else player.age + 24h" />
-				</do_if>
+				</do_if-->
 				<do_if value="$createdShip.pilot.$spawnjob?" negate="true">
 					<set_value name="$createdShip.pilot.$spawnjob" />
 				</do_if>
@@ -6457,6 +6467,246 @@
 					<remove_value name="$Elite"/>
 					<remove_value name="$defineEOL"/>
 				</do_if>
+			</actions>
+		</library>
+
+		<!--
+		<set_value name="$tmpConfig" exact="table[]" />
+		<set_value name="$faction" exact="faction.player" />
+		<include_actions ref="md.MM_Corps__Data.MMCData_do_station_ships" />
+		-->
+		<library name="MMCData_do_station_ships">
+			<actions>
+				<create_list name="$ShipYards"/>
+				<create_list name="$Stations"/>
+				<set_value name="$temp_entitytype" exact="entitytype.manager"/>
+				<set_value name="$temp_entitytypeSubordinates" exact="6"/>
+
+				<find_station name="$temp_stations" space="player.galaxy" functional="true" multiple="true">
+					<match owner="$faction"/>
+				</find_station>
+				<do_all exact="$temp_stations.count" counter="$x">
+					<do_if value="$temp_stations.{$x}.exists" negate="true">
+						<continue />
+					</do_if>
+					<do_if value="$temp_stations.{$x}.canproduceships">
+						<append_to_list name="$ShipYards" exact="$temp_stations.{$x}"/>
+					</do_if>
+					<do_if value="$temp_stations.{$x}.tradenpc and $temp_stations.{$x}.subordinates.{$temp_entitytype}.count lt $temp_entitytypeSubordinates">
+						<append_to_list name="$Stations" exact="$temp_stations.{$x}"/>
+					</do_if>
+				</do_all>
+				<remove_value name="$temp_stations"/>
+
+				<do_if value="$Stations.count and $ShipYards.count == 0">
+					<find_station name="$ShipYards" space="player.galaxy" functional="true" multiple="true">
+						<match_content class="class.production" />
+						<match_relation faction="$faction"  relation="neutral" comparison="ge"/>
+					</find_station>
+					<do_all exact="$ShipYards.count" counter="$x" reverse="true">
+						<do_if value="$ShipYards.{$x}.exists" negate="true">
+							<remove_value name="$ShipYards.{$x}"/>
+							<continue />
+						</do_if>
+						<do_if value="$ShipYards.{$x}.canproduceships" negate="true">
+							<remove_value name="$ShipYards.{$x}"/>
+							<continue />
+						</do_if>
+					</do_all>
+				</do_if>
+
+				<do_if value="$Stations.count and $ShipYards.count and not $tmpConfig.$ships?">
+					<include_actions ref="md.MM_Corps__Data.MMCData_config" />
+				</do_if>
+				<do_if value="$Stations.count and $ShipYards.count and $tmpConfig.$ships.$trade_sm.count">
+					<create_list name="$tmpMiner" />
+					<create_list name="$tmpCollector" />
+					<do_all exact="$Stations.count" counter="$x">
+						<set_value name="$temp_requiredShips" exact="$temp_entitytypeSubordinates"/>
+						<set_value name="$temp_requiredShips" exact="$Stations.{$x}.subordinates.{$temp_entitytype}.count" operation="subtract"/>
+
+						<do_if value="$tmpConfig.$ships.$mine_sm.count"  chance="if $temp_requiredShips gt 0 then 100 else 0">
+							<do_if value="$Stations.{$x}.resources.list.count" chance="if $temp_requiredShips gt 0 then 100 else 0">
+								<do_all exact="$Stations.{$x}.resources.list.count" counter="$r">
+									<do_if value="$Stations.{$x}.resources.list.{$r}.tags.indexof.{tag.minable}">
+										<do_if value="$Stations.{$x}.resources.list.{$r}.tags.indexof.{tag.liquid}">
+											<set_value name="$liquid" />
+										</do_if>
+										<do_if value="$Stations.{$x}.resources.list.{$r}.tags.indexof.{tag.bulk}">
+											<set_value name="$bulk" />
+										</do_if>
+									</do_if>
+								</do_all>
+								<do_if value="$liquid? or $bulk?">
+									<do_all exact="$tmpConfig.$ships.$mine_sm.count" counter="$r" chance="if $tmpMiner.count or $tmpCollector.count then 0 else 100">
+										<substitute_text text="$testmacro" source="$tmpConfig.$ships.$mine_sm.{$r}.id">
+											<replace string="'mine'" with="'match'" />
+											<replace string="'ore'" with="'match'" />
+											<replace string="'ice'" with="'match'" />
+											<replace string="'crystal'" with="'match'" />
+											<replace string="'silicon'" with="'match'" />
+											<replace string="'nividium'" with="'match'" />
+										</substitute_text>
+										<!--
+											<replace string="'collect'" with="'match'" />
+											<replace string="'gas'" with="'match'" />
+											<replace string="'ions'" with="'match'" />
+											<replace string="'hydrogen'" with="'match'" />
+											<replace string="'plasma'" with="'match'" />
+										-->
+										<do_if value="$testmacro != $tmpConfig.$ships.$mine_sm.{$r}.id">
+											<append_to_list name="$tmpMiner" exact="$tmpConfig.$ships.$mine_sm.{$r}" />
+										</do_if>
+										<do_else>
+											<append_to_list name="$tmpCollector" exact="$tmpConfig.$ships.$mine_sm.{$r}" />
+										</do_else>
+										<remove_value name="$testmacro"/>
+									</do_all>
+
+									<!-- do order -->
+									<set_value name="$tmpStation" exact="$Stations.{$x}" />
+									<include_actions ref="md.MM_Corps__Data.MMCData_do_station_ships_find_sy" />
+		
+									<set_value name="$tmpStation" exact="$Stations.{$x}" />
+
+									<do_if value="$liquid? and $tmpCollector.count" chance="if $temp_requiredShips gt 0 then 100 else 0">
+										<set_value name="$ref" exact="$tmpCollector.random" />
+										<include_actions ref="md.MM_Corps__Data.MMCData_do_station_ships_order_ships" />
+										<set_value name="$temp_requiredShips" exact="1" operation="subtract"/>
+									</do_if>
+									<do_if value="$bulk? and $tmpMiner.count" chance="if $temp_requiredShips gt 0 then 100 else 0">
+										<set_value name="$ref" exact="$tmpMiner.random" />
+										<include_actions ref="md.MM_Corps__Data.MMCData_do_station_ships_order_ships" />
+										<set_value name="$temp_requiredShips" exact="1" operation="subtract"/>
+									</do_if>
+									<remove_value name="$liquid"/>
+									<remove_value name="$bulk"/>
+									<remove_value name="$tmpStation"/>
+								</do_if>
+							</do_if>
+						</do_if>
+						<do_if value="$Stations.{$x}.resources.list.count or $Stations.{$x}.tradewares.list.count" chance="if $temp_requiredShips gt 0 then 100 else 0">
+							<!-- do order -->
+							<set_value name="$tmpStation" exact="$Stations.{$x}" />
+							<include_actions ref="md.MM_Corps__Data.MMCData_do_station_ships_find_sy" />
+
+							<set_value name="$tmpStation" exact="$Stations.{$x}" />
+
+							<do_if value="$temp_requiredShips le 2">
+								<set_value name="$tmpStationRS" exact="$temp_requiredShips"/>
+							</do_if>
+							<do_else>
+								<set_value name="$tmpStationRS" min="1" max="$temp_requiredShips" profile="increasing"/>
+							</do_else>
+							<do_all exact="$tmpStationRS">
+								<set_value name="$ref" exact="$tmpConfig.$ships.$trade_sm.random" />
+								<include_actions ref="md.MM_Corps__Data.MMCData_do_station_ships_order_ships" />
+							</do_all>
+							<remove_value name="$tmpStation"/>
+							<remove_value name="$tmpStationRS"/>
+						</do_if>
+					</do_all>
+					<remove_value name="$tmpCollector"/>
+					<remove_value name="$tmpMiner"/>
+				</do_if>
+
+				<remove_value name="$ShipYards"/>
+				<remove_value name="$Stations"/>
+				<remove_value name="$temp_shipyard"/>
+				<remove_value name="$temp_entitytype"/>
+				<remove_value name="$temp_entitytypeSubordinates"/>
+				<remove_value name="$faction"/>
+			</actions>
+		</library>
+
+		<!--
+		<set_value name="$tmpStation" exact="$Stations.{$x}" />
+		<set_value name="$ShipYards" exact="[]" />
+		<include_actions ref="md.MM_Corps__Data.MMCData_do_station_ships_find_sy" />
+		<remove_value name="$temp_shipyard"/>
+		-->
+		<library name="MMCData_do_station_ships_find_sy">
+			<actions>
+				<do_if value="$tmpStation.canproduceships">
+					<set_value name="$temp_shipyard" exact="$Stations.{$x}"/>
+				</do_if>
+				<do_else>
+					<set_value name="$temp_shipyard" exact="$ShipYards.random"/>
+					<do_all exact="$ShipYards.count" counter="$y" chance="if $ShipYards.count gt 1 then 100 else 0">
+						<do_if value="$temp_shipyard.zone == $tmpStation.zone">
+							<break />
+						</do_if>
+						<do_if value="$ShipYards.{$y}.distanceto.{$tmpStation.zone} lt $temp_shipyard.distanceto.{$tmpStation.zone}">
+							<set_value name="$temp_shipyard" exact="$ShipYards.{$y}"/>
+						</do_if>
+					</do_all>
+				</do_else>
+				<remove_value name="$tmpStation"/>
+			</actions>
+		</library>
+
+		<!--
+		<set_value name="$ref" exact="macro.macro" />
+		<set_value name="$faction" exact="faction.player" />
+		<set_value name="$temp_shipyard" exact="$Station" />
+		<set_value name="$tmpStation" exact="$Stations.{$x}" />
+		<include_actions ref="md.MM_Corps__Data.MMCData_do_station_ships_order_ships" />
+		<remove_value name="$temp_shipyard"/>
+		<remove_value name="$tmpStation"/>
+		-->
+		<library name="MMCData_do_station_ships_order_ships">
+			<actions>
+				<do_if value="$raceTag? and $raceTag" negate="true">
+					<set_value name="$raceTag" exact="if $faction? and ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random"/>
+				</do_if>
+
+				<set_value name="$cost" exact="0"/>
+				<do_if value="$ref.ware and $temp_shipyard.cargo.{$ref.ware}.count">
+					<remove_cargo object="$temp_shipyard" ware="$ref.ware" exact="1" />
+					<set_value name="$cost" exact="$ref.ware.maxprice" chance="if $temp_shipyard.owner != $faction then 100 else 0"/>
+				</do_if>
+				<do_elseif value="$ref.ware and $ref.ware.maxprice">
+					<set_value name="$cost" exact="$ref.ware.maxprice"/>
+				</do_elseif>
+
+				<create_ship name="$Object" dock="$temp_shipyard" zone="$temp_shipyard.zone" macro="$ref">
+					<owner exact="$faction" overridenpc="true"/>
+					<pilot actor="null"/>
+				</create_ship>
+
+				<do_if value="$Object.primarypurpose == objectpurpose.mine">
+					<set_value name="$Unitcapacity" exact="[($Object.units.maxcount-$Object.units.count), 200].min" />
+					<do_if value="$Object.cargo.{ware.ore}.max and $Object.cargo.{ware.plasma}.max">
+						<add_units object="$Object" macro="macro.units_size_drone_rubble_collector_mk2_macro" exact="$Unitcapacity/2"/>
+						<set_value name="$Unitcapacity" exact="[($Object.units.maxcount-$Object.units.count), 200].min" />
+						<add_units object="$Object" macro="macro.units_size_drone_liquid_collector_mk2_macro" exact="$Unitcapacity"/>
+					</do_if>
+					<do_elseif value="$Object.cargo.{ware.ore}.max">
+						<add_units object="$Object" macro="macro.units_size_drone_rubble_collector_mk2_macro" exact="$Unitcapacity"/>
+					</do_elseif>
+					<do_elseif value="$Object.cargo.{ware.plasma}.max">
+						<add_units object="$Object" macro="macro.units_size_drone_liquid_collector_mk2_macro" exact="$Unitcapacity"/>
+					</do_elseif>
+					<remove_value name="$Unitcapacity" />
+				</do_if>
+
+				<create_pilot name="$pilot" ship="$Object">
+					<select race="$raceTag" tags="tag.pilot"/>
+					<owner exact="$faction"/>
+				</create_pilot>
+				
+				<share_actor_account actor="$pilot" otherobject="$_CEO"/>
+				
+				<do_if value="$cost and $_CEO.owner != $temp_shipyard.tradenpc.owner">
+					<transfer_money from="$_CEO" to="$temp_shipyard.tradenpc" amount="$cost"/>
+				</do_if>
+
+				<set_object_commander object="$Object" commander="$tmpStation" type="$tmpStation.tradenpc.type" />
+				<set_value name="$Station" exact="$tmpStation"/>
+				<include_actions ref="md.MM_Corps__Data.MMCData_ship_job" />
+				
+				<remove_value name="$Object"/>
+				<remove_value name="$raceTag"/>
 			</actions>
 		</library>
 	</cues>

@@ -11,7 +11,7 @@
 	</add>
 
 	<add sel="//library[@name='MMCData_config']/actions/do_if/do_if[@value=&quot;'xen'&quot;]">
-						<append_to_list name="$temp_ships.$mine_sm" exact="macro.units_size_s_xenon_swarm_attack_drone_01_macro"/>
+						<append_to_list name="$temp_ships.$mine_sm" exact="macro.units_size_m_xenon_miner_01_macro"/>
 						<append_to_list name="$temp_ships.$mine_sm" exact="macro.units_size_m_xenon_collector_01_macro"/>
 	</add>
 

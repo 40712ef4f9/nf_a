@@ -8,7 +8,7 @@
 					<event_conversation_started conversation="default" />
 					<event_conversation_returned_to_section section="default" />
 				</check_any>
-				<check_value value="[faction.player, faction.enemy, faction.criminal, faction.smuggler, faction.neutral, faction.friend, faction.ownerless].indexof.{event.object.owner}" negate="true"/>
+				<check_value value="[faction.player, faction.enemy, faction.criminal, faction.smuggler, faction.neutral, faction.friend, faction.ownerless, faction.civilian].indexof.{event.object.owner}" negate="true"/>
 				<check_value value="event.object.container.isclass.station" />
 				<check_value value="event.object.owner.relationto.{faction.player} gt faction.player.relation.neutral.min"/>
 				<check_any>
@@ -42,6 +42,7 @@
 							<match owner="player.primaryship.owner" negate="true"/>		
 							<match owner="faction.enemy" negate="true"/>		
 							<match owner="faction.criminal" negate="true"/>		
+							<match owner="faction.civilian" negate="true"/>		
 							<match owner="faction.smuggler" negate="true"/>		
 							<match owner="faction.neutral" negate="true"/>		
 							<match owner="faction.ownerless" negate="true"/>		
@@ -54,6 +55,7 @@
 							<match owner="player.primaryship.owner" negate="true"/>		
 							<match owner="faction.enemy" negate="true"/>		
 							<match owner="faction.criminal" negate="true"/>		
+							<match owner="faction.civilian" negate="true"/>		
 							<match owner="faction.smuggler" negate="true"/>		
 							<match owner="faction.neutral" negate="true"/>		
 							<match owner="faction.ownerless" negate="true"/>		
