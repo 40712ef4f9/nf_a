@@ -410,6 +410,7 @@
               <add_player_choice text="{1002,5000}" position="top_left" section="cArch_finalconfirm" choiceparam="0" comment="I want to deliver all the wares myself."/>
               <add_player_choice text="{1002,5001}" position="bottom_left" section="cArch_selectautotrade" choiceparam="0" comment="I want you to take care of getting the resources."/>
               <add_player_choice_return text="{1002,5002}" position="bottom_right" comment="Select a different station (Back)"/>
+              <add_player_choice text="{40002,150}" section="cArch_contractor_options" position="top_right" selectable="not $actor.container.macro.ismacro.units_size_xl_builder_ship_plot_01_macro" />
             </do_elseif>
 
             <do_elseif value="event.param == 'cArch_selectautotrade'">
@@ -437,32 +438,55 @@
               <add_player_choice_return text="{1002,20}" position="bottom_right" comment="(Back)"/>
             </do_elseif>
 
-			<do_elseif value="event.param == 'cArch_contractor_options'">
-			  <add_player_choice text="{40002,152}" tooltip="{40002,153}" section="cArch_deployatstation_contractor" position="top_left" choiceparam="[$location.component, $selectedMacro, player.primaryship.owner, 0, 0, false, $location]"/>
-			  <add_player_choice text="{40002,154}" tooltip="{40002,155}" section="cArch_deployatstation_contractor" position="left" choiceparam="[$location.component, $selectedMacro, player.primaryship.owner, 100, 100, false, $location]"/>
-			  <add_player_choice text="{40002,156}" tooltip="{40002,157}" section="cArch_deployatstation_contractor" position="bottom_left" choiceparam="[$location.component, $selectedMacro, player.primaryship.owner, 100, 100, true, $location]"/>
-			  <add_player_choice_return text="{1002,20}" position="bottom_right" comment="(Back)"/>
-			</do_elseif>
+            <do_elseif value="event.param == 'cArch_contractor_options'">
+              <add_player_choice text="{40002,152}" tooltip="{40002,153}" section="cArch_deployatstation_contractor" position="top_left" choiceparam="[$location.component, $selectedMacro, player.primaryship.owner, 0, 0, false, $location]"/>
+              <add_player_choice text="{40002,154}" tooltip="{40002,155}" section="cArch_deployatstation_contractor" position="left" choiceparam="[$location.component, $selectedMacro, player.primaryship.owner, 100, 100, false, $location]"/>
+              <add_player_choice text="{40002,156}" tooltip="{40002,157}" section="cArch_deployatstation_contractor" position="bottom_left" choiceparam="[$location.component, $selectedMacro, player.primaryship.owner, 100, 100, true, $location]"/>
+              <add_player_choice_return text="{1002,20}" position="bottom_right" comment="(Back)"/>
+            </do_elseif>
 
-			<do_elseif value="event.param == 'cArch_deployatstation_contractor'">
-			  <do_if value="event.param2? and event.param2.count">
-				<signal_cue_instantly cue="md.MM_Corps__Station_Const.MMCStationConst_contract" param="event.param2"/>
-				<add_npc_line line="1112" comment="Moving into position" />
-			  </do_if>
-			  <do_else>
-				<show_help position="8" log="false" force="true" duration="2s" custom="'ERROR: missing event.param2'" />
-			  </do_else>
-			</do_elseif>
+            <do_elseif value="event.param == 'cArch_deployatstation_contractor'">
+              <do_if value="event.param2? and event.param2.count">
+                <signal_cue_instantly cue="md.MM_Corps__Station_Const.MMCStationConst_contract" param="event.param2"/>
+                <add_npc_line line="1112" comment="Moving into position" />
+              </do_if>
+              <do_else>
+                <show_help position="8" log="false" force="true" duration="2s" custom="'ERROR: missing event.param2'" />
+              </do_else>
+            </do_elseif>
 
-			<do_elseif value="event.param == 'cArch_workat_contractor'">
-			  <do_if value="event.param2? and event.param2.{3}.isclass.zone and event.param2.{3}.freebuildlocations.count">
-				<set_value name="$location" exact="event.param2.{3}.freebuildlocations.random" />
-				<open_conversation_menu menu="BuilderMacrosMenu" param="[0, 0, $actor, $actor.ship, 1]" param2="event.param3" />
-			  </do_if>
-			  <do_else>
-				<show_help position="8" log="false" force="true" duration="2s" custom="'ERROR: missing location'" />
-			  </do_else>
-			</do_elseif>
+            <do_elseif value="event.param == 'cArch_workat_contractor'">
+              <do_if value="event.param2? and event.param2.{3}.isclass.zone and event.param2.{3}.freebuildlocations.count">
+                <set_value name="$location" exact="event.param2.{3}.freebuildlocations.random" />
+                <do_if value="$location.child">
+                  <do_all exact="event.param2.{3}.buildlocations.count" counter="$bs"> 
+                    <do_if value="event.param2.{3}.buildlocations.{$bs}.child" negate="true">
+                      <set_value name="$location" exact="event.param2.{3}.buildlocations.{$bs}"/>
+                      <break />
+                    </do_if>
+                  </do_all>
+                </do_if>
+
+                <do_if value="$location.child" negate="true">
+                  <do_if value="not $actor.$specialMacroOrder? and $actor.ship.buildmodule.exists and $actor.ship.buildmodule.buildmacros.count == 1">
+                    <set_value name="$actor.$specialMacroOrder" exact="$actor.ship.buildmodule.buildmacros.{1}" />
+                  </do_if>
+                  <do_if value="$actor.$specialMacroOrder? and typeof $actor.$specialMacroOrder == datatype.macro">
+                    <open_conversation_menu menu="SelectUpgradesMenu" param="[0, 0, $actor, $actor.ship, null, $actor.$specialMacroOrder, '', 0, true, []]" param2="event.param3" />
+                  </do_if>
+                  <do_else>
+                    <open_conversation_menu menu="BuilderMacrosMenu" param="[0, 0, $actor, $actor.ship, 1]" param2="event.param3" />
+                  </do_else>
+                </do_if>
+                <do_else>
+                  <show_help position="8" log="false" force="true" duration="2s" custom="'ERROR: no location left'" />
+                  <remove_value name="$location" />
+                </do_else>
+              </do_if>
+              <do_else>
+                <show_help position="8" log="false" force="true" duration="2s" custom="'ERROR: missing location'" />
+              </do_else>
+            </do_elseif>
 
             <do_elseif value="event.param == 'cArch_buildstation'">
               <!-- Successful end of build-station conversation -->
@@ -479,17 +503,17 @@
               </do_else>
             </do_elseif>
 
-			<do_elseif value="event.param == 'cArch_deployatstation'">
-			  <debug_text text="event.param2"/>
-			  <do_if value="event.param2.{3}.zone.npcbuildlocations.indexof.{event.param2.{3}.buildlocation} or event.param2.{3}.zone.buildlocations.indexof.{event.param2.{3}.buildlocation}">
-				<set_value name="$DeployedStation" exact="event.param2.{3}"/>
-				<add_npc_line line="1112" comment="Moving into position" />
-				<signal_cue cue="DeployToStation"/>
-			  </do_if>
-			  <do_else>
-				<show_help position="8" log="false" force="true" duration="2s" custom="'ERROR: station incompatible [missing buildspot]'" />
-			  </do_else>
-			</do_elseif>
+            <do_elseif value="event.param == 'cArch_deployatstation'">
+              <debug_text text="event.param2"/>
+              <do_if value="event.param2.{3}.zone.npcbuildlocations.indexof.{event.param2.{3}.buildlocation} or event.param2.{3}.zone.buildlocations.indexof.{event.param2.{3}.buildlocation}">
+                <set_value name="$DeployedStation" exact="event.param2.{3}"/>
+                <add_npc_line line="1112" comment="Moving into position" />
+                <signal_cue cue="DeployToStation"/>
+              </do_if>
+              <do_else>
+                <show_help position="8" log="false" force="true" duration="2s" custom="'ERROR: station incompatible [missing buildspot]'" />
+              </do_else>
+            </do_elseif>
 
             <do_elseif value="event.param == 'cArch_cancelmoveto'">
               <do_if value="not @$station">
@@ -685,9 +709,9 @@
               <play_cutscene key="'LeavePlayerShipWithDrone'">
                 <param name="npcref" object="$actor" />
               </play_cutscene>
-             <set_owner object="$actor" faction="faction.neutral" />
-             <signal_cue_instantly cue="md.NF_BASE.NF_kill_NPC" param="$actor" delay="20s"/>
-             <start_actor_transport actor="$actor" />
+              <set_owner object="$actor" faction="faction.neutral" />
+              <signal_cue_instantly cue="md.NF_BASE.NF_kill_NPC" param="$actor" delay="20s"/>
+              <start_actor_transport actor="$actor" />
             </do_if>
           </actions>
         </cue>
@@ -720,7 +744,7 @@
           <delay exact="2s" />
           <actions>
             <debug_text text="'start'" />
-			<do_if value="$actor.$jobDetails? and $actor.$jobDetails.keys.list.count and $actor.$jobDetails.$BuildLocation.child == null">
+            <do_if value="$actor.$jobDetails? and $actor.$jobDetails.keys.list.count and $actor.$jobDetails.$BuildLocation.child == null">
 
               <set_value name="$selectedMacro" exact="$actor.$jobDetails.$StationMacro" />
               <set_value name="$location" exact="$actor.$jobDetails.$BuildLocation" />
@@ -733,7 +757,7 @@
                 <append_to_list name="$actor.$jobDetails.$CEO.$JOBS" exact="[if md.CM_Config.Settings.$Check? then 'BR.move.patrol' else 'move.patrol', $actor.$jobDetails.$BuildZone, [ ['range', 'zone'] ] ]"/>
               </do_if>
             </do_if>
-			<debug_text text="'end'" />
+            <debug_text text="'end'" />
           </actions>
         </cue>
 
@@ -772,9 +796,9 @@
               </conditions>
               <actions>
                 <debug_text text="'%1 Start'.[$actor.ship]" />
-				<!-- Abort move.buildership order -->
+                <!-- Abort move.buildership order -->
                 <abort_scripts entity="$actor.ship.pilot" />
-				<!-- <reset_cue cue="MoveBuilderShip"/> may triggered by BuilderShipFailed-->
+                <!-- <reset_cue cue="MoveBuilderShip"/> may triggered by BuilderShipFailed-->
               </actions>
             </cue>
 
@@ -782,15 +806,15 @@
               <conditions>
                 <event_object_signalled object="$actor.ship" param="'move.buildership'" param2="false"/>
               </conditions>
-			  <delay exact="2s" /><!-- without delay game crash about endless aborting .pilot script -->
+              <delay exact="2s" /><!-- without delay game crash about endless aborting .pilot script -->
               <actions>
                 <debug_text text="'%1 Start'.[$actor.ship]" />
-				<!--Do not abort anything as it could have been given a new command-->
+                <!--Do not abort anything as it could have been given a new command-->
                 <include_actions ref="MMCStationConst_NewBuildLocation"/>
 
                 <reset_cue cue="MoveBuilderShip"/>
                 <remove_build_location_claim buildlocation="$location" />
-				<debug_text text="'end'" />
+                <debug_text text="'end'" />
               </actions>
             </cue>
 
@@ -822,7 +846,7 @@
                 <cue name="CheckBuildLocationObstructed_Build">
                   <delay exact="$checkdelay" />
                   <actions>
-				  	<debug_text text="'%1 Start'.[$actor.ship]" />
+                    <debug_text text="'%1 Start'.[$actor.ship]" />
                     <do_if value="$location.child != null">
                       <!-- TODO: abort cleanly -->
                     </do_if>
@@ -855,13 +879,13 @@
                         <connect_to_build_location object="$actor.container" buildlocation="$location"/>
 
                         <write_to_logbook category="missions" text="{40002,91}.[$actor.$jobDetails.$BuildZone.name, 
-																				if 	$actor.$jobDetails.$finalStationOwner and typeof $actor.$jobDetails.$finalStationOwner == datatype.faction 
-																				then 
-																					if $actor.$jobDetails.$finalStationOwner.name then $actor.$jobDetails.$finalStationOwner.name else $actor.$jobDetails.$finalStationOwner.id 
-																				else 
-																					if $actor.container.owner.name then $actor.container.owner.name else $actor.container.owner.id, 
-																				$selectedMacro.name]"
-								chance="if global.$nfconfig.$buildOwnerNotice then 100 else 0"/>
+                                        if   $actor.$jobDetails.$finalStationOwner and typeof $actor.$jobDetails.$finalStationOwner == datatype.faction 
+                                        then 
+                                          if $actor.$jobDetails.$finalStationOwner.name then $actor.$jobDetails.$finalStationOwner.name else $actor.$jobDetails.$finalStationOwner.id 
+                                        else 
+                                          if $actor.container.owner.name then $actor.container.owner.name else $actor.container.owner.id, 
+                                        $selectedMacro.name]"
+                chance="if global.$nfconfig.$buildOwnerNotice then 100 else 0"/>
 
                         <!-- build all stages, with 100% armament + shielding -->
                         <create_list name="$BuildPlanList"/>
@@ -908,7 +932,7 @@
 
                       </do_else>
                     </do_else>
-					<debug_text text="'end'" />
+                    <debug_text text="'end'" />
                   </actions>
                 </cue>
               </cues>
@@ -995,42 +1019,42 @@
               </conditions>
               <actions>
                 <do_if value="event.name == 'event_game_loaded' and not $actorContainer? and $station.exists and $actor.container? and $actor.container.exists">
-				  <debug_text text="'Reset: e.O: %1  A: %2  AC %3, St %4'.[@event.object, @$actor, @$actor.container, @$station]" />
+                  <debug_text text="'Reset: e.O: %1  A: %2  AC %3, St %4'.[@event.object, @$actor, @$actor.container, @$station]" />
                   <set_value name="$actorContainer" exact="$actor.container" />
-				  <reset_cue cue="this" />
+                  <reset_cue cue="this" />
                 </do_if>
                 <do_else comment="remove all components that are building">
-				  <do_if value="event.object? and event.object">
-				    <debug_text text="'%1 destroyed! %2 '.[event.object.knownname, @event.object.zone.knownname]" filter="error" chance="100"/>
-				  </do_if>
-				  <do_else>
-				    <debug_text text="'%1 destroyed/not found! %2 / St %3 in %4'.[@$actorContainer.knownname, @$actorContainer.zone.knownname, @$station.knownname, @$actorContainer.zone.knownname]" filter="error" chance="100"/>
-				  </do_else>
+                  <do_if value="event.object? and event.object">
+                    <debug_text text="'%1 destroyed! %2 '.[event.object.knownname, @event.object.zone.knownname]" filter="error" chance="100"/>
+                  </do_if>
+                  <do_else>
+                    <debug_text text="'%1 destroyed/not found! %2 / St %3 in %4'.[@$actorContainer.knownname, @$actorContainer.zone.knownname, @$station.knownname, @$actorContainer.zone.knownname]" filter="error" chance="100"/>
+                  </do_else>
 
-				  <do_if value="event.name == 'event_object_destroyed' and $actor.$build_base_stage? and $actor.$build_base_stage">
-					<destroy_object object="$station" explosion="false"/>
-				  </do_if>
-				  <do_else comment="remove all components that are building">
-					<do_if value="$station">
-					  <find_object_component name="$Component" object="$station" multiple="true" />
-					  <do_all exact="$Component.count" counter="$Counter" reverse="true">
-						<do_if value="$Component.{$Counter}.isconstruction">
-						  <destroy_object object="$Component.{$Counter}" explosion="false"/>
-						</do_if>
-					  </do_all>
-					  <remove_value name="$Component"/>
-					</do_if>
-				  </do_else>
-  
-				  <do_if value="$actorContainer.isoperational">
-				    <clear_buildmodule buildmodule="$actorContainer.buildmodule" />
-				    <disconnect_from_build_location object="$actorContainer" />
-					<signal_cue_instantly cue="md.MM_Corps__Station_Const.MMCStationConst_refresh" param="$actorContainer"/>
-				  </do_if>
+                  <do_if value="event.name == 'event_object_destroyed' and $actor.$build_base_stage? and $actor.$build_base_stage">
+                    <destroy_object object="$station" explosion="false"/>
+                  </do_if>
+                  <do_else comment="remove all components that are building">
+                    <do_if value="$station">
+                      <find_object_component name="$Component" object="$station" multiple="true" />
+                      <do_all exact="$Component.count" counter="$Counter" reverse="true">
+                        <do_if value="$Component.{$Counter}.isconstruction">
+                          <destroy_object object="$Component.{$Counter}" explosion="false"/>
+                        </do_if>
+                      </do_all>
+                      <remove_value name="$Component"/>
+                    </do_if>
+                  </do_else>
 
-				  <reset_cue cue="BuildFinished_Wait" />
+                  <do_if value="$actorContainer.isoperational">
+                    <clear_buildmodule buildmodule="$actorContainer.buildmodule" />
+                    <disconnect_from_build_location object="$actorContainer" />
+                    <signal_cue_instantly cue="md.MM_Corps__Station_Const.MMCStationConst_refresh" param="$actorContainer"/>
+                  </do_if>
+
+                  <reset_cue cue="BuildFinished_Wait" />
                 </do_else>
-				<debug_text text="'end'" />
+                <debug_text text="'end'" />
               </actions>
             </cue>
 
@@ -1054,9 +1078,9 @@
                       <signal_objects object="player.galaxy" param="'check for new owner'" param2="$station.zone"/>
                       <signal_objects object="player.galaxy" param="'init station'" param2="$station"/>
                     </do_if>
-					<!--do_else>
-						<create_ai_unit object="$station" />
-					</do_else-->
+                    <!--do_else>
+            <create_ai_unit object="$station" />
+          </do_else-->
                   </do_if>
 
                   <do_if value="$station and $station.availablebuildslots.count == 0">
@@ -1072,12 +1096,12 @@
 
                       <do_if value="$actor.$jobDetails.$finalStationOwner">
                         <cancel_cue cue="ShowStopper"/>
-						<signal_objects object="player.galaxy" param="'check for new owner'" param2="$station.zone"/>
+                        <signal_objects object="player.galaxy" param="'check for new owner'" param2="$station.zone"/>
                         <include_actions ref="md.MM_Corps__Station_Const.MMCStationConst_finalize" />
                       </do_if>
-					  <do_elseif value="$station.tradenpc and ($station.canbuildships or $station.canproduceships)">
-						<signal_objects object="player.galaxy" param="'do.start.syscript'" param2="$station" />
-					  </do_elseif>
+                      <do_elseif value="$station.tradenpc and ($station.canbuildships or $station.canproduceships)">
+                        <signal_objects object="player.galaxy" param="'do.start.syscript'" param2="$station" />
+                      </do_elseif>
 
                       <!-- finish job -->
                       <clear_buildmodule buildmodule="$actor.container.buildmodule" />
@@ -1129,7 +1153,7 @@
           </conditions>
           <delay exact="1ms" />
           <actions>
-		  	<debug_text text="'run'" />
+            <debug_text text="'run'" />
             <remove_value name="$actor.$atWork"/>
             <remove_value name="$actorContainer"/>
           </actions>

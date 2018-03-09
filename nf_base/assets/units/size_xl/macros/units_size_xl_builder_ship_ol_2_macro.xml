@@ -4,15 +4,15 @@
   <macro name="units_size_xl_builder_ship_ol_2_macro" class="ship_xl" alias="units_size_xl_builder_ship_macro">
     <component ref="units_size_xl_builder_ship" />
     <properties>
-      <identification name="{20101,4001}" description="{20101,4002}" unique="0" mapicon="shipicon_builder_l" />
-	  <explosiondamage value="100000" />
+      <identification name="{20101,4001} {20106, 201} {20007,3003}" description="{20101,4002}" unique="0" mapicon="shipicon_builder_l" />
+      <explosiondamage value="100000" />
       <hull max="1400000" />
       <effects>
         <explosion ref="explosion_l_01" />
         <jumpin ref="jump_jumpin_l" />
         <jumpout ref="jump_jumpout_l" />
       </effects>
-	<purpose primary="build" />
+      <purpose primary="build" />
     </properties>
     <connections>
       <connection ref="ConnectionFor_props_tradeoffer_buy_buildership">
@@ -54,7 +54,7 @@
         <macro ref="props_surf_ar_jumpdrive_macro" connection="Connection01" />
       </connection>
       <connection ref="connection_radar_fallback01">
-        <macro ref="radar_ship_xl_fallback_01_macro" connection="ship" />
+        <macro ref="radar_ship_xl_builder_01_macro" connection="ship" />
       </connection>
       <connection ref="connection_shieldgen01">
         <macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component" />
@@ -62,7 +62,7 @@
       <connection ref="connection_shieldgen02">
         <macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component" />
       </connection>
-	  <connection ref="connection_shieldgen_external01">
+      <connection ref="connection_shieldgen_external01">
         <macro ref="shieldgenerator_size_l_mk3_macro" connection="connection_component" />
       </connection>
       <connection ref="connection_shieldgen_external02">

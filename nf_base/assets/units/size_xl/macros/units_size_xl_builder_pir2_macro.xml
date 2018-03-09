@@ -4,7 +4,7 @@
   <macro name="units_size_xl_builder_pir2_macro" class="ship_xl">
     <component ref="units_size_xl_builder_ship" />
     <properties>
-      <identification name="{20101,4001}" description="{20101,4002}" mapicon="shipicon_builder_l" />
+      <identification name="{20101,4001} {20106, 201}" description="{20101,4002}" mapicon="shipicon_builder_l" />
       <explosiondamage value="100000" />
       <hull max="1400000" />
       <effects>
@@ -54,7 +54,7 @@
         <macro ref="props_surf_ar_jumpdrive_macro" connection="Connection01" />
       </connection>
       <connection ref="connection_radar_fallback01">
-        <macro ref="radar_ship_xl_fallback_01_macro" connection="ship" />
+        <macro ref="radar_ship_xl_builder_01_macro" connection="ship" />
       </connection>
       <connection ref="connection_shieldgen01">
         <macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component" />

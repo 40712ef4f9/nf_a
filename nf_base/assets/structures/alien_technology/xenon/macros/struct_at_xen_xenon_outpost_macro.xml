@@ -53,6 +53,11 @@
 	  <connection ref="ConnectionFor_props_wps_xen_weaponplatform_01_macro3">
 		<macro ref="props_wps_xen_weaponplatform_01_macro" connection="space" />
 	  </connection>
+
+	  <connection ref="ConnectionFor_props_wps_xen_weaponplatform_01_macro">
+        <build mode="optional" group="defense" sequence="A" stage="1" tags="primary" />
+		<macro ref="props_wps_xen_weaponplatform_01_macro" connection="space" />
+	  </connection>
 	  
     </connections>
   </macro>

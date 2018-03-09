@@ -71,12 +71,94 @@
     <do_elseif value="event.param == 'cArch_workat_contractor'">
       <do_if value="event.param2? and event.param2.{3}.isclass.zone and event.param2.{3}.freebuildlocations.count">
         <set_value name="$location" exact="event.param2.{3}.freebuildlocations.random" />
-        <open_conversation_menu menu="BuilderMacrosMenu" param="[0, 0, $actor, $actor.ship, 1]" param2="event.param3" />
+        <do_if value="$location.child">
+          <do_all exact="event.param2.{3}.buildlocations.count" counter="$bs"> 
+            <do_if value="event.param2.{3}.buildlocations.{$bs}.child" negate="true">
+              <set_value name="$location" exact="event.param2.{3}.buildlocations.{$bs}"/>
+              <break />
+            </do_if>
+          </do_all>
+        </do_if>
+
+        <do_if value="$location.child" negate="true">
+          <do_if value="not $actor.$specialMacroOrder? and $actor.ship.buildmodule.exists and $actor.ship.buildmodule.buildmacros.count == 1">
+            <set_value name="$actor.$specialMacroOrder" exact="$actor.ship.buildmodule.buildmacros.{1}" />
+          </do_if>
+
+          <add_player_choice_sub text="{1002,4002}" position="top_left" section="cArch_buildermacros" choiceparam="[0, 0, $actor, $actor.ship, 1]" comment="Select station for construction" />
+          <add_player_choice_sub text="'Start- %1'.[if $actor.$specialMacroOrder.name then $actor.$specialMacroOrder.name else $actor.$specialMacroOrder.id]" tooltip="'Do base stage of selected station'" position="left" section="cArch_buildermacros_short" choiceparam="[0, 0, $actor, $actor.ship, 1]" comment="Select station for construction" chance="$actor.$specialMacroOrder? *100" />
+          <add_player_choice_sub text="'Full- %1'.[if $actor.$specialMacroOrder.name then $actor.$specialMacroOrder.name else $actor.$specialMacroOrder.id]" tooltip="'Order all stages of selected station'" position="right" section="cArch_buildermacros_short" choiceparam="[0, 0, $actor, $actor.ship, 2]" comment="Select station for construction" chance="$actor.$specialMacroOrder? *100" />
+          <add_player_choice_return text="{1002,2}" position="bottom_right" comment="Goodbye"/>
+
+          <!--do_if value="$actor.$specialMacroOrder? and typeof $actor.$specialMacroOrder == datatype.macro">
+      <open_conversation_menu menu="SelectUpgradesMenu" param="[0, 0, $actor, $actor.ship, null, $actor.$specialMacroOrder, '', 0, true, []]" param2="event.param3" />
+      </do_if>
+      <do_else>
+      <open_conversation_menu menu="BuilderMacrosMenu" param="[0, 0, $actor, $actor.ship, 1]" param2="event.param3" />
+      </do_else-->
+        </do_if>
+        <do_else>
+          <show_help position="8" log="false" force="true" duration="2s" custom="'ERROR: no location left'" />
+          <remove_value name="$location" />
+        </do_else>
       </do_if>
       <do_else>
         <show_help position="8" log="false" force="true" duration="2s" custom="'ERROR: missing location'" />
       </do_else>
     </do_elseif>
+  </add>
+  <!-- build unregular macros like SY -->
+  <add sel="//do_elseif[@value='$location?']/add_player_choice_sub[@choiceparam='[0, 0, $actor, $actor.ship, 1]']" pos="after">
+    <do_if value="not $actor.$specialMacroOrder? and $actor.ship.buildmodule.exists and $actor.ship.buildmodule.buildmacros.count == 1">
+      <set_value name="$actor.$specialMacroOrder" exact="$actor.ship.buildmodule.buildmacros.{1}" />
+    </do_if>
+    <add_player_choice_sub text="'Start %1'.[if $actor.$specialMacroOrder.name then $actor.$specialMacroOrder.name else $actor.$specialMacroOrder.id]" tooltip="'Do base stage of selected station'" position="left" section="cArch_buildermacros_short" choiceparam="[0, 0, $actor, $actor.ship, 1]" comment="Select station for construction" chance="$actor.$specialMacroOrder? *100" />
+    <add_player_choice_sub text="'Full %1'.[if $actor.$specialMacroOrder.name then $actor.$specialMacroOrder.name else $actor.$specialMacroOrder.id]" tooltip="'Order all stages of selected station'" position="right" section="cArch_buildermacros_short" choiceparam="[0, 0, $actor, $actor.ship, 2]" comment="Select station for construction" chance="$actor.$specialMacroOrder? *100" />
+  </add>
+  <add sel="/mdscript[@name='NPC_Architect']/cues/cue/cues/cue[@name='SectionHandler']/actions/do_elseif[@value=&quot;event.param == 'cArch_buildermacros'&quot;]" pos="after">
+    <do_elseif value="event.param == 'cArch_buildermacros_short' and $actor.$specialMacroOrder?">
+      <!-- Result from build cost menu -->
+      <!-- param2 == { selected macro name, buildplanlist, upgradeplanlist } -->
+      <set_value name="$selectedMacro" exact="$actor.$specialMacroOrder" />
+      <set_value name="$buildplanlist" exact="[['a',0]]" />
+      <set_value name="$buildplanlist" exact="[['a',99], ['b',99], ['c',99], ['d',99], ['e',99], ['f',99], ['g',99], ['h',99], ['i',99], ['j',99], ['k',99], ['l',99], ['m',99], ['n',99], ['o',99], ['p',99], ['q',99], ['r',99], ['s',99], ['t',99]]" chance="if event.param2.{5}? and event.param2.{5} == 2 then 100 else 0"/>
+      <set_value name="$actor.$fullbuild" chance="if event.param2.{5}? and event.param2.{5} == 2 then 100 else 0"/>
+      <create_build_plan macro="$selectedMacro" buildplan="$Buildplan" buildplanlist="$buildplanlist" upgradeplanlist="[['turret_small_mg',1],['turret_medium_pe',1],['shieldgenerator',1],['turret_missile_df',1]]" />
+      <remove_value name="$buildplanlist" />
+      <get_build_slot_price price="$buildcost" object="$actor.container" buildmodule="$BuildModule" macro="$selectedMacro" sequence="''" stage="0" buildplan="$Buildplan" />
+      <add_npc_line line="1102" view="facecopilot" chance="(not player.hudmode) * 100" comment="We will need resources" />
+      <set_trade_restrictions object="$actor.container" restricted="true" />
+      <add_player_choice text="{1002,5000}" position="top_left" section="cArch_finalconfirm" choiceparam="0" comment="I want to deliver all the wares myself."/>
+      <add_player_choice text="{1002,5001}" position="bottom_left" section="cArch_selectautotrade" choiceparam="0" comment="I want you to take care of getting the resources."/>
+      <add_player_choice_return text="{1002,2}" position="bottom_right" comment="Goodbye"/>
+      <add_player_choice text="{40002,150}" section="cArch_contractor_options" position="top_right" selectable="not $actor.container.macro.ismacro.units_size_xl_builder_ship_plot_01_macro" />
+    </do_elseif>
+  </add>
+  <add sel="//do_elseif[@value=&quot;event.param == 'cArch_buildstation'&quot;]/do_if/set_buildmodule_macro" pos="after">
+    <do_if value="$actor.$specialMacroOrder? and $actor.$specialMacroOrder == $selectedMacro">
+      <remove_value name="$actor.$specialMacroOrder" />
+    </do_if>
+  </add>
+  <add sel="//do_elseif[@value=&quot;event.param == 'cArch_selectautotrade'&quot;]">
+    <do_if value="$actor.$fullbuild?">
+      <set_value name="$actor.$fullbuild" exact="false" />
+    </do_if>
+  </add>
+  <add sel="/mdscript[@name='NPC_Architect']/cues/cue/cues/cue/cues/cue[@name='BuildFinished_Active']/actions/do_if/start_conversation" type="@chance" >if $actor.$fullbuild? and not $actor.$fullbuild then 0 else 100</add>
+  <add sel="/mdscript[@name='NPC_Architect']/cues/cue/cues/cue/cues/cue[@name='BuildFinished_Active']/actions/do_if/start_conversation" pos="after">
+    <do_if value="$actor.$fullbuild? and $station.availablebuildslots.count == 0">
+      <remove_value name="$actor.$fullbuild" />
+    </do_if>
+  </add>
+  <!-- improve usage -->
+  <add sel="//cue[@name='MoveBuilderShip']/actions">
+    <remove_object_commander object="$actor.ship"/>
+  </add>
+  <add sel="//cue[@name='ValidateDestinationFree']/actions">
+    <set_object_commander object="$actor.ship" commander="player.primaryship" chance="$actor.ship.isplayerowned *100" />
+  </add>
+  <add sel="//cue[@name='BuilderShipFailed']/actions">
+    <set_object_commander object="$actor.ship" commander="player.primaryship" chance="$actor.ship.isplayerowned *100" />
   </add>
 
 </diff>

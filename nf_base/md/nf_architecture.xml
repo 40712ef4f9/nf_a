@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<mdscript name="NF_ARCHITECTURE" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../libraries/md.xsd">
+	<cues>
+		<!-- TODO: 
+			* add option for Blueprint after Station-Boarding
+		-->
+		<cue name="NF_Arch_base" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="default" />
+					<event_conversation_returned_to_section section="default" />
+					<event_conversation_next_section sectionprefix="nf_a_cArch"/>
+				</check_any>
+				<check_value value="event.object.type" exact="entitytype.architect" />
+				<check_value value="event.object.owner" exact="faction.player" />
+				<check_value value="event.object.container == player.primaryship" />
+			</conditions>
+			<actions>
+				<do_if value="md.$NF_ArchiSpMacros?" negate="true">
+					<create_list name="md.$NF_ArchiSpMacros"/>
+				</do_if>
+				<create_list name="$build"/>
+				<set_value name="$target" exact="null" />
+				<set_value name="$baseMenu" exact="false" />
+				<do_all exact="player.primaryship.subordinates.count" counter="$i">
+					<do_if value="player.target and player.primaryship.subordinates.{$i}.primarypurpose == objectpurpose.build and player.primaryship.subordinates.{$i}.architect.exists and player.primaryship.subordinates.{$i}.zone == player.primaryship.zone and player.primaryship.subordinates.{$i} == player.target">
+						<set_value name="$target" exact="player.primaryship.subordinates.{$i}" />
+					</do_if>
+					<do_elseif value="player.primaryship.subordinates.{$i}.primarypurpose == objectpurpose.build and player.primaryship.subordinates.{$i}.zone == player.primaryship.zone and player.primaryship.subordinates.{$i}.architect.exists">
+						<append_to_list name="$build" exact="player.primaryship.subordinates.{$i}" />
+					</do_elseif>
+				</do_all>
+
+				<do_if value="event.param" exact="'nf_a_cArch_start'">
+					<do_if value="event.param2? and typeof event.param2 == datatype.macro">
+						<set_value name="event.object.$specialMacroOrder" exact="event.param2" />
+					</do_if>
+
+					<set_value name="$baseMenu" exact="true" />
+
+				</do_if>
+				<do_elseif value="event.param" exact="'nf_a_cArch_add_steal'">
+					<set_value name="$tmp_Chance" exact="if event.param2 gt 100 then 100 else [20, event.param2].max" />
+					<set_value name="$tmp_Chance2" exact="$tmp_Chance * 0.5f" />
+
+					<do_if value="true" chance="$tmp_Chance">
+						<include_actions ref="md.NF_ARCHITECTURE.NF_Arch_looseCover" />
+						<set_relation_boost object="player.platform.container" faction="faction.player" value="faction.player.relation.kill.max" decay="1" delay="24h" />
+						<show_help position="8" log="false" force="true" duration="3s" custom="{2802,2711}" />
+					</do_if>
+					<do_elseif value="true" chance="$tmp_Chance2">
+						<include_actions ref="md.NF_ARCHITECTURE.NF_Arch_looseCover" />
+						<set_relation_boost object="player.platform.container" faction="faction.player" value="faction.player.relation.enemy.mid" decay="1" delay="12h" />
+						<include_actions ref="md.NF_ARCHITECTURE.NF_Arch_add_macro" />
+						<show_help position="8" log="false" force="true" duration="3s" custom="{2802,2712}" />
+					</do_elseif>
+					<do_elseif value="true" chance="55" comment="should not work well">
+						<include_actions ref="md.NF_ARCHITECTURE.NF_Arch_add_macro" />
+						<show_help position="8" log="false" force="true" duration="3s" custom="{2802,2713}" />
+					</do_elseif>
+					<do_else>
+						<show_help position="8" log="false" force="true" duration="3s" custom="{2802,2714}" />
+					</do_else>
+
+					<set_value name="$baseMenu" exact="true" />
+					<remove_value name="$tmp_Chance"/>
+					<remove_value name="$tmp_Chance2"/>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'nf_a_cArch_add_pay'">
+					<transfer_money from="player.entity" to="player.platform.container.tradenpc" amount="event.param2" />
+
+					<include_actions ref="md.NF_ARCHITECTURE.NF_Arch_add_macro" />
+
+					<set_value name="$baseMenu" exact="true" />
+				</do_elseif>
+				<do_elseif value="event.param" exact="'nf_a_cArch_add'">
+					<include_actions ref="md.NF_ARCHITECTURE.NF_Arch_add_macro" />
+				</do_elseif>
+				<do_elseif value="event.param" exact="'nf_a_cArch_remove'">
+					<do_if value="typeof event.param2 == datatype.macro">
+						<remove_value name="md.$NF_ArchiSpMacros.{md.$NF_ArchiSpMacros.indexof.{event.param2}}"/>
+					</do_if>
+					<do_else>
+						<remove_value name="md.$NF_ArchiSpMacros.{event.param2}"/>
+					</do_else>
+
+					<set_value name="$baseMenu" exact="true" />
+				</do_elseif>
+				<do_elseif value="event.param" exact="'nf_a_cArch_set'">
+					<do_if value="typeof event.param2 != datatype.list and event.param2.isclass.ship and event.param2.architect.exists">
+						<set_value name="event.param2.architect.$specialMacroOrder" exact="event.object.$specialMacroOrder" />
+						<set_value name="$baseMenu" exact="true" />
+					</do_if>
+					<do_elseif value="typeof event.param2 == datatype.list">
+						<set_value name="$todo_options_start" exact="0" />
+						<set_value name="$todo_options" exact="event.param2.{1}.clone"/>
+						<set_value name="$todo_options_start" exact="event.param2.{2}" />
+						<set_value name="$todo_options_max" exact="$todo_options.count" />
+						<do_if value="$todo_options_start gt 0">
+						
+							<do_all exact="6" counter="$i">
+								<do_if value="$i == 6 and ($todo_options_start + 1) le $todo_options_max">
+									<add_player_choice 		text="{2802,1000}.[$todo_options_start, $todo_options_max]" 	position="bottom_right" section="nf_a_cArch_set" 		choiceparam="[$todo_options, $todo_options_start]"/>
+								</do_if>
+								<do_elseif value="$i == 1 and $todo_options_start == 1 and $target">
+									<add_player_choice		text="'%1'.[$target.name]"	position="$i" immediate="$target.architect.$specialMacroOrder?" tooltip="if $target.architect.$specialMacroOrder? then '%1\n%2'.[$target.architect.$specialMacroOrder.id, $target.architect.$specialMacroOrder.name] else ''" section="nf_a_cArch_set" choiceparam="$target" />
+								</do_elseif>
+								<do_elseif value="$todo_options_start le $todo_options_max">
+									<add_player_choice		text="'%1'.[$todo_options.{$todo_options_start}.name]"	position="$i" 	immediate="$todo_options.{$todo_options_start}.architect.$specialMacroOrder?" tooltip="if $todo_options.{$todo_options_start}.architect.$specialMacroOrder? then '%1\n%2'.[$todo_options.{$todo_options_start}.architect.$specialMacroOrder.id, $todo_options.{$todo_options_start}.architect.$specialMacroOrder.name] else ''" 	section="nf_a_cArch_set" choiceparam="$todo_options.{$todo_options_start}"/>
+									<set_value name="$todo_options_start"  operation="add" exact="1" />
+								</do_elseif>
+								<do_elseif value="$i == 6">
+									<add_player_choice	text="{1002,20}" position="bottom_right" section="nf_a_cArch_start" />
+									<!--add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/-->
+								</do_elseif>
+							</do_all>
+		
+						</do_if>
+						<!--  clean  -->
+						<remove_value name="$todo_options_start"/>
+						<remove_value name="$todo_options_max"/>
+						<remove_value name="$todo_options"/>
+					</do_elseif>
+
+				</do_elseif>
+				<do_elseif value="event.param" exact="'nf_a_cArch_to_all'">
+					<do_if value="$target">
+						<set_value name="$target.architect.$specialMacroOrder" exact="event.object.$specialMacroOrder" />
+					</do_if>
+					<do_all exact="$build.count" counter="$i">
+						<set_value name="$build.{$i}.architect.$specialMacroOrder" exact="event.object.$specialMacroOrder" />
+					</do_all>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'nf_a_cArch_to_select'">
+					<set_value name="$todo_options_start" exact="0" />
+					<set_value name="$todo_options" exact="md.$NF_ArchiSpMacros.clone"/>
+					<set_value name="$todo_options_start" exact="event.param2.{2}" />
+					<set_value name="$todo_options_max" exact="$todo_options.count" />
+					<do_if value="$todo_options_start gt 0">
+					
+						<do_all exact="6" counter="$i">
+							<do_if value="$i == 6 and ($todo_options_start + 1) le $todo_options_max">
+								<add_player_choice 		text="{2802,1000}.[$todo_options_start, $todo_options_max]" 	position="bottom_right" section="nf_a_cArch_to_select" 		choiceparam="[null, $todo_options_start]"/>
+							</do_if>
+							<do_elseif value="$todo_options_start le $todo_options_max">
+								<add_player_choice		tooltip="$todo_options.{$todo_options_start}.name"	text="'%1'.[$todo_options.{$todo_options_start}.id]" immediate="event.object.$specialMacroOrder? and event.object.$specialMacroOrder == $todo_options.{$todo_options_start}" selectable="not (event.object.$specialMacroOrder? and event.object.$specialMacroOrder == $todo_options.{$todo_options_start})"	position="$i" 		section="nf_a_cArch_start" choiceparam="$todo_options.{$todo_options_start}"/>
+								<set_value name="$todo_options_start"  operation="add" exact="1" />
+							</do_elseif>
+							<do_elseif value="$i == 6">
+								<add_player_choice	text="{1002,20}" position="bottom_right" section="nf_a_cArch_start" />
+								<!--add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/-->
+							</do_elseif>
+						</do_all>
+	
+					</do_if>
+					<!--  clean  -->
+					<remove_value name="$todo_options_start"/>
+					<remove_value name="$todo_options_max"/>
+					<remove_value name="$todo_options"/>
+				</do_elseif>
+				<do_else>
+					<add_player_choice_sub text="{2802,2701}" position="top_left" section="nf_a_cArch_start" />
+				</do_else>
+
+				<do_if value="$baseMenu">
+					<do_if value="$target">
+						<add_player_choice position="top_left" text="{2802,2702}.[$target.name]" section="nf_a_cArch_set" selectable="event.object.$specialMacroOrder?" choiceparam="$target" />
+					</do_if>
+					<do_else>
+						<add_player_choice_sub position="top_left" text="{2802,2703}" section="nf_a_cArch_set" selectable="event.object.$specialMacroOrder?" choiceparam="[$build, 1]" />
+					</do_else>
+
+					<add_player_choice position="left" text="{2802,2704}.[$build.count]" section="nf_a_cArch_to_all" selectable="event.object.$specialMacroOrder? and $build.count" />
+
+					<add_player_choice_sub position="top_right" text="{2802,2705}.[if not event.object.$specialMacroOrder? then {2802,8286} else if event.object.$specialMacroOrder.name then event.object.$specialMacroOrder.name else event.object.$specialMacroOrder.id]" section="nf_a_cArch_to_select" selectable="md.$NF_ArchiSpMacros.count" choiceparam="[null, 1]" />
+
+					<do_if value="player.platform and player.platform.container.isclass.station and md.$NF_ArchiSpMacros.indexof.{player.platform.container.macro}">
+						<add_player_choice position="right" text="{2802,2716}" section="nf_a_cArch_add" selectable="false" />
+					</do_if>
+					<do_elseif value="player.platform and player.platform.owner.relationto.{player.entity.owner} gt player.platform.owner.relation.member.mid">
+						<add_player_choice position="right" text="{2802,2706}" section="nf_a_cArch_add" selectable="(player.platform and player.platform.container.isclass.station and md.$NF_ArchiSpMacros.indexof.{player.platform.container.macro} == 0)" />
+					</do_elseif>
+					<do_elseif value="player.platform and player.platform.owner.relationto.{player.entity.owner} gt player.platform.owner.relation.friend.min and player.platform.container.tradenpc.exists">
+						<set_value name="$tmp_Price" exact="10000000Cr * ((player.platform.owner.relation.member.mid - player.platform.owner.relationto.{faction.player})f * 100)" />
+
+						<add_player_choice position="right" text="{2802,2706}" tooltip="{2802,2710}.[$tmp_Price.formatted.default]" section="nf_a_cArch_add_pay" 
+							selectable="(player.platform and player.platform.container.isclass.station and md.$NF_ArchiSpMacros.indexof.{player.platform.container.macro} == 0 and player.platform.container.tradenpc and player.money ge $tmp_Price)" 
+							choiceparam="$tmp_Price" />
+
+						<remove_value name="$tmp_Price"/>
+					</do_elseif>
+
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				</do_if>
+
+				<remove_value name="$baseMenu"/>
+				<remove_value name="$target"/>
+				<remove_value name="$build"/>
+			</actions>
+		</cue>
+
+		<!--
+		<include_actions ref="md.NF_ARCHITECTURE.NF_Arch_add_macro" />
+		-->
+		<library name="NF_Arch_add_macro">
+			<actions>
+				<do_if value="md.$NF_ArchiSpMacros?" negate="true">
+					<create_list name="md.$NF_ArchiSpMacros"/>
+				</do_if>
+				<do_if value="player.platform and player.platform.container.isclass.station">
+					<append_to_list name="md.$NF_ArchiSpMacros" exact="player.platform.container.macro" chance="(md.$NF_ArchiSpMacros.indexof.{player.platform.container.macro} == 0)*100"/>
+					<write_to_logbook category="tips" text="{2802,2715}.[player.platform.container.knownname, player.platform.container.zone.name, player.platform.container.macro.id]"/>
+				</do_if>
+			</actions>
+		</library>
+		<!--
+		<include_actions ref="md.NF_ARCHITECTURE.NF_Arch_looseCover" />
+		-->
+		<library name="NF_Arch_looseCover">
+			<actions>
+				<do_if value="player.entity.owner != player.entity.trueowner or player.primaryship.owner != player.primaryship.trueowner">
+					<do_if value="player.entity.$covergroup?">
+						<signal_cue_instantly cue="md.NF_HideMy_ACME.NFHMA_unCover" />
+					</do_if>
+					<do_else>
+						<set_cover_owner object="player.entity" />
+						<set_cover_owner object="player.primaryship" />
+					</do_else>
+				</do_if>
+			</actions>
+		</library>
+	</cues>
+</mdscript>

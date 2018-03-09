@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<diff>
+	<replace sel="//do_if[@value='not $shoppinglist.indexof.{$tradewares.{$i}} and $warebasket.indexof.{$tradewares.{$i}}']/@value">not $shoppinglist.indexof.{$tradewares.{$i}} and $warebasket.indexof.{$tradewares.{$i}} and $homebase.cargo.{$tempware}.target gt $homebase.cargo.{$tempware}.count and ($homebase.cargo.{$tempware}.target - $homebase.cargo.{$tempware}.count) gt ($homebase.cargo.{$tempware}.target * 0.1f)</replace>
+	<replace sel="//set_value[@exact='[this.ship.cargo.{$ware}.free, $homebase.cargo.{$ware}.target].min']/@exact">[this.ship.cargo.{$ware}.free, $homebase.cargo.{$ware}.target - $homebase.cargo.{$ware}.count].min</replace>
+	<replace sel="//do_else/set_value[@name='$homebaseresources']/@exact">if $homebase.resources.list.count then $homebase.resources.list else if $homebase.tradewares.list.count then $homebase.tradewares.list else $homebase.resources.list</replace>
+	<replace sel="//do_if[@value='not $iswarehouse and $resourceoffers.count == 0']/@value">$resourceoffers.count == 0</replace>
+</diff>

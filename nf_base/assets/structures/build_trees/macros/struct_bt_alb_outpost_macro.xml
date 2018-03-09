@@ -11,29 +11,27 @@
         <macro ref="struct_econ_ref_ar_pmc_basis1_macro" connection="space" />
       </connection>	
       <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_p_small">
-        <!--<build mode="optional" group="defense" sequence="A" stage="1" />-->
         <macro>
           <component ref="struct_econ_ref_ar_pmc_p_small1" connection="space" />
         </macro>
       </connection>
       <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_u_macro">
-       <!-- <build mode="optional" group="defense" sequence="A" stage="1" tags="primary" />-->
         <macro ref="struct_econ_ref_ar_pmc_u1_macro" connection="space" />
       </connection>      
       <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro1">
-       <!-- <build mode="optional" group="defense" sequence="F" stage="3" tags="primary" />-->
         <macro ref="struct_econ_science_weaponplatform1_macro" connection="space" />
       </connection> 
 		<connection ref="connection_controlroom01">
         <macro ref="control_room_macro" connection="Connection01" />
       </connection>
 	  <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro">
-        <!--<build mode="optional" group="defense" sequence="F" stage="1" tags="primary" />-->
         <macro ref="struct_econ_science_weaponplatform1_macro" connection="space" />
       </connection>
-      
       <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro2">
-        <!--<build mode="optional" group="defense" sequence="F" stage="2" tags="primary" />-->
+        <macro ref="struct_econ_science_weaponplatform1_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_science_weaponplatform_macro3">
+        <build mode="optional" group="defense" sequence="A" stage="1" tags="primary" />
         <macro ref="struct_econ_science_weaponplatform1_macro" connection="space" />
       </connection>
     </connections>

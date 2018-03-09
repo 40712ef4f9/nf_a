@@ -258,6 +258,24 @@
 					<param name="basketoverride" value="if this.$params.$basketoverride? then this.$params.$basketoverride else null" />
 				</run_script>
 			</do_elseif>
+			<do_elseif value="$run_script_name" exact="'mining.ship.station'">
+
+				<do_if value="not this.$params.$warebasket? and this.$params.$basketoverride? and this.$params.$basketoverride.count">
+					<set_value name="this.$params.$warebasket" exact="this.$params.$basketoverride"/>
+					<remove_value name="this.$params.$basketoverride"/>
+				</do_if>
+				<do_if value="this.$params.$warebasket? and this.$params.$warebasket.count">
+					<do_all exact="this.$params.$warebasket.count" counter="$i" reverse="true">
+						<do_if value="this.ship.cargo.{this.$params.$warebasket.{$i}}.max gt 0" negate="true">
+							<remove_value name="this.$params.$warebasket.{$i}"/>
+						</do_if>
+					</do_all>
+				</do_if>
+
+				<run_script name="'mining.ship.station'" >
+					<param name="warebasket" value="if this.$params.$warebasket? then this.$params.$warebasket else null" />
+				</run_script>
+			</do_elseif>
 			<do_elseif value="$run_script_name" exact="'trade.ship.ranged'">
 				<run_script name="'trade.ship.ranged'" >
 					<param name="warelist" value="if this.$params.$warelist? then this.$params.$warelist else null" />

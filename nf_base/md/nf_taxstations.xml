@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mdscript name="NF_TaxStations" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="D:\games\Steam\steamapps\common\X Rebirth\MODS_JSGME\libraries\md.xsd">
 <cues>
-	<cue name="Tax_Stations" instantiate="true" checktime="player.age + 30min" checkinterval="30min">
+	<cue name="Tax_Stations" instantiate="true" checktime="5min" checkinterval="30min">
 		<conditions>
 			<check_value value="global.$nfconfig.$Check" />
 			<check_value value="global.$nfconfig.$taxStationsPL"/>
@@ -41,7 +41,7 @@
        </actions>
 	</cue>
 
-	<cue name="NPC_Expenses" instantiate="true" checktime="player.age + 30min" checkinterval="60min">
+	<cue name="NPC_Expenses" instantiate="true" checktime="5min" checkinterval="60min">
 		<conditions>
 			<check_value value="global.$nfconfig.$Check" />
 			<check_value value="global.$nfconfig.$npcExpensesPL"/>

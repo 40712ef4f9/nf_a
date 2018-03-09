@@ -37,6 +37,9 @@
 				<do_if value="global.$mmpiratesy_pfactions?" negate="true">
 					<set_value name="global.$mmpiratesy_pfactions" exact="[faction.reivers,faction.sovereignsyndicate,faction.hereticvanguards]"/>
 				</do_if>
+				<do_if value="md.$NF_ArchiSpMacros?" negate="true">
+					<create_list name="md.$NF_ArchiSpMacros"/>
+				</do_if>
 				<!--
 					NF Config
 				-->
@@ -320,7 +323,9 @@
 								macro.units_size_l_xenon_01_miner_macro,
 								macro.units_size_l_xenon_01_collector_macro,
 								macro.units_size_l_xenon_01_dc_macro,
-								macro.units_size_xl_xenon_01_c_macro
+								macro.units_size_xl_xenon_01_c_macro,
+								macro.units_size_l_xenon_outk_macro,
+								macro.units_size_xl_builder_outpost_macro
 							]
 						"/>
 					<do_all exact="$todo.count" counter="$j" >
@@ -361,7 +366,8 @@
 				<!-- Factions -->
 				<do_if value="md.$todo_factions?">
 					<append_to_list name="md.$todo_factions" exact="[
-						faction.acmecorp
+						faction.acmecorp,
+						faction.deepwater
 						]"/>
 				</do_if>
 
@@ -664,7 +670,7 @@
 						<set_value name="$done" operation="add"/>
 					</do_elseif>
 				</do_all>
-				<debug_text text="'Patch: %2 of %1 done'.[$todo.count, $done]" filter="error" chance="100" />
+				<debug_text text="'Patch: %2 of %1 done'.[$todo.count, $done]" filter="error" chance="0" />
 				<remove_value name="$todo"/>
 				<remove_value name="$done"/>
 			</actions>

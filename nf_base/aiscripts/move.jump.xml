@@ -91,9 +91,10 @@
     <set_value name="$startsector" exact="this.ship.sector"/>
   </add>
   <add sel="//label[@name='finish']" pos="after">
-    <do_if value="not $ignorefuel and $startsector? and global.$nfconfig.$AdvJump and $startsector.gatedistance.{$targetsector}">
-      <remove_cargo ware="ware.fuelcells" object="this.ship" exact="$startsector.gatedistance.{$targetsector} * 100" />
-    </do_if>
+    <do_if value="not $ignorefuel and $startsector? and global.$nfconfig.$AdvJump and $startsector.gatedistance.{this.ship.sector}">
+      <remove_cargo ware="ware.fuelcells" object="this.ship" exact="$startsector.gatedistance.{this.ship.sector} * 100" />
+      <remove_value name="$startsector"/>
+   </do_if>
   </add>
 
   <add sel="//do_if[@value='$nextstep == $targetsector']/get_closest_jumpbeacon" pos="after">

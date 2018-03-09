@@ -29,12 +29,23 @@
 						<set_value name="$todo_options_start" exact="event.param2" />
 						<set_value name="$todo_options_max" exact="$RestoreTargets.count" />
 
+						<do_if value="md.$mmcareWrecks?" negate="true">
+							<create_list name="md.$mmcareWrecks"/>
+						</do_if>
+						<do_else>
+							<do_all exact="md.$mmcareWrecks.count" counter="$Counter" reverse="true">
+								<do_if value="not md.$mmcareWrecks.{$Counter}.exists">
+									<remove_value name="md.$mmcareWrecks.{$Counter}" />
+								</do_if>
+							</do_all>
+						</do_else>
+
 						<do_all exact="6" counter="$i">
 							<do_if value="$i == 6 and ($todo_options_start + 1) le $todo_options_max">
 								<add_player_choice_sub 		text="{2802,1300}.[$todo_options_start, $todo_options_max]" 	position="bottom_right" section="mmcare_do_restore" 		choiceparam="$todo_options_start"/>
 							</do_if>
 							<do_elseif value="$todo_options_start le $todo_options_max">
-								<add_player_choice		text="$RestoreTargets.{$todo_options_start}.macro.name" tooltip="{2802,1330}.[$RestoreTargets.{$todo_options_start}.distanceto.{event.object.container}]" 	position="$i" 		section="mmcare_do_restore_do" choiceparam="$RestoreTargets.{$todo_options_start}"/>
+								<add_player_choice		text="$RestoreTargets.{$todo_options_start}.macro.name" tooltip="{2802,1330}.[$RestoreTargets.{$todo_options_start}.distanceto.{event.object.container}]" 	position="$i" 	 selectable="md.$mmcareWrecks.indexof.{$RestoreTargets.{$todo_options_start}} == 0"	section="mmcare_do_restore_do" choiceparam="$RestoreTargets.{$todo_options_start}"/>
 								<set_value name="$todo_options_start"  operation="add" exact="1" /> 
 							</do_elseif>
 							<do_elseif value="$i == 6">
@@ -53,35 +64,64 @@
 					<set_value name="$Macro" exact="event.param2.macro"/>
 					<set_value name="$Position" exact="event.param2.position"/>
 					<set_value name="$Rotation" exact="event.param2.rotation"/>
-					<destroy_object object="event.param2" explosion="false" />
-					<create_ship name="$Ship" macro="$Macro" zone="event.object.container.zone">
-						<defence actor="null"/>
-						<engineer actor="null"/>
-						<owner exact="faction.ownerless"/>
-						<position value="$Position"/>
-						<rotation value="$Rotation"/>
-					</create_ship>
-					<create_group groupname="$Objects"/>
-					<find_object_component groupname="$Objects" object="$Ship" class="class.destructible" multiple="true" functional="true" integrated="false"/>
-					<do_all exact="$Objects.list.count" counter="$Counter">
-						  <!--set_object_hull object="$Objects.{$Counter}" exact="0"/-->
-						  <destroy_object object="$Objects.list.{$Counter}" explosion="true" chance="($Objects.list.{$Counter} != $Ship and not $Objects.list.{$Counter}.isclass.dockingbay and not $Objects.list.{$Counter}.macro.ismacro.playerdock_capship01_macro)*100"/>
-					</do_all>
-					<!--set_summarised_shield_state object="$Ship" state="wreck" exact="$Ship.summary.numshields.all"/>
-					<set_summarised_surfacedestructible_state object="$Ship" state="wreck" exact="$Ship.summary.numsurfacedestructible.all"/>
-					<set_summarised_turret_state object="$Ship" state="wreck" exact="$Ship.summary.numturrets.all"/-->
-					<set_object_hull object="$Ship" exact="5"/>
-					<remove_value name="$Objects" />
+					<set_value name="$Zone" exact="event.param2.zone"/>
+					
+					<set_value name="$breakupChance" exact="210"/>
+					<set_value name="$breakupChance" exact="20" operation="add" chance="if $Macro.class == class.ship_xl then 100 else 0"/>
+					<set_value name="$breakupChance" exact="event.object.container.pilot.combinedskill" operation="subtract" chance="if event.object.container.pilot and event.object.container.pilot.exists then 100 else 0"/>
+					<set_value name="$breakupChance" exact="event.object.container.engineer.combinedskill" operation="subtract" chance="if event.object.container.engineer and event.object.container.engineer.exists then 100 else 0"/>
+					
+					<do_if value="true" chance="[100, $breakupChance].min">
+						<do_if value="md.$mmcareWrecks?" negate="true">
+							<create_list name="md.$mmcareWrecks"/>
+						</do_if>
+						<do_if value="md.$mmcareWrecks.indexof.{event.param2}" negate="true">
+							<append_to_list name="md.$mmcareWrecks" exact="event.param2" />
+						</do_if>
+						<show_help position="8" log="false" force="true" duration="5s" custom="'INFO: Repair not possible'" />
+						<!-- TODO: Target got destroyed at salvage -->
+					</do_if>
+					<do_else>
+						<destroy_object object="event.param2" explosion="false" />
+						<create_ship name="$Ship" macro="$Macro" zone="$Zone">
+							<defence actor="null"/>
+							<engineer actor="null"/>
+							<owner exact="faction.ownerless"/>
+							<position value="$Position"/>
+							<rotation value="$Rotation"/>
+						</create_ship>
+						<create_group groupname="$Objects"/>
+						<find_object_component groupname="$Objects" object="$Ship" class="class.destructible" multiple="true" functional="true" integrated="false"/>
+						<do_all exact="$Objects.list.count" counter="$Counter">
+							  <!--set_object_hull object="$Objects.{$Counter}" exact="0"/-->
+							  <destroy_object object="$Objects.list.{$Counter}" explosion="true" chance="($Objects.list.{$Counter} != $Ship and not $Objects.list.{$Counter}.isclass.dockingbay and not $Objects.list.{$Counter}.macro.ismacro.playerdock_capship01_macro)*100"/>
+						</do_all>
+						<!--set_summarised_shield_state object="$Ship" state="wreck" exact="$Ship.summary.numshields.all"/>
+						<set_summarised_surfacedestructible_state object="$Ship" state="wreck" exact="$Ship.summary.numsurfacedestructible.all"/>
+						<set_summarised_turret_state object="$Ship" state="wreck" exact="$Ship.summary.numturrets.all"/-->
+						<set_object_hull object="$Ship" exact="5"/>
+						<remove_value name="$Objects" />
+					</do_else>
 					<remove_value name="$Macro" />
 					<remove_value name="$Position" />
 					<remove_value name="$Rotation" />
-					<do_if value="event.object.container.isclass.ship">
+					<remove_value name="$Zone" />
+					<remove_value name="$breakupChance" />
+					<do_if value="event.object.container.isclass.ship and event.param2.exists">
 						<remove_from_player_squad object="event.object.container" />
-						<start_script name="'move.patrol.care'" object="event.object.container.pilot">
-							<param name="patrolobject" value="event.param2" />
-						</start_script>
+						<do_if value="event.object.container.isclass.[class.ship, class.station]">
+							<start_script name="'move.patrol.care'" object="event.object.container.pilot">
+								<param name="patrolobject" value="if $Ship? and $Ship.exists then $Ship else event.param2" />
+							</start_script>
+						</do_if>
+						<do_else>
+							<start_script name="'move.patrol.care'" object="event.object.container.pilot">
+								<param name="range" value="'zone'" />
+								<param name="patrolobject" value="event.param2.zone" />
+							</start_script>
+						</do_else>
 					</do_if>
-					<do_if value="global.$mmcarriers_xl? and event.object.container.macro.ismacro.{global.$mmcarriers_xl}">
+					<do_if value="$Ship? and global.$mmcarriers_xl? and event.object.container.macro.ismacro.{global.$mmcarriers_xl}">
 						<create_group groupname="$docks" />
 						<do_all exact="2" counter="$j">
 							<find_dock_location container="event.object.container" size="[tag.dock_xl, tag.dock_l].{$j}" name="$dock" multiple="true"/>

@@ -2537,7 +2537,7 @@
 
 					<set_value name="$param" exact="[['basketoverride', $basketoverride]]"/>
 					<set_value name="$destination" exact="$sectors.random" chance="if $destination? and $destination.exists then 0 else 100"/>
-					<set_value name="$script" exact="'mining.ship.free'"/>
+					<set_value name="$script" exact="if $Object.commander and $Object.commander.isclass.station and $Object.commander.resources.list.count then 'mining.ship.station' else 'mining.ship.free'"/>
 					<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_tmp" />
 
 					<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_runscript" />
@@ -6864,14 +6864,6 @@
 				</do_if>
 
 				<set_value name="$cost" exact="0"/>
-				<do_if value="$ref.ware and $temp_shipyard.cargo.{$ref.ware}.count">
-					<remove_cargo object="$temp_shipyard" ware="$ref.ware" exact="1" />
-					<set_value name="$cost" exact="$ref.ware.maxprice" chance="if $temp_shipyard.owner != $faction then 100 else 0"/>
-				</do_if>
-				<do_elseif value="$ref.ware and $ref.ware.maxprice">
-					<set_value name="$cost" exact="$ref.ware.maxprice"/>
-				</do_elseif>
-
 				<do_if value="$temp_shipyard" negate="true" comment="fallback">
 					<set_value name="$temp_shipyard" exact="$temp_Station"/>
 					<set_value name="$fallback" />
@@ -6883,6 +6875,17 @@
 				</create_ship>
 
 				<do_if value="$Object.exists">
+					<do_if value="$ref.ware and $temp_shipyard.cargo.{$ref.ware}.count">
+						<remove_cargo object="$temp_shipyard" ware="$ref.ware" exact="1" />
+						<set_value name="$cost" exact="$ref.ware.maxprice" chance="if $temp_shipyard.owner != $faction then 100 else 0"/>
+					</do_if>
+					<do_elseif value="$ref.ware and $ref.ware.maxprice">
+						<set_value name="$cost" exact="$ref.ware.maxprice"/>
+						<do_if value="stat.nf_ships_spawned?">
+							<set_value name="stat.nf_ships_spawned" operation="add" />
+						</do_if>
+					</do_elseif>
+
 					<do_if value="$Object.primarypurpose == objectpurpose.mine">
 						<set_value name="$Unitcapacity" exact="[($Object.units.maxcount-$Object.units.count), 200].min" />
 						<do_if value="$Object.cargo.{ware.ore}.max and $Object.cargo.{ware.plasma}.max">
@@ -6903,16 +6906,25 @@
 						<select race="$raceTag" tags="tag.pilot"/>
 						<owner exact="$faction"/>
 					</create_pilot>
+
+					<set_value name="$temp_object" exact="$pilot" />
+					<set_value name="$temp_Skill" exact="if $temp_shipyard.owner == $faction then true else false" />
+					<include_actions ref="md.NF_BASE.NF_skill_actor" />
+					<remove_value name="$temp_object"/>
+					<remove_value name="$temp_Skill"/>
 					
 					<share_actor_account actor="$pilot" otherobject="$_CEO"/>
 					
-					<do_if value="$cost and $_CEO.owner != $temp_shipyard.tradenpc.owner">
+					<do_if value="$cost and $temp_shipyard.tradenpc and $_CEO.owner != $temp_shipyard.tradenpc.owner">
 						<transfer_money from="$_CEO" to="$temp_shipyard.tradenpc" amount="$cost"/>
 					</do_if>
 	
 					<set_object_commander object="$Object" commander="$temp_Station" type="$temp_Station.tradenpc.type" />
+
 					<set_value name="$Station" exact="$temp_Station"/>
 					<include_actions ref="md.MM_Corps__Data.MMCData_ship_job" />
+
+					<remove_value name="$pilot"/>
 				</do_if>
 
 				<do_if value="$fallback?">

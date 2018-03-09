@@ -103,13 +103,18 @@
 		<cue name="NFHMA_unCover" instantiate="true" >
 			<conditions>
 				<check_any>
-					<event_object_undocked object="player.primaryship" />
-					<event_conversation_next_section section="gOrders_attackall"/>
-					<event_conversation_next_section section="gOrders_attackobject"/>
-					<event_conversation_next_section sectionprefix="mmca_own_fleet_do_attack_"/>
+					<event_cue_signalled/>
+					<check_all>
+						<check_any>
+							<event_object_undocked object="player.primaryship" />
+							<event_conversation_next_section section="gOrders_attackall"/>
+							<event_conversation_next_section section="gOrders_attackobject"/>
+							<event_conversation_next_section sectionprefix="mmca_own_fleet_do_attack_"/>
+						</check_any>
+						<check_value value="event.object.coverowner == faction.acmecorp" />
+					</check_all>
 				</check_any>
 				<check_value value="player.entity.$covergroup?" />
-				<check_value value="event.object.coverowner == faction.acmecorp" />
 			</conditions>
 			<actions>
 				<do_if value="player.entity.$covergroup?">
