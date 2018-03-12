@@ -59,7 +59,7 @@
 
 						<set_value name="$_CEO" exact="global.$PLUTARCH_CEO" />
 						<!-- load config -->
-						<set_value name="$special_musthave" exact="[macro.struct_bt_alb_shipyard_2_macro, macro.struct_bt_alb_small_ships_complex_macro]"/>
+						<set_value name="$special_musthave" exact="[macro.struct_bt_pmc_shipyard_macro, macro.struct_bt_alb_small_ships_complex_macro]"/>
 						<set_value name="$build" exact="['al','tech','ship','shippart']" comment="['massenergy','energy','food','drug','tech','ship','al','ol','warehouse']"/>
 						<set_value name="$style" exact="['domination', 'cooperative', 'pirate']" comment="min 3 entries required"/>
 
