@@ -15,14 +15,15 @@
     <handler ref="TargetInvalidHandler" />
     <handler ref="AttackHandler" />
     <handler ref="ScannedHandler" />
+    <handler ref="PlayerInput" />
   </interrupts>
   <init>
     <set_command command="command.patrol"  />
     <set_command_action commandaction="commandaction.calculating" />
   </init>
   <patch sinceversion="6">
-      <set_value name="$ownstations" exact="false"/>
-      <set_value name="$position" exact="null"/>
+    <set_value name="$ownstations" exact="false"/>
+    <set_value name="$position" exact="null"/>
   </patch>
   <attention min="unknown">
     <actions>
@@ -32,65 +33,65 @@
         <set_value name="$patrolobject" exact="this.ship.jobmainzone"/>
       </do_if>
       <do_if value="@$patrolobject.exists and $patrolobject.isclass.[class.zone, class.sector, class.cluster] and ['zone','sector','cluster'].indexof.{$range}">
-		  <set_value name="$endintargetzone" exact="true"/>
-		  <do_if value="$patrolobject.isclass.zone" negate="true">
-			  <find_zone groupname="$zones" space="$patrolobject" multiple="true" tempzone="false" /> 
-			  <do_all exact="$zones.count" counter="$i" reverse="true"> 
-				  <do_if value="$zones.{$i}.istemporaryzone or $zones.{$i}.isclass.highway or not $zones.{$i}.ismapzone">
-					  <remove_from_group group="$zones" object="$zones.{$i}" />
-				  </do_if>
-			  </do_all>
-			  <set_value name="$patrolobject" exact="$zones.random"/>
-			  <remove_value name="$zones"/>
-		  </do_if>
-		  <do_if value="$position">
-			  <set_value name="$endintargetzone" exact="false"/>
-		  </do_if>
-		  <do_if value="not $patrolobject.isclass.zone and this.zone != $patrolobject">
-			  <run_script name="if @global.$mmcare_mmcarrier_is_active then 'move.generic.carrier' else 'move.generic'" >
-				<param name="destination" value="$patrolobject" />
-				<param name="endintargetzone" value="$endintargetzone" />
-				<param name="position" value="$position" />
-			  </run_script>
-			  <set_value name="$patrolobject" exact="null"/>
-		  </do_if>
-		  <remove_value name="$endintargetzone"/>
-		  <set_value name="$position" exact="null"/>
+        <set_value name="$endintargetzone" exact="true"/>
+        <do_if value="$patrolobject.isclass.zone" negate="true">
+          <find_zone groupname="$zones" space="$patrolobject" multiple="true" tempzone="false" /> 
+          <do_all exact="$zones.count" counter="$i" reverse="true"> 
+            <do_if value="$zones.{$i}.istemporaryzone or $zones.{$i}.isclass.highway or not $zones.{$i}.ismapzone">
+              <remove_from_group group="$zones" object="$zones.{$i}" />
+            </do_if>
+          </do_all>
+          <set_value name="$patrolobject" exact="$zones.random"/>
+          <remove_value name="$zones"/>
+        </do_if>
+        <do_if value="$position">
+          <set_value name="$endintargetzone" exact="false"/>
+        </do_if>
+        <do_if value="not $patrolobject.isclass.zone and this.zone != $patrolobject">
+          <run_script name="if @global.$mmcare_mmcarrier_is_active then 'move.generic.carrier' else 'move.generic'" >
+            <param name="destination" value="$patrolobject" />
+            <param name="endintargetzone" value="$endintargetzone" />
+            <param name="position" value="$position" />
+          </run_script>
+          <set_value name="$patrolobject" exact="null"/>
+        </do_if>
+        <remove_value name="$endintargetzone"/>
+        <set_value name="$position" exact="null"/>
       </do_if>
 
-	  <do_if value="not this.ship.engineer.exists">
-		  <create_engineer name="$engineer" ship="this.ship">
-			  <select race="race.argon" tags="tag.engineer"/>
-			  <owner exact="this.ship.owner"/>
-			  <skills>
-				  <skill type="boarding" exact="5"/>
-				  <skill type="combat" exact="5"/>
-				  <skill type="engineering" exact="5"/>
-				  <skill type="navigation" exact="5"/>
-				  <skill type="leadership" exact="5"/>
-				  <skill type="morale" exact="5"/>
-				  <skill type="science" exact="5"/>
-				  <skill type="management" exact="5"/>
-			  </skills>
-		  </create_engineer>
-	  </do_if>
-	  <do_if value="this.ship.engineer.exists">
-		  <start_script object="this.ship.engineer" name="'engineer.ai.plus'"/>
-	  </do_if>
-	  
+      <do_if value="not this.ship.engineer.exists">
+        <create_engineer name="$engineer" ship="this.ship">
+          <select race="race.argon" tags="tag.engineer"/>
+          <owner exact="this.ship.owner"/>
+          <skills>
+            <skill type="boarding" exact="5"/>
+            <skill type="combat" exact="5"/>
+            <skill type="engineering" exact="5"/>
+            <skill type="navigation" exact="5"/>
+            <skill type="leadership" exact="5"/>
+            <skill type="morale" exact="5"/>
+            <skill type="science" exact="5"/>
+            <skill type="management" exact="5"/>
+          </skills>
+        </create_engineer>
+      </do_if>
+      <do_if value="this.ship.engineer.exists">
+        <start_script object="this.ship.engineer" name="'engineer.ai.plus'"/>
+      </do_if>
+
       <label name="start" />
       <set_value name="$capship" exact="this.ship.isclass.[class.ship_l, class.ship_xl]" />
 
-	  <do_if value="this.ship.owner == this.ship.trueowner and not $ownstations">
-		  <get_control_entities groupname="$Entities" object="this.ship"/>
-		  <do_if value="$Entities?">
-			  <do_all exact="$Entities.count" counter="$i" > 
-				  <set_cover_owner object="$Entities.{$i}" faction="faction.neutral"/>
-			  </do_all> 
-			  <set_cover_owner object="this.ship" faction="faction.neutral"/>
-		  </do_if>
-		  <remove_value name="$Entities"/>
-	  </do_if>
+      <do_if value="this.ship.owner == this.ship.trueowner and not $ownstations">
+        <get_control_entities groupname="$Entities" object="this.ship"/>
+        <do_if value="$Entities?">
+          <do_all exact="$Entities.count" counter="$i" > 
+            <set_cover_owner object="$Entities.{$i}" faction="faction.neutral"/>
+          </do_all> 
+          <set_cover_owner object="this.ship" faction="faction.neutral"/>
+        </do_if>
+        <remove_value name="$Entities"/>
+      </do_if>
 
       <set_value name="$startzone" exact="this.ship.zone" />
       <!-- Has a job main zone? -->
@@ -109,22 +110,22 @@
       <do_else>
         <set_value name="$patrol_duration" exact="10min" />
         <create_formation formation="formationshape.vshape" object="this.ship" param="this.ship.size * 1.5" />
-		<do_all exact="this.ship.subordinates.count" counter="$i">
-			<do_if value="this.ship.trueowner == this.ship.subordinates.{$i}.owner">
-				<get_control_entities groupname="$Entities" object="this.ship.subordinates.{$i}"/>
-				<do_if value="$Entities?">
-					<do_all exact="$Entities.count" counter="$j" > 
-						<set_cover_owner object="$Entities.{$j}" faction="faction.neutral"/>
-					</do_all> 
-					<set_cover_owner object="this.ship.subordinates.{$i}" faction="faction.neutral"/>
-				</do_if>
-				<remove_value name="$Entities"/>
-			</do_if>
-			<start_script name="'move.escort'" object="this.ship.subordinates.{$i}.pilot">
-				<param name="target" value="this.ship" />
-				<param name="formation" value="[formationshape.vshape, formationshape.invvshape].random" />              
-			</start_script>
-		</do_all>
+        <do_all exact="this.ship.subordinates.count" counter="$i">
+          <do_if value="this.ship.trueowner == this.ship.subordinates.{$i}.owner">
+            <get_control_entities groupname="$Entities" object="this.ship.subordinates.{$i}"/>
+            <do_if value="$Entities?">
+              <do_all exact="$Entities.count" counter="$j" > 
+                <set_cover_owner object="$Entities.{$j}" faction="faction.neutral"/>
+              </do_all> 
+              <set_cover_owner object="this.ship.subordinates.{$i}" faction="faction.neutral"/>
+            </do_if>
+            <remove_value name="$Entities"/>
+          </do_if>
+          <start_script name="'move.escort'" object="this.ship.subordinates.{$i}.pilot">
+            <param name="target" value="this.ship" />
+            <param name="formation" value="[formationshape.vshape, formationshape.invvshape].random" />              
+          </start_script>
+        </do_all>
       </do_else>
 
       <do_if value="$range" exact="'zone'">
@@ -163,27 +164,27 @@
         </do_if>
         <set_value name="$hulldamagelimit" exact="60 + (40 * this.ship.engineer.combinedskill / 100)" comment="below what percentage hull is a component considered damaged (ship engineer repairs up to a value between 60% and 100%, dependent on skill)"/>
         <set_value name="$target" exact="null" />
- 		<find_object name="$RepairTargets" space="$space" class="class.station" owner="this.ship.trueowner" multiple="true"/>
-		<do_all exact="$RepairTargets.count" counter="$i">
-			<do_if value="$RepairTargets.{$i}.hullpercentage ge $hulldamagelimit">
-				<continue />
-			</do_if>
-			<do_if value="$target == null">
-				<set_value name="$target" exact="$RepairTargets.{$i}"/>
-			</do_if>
-			<do_elseif value="$RepairTargets.{$i}.hullpercentage lt @$target.hullpercentage">
-				<set_value name="$target" exact="$RepairTargets.{$i}"/>
-			</do_elseif>
-		</do_all>
-		<remove_value name="$hulldamagelimit"/>
-		<remove_value name="$RepairTargets"/>
+        <find_object name="$RepairTargets" space="$space" class="class.station" owner="this.ship.trueowner" multiple="true"/>
+        <do_all exact="$RepairTargets.count" counter="$i">
+          <do_if value="$RepairTargets.{$i}.hullpercentage ge $hulldamagelimit">
+            <continue />
+          </do_if>
+          <do_if value="$target == null">
+            <set_value name="$target" exact="$RepairTargets.{$i}"/>
+          </do_if>
+          <do_elseif value="$RepairTargets.{$i}.hullpercentage lt @$target.hullpercentage">
+            <set_value name="$target" exact="$RepairTargets.{$i}"/>
+          </do_elseif>
+        </do_all>
+        <remove_value name="$hulldamagelimit"/>
+        <remove_value name="$RepairTargets"/>
         <do_if value="$target.exists" >
           <set_value name="$targetzone" exact="$target.zone" />
           <set_value name="$pos" exact="$target.position" />
           <remove_value name="$target"/>
           <resume label="patrol" />
         </do_if>
-		<remove_value name="$target"/>
+        <remove_value name="$target"/>
       </do_if>
 
       <!-- Specal case for patrol around Object "patrolobject" -->
@@ -347,19 +348,19 @@
 
       <!-- check if there this is a wreck and we can restore it -->
       <do_if value="false">
-		<find_gravidar_contact name="$RestoreTarget" object="this.ship" restorable="true" multiple="false">
-			<match_distance object="this.ship" max="this.ship.maxradarrange"/>
-			<match_size min="300m"/>
-		</find_gravidar_contact>
-		<do_if value="$RestoreTarget.iswreck">
-			<restore_object object="$RestoreTarget" hull="1" recursive="true"/>
-			<set_owner object="$RestoreTarget" faction="faction.ownerless" />
-			<set_object_hull object="$RestoreTarget" exact="5" />
-			<set_value name="$targetzone" exact="$RestoreTarget.zone"/>
-			<get_safe_pos result="$pos" radius="this.ship.size + 1000m" ignored="this.ship" object="$RestoreTarget" zone="$targetzone" />
-			
-			<resume label="patrol"/>
-		</do_if>
+        <find_gravidar_contact name="$RestoreTarget" object="this.ship" restorable="true" multiple="false">
+          <match_distance object="this.ship" max="this.ship.maxradarrange"/>
+          <match_size min="300m"/>
+        </find_gravidar_contact>
+        <do_if value="$RestoreTarget.iswreck">
+          <restore_object object="$RestoreTarget" hull="1" recursive="true"/>
+          <set_owner object="$RestoreTarget" faction="faction.ownerless" />
+          <set_object_hull object="$RestoreTarget" exact="5" />
+          <set_value name="$targetzone" exact="$RestoreTarget.zone"/>
+          <get_safe_pos result="$pos" radius="this.ship.size + 1000m" ignored="this.ship" object="$RestoreTarget" zone="$targetzone" />
+
+          <resume label="patrol"/>
+        </do_if>
       </do_if>
 
       <do_if value="this.ship.trueowner == faction.player and @$nextupdate lt player.age">
@@ -381,31 +382,31 @@
     </actions>
   </attention>
   <on_abort>
-	<do_if value="this.ship.owner != this.ship.trueowner">
-		<get_control_entities groupname="$Entities" object="this.ship"/>
-		<do_if value="$Entities?">
-			<do_all exact="$Entities.count" counter="$i" > 
-				<set_cover_owner object="$Entities.{$i}"/>
-			</do_all> 
-			<set_cover_owner object="this.ship"/>
-		</do_if>
-		<remove_value name="$Entities"/>
-		<do_all exact="this.ship.subordinates.count" counter="$i">
-			<get_control_entities groupname="$Entities" object="this.ship.subordinates.{$i}"/>
-			<do_if value="$Entities?">
-				<do_all exact="$Entities.count" counter="$j" > 
-					<set_cover_owner object="$Entities.{$j}"/>
-				</do_all> 
-				<set_cover_owner object="this.ship.subordinates.{$i}"/>
-			</do_if>
-			<remove_value name="$Entities"/>
-			<start_script name="'move.escort'" object="this.ship.subordinates.{$i}.pilot">
-				<param name="target" value="this.ship" />
-				<param name="formation" value="[formationshape.vshape, formationshape.invvshape].random" />              
-			</start_script>
-		</do_all>
-	</do_if>
-	<destroy_object object="this.ship.engineer" chance="if this.ship.isclass.[class.ship_s, class.ship_m] then 100 else 0"/>
-	<start_script object="this.ship.engineer" name="'engineer.ai'" chance="if this.ship.isclass.[class.ship_l, class.ship_xl] then 100 else 0"/>
+    <do_if value="this.ship.owner != this.ship.trueowner">
+      <get_control_entities groupname="$Entities" object="this.ship"/>
+      <do_if value="$Entities?">
+        <do_all exact="$Entities.count" counter="$i" > 
+          <set_cover_owner object="$Entities.{$i}"/>
+        </do_all> 
+        <set_cover_owner object="this.ship"/>
+      </do_if>
+      <remove_value name="$Entities"/>
+      <do_all exact="this.ship.subordinates.count" counter="$i">
+        <get_control_entities groupname="$Entities" object="this.ship.subordinates.{$i}"/>
+        <do_if value="$Entities?">
+          <do_all exact="$Entities.count" counter="$j" > 
+            <set_cover_owner object="$Entities.{$j}"/>
+          </do_all> 
+          <set_cover_owner object="this.ship.subordinates.{$i}"/>
+        </do_if>
+        <remove_value name="$Entities"/>
+        <start_script name="'move.escort'" object="this.ship.subordinates.{$i}.pilot">
+          <param name="target" value="this.ship" />
+          <param name="formation" value="[formationshape.vshape, formationshape.invvshape].random" />              
+        </start_script>
+      </do_all>
+    </do_if>
+    <destroy_object object="this.ship.engineer" chance="if this.ship.isclass.[class.ship_s, class.ship_m] then 100 else 0"/>
+    <start_script object="this.ship.engineer" name="'engineer.ai'" chance="if this.ship.isclass.[class.ship_l, class.ship_xl] then 100 else 0"/>
   </on_abort>
 </aiscript>

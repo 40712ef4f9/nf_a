@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Michael (192.168.3.145) at 18.07.2014_10-54-21-->
+<macros>
+  <macro name="units_size_m_diplomatic_tp_macro" class="ship_m">
+    <component ref="units_size_m_diplomatic_tp" />
+    <properties>
+      <identification name="{20101,11521}" description="{20101,11502}" mapicon="shipicon_fighter_m" />
+      <weapons>
+        <slot ref="connection_weapon_prim01" />
+        <slot ref="connection_weapon_prim02" />
+        <slot ref="connection_weapon_prim03" />
+        <slot ref="connection_weapon_prim04" />
+        <slot ref="connection_weapon_sec01" />
+        <slot ref="connection_weapon_sec02" />
+      </weapons>
+      <hull max="44000" />
+      <!--secrecy level="1" />
+      <purpose primary="fight" /-->
+    </properties>
+    <connections>
+      <connection ref="connection_cockpit01">
+        <macro ref="unit_combat_ar_cockpit_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_engine01">
+        <macro ref="engine_ship_m_s6m4_macro" connection="ship" />
+      </connection>
+      <connection ref="connection_radar01">
+        <macro ref="radar_ship_m_fighter_01_macro" connection="ship" />
+      </connection>
+      <connection ref="connection_shieldgen01">
+        <macro ref="shieldgenerator_ship_m_02_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_weapon_prim01">
+        <macro ref="weapon_invisible_impulse_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_weapon_prim02">
+        <macro ref="weapon_invisible_impulse_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_weapon_prim03">
+        <macro ref="weapon_invisible_impulse_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_weapon_prim04">
+        <macro ref="weapon_invisible_impulse_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_weapon_sec01">
+        <macro ref="missilelauncher_invisible_dumbfire_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_weapon_sec02">
+        <macro ref="missilelauncher_invisible_dumbfire_mk1_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="playerdockCon">
+        <macro ref="dockingbay_player_bar_ol_macro" connection="Connection02" />
+      </connection>
+      <connection ref="connection_storage01">
+        <macro ref="storage_ship_xs_universal_01_macro" connection="ShipConnection" />
+      </connection>
+      <connection ref="connection_storage02">
+        <macro ref="storage_ship_xs_universal_01_macro" connection="ShipConnection" />
+      </connection>
+    </connections>
+  </macro>
+</macros>

@@ -45,7 +45,7 @@
 					</actions>
 				</cue>
 
-				<cue name="DO_Worker" instantiate="true" checktime="player.age + 4min" checkinterval="15min">
+				<cue name="DO_Worker" instantiate="true" checktime="4min" checkinterval="15min">
 					<delay min="120s" max="600s"/>
 					<actions>
 						<!--

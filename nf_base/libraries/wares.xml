@@ -579,6 +579,46 @@
 			<component ref="units_size_m_boarding_macro" amount="1" />
 			<icon video="units_size_m_boarding_macro" />
 		</ware>
+
+		<ware id="shp_m_diplomatic_tp" name="{20101,11521}" description="{20101,11502}" transport="ship" size="ship" volume="28390" tags="economy ship">
+			<price min="5012649" average="5897234" max="6781819" />
+			<production time="208" amount="1" method="default" name="{20206,101}">
+				<primary>
+					<ware ware="energycells" amount="979" />
+					<ware ware="foodrations" amount="338" />
+					<ware ware="fusionreactor" amount="11" />
+					<ware ware="holtzmanfieldgenerator" amount="1" />
+					<ware ware="microchips" amount="23" />
+					<ware ware="reinforcedmetalplating" amount="52" />
+					<ware ware="scanningarray" amount="23" />
+				</primary>
+			</production>
+			<production time="208" amount="1" method="omicron" name="{20206,301}">
+				<primary>
+					<ware ware="bofu" amount="158" />
+					<ware ware="emspectrometer" amount="25" />
+					<ware ware="energycells" amount="979" />
+					<ware ware="fusionreactor" amount="11" />
+					<ware ware="holtzmanfieldgenerator" amount="1" />
+					<ware ware="plasmapumps" amount="86" />
+					<ware ware="reinforcedmetalplating" amount="52" />
+				</primary>
+			</production>
+			<production time="208" amount="1" method="fieldsofop" name="{20206,601}">
+				<primary>
+					<ware ware="energycells" amount="979" />
+					<ware ware="foodrations" amount="338" />
+					<ware ware="fusionreactor" amount="11" />
+					<ware ware="holtzmanfieldgenerator" amount="1" />
+					<ware ware="microchips" amount="23" />
+					<ware ware="scanningarray" amount="23" />
+					<ware ware="teladianium" amount="695" />
+				</primary>
+			</production>
+			<component ref="units_size_m_diplomatic_tp_macro" amount="1" />
+			<icon video="units_size_m_diplomatic_tp_macro" />
+		</ware>
+
 		<ware id="shp_m_torpedo_01_xen" name="{20101,2621}" description="{20101,2622}" transport="ship" size="ship" volume="11410" tags="economy ship">
 			<price min="5012649" average="5897234" max="6781819" />
 			<production time="208" amount="1" method="default" name="{20206,101}">

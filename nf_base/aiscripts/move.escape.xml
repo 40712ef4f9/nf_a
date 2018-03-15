@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-<aiscript name="move.escape" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+<aiscript name="move.escape" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
   <params>
     <param name="target" default="null"/>
+    <param name="vip" default="this"/>
   </params>
   <init>
     <set_command command="command.withdrawbattle" />
 	<set_command_action commandaction="commandaction.flyingto" param="$target"/>
   </init>
+  <patch sinceversion="2" early="true">
+    <set_value name="$vip" exact="this" />
+  </patch>
   <attention min="visible">
     <actions>
       <set_value name="$debugoutputchance" exact="0" />
@@ -84,7 +88,7 @@
 
       <label name="selfdestruct" />
 	  
-      <signal_objects object="player.galaxy" param="'SD_MOVE'" param2="[this.ship, this.ship.pilot, $target]" delay="30s"/>
+      <signal_objects object="player.galaxy" param="'SD_MOVE'" param2="[this.ship, $vip, $target]" delay="30s"/>
       <wait min="2min" max="5min" />
 
       <destroy_object explosion="false" object="this.ship" />
@@ -106,7 +110,7 @@
 		<safepos object="$target"/>
       </warp>	  
 
-      <signal_objects object="player.galaxy" param="'SD_MOVE'" param2="[this.ship, this.ship.pilot, $target]" delay="30s"/>
+      <signal_objects object="player.galaxy" param="'SD_MOVE'" param2="[this.ship, $vip, $target]" delay="30s"/>
       <wait min="2min" max="5min" />
 
       <destroy_object explosion="false" object="this.ship" />

@@ -15,6 +15,7 @@ X Rebirth\extensions\nf_prosdv
 Each folder is a mod(-part) and will activated if conditions match
 
 It is absolutely necessary to start a new game after install this mod!
+In case you have performance issues at new-game-start by reason of your CPU, try to start with difficult setting "normal" or lower (at "hard" and higher the number of ships is always significantly higher) and change the setting afterwards.
 
 #####
 # 3rd Mod support

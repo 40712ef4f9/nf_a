@@ -203,6 +203,17 @@
 				</do_if>
 			</actions>
 		</cue>
+		<cue name="MMVoy_restartpldefault" instantiate="true" namespace="this">
+			<conditions>
+				<event_object_signalled object="player.galaxy" param="'do.start.pldefault'" />
+			</conditions>
+			<actions>
+				<do_if value="event.param2? and event.param2.isclass.ship and event.param2.isplayerowned">
+					<abort_scripts entity="event.param2.pilot"/>
+					<start_script object="event.param2.pilot" name="'player.default'" />
+				</do_if>
+			</actions>
+		</cue>
 
 		<cue name="MMVoy_advcom" instantiate="true" >
 			<conditions>

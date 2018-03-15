@@ -4,9 +4,46 @@
     <check_value value="((event.name == 'event_cue_signalled' and typeof event.param == datatype.list and event.param.{1}.isplayerowned) or (event.name == 'event_platform_actor_created' and event.param.isplayerowned))"/>
   </add>
 
+  <replace sel="//cue[@name='ActorDestructed']">
+    <cue name="ActorDestructed">
+      <conditions>
+        <check_any>
+          <check_all>
+            <event_game_loaded/> 
+            <check_any>
+              <check_value value="$actor.exists" negate="true"/>
+              <check_value value="$actor.exists and not $actor.isplayerowned and not ($BuildModule? and $BuildModule.exists and $BuildModule.isbuilding)"/>
+            </check_any>
+          </check_all>
+          <event_object_destroyed object="$actor" />
+        </check_any>
+      </conditions>
+      <delay exact="200ms" />
+      <actions>
+        <do_if value="event.name == 'event_game_loaded' and $actor.exists and not $actor.isplayerowned">
+          <signal_cue_instantly cue="md.NPC_Architect_nP.Base" param="[$actor, $PlatformActor, if $IsOnBuilderShip? then $IsOnBuilderShip else if $BuildModule? and $BuildModule.exists then true else false ]"/>
+        </do_if>
+        <!-- No actor, no handler instances -->
+        <cancel_cue cue="Base" />
+      </actions>
+    </cue>
+  </replace>
+  <add sel="//cue[@name='OnHired']/actions/do_if/add_actor_to_playership" pos="after">
+    <signal_cue_instantly cue="md.NPC_Architect_nP.Base" param="[$actor, $PlatformActor, if $IsOnBuilderShip? then $IsOnBuilderShip else if $BuildModule? and $BuildModule.exists then true else false ]"/>
+    <cancel_cue cue="Base" />
+  </add>
+  <add sel="//cue[@name='OnFired']/actions/do_if/start_actor_transport" pos="after">
+    <cancel_cue cue="Base" />
+  </add>
   <add sel="//cue[@name='OnFired']/actions/do_if/start_actor_transport" pos="before">
     <set_owner object="$actor" faction="faction.neutral" />
     <signal_cue_instantly cue="md.NF_BASE.NF_kill_NPC" param="$actor" delay="20s"/>
+  </add>
+  <add sel="//cue[@name='OnDroneArrival']/actions">
+    <do_if value="not $actor.isplayerowned">
+      <signal_cue_instantly cue="md.NPC_Architect_nP.Base" param="[$actor, $PlatformActor, if $IsOnBuilderShip? then $IsOnBuilderShip else if $BuildModule? and $BuildModule.exists then true else false ]"/>
+      <cancel_cue cue="Base" />
+    </do_if>
   </add>
 
   <add sel="//cue[@name='BuildFinished_Active']/actions/do_if/create_ai_unit" pos="after">

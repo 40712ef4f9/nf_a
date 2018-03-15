@@ -5089,9 +5089,15 @@
 <set_value name="$text2" exact="'\n* Order: Ship: %1 SY: %2 [%3] %4 \n'.[$macro.id, $ShipYardOfTrust.knownname, $ShipYardOfTrust.zone.knownname, @$ShipYardOfTrust.tradenpc.$orders.count]" operation="add"/>
 						<signal_objects object="$ShipYardOfTrust" param="'SHIPORDER'" param2="[$macro, $_faction, $_CEO]" />
 					</do_if>
+					<do_else>
+<set_value name="$text3" exact="'** No Order SY:%1 Macro:%2\n'.[$ShipYardOfTrust, $macro]" operation="add"/>
+					</do_else>
 					<remove_value name="$macro"/>
 					<remove_value name="$ShipYardOfTrust"/>
 				</do_if>
+				<do_else>
+<set_value name="$text3" exact="'** No SY available\n'" operation="add"/>
+				</do_else>
 			</actions>
 		</library>
 

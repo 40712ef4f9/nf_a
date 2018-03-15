@@ -12,14 +12,12 @@
           <check_value value="event.param.exists" />
           <check_value value="[faction.enemy, faction.criminal, faction.smuggler, faction.neutral, faction.friend, faction.ownerless].indexof.{event.param.owner}" negate="true"/>
           <check_any>
-            <check_value value="event.param.hullpercentage le 11" />
-            <check_value value="event.param.hullpercentage le 21 and global.$nfStationdestruction_o10_20.indexof.{event.param.macro.id}" />
-            <check_value value="event.param.hullpercentage lt 31 and global.$nfStationdestruction_o20_30.indexof.{event.param.macro.id}" />
-            <check_value value="event.param.hullpercentage lt 49 and global.$nfStationdestruction_o30_49.indexof.{event.param.macro.id}" />
+            <check_value value="global.$nfStationdestructionHulls.{'$%1'.[event.param.macro.id]}?" negate="true"/>
+            <check_value value="event.param.hullpercentage le global.$nfStationdestructionHulls.{'$%1'.[event.param.macro.id]}" />
           </check_any>
         </conditions>
         <actions>
-			<signal_objects object="player.galaxy" param="'StationDamaged'" param2="event.param" />
+          <signal_objects object="player.galaxy" param="'StationDamaged'" param2="event.param" />
         </actions>
       </handler>
     </library>

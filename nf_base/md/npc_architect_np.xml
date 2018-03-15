@@ -77,13 +77,19 @@
             <check_any>
               <check_all>
                 <event_game_loaded/> 
-                <check_value value="$actor.exists" negate="true"/>
+                <check_any>
+                  <check_value value="$actor.exists" negate="true"/>
+                  <check_value value="$actor.exists and $actor.isplayerowned and not ($BuildModule? and $BuildModule.exists and $BuildModule.isbuilding)"/>
+                </check_any>
               </check_all>
               <event_object_destroyed object="$actor" />
             </check_any>
           </conditions>
           <delay exact="200ms" />
           <actions>
+            <do_if value="event.name == 'event_game_loaded' and $actor.exists and $actor.isplayerowned">
+              <signal_cue_instantly cue="md.NPC_Architect.Base" param="[$actor, $PlatformActor, if $IsOnBuilderShip? then $IsOnBuilderShip else if $BuildModule? and $BuildModule.exists then true else false ]"/>
+            </do_if>
             <!-- No actor, no handler instances -->
             <cancel_cue cue="Base" />
           </actions>
@@ -662,12 +668,14 @@
               </play_cutscene>
               <!-- <start_conversation actor="$actor" conversation="Speak" type="normal" convparam="3163" /> -->
               <set_owner object="$actor" faction="faction.player" />
+              <signal_cue_instantly cue="md.NPC_Architect.Base" param="[$actor, $PlatformActor, if $IsOnBuilderShip? then $IsOnBuilderShip else if $BuildModule? and $BuildModule.exists then true else false ]"/>
               <set_skills_visible entity="$actor" visible="true" />
               <add_actor_to_playership actor="$actor" />
+              <cancel_cue cue="Base" />
             </do_if>
             <do_else>
               <start_actor_transport actor="$actor" target="player.primaryship" />
-            </do_else>
+           </do_else>
           </actions>
         </cue>
 
@@ -712,6 +720,7 @@
               <set_owner object="$actor" faction="faction.neutral" />
               <signal_cue_instantly cue="md.NF_BASE.NF_kill_NPC" param="$actor" delay="20s"/>
               <start_actor_transport actor="$actor" />
+			  <cancel_cue cue="Base" />
             </do_if>
           </actions>
         </cue>
@@ -732,6 +741,10 @@
                 <set_value name="$BuildModule" exact="$actor.container.buildmodule" />
                 <set_value name="$station" exact="$BuildModule.buildanchor" />
               </do_if>
+            </do_if>
+            <do_if value="$actor.isplayerowned">
+              <signal_cue_instantly cue="md.NPC_Architect.Base" param="[$actor, $PlatformActor, if $IsOnBuilderShip? then $IsOnBuilderShip else if $BuildModule? and $BuildModule.exists then true else false ]"/>
+              <cancel_cue cue="Base" />
             </do_if>
           </actions>
         </cue>

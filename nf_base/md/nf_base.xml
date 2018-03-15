@@ -256,6 +256,7 @@
 							[macro.units_size_s_ship_pmc_01_macro, macro.units_size_s_pmc_xen_sat_macro],
 							[macro.units_size_s_ship_ar_military_03_macro, macro.units_size_s_ship_ar_military_03_bomber_macro],
 							[macro.units_size_s_ship_ar_military_03_macro, macro.units_size_s_ship_ar_military_03_cargo_macro],
+							[macro.units_size_m_canteran_01_macro, macro.units_size_m_diplomatic_tp_macro],
 							[macro.units_size_m_ice_collector_macro, macro.units_size_m_boarding_macro]
 						]
 					"/>
@@ -382,119 +383,112 @@
 					<set_value name="global.$nfconfig.$Check" exact="1"/>
 				</do_if>
 				
-				<set_value name="global.$nfStationdestruction_o10" exact="[
-					'struct_bt_alb_spice_farm_macro',
-					'struct_bt_ol_spacefuel_production_macro',
-					'struct_econ_weapon_ar_defence_pl_macro',
-					'xenon_small_station_01_macro',
-					'struct_bt_alb_warehouse_macro',
-					'struct_bt_hol_big_ships_yard_macro',
-					'struct_bt_pir_shipyard_2_macro',
-					'struct_bt_alb_big_ships_yard_macro',
-					'struct_bt_alb_shipyard_2_macro',
-					'struct_bt_hoa_shipyard_macro',
-					'struct_bt_alb_drone_factory_macro',
-					'struct_bt_alb_high_energy_construction_macro',
-					'struct_econ_special_piratestation_macro',
-					'struct_bt_alb_small_ships_complex_macro',
-					'masstraffic_station_01_macro',
-					'struct_bt_dv_shipyard_macro',
-					'xenon_asteroid_01_base_01_macro',
-					'xenon_asteroid_01_base_01b_macro',
-					'struct_bt_dv_solar_power_plant_macro',
-					'landmarks_unique_split_lostcolony_macro',
-					'struct_bt_ol_small_ships_complex_macro',
-					'struct_bt_ol_shippartproduction_macro',
-					'struct_bt_ol_weaponryproduction_macro',
-					'struct_bt_ol_weaponrycomplex_macro',
-					'xenon_asteroid_shipyard_macro',
-					'struct_bt_ol_cell_refinery_macro',
-					'struct_econ_unique_ar_spp_xl_macro',
-					'struct_bt_ol_water_destillery_macro',
-					'struct_bt_ol_laboratory_macro',
-					'struct_bt_ol_hightec_construction_macro',
-					'struct_bt_ol_tech_complex_macro',
-					'struct_bt_ol_metalworks_macro',
-					'struct_bt_alb_solar_power_plant_macro',
-					'struct_bt_ol_medical_supplies_macro',
-					'struct_bt_ol_crystal_refinement_macro',
-					'struct_bt_alb_small_ships_yard_macro',
-					'xenon_asteroid_02_base_02_macro',
-					'struct_bt_ol_soy_farm_macro',
-					'landmarks_unique_ar_lonely_giant_macro',
-					'struct_bt_ol_drone_factory_macro',
-					'struct_bt_ol_spice_farm_macro',
-					'struct_bt_ol_construction_material_macro',
-					'struct_bt_alb_servicedock_macro',
-					'struct_bt_ol_solar_power_plant_macro',
-					'struct_bt_ol_plankton_tank_macro',
-					'struct_bt_ol_drone_complex_macro',
-					'struct_bt_ol_farm_complex_macro',
-					'struct_bt_ol_high_energy_construction_macro',
-					'struct_bt_ol_small_ships_yard_macro',
-					'struct_bt_ol_shipyard_macro',
-					'khaak_weaponplatform_macro',
-					'xenon_weaponplatform_macro',
-					'mine_te_ore_s_macro']"/>
-				
-				<set_value name="global.$nfStationdestruction_o10_20" exact="[
-					'struct_bt_alb_spice_farm_macro',
-					'struct_bt_ol_spacefuel_production_macro',
-					'struct_econ_weapon_ar_defence_pl_macro',
-					'xenon_small_station_01_macro',
-					'struct_bt_alb_warehouse_macro',
-					'struct_bt_hol_big_ships_yard_macro',
-					'struct_bt_pir_shipyard_2_macro',
-					'struct_bt_alb_big_ships_yard_macro',
-					'struct_bt_alb_shipyard_2_macro',
-					'struct_bt_hoa_shipyard_macro',
-					'struct_bt_alb_drone_factory_macro',
-					'struct_bt_alb_high_energy_construction_macro',
-					'struct_econ_special_piratestation_macro',
-					'struct_bt_alb_small_ships_complex_macro',
-					'masstraffic_station_01_macro',
-					'struct_bt_dv_shipyard_macro',
-					'xenon_asteroid_01_base_01_macro',
-					'xenon_asteroid_01_base_01b_macro',
-					'struct_bt_dv_solar_power_plant_macro',
-					'landmarks_unique_split_lostcolony_macro',
-					'struct_bt_ol_small_ships_complex_macro']"/>
-				
-				<set_value name="global.$nfStationdestruction_o20_30" exact="[
-					'struct_bt_ol_shippartproduction_macro',
-					'struct_bt_ol_weaponryproduction_macro',
-					'struct_bt_ol_weaponrycomplex_macro',
-					'xenon_asteroid_shipyard_macro',
-					'struct_bt_ol_cell_refinery_macro',
-					'struct_econ_unique_ar_spp_xl_macro',
-					'struct_bt_ol_water_destillery_macro',
-					'struct_bt_ol_laboratory_macro',
-					'struct_bt_ol_hightec_construction_macro',
-					'struct_bt_ol_tech_complex_macro',
-					'struct_bt_ol_metalworks_macro',
-					'struct_bt_alb_solar_power_plant_macro',
-					'struct_bt_ol_medical_supplies_macro',
-					'struct_bt_ol_crystal_refinement_macro',
-					'struct_bt_alb_small_ships_yard_macro',
-					'xenon_asteroid_02_base_02_macro',
-					'struct_bt_ol_soy_farm_macro',
-					'landmarks_unique_ar_lonely_giant_macro']"/>
-				
-				<set_value name="global.$nfStationdestruction_o30_49" exact="[
-					'struct_bt_ol_drone_factory_macro',
-					'struct_bt_ol_spice_farm_macro',
-					'struct_bt_ol_construction_material_macro',
-					'struct_bt_alb_servicedock_macro',
-					'struct_bt_ol_solar_power_plant_macro',
-					'struct_bt_ol_plankton_tank_macro',
-					'struct_bt_ol_drone_complex_macro',
-					'struct_bt_ol_farm_complex_macro',
-					'struct_bt_ol_high_energy_construction_macro',
-					'struct_bt_ol_small_ships_yard_macro',
-					'struct_bt_ol_shipyard_macro',
-					'khaak_weaponplatform_macro',
-					'xenon_weaponplatform_macro',
-					'mine_te_ore_s_macro']"/>
+				<do_if value="global.$nfStationdestructionHulls?" negate="true">
+					<set_value name="global.$nfStationdestructionHulls" exact="table[
+							$asteroid_turret_m_01_macro	=	95,
+							$khaak_hive_01_macro	=	95,
+							$khaak_weaponplatform_macro	=	46,
+							$landmarks_te_tradestation_macro	=	10,
+							$landmarks_unique_aqueduct_macro	=	10,
+							$landmarks_unique_ar_badlands_colony_macro	=	10,
+							$landmarks_unique_ar_lonely_giant_macro	=	31,
+							$landmarks_unique_core_dig_macro	=	10,
+							$landmarks_unique_split_lostcolony_macro	=	20,
+							$masstraffic_station_01_macro	=	18,
+							$masstraffic_station_02_macro	=	10,
+							$masstraffic_station_03_macro	=	10,
+							$mine_te_ore_s_macro	=	49,
+							$struct_at_xen_xenon_hive_macro	=	10,
+							$struct_at_xen_xenon_outpost_macro	=	10,
+							$struct_at_xen_xenon_portal_macro	=	10,
+							$struct_bt_alb_big_ships_yard_macro	=	15,
+							$struct_bt_alb_cattle_ranch_macro	=	10,
+							$struct_bt_alb_cell_refinery_macro	=	10,
+							$struct_bt_alb_constructionmaterial_production_macro	=	10,
+							$struct_bt_alb_crystal_refinement_macro	=	11,
+							$struct_bt_alb_drone_complex_macro	=	11,
+							$struct_bt_alb_drone_factory_macro	=	16,
+							$struct_bt_alb_farm_complex_macro	=	10,
+							$struct_bt_alb_food_production_complex_macro	=	10,
+							$struct_bt_alb_food_production_plant_macro	=	10,
+							$struct_bt_alb_fuelstation_macro	=	10,
+							$struct_bt_alb_gatedefence_macro	=	35,
+							$struct_bt_alb_high_energy_construction_macro	=	18,
+							$struct_bt_alb_hightec_construction_macro	=	10,
+							$struct_bt_alb_laboratory_macro	=	10,
+							$struct_bt_alb_medical_supplies_macro	=	10,
+							$struct_bt_alb_metal_works_macro	=	11,
+							$struct_bt_alb_servicedock_macro	=	35,
+							$struct_bt_alb_shippart_production_macro	=	10,
+							$struct_bt_alb_shipyard_2_macro	=	15,
+							$struct_bt_alb_small_ships_complex_macro	=	18,
+							$struct_bt_alb_small_ships_yard_macro	=	31,
+							$struct_bt_alb_solar_power_plant_macro	=	28,
+							$struct_bt_alb_spice_farm_macro	=	12,
+							$struct_bt_alb_tech_complex_macro	=	10,
+							$struct_bt_alb_warehouse_macro	=	14,
+							$struct_bt_alb_water_destillery_macro	=	11,
+							$struct_bt_alb_weaponry_complex_macro	=	10,
+							$struct_bt_alb_weaponry_production_macro	=	10,
+							$struct_bt_alb_wheat_farm_macro	=	10,
+							$struct_bt_dv_canteran_ringstation_01_macro	=	10,
+							$struct_bt_dv_shipyard_macro	=	18,
+							$struct_bt_dv_solar_power_plant_macro	=	19,
+							$struct_bt_dv_water_destillery_macro	=	10,
+							$struct_bt_dv_wheat_farm_macro	=	11,
+							$struct_bt_hoa_shipyard_macro	=	15,
+							$struct_bt_hol_big_ships_yard_macro	=	15,
+							$struct_bt_hol_dock_macro	=	10,
+							$struct_bt_hol_dock_pir_macro	=	10,
+							$struct_bt_ol_bofu_plant_macro	=	11,
+							$struct_bt_ol_cell_refinery_macro	=	26,
+							$struct_bt_ol_construction_material_macro	=	35,
+							$struct_bt_ol_crystal_refinement_macro	=	31,
+							$struct_bt_ol_drone_complex_macro	=	38,
+							$struct_bt_ol_drone_factory_macro	=	35,
+							$struct_bt_ol_farm_complex_macro	=	38,
+							$struct_bt_ol_fuelstation_macro	=	10,
+							$struct_bt_ol_high_energy_construction_macro	=	40,
+							$struct_bt_ol_hightec_construction_macro	=	28,
+							$struct_bt_ol_laboratory_macro	=	27,
+							$struct_bt_ol_medical_supplies_macro	=	30,
+							$struct_bt_ol_metalworks_macro	=	28,
+							$struct_bt_ol_plankton_tank_macro	=	36,
+							$struct_bt_ol_shippartproduction_macro	=	22,
+							$struct_bt_ol_shipyard_macro	=	44,
+							$struct_bt_ol_small_ships_complex_macro	=	21,
+							$struct_bt_ol_small_ships_yard_macro	=	40,
+							$struct_bt_ol_solar_power_plant_macro	=	36,
+							$struct_bt_ol_soy_farm_macro	=	33,
+							$struct_bt_ol_spacefuel_production_macro	=	13,
+							$struct_bt_ol_spice_farm_macro	=	35,
+							$struct_bt_ol_tech_complex_macro	=	28,
+							$struct_bt_ol_tradestation_macro	=	22,
+							$struct_bt_ol_tradestation_sy_macro	=	21,
+							$struct_bt_ol_water_destillery_macro	=	27,
+							$struct_bt_ol_weaponrycomplex_macro	=	22,
+							$struct_bt_ol_weaponryproduction_macro	=	22,
+							$struct_bt_pir_shipyard_2_macro	=	15,
+							$struct_bt_pir_small_ships_complex_macro	=	18,
+							$struct_bt_pirate_shipyard_macro	=	15,
+							$struct_bt_sy_heretic_macro	=	44,
+							$struct_bt_te_shippartproduction_macro	=	22,
+							$struct_econ_agri_ar_unique_megafarmlands_macro	=	10,
+							$struct_econ_cw_generic_te_water_macro	=	10,
+							$struct_econ_ref_ar_pmc_north_macro	=	10,
+							$struct_econ_special_piratestation_macro	=	18,
+							$struct_econ_unique_ar_spp_xl_macro	=	27,
+							$struct_econ_weapon_ar_defence_pl_macro	=	13,
+							$terracorp_hq_01_macro	=	10,
+							$vacanaltd_hq_01_macro	=	10,
+							$xenon_asteroid_01_base_01_macro	=	12,
+							$xenon_asteroid_01_base_01b_macro	=	12,
+							$xenon_asteroid_02_base_02_macro	=	33,
+							$xenon_asteroid_shipyard_macro	=	23,
+							$xenon_small_station_01_macro	=	10,
+							$xenon_weaponplatform_macro	=	15
+						]"/>
+				</do_if>
 			</actions>
 		</cue>
 		<library name="NF_BASE_TO">
@@ -743,14 +737,14 @@
 				<check_value value="event.param2.{1}.combinedskill le 75" />
 			</conditions>
 			<actions>
-			  <do_if value="event.param2.{1}.inventory.{event.param2.{2}}.count == (event.param2.{1}.combinedskill)i">
+			  <do_if value="event.param2.{1}.inventory.{event.param2.{2}}.count == (event.param2.{1}.combinedskill)i*10" comment="inv.count req 10 - 740">
 				  <remove_inventory entity="event.param2.{1}" ware="event.param2.{2}" exact="event.param2.{1}.inventory.{event.param2.{2}}.count" />
 				  <do_if value="event.param2.{1}.combinedskill" max="74">
 					<set_value name="$Skill" exact="[skilltype.leadership, skilltype.navigation, skilltype.combat, skilltype.engineering, skilltype.management, skilltype.morale, skilltype.science]" />
 					<do_all exact="$Skill.count" counter="$k">
-						<do_if value="event.param2.{1}.skill.{$Skill.{$k}} lt 4">
-							<add_skill entity="event.param2.{1}" type="$Skill.{$k}" exact="1" chance="(80 - event.param2.{1}.combinedskill)" />
-							<break chance="if event.param2.{1}.skill.{$Skill.{$k}} == 4 then 100 else 0" />
+						<do_if value="event.param2.{1}.skill.{$Skill.{$k}} lt 4" chance="(80 - event.param2.{1}.combinedskill)">
+							<add_skill entity="event.param2.{1}" type="$Skill.{$k}" exact="1" />
+							<break chance="if event.param2.{1}.skill.{$Skill.{$k}} == 4 then 100 else if event.param2.{1}.skill.{$Skill.{$k}} == 3 then 75 else 0" />
 						</do_if>
 					</do_all>
 					<remove_value name="$Skill"/>
@@ -759,7 +753,7 @@
 			  <do_elseif value="(event.param2.{1}.combinedskill)i" max="74">
 				<add_inventory entity="event.param2.{1}" ware="event.param2.{2}" exact="1" />
 			  </do_elseif>
-			  <debug_text text="'%4 %5 %1 skilled inv:%2 cs:%3 :: %6'.[event.param2.{1}.knownname, event.param2.{1}.inventory.{event.param2.{2}}.count, event.param2.{1}.combinedskill, event.param2.{1}, event.param2.{1}.typename, @event.param2.{3}]" chance="0"/>
+			  <debug_text chance="0" text="'%4 %5 %1 skilled inv:%2 cs:%3 :: %6'.[event.param2.{1}.knownname, event.param2.{1}.inventory.{event.param2.{2}}.count, event.param2.{1}.combinedskill, event.param2.{1}, event.param2.{1}.typename, @event.param2.{3}]"/>
 			</actions>
 		</cue>
 

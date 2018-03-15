@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <mdscript name="NF_StationDestruct" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
 	<cues>
-		<cue name="StationDestruct_init" namespace="static">
+		<cue name="StationDestruct_init" namespace="static" version="2">
 			<actions>
 				<do_if value="$watchedObjects?" negate="true">
 					<create_list name="$watchedObjects" />
 					<create_list name="$watchedObjects_helper" />
+					<create_list name="$checkWatchedObject" />
 				</do_if>
 			</actions>
+			<patch sinceversion="2" state="complete">
+				<create_list name="$checkWatchedObject" />
+			</patch>
 			<cues>
 				<cue name="StationDestruct_bridge" instantiate="true">
 					<conditions>
@@ -16,8 +20,16 @@
 					</conditions>
 					<actions>
 						<debug_text chance="0" text="event.param2.knownname + ' ' + event.param2.zone.knownname + ' -- ' + event.param2.hullpercentage" />
-						<do_if value="event.param2? and event.param2.exists and $watchedObjects_helper.indexof.{event.param2} == 0">
+						<do_if value="event.param2? and event.param2.exists and not global.$nfStationdestructionHulls.{'$%1'.[event.param2.macro.id]}? and $checkWatchedObject.indexof.{event.param2.macro} == 0">
+							<signal_objects object="player.galaxy" param="'Do.check.StMinHull'" param2="event.param2.macro"/>
+							<append_to_list name="$checkWatchedObject" exact="event.param2" />
+						</do_if>
+						<do_elseif value="event.param2? and event.param2.exists and global.$nfStationdestructionHulls.{'$%1'.[event.param2.macro.id]}? and $watchedObjects_helper.indexof.{event.param2} == 0">
 							<set_value name="$target" exact="event.param2" />
+
+							<do_if value="$checkWatchedObject.indexof.{$target.macro}">
+								<remove_value name="$checkWatchedObject.{$checkWatchedObject.indexof.{$target.macro}}"/>
+							</do_if>
 
 							<!-- evacuate PoliceChief -->
 							<do_if value="$target.zone.policefaction and $target == $target.sector.representative.{$target.zone.policefaction}.{entitytype.lawenforcement}.container">
@@ -89,87 +101,87 @@
 							<remove_value name="$Stationdock" />
 							
 							<!-- relation -->
-				<create_list name="$friends"/>
-				<find_station name="$tmp" space="$target.zone" functional="true" multiple="true" >
-					<match_relation faction="$target.owner" relation="neutral" comparison="gt"/>
-				</find_station>
-				<do_all exact="$tmp.count" counter="$Counter">
-					<do_if value="$tmp.{$Counter}.owner" exact="$target.owner" chance="0">
-						<continue />
-					</do_if>
-					<do_if value="$friends.indexof.{$tmp.{$Counter}.owner}" exact="0">
-						<append_to_list name="$friends" exact="$tmp.{$Counter}.owner" />
-					</do_if>
-				</do_all>
-				<remove_value name="$tmp"/>
-				<do_if value="$friends.count">
-					<create_list name="$attackers"/>
-					<find_ship name="$tmp" class="[class.ship_l,class.ship_xl]" space="$target.zone" multiple="true" >
-						<match_relation faction="$target.owner" relation="kill" comparison="le"/>
-					</find_ship>
-					<do_all exact="$tmp.count" counter="$Counter">
-						<do_if value="$attackers.indexof.{$tmp.{$Counter}.owner}" exact="0">
-							<append_to_list name="$attackers" exact="$tmp.{$Counter}.owner" />
-						</do_if>
-					</do_all>
-					<remove_value name="$tmp"/>
-	
-					<do_all exact="$attackers.count" counter="$Counter1">
-						<find_zone name="$attackers_zone" space="player.galaxy" owner="$attackers.{$Counter1}" tempzone="false" mapzone="true" multiple="true" />
-						<find_station name="$tmp" space="player.galaxy" owner="$attackers.{$Counter1}" functional="true" multiple="true" />
-						<do_all exact="$tmp.count" counter="$Counter">
-							<do_if value="$attackers_zone.indexof.{$tmp.{$Counter}.zone}" exact="0">
-								<append_to_list name="$attackers_zone" exact="$tmp.{$Counter}.zone" />
-							</do_if>
-						</do_all>
-						<remove_value name="$tmp"/>
-						
-						<do_all exact="$friends.count" counter="$Counter2">
-							<set_value name="$massiveRelation" exact="false" />
-							<do_if value="$attackers.{$Counter1}.hasrelation.enemy.{$friends.{$Counter2}}" negate="true">
-								<find_zone name="$tmp" space="player.galaxy" owner="$friends.{$Counter2}" tempzone="false" mapzone="true" multiple="true" />
-								<do_all exact="$tmp.count" counter="$Counter">
-									<do_if value="$attackers_zone.indexof.{$tmp.{$Counter}}" exact="0" negate="true">
-										<set_value name="$massiveRelation" exact="true" />
-									</do_if>
-								</do_all>
-								<remove_value name="$tmp"/>
-								<find_station name="$tmp" space="player.galaxy" owner="$friends.{$Counter2}" functional="true" multiple="true" chance="(not $massiveRelation) *100" />
-								<do_all exact="$tmp.count" counter="$Counter" chance="(not $massiveRelation) *100">
-									<do_if value="$attackers_zone.indexof.{$tmp.{$Counter}.zone}" exact="0" negate="true">
-										<set_value name="$massiveRelation" exact="true" />
-									</do_if>
-								</do_all>
-								<remove_value name="$tmp"/>
-							</do_if>
-
-							<do_if value="$friends.indexof.{$attackers.{$Counter1}}" exact="0">
-								<do_if value="$attackers.{$Counter1}.relationto.{$friends.{$Counter2}} ge $attackers.{$Counter1}.relation.member.mid">
-									<!-- -->
+							<create_list name="$friends"/>
+							<find_station name="$tmp" space="$target.zone" functional="true" multiple="true" >
+								<match_relation faction="$target.owner" relation="neutral" comparison="gt"/>
+							</find_station>
+							<do_all exact="$tmp.count" counter="$Counter">
+								<do_if value="$tmp.{$Counter}.owner" exact="$target.owner" chance="0">
+									<continue />
 								</do_if>
-								<do_elseif value="$attackers.{$Counter1}.relationto.{$friends.{$Counter2}} ge $attackers.{$Counter1}.relation.member.min">
-									<set_faction_relation faction="$attackers.{$Counter1}" otherfaction="$friends.{$Counter2}" value="$attackers.{$Counter1}.relation.member.min"/>
-								</do_elseif>
-								<do_elseif value="$attackers.{$Counter1}.relationto.{$friends.{$Counter2}} gt $attackers.{$Counter1}.relation.friend.min">
-									<set_faction_relation faction="$attackers.{$Counter1}" otherfaction="$friends.{$Counter2}" value="$attackers.{$Counter1}.relation.friend.min"/>
-								</do_elseif>
-								<do_elseif value="$attackers.{$Counter1}.relationto.{$friends.{$Counter2}} gt $attackers.{$Counter1}.relation.neutral.mid">
-									<set_faction_relation faction="$attackers.{$Counter1}" otherfaction="$friends.{$Counter2}" value="$attackers.{$Counter1}.relation.neutral.mid"/>
-								</do_elseif>
-								<do_elseif value="$attackers.{$Counter1}.relationto.{$friends.{$Counter2}} le $attackers.{$Counter1}.relation.neutral.min+0.001LF" chance="(not $massiveRelation) *100">
-									<add_faction_relation faction="$attackers.{$Counter1}" otherfaction="$friends.{$Counter2}" value="-0.01LF"/>
-								</do_elseif>
-								<do_else>
-									<set_faction_relation faction="$attackers.{$Counter1}" otherfaction="$friends.{$Counter2}" value="$attackers.{$Counter1}.relation.neutral.min+0.001LF"/>
-								</do_else>
+								<do_if value="$friends.indexof.{$tmp.{$Counter}.owner}" exact="0">
+									<append_to_list name="$friends" exact="$tmp.{$Counter}.owner" />
+								</do_if>
+							</do_all>
+							<remove_value name="$tmp"/>
+							<do_if value="$friends.count">
+								<create_list name="$attackers"/>
+								<find_ship name="$tmp" class="[class.ship_l,class.ship_xl]" space="$target.zone" multiple="true" >
+									<match_relation faction="$target.owner" relation="kill" comparison="le"/>
+								</find_ship>
+								<do_all exact="$tmp.count" counter="$Counter">
+									<do_if value="$attackers.indexof.{$tmp.{$Counter}.owner}" exact="0">
+										<append_to_list name="$attackers" exact="$tmp.{$Counter}.owner" />
+									</do_if>
+								</do_all>
+								<remove_value name="$tmp"/>
+				
+								<do_all exact="$attackers.count" counter="$Counter1">
+									<find_zone name="$attackers_zone" space="player.galaxy" owner="$attackers.{$Counter1}" tempzone="false" mapzone="true" multiple="true" />
+									<find_station name="$tmp" space="player.galaxy" owner="$attackers.{$Counter1}" functional="true" multiple="true" />
+									<do_all exact="$tmp.count" counter="$Counter">
+										<do_if value="$attackers_zone.indexof.{$tmp.{$Counter}.zone}" exact="0">
+											<append_to_list name="$attackers_zone" exact="$tmp.{$Counter}.zone" />
+										</do_if>
+									</do_all>
+									<remove_value name="$tmp"/>
+									
+									<do_all exact="$friends.count" counter="$Counter2">
+										<set_value name="$massiveRelation" exact="false" />
+										<do_if value="$attackers.{$Counter1}.hasrelation.enemy.{$friends.{$Counter2}}" negate="true">
+											<find_zone name="$tmp" space="player.galaxy" owner="$friends.{$Counter2}" tempzone="false" mapzone="true" multiple="true" />
+											<do_all exact="$tmp.count" counter="$Counter">
+												<do_if value="$attackers_zone.indexof.{$tmp.{$Counter}}" exact="0" negate="true">
+													<set_value name="$massiveRelation" exact="true" />
+												</do_if>
+											</do_all>
+											<remove_value name="$tmp"/>
+											<find_station name="$tmp" space="player.galaxy" owner="$friends.{$Counter2}" functional="true" multiple="true" chance="(not $massiveRelation) *100" />
+											<do_all exact="$tmp.count" counter="$Counter" chance="(not $massiveRelation) *100">
+												<do_if value="$attackers_zone.indexof.{$tmp.{$Counter}.zone}" exact="0" negate="true">
+													<set_value name="$massiveRelation" exact="true" />
+												</do_if>
+											</do_all>
+											<remove_value name="$tmp"/>
+										</do_if>
+			
+										<do_if value="$friends.indexof.{$attackers.{$Counter1}}" exact="0">
+											<do_if value="$attackers.{$Counter1}.relationto.{$friends.{$Counter2}} ge $attackers.{$Counter1}.relation.member.mid">
+												<!-- -->
+											</do_if>
+											<do_elseif value="$attackers.{$Counter1}.relationto.{$friends.{$Counter2}} ge $attackers.{$Counter1}.relation.member.min">
+												<set_faction_relation faction="$attackers.{$Counter1}" otherfaction="$friends.{$Counter2}" value="$attackers.{$Counter1}.relation.member.min"/>
+											</do_elseif>
+											<do_elseif value="$attackers.{$Counter1}.relationto.{$friends.{$Counter2}} gt $attackers.{$Counter1}.relation.friend.min">
+												<set_faction_relation faction="$attackers.{$Counter1}" otherfaction="$friends.{$Counter2}" value="$attackers.{$Counter1}.relation.friend.min"/>
+											</do_elseif>
+											<do_elseif value="$attackers.{$Counter1}.relationto.{$friends.{$Counter2}} gt $attackers.{$Counter1}.relation.neutral.mid">
+												<set_faction_relation faction="$attackers.{$Counter1}" otherfaction="$friends.{$Counter2}" value="$attackers.{$Counter1}.relation.neutral.mid"/>
+											</do_elseif>
+											<do_elseif value="$attackers.{$Counter1}.relationto.{$friends.{$Counter2}} le $attackers.{$Counter1}.relation.neutral.min+0.001LF" chance="(not $massiveRelation) *100">
+												<add_faction_relation faction="$attackers.{$Counter1}" otherfaction="$friends.{$Counter2}" value="-0.01LF"/>
+											</do_elseif>
+											<do_else>
+												<set_faction_relation faction="$attackers.{$Counter1}" otherfaction="$friends.{$Counter2}" value="$attackers.{$Counter1}.relation.neutral.min+0.001LF"/>
+											</do_else>
+										</do_if>
+										<remove_value name="$massiveRelation"/>
+									</do_all>
+								</do_all>
+								<remove_value name="$attackers_zone"/>
+								<remove_value name="$attackers"/>
 							</do_if>
-							<remove_value name="$massiveRelation"/>
-						</do_all>
-					</do_all>
-					<remove_value name="$attackers_zone"/>
-					<remove_value name="$attackers"/>
-				</do_if>
-				<remove_value name="$friends"/>
+							<remove_value name="$friends"/>
 							<!-- / relation -->
 
 
@@ -178,9 +190,13 @@
 							<set_owner object="$target" faction="faction.ownerless" />
 
 							<signal_objects object="player.galaxy" param="'check for new owner'" param2="$target.zone"/>
+							
+							<do_if value="global.$nfStationdestructionHulls.{'$%1'.[$target.macro.id]} gt 10 and ($target.hullpercentage)i-2 lt global.$nfStationdestructionHulls.{'$%1'.[$target.macro.id]}" comment="update hull-list">
+								<signal_objects object="player.galaxy" param="'Do.check.StMinHull.part2'" param2="[$target, false]"/>
+							</do_if>
 
 							<remove_value name="$target" />
-						</do_if>
+						</do_elseif>
 						<debug_text chance="0" text="'end'" />
 					</actions>
 				</cue>
@@ -191,7 +207,7 @@
 					</conditions>
 					<actions>
 						<do_if value="$watchedObjects? and $watchedObjects.count">
-							<debug_text text="'List: ' + $watchedObjects.count" />
+							<debug_text chance="0" text="'List: ' + $watchedObjects.count" />
 							<set_value name="$limit" exact="player.age - 24h" />
 							<do_all exact="$watchedObjects.count" counter="$i" reverse="true">
 								<set_value name="$init" exact="false" />
@@ -780,7 +796,7 @@
 				<event_object_signalled object="player.galaxy" param="'reinit station'" />
 			</conditions>
 			<actions>
-				<debug_text text="'Start'" />
+				<debug_text chance="0" text="'Start'" />
 				<do_if value="event.param2? and event.param2.exists">
 					<set_value name="$target" exact="event.param2" />
 					<set_value name="$faction" exact="event.param2.owner" />
@@ -1044,7 +1060,7 @@
 						<signal_objects object="player.galaxy" param="'init station'" param2="event.param2"/>
 					</do_else>
 				</do_if>
-				<debug_text text="'end'" />
+				<debug_text chance="0" text="'end'" />
 			</actions>
 		</cue>
 		<cue name="StationDestruct_prestart" instantiate="true">
@@ -1053,7 +1069,7 @@
 			</conditions>
 			<delay min="10s" max="20s"/>
 			<actions>
-				<debug_text text="'Start'" />
+				<debug_text chance="0" text="'Start'" />
 				<do_if value="event.param2? and typeof event.param2 == datatype.list">
 					<set_value name="$todo" exact="event.param2"/>
 				</do_if>
@@ -1068,7 +1084,7 @@
 					</do_if>
 				</do_all>
 				<remove_value name="$todo" />
-				<debug_text text="'end'" />
+				<debug_text chance="0" text="'end'" />
 			</actions>
 		</cue>
 		<cue name="StationDestruct_transfer_Npc" instantiate="true">
@@ -1076,15 +1092,32 @@
 				<event_object_signalled object="player.galaxy" param="'SD_MOVE'" />
 			</conditions>
 			<actions>
-				<debug_text text="'Start'" />
+				<debug_text chance="0" text="'Start'" />
 				<do_if value="event.param2? and typeof event.param2 == datatype.list">
 					<set_value name="$todo" exact="event.param2"/>
 				</do_if>
-				<find_dock_location name="$Stationdock" container="$todo.{3}" size="tag.dock_p"/>
+				<!--find_dock_location name="$Stationdock" container="$todo.{3}" size="tag.dock_p"/-->
+				<find_dock_location name="$Stationdock" container="$todo.{3}" freemissionactorslot="true" multiple="false" />
 				<add_actor_to_platform actor="$todo.{2}" dockingbay="$Stationdock.component"/>
+
+				<set_value name="$faction" exact="$todo.{3}.zone.policefaction" />
+				<do_if value="$faction">
+					<do_if value="not $todo.{3}.sector.representative.{$faction}.{entitytype.lawenforcement}">
+					  <create_representative_actor sector="$todo.{3}.sector" faction="$faction" type="entitytype.lawenforcement" name="$actor" />
+					  <do_if value="$actor">
+						  <debug_text chance="0" text="'ReCreated representative of \'%1\' in sector \'%2\': %3 (%4)'.[$faction.knownname, $todo.{3}.sector.knownname, $actor.knownname, $actor]" filter="scripts_verbose" />
+					  </do_if>
+					  <do_else>
+						  <debug_text chance="0" text="'Failed to create representative of \'%1\' in sector \'%2\' (for police faction in zone \'%3\')'.[$faction.knownname, $sectors.{$i}.knownname, $zones.{$j}.knownname]" filter="general" />
+					  </do_else>
+					</do_if>
+					<remove_value name="$actor" />
+				</do_if>
+				<remove_value name="$faction" />
+
 				<destroy_object explosion="false" object="$todo.{1}" />
 				<remove_value name="$todo" />
-				<debug_text text="'end'" />
+				<debug_text chance="0" text="'end'" />
 			</actions>
 		</cue>
 
@@ -1181,17 +1214,23 @@
 
 					<do_if value="$newHomeBase">
 						<!-- send diplomatic ship -->
-						<create_ship name="$Diplomat_Ship" zone="$target.zone" macro="units_size_m_canteran_01_macro" capturable="false">
-						  <owner exact="$VIP.owner"/>
-						  <pilot actor="$VIP"/>
+						<create_ship name="$Diplomat_Ship" zone="$target.zone" macro="units_size_m_diplomatic_tp_macro" capturable="false">
+						  <owner exact="$VIP.owner" overridenpc="true"/>
+						  <pilot ref="trader_albion_random"/>
 						  <safepos object="$target"/>
 						</create_ship>
 						<set_object_min_hull object="$Diplomat_Ship" exact="100"/>
-						<start_script object="$Diplomat_Ship.pilot" name="'move.escape'">
-							<param name="target" value="$newHomeBase"/>
-						</start_script>
-						<debug_text text="$Diplomat_Ship.knownname + ' ' + $newHomeBase.zone.knownname + ' -- ' + $newHomeBase.knownname" filter="error" chance="100" />
+						<find_dock_location name="$Diplomat_Ship_Dock" container="$Diplomat_Ship" freemissionactorslot="true" multiple="false" />
+						<add_actor_to_platform actor="$VIP" dockingbay="$Diplomat_Ship_Dock.component"/>
+						<do_if value="$VIP.container == $Diplomat_Ship">
+							<start_script object="$Diplomat_Ship.pilot" name="'move.escape'">
+								<param name="target" value="$newHomeBase"/>
+								<param name="vip" value="$VIP"/>
+							</start_script>
+						</do_if>
+						<debug_text text="$Diplomat_Ship.knownname + ' ' + $newHomeBase.zone.knownname + ' -- ' + $newHomeBase.knownname + ' -- ' + $VIP.knownname" filter="error" chance="100" />
 						<remove_value name="$Diplomat_Ship" />
+						<remove_value name="$Diplomat_Ship_Dock" />
 						<!-- move NPC -->
 					</do_if>
 					<remove_value name="$newHomeBase"/>
@@ -1199,6 +1238,201 @@
 				</do_if>
 			</actions>
 		</library>
+
+		<cue name="StationDestruct_checkMinHull_p1" instantiate="true">
+			<conditions>
+				<event_object_signalled object="player.galaxy" param="'Do.check.StMinHull'" />
+			</conditions>
+			<actions>
+				<debug_text chance="0" text="'Start'" />
+				<do_if value="event.param2? and typeof event.param2 == datatype.macro">
+					<set_value name="$todo" exact="event.param2"/>
+					<find_zone name="$zones" space="player.cluster" tempzone="false" mapzone="true" multiple="true" />
+					<set_value name="$BuildZone" exact="$zones.random"/>
+					<do_all exact="$zones.count" counter="$x">
+						<do_if value="$zones.{$x} == player.zone" negate="true">
+							<set_value name="$BuildZone" exact="$zones.{$x}"/>
+							<break />
+						</do_if>
+					</do_all>
+					<remove_value name="$zones"/>
+					
+					<create_station name="$Object" macro="$todo" zone="$BuildZone" owner="faction.ownerless" >
+	
+						<safepos y="25km" radius="10km"/>
+						<!-- just use the max possible for any station: -->
+						<buildsequence sequence="'a'" stage="1"/>
+						<buildsequence sequence="'a'" stage="2"/>
+						<buildsequence sequence="'a'" stage="3"/>
+						<buildsequence sequence="'a'" stage="4"/>
+						<buildsequence sequence="'a'" stage="5"/>
+						<buildsequence sequence="'a'" stage="6"/>
+						<buildsequence sequence="'a'" stage="7"/>
+						<buildsequence sequence="'a'" stage="8"/>
+						<buildsequence sequence="'a'" stage="9"/>
+						<buildsequence sequence="'b'" stage="1"/>
+						<buildsequence sequence="'b'" stage="2"/>
+						<buildsequence sequence="'b'" stage="3"/>
+						<buildsequence sequence="'b'" stage="4"/>
+						<buildsequence sequence="'b'" stage="5"/>
+						<buildsequence sequence="'b'" stage="6"/>
+						<buildsequence sequence="'b'" stage="7"/>
+						<buildsequence sequence="'b'" stage="8"/>
+						<buildsequence sequence="'b'" stage="9"/>
+						<buildsequence sequence="'c'" stage="1"/>
+						<buildsequence sequence="'c'" stage="2"/>
+						<buildsequence sequence="'c'" stage="3"/>
+						<buildsequence sequence="'c'" stage="4"/>
+						<buildsequence sequence="'c'" stage="5"/>
+						<buildsequence sequence="'c'" stage="6"/>
+						<buildsequence sequence="'c'" stage="7"/>
+						<buildsequence sequence="'c'" stage="8"/>
+						<buildsequence sequence="'c'" stage="9"/>
+						<buildsequence sequence="'d'" stage="1"/>
+						<buildsequence sequence="'d'" stage="2"/>
+						<buildsequence sequence="'d'" stage="3"/>
+						<buildsequence sequence="'d'" stage="4"/>
+						<buildsequence sequence="'d'" stage="5"/>
+						<buildsequence sequence="'d'" stage="6"/>
+						<buildsequence sequence="'d'" stage="7"/>
+						<buildsequence sequence="'d'" stage="8"/>
+						<buildsequence sequence="'d'" stage="9"/>
+						<buildsequence sequence="'e'" stage="1"/>
+						<buildsequence sequence="'e'" stage="2"/>
+						<buildsequence sequence="'e'" stage="3"/>
+						<buildsequence sequence="'e'" stage="4"/>
+						<buildsequence sequence="'e'" stage="5"/>
+						<buildsequence sequence="'e'" stage="6"/>
+						<buildsequence sequence="'e'" stage="7"/>
+						<buildsequence sequence="'e'" stage="8"/>
+						<buildsequence sequence="'e'" stage="9"/>
+						<buildsequence sequence="'f'" stage="1"/>
+						<buildsequence sequence="'f'" stage="2"/>
+						<buildsequence sequence="'f'" stage="3"/>
+						<buildsequence sequence="'f'" stage="4"/>
+						<buildsequence sequence="'f'" stage="5"/>
+						<buildsequence sequence="'f'" stage="6"/>
+						<buildsequence sequence="'f'" stage="7"/>
+						<buildsequence sequence="'f'" stage="8"/>
+						<buildsequence sequence="'f'" stage="9"/>
+						<buildsequence sequence="'g'" stage="1"/>
+						<buildsequence sequence="'g'" stage="2"/>
+						<buildsequence sequence="'g'" stage="3"/>
+						<buildsequence sequence="'g'" stage="4"/>
+						<buildsequence sequence="'g'" stage="5"/>
+						<buildsequence sequence="'g'" stage="6"/>
+						<buildsequence sequence="'g'" stage="7"/>
+						<buildsequence sequence="'g'" stage="8"/>
+						<buildsequence sequence="'g'" stage="9"/>
+						<buildsequence sequence="'h'" stage="1"/>
+						<buildsequence sequence="'h'" stage="2"/>
+						<buildsequence sequence="'h'" stage="3"/>
+						<buildsequence sequence="'h'" stage="4"/>
+						<buildsequence sequence="'h'" stage="5"/>
+						<buildsequence sequence="'h'" stage="6"/>
+						<buildsequence sequence="'h'" stage="7"/>
+						<buildsequence sequence="'h'" stage="8"/>
+						<buildsequence sequence="'h'" stage="9"/>
+						<buildsequence sequence="'i'" stage="1"/>
+						<buildsequence sequence="'i'" stage="2"/>
+						<buildsequence sequence="'i'" stage="3"/>
+						<buildsequence sequence="'i'" stage="4"/>
+						<buildsequence sequence="'i'" stage="5"/>
+						<buildsequence sequence="'i'" stage="6"/>
+						<buildsequence sequence="'i'" stage="7"/>
+						<buildsequence sequence="'i'" stage="8"/>
+						<buildsequence sequence="'i'" stage="9"/>
+						<buildsequence sequence="'j'" stage="1"/>
+						<buildsequence sequence="'j'" stage="2"/>
+						<buildsequence sequence="'j'" stage="3"/>
+						<buildsequence sequence="'j'" stage="4"/>
+						<buildsequence sequence="'j'" stage="5"/>
+						<buildsequence sequence="'j'" stage="6"/>
+						<buildsequence sequence="'j'" stage="7"/>
+						<buildsequence sequence="'j'" stage="8"/>
+						<buildsequence sequence="'j'" stage="9"/>
+						<buildsequence sequence="'k'" stage="1"/>
+						<buildsequence sequence="'k'" stage="2"/>
+						<buildsequence sequence="'k'" stage="3"/>
+						<buildsequence sequence="'k'" stage="4"/>
+						<buildsequence sequence="'k'" stage="5"/>
+						<buildsequence sequence="'k'" stage="6"/>
+						<buildsequence sequence="'k'" stage="7"/>
+						<buildsequence sequence="'k'" stage="8"/>
+						<buildsequence sequence="'k'" stage="9"/>
+					</create_station>
+
+					<set_object_hull object="$Object" exact="1"/>
+					<find_object_component object="$Object" groupname="$targetComps" multiple="true" surfaceelement="true" integrated="false"/>
+					<do_all exact="$targetComps.list.count" counter="$tc"> 
+					  <destroy_object object="$targetComps.list.{$tc}" explosion="true"/>
+					</do_all>
+					<remove_value name="$targetComps" /> 
+					<find_object_component object="$Object" groupname="$targetComps" multiple="true" surfaceelement="false" integrated="false" class="class.destructible" checkoperational="false"> 
+					  <match_size min="10m"/> 
+					</find_object_component> 
+					<do_all exact="$targetComps.list.count" counter="$tc"> 
+					  <destroy_object object="$targetComps.list.{$tc}" explosion="true"/>
+					</do_all>
+					<remove_value name="$targetComps" /> 
+
+
+					<signal_objects object="player.galaxy" param="'Do.check.StMinHull.part2'" param2="$Object"/>
+
+					<remove_value name="$BuildZone" />
+					<remove_value name="$Object" />
+					<remove_value name="$todo" />
+				</do_if>
+				<do_else>
+					<debug_text text="'ERROR event.param2 missing or wrong datatype'" filter="error" />
+				</do_else>
+				<debug_text chance="0" text="'end'" />
+			</actions>
+		</cue>
+		<cue name="StationDestruct_checkMinHull_p2" instantiate="true" namespace="this">
+			<conditions>
+				<event_object_signalled object="player.galaxy" param="'Do.check.StMinHull.part2'" />
+			</conditions>
+			<delay min="1s" max="2s"/>
+			<actions>
+				<do_if value="event.param2?" negate="true"> 
+					<debug_text text="'ERROR event.param2 missing or wrong'" filter="error" />
+				</do_if>
+				<do_else>
+					<do_if value="typeof event.param2 == datatype.list"> 
+						<set_value name="$Object" exact="event.param2.{1}"/>
+						<set_value name="$kill" exact="event.param2.{2}"/>
+					</do_if>
+					<do_else>
+						<set_value name="$Object" exact="event.param2"/>
+						<set_value name="$kill" exact="true"/>
+					</do_else>
+					
+					<do_if value="$Object and $Object.isclass.station"> 
+						<set_value name="$tmpHull" exact="($Object.hullpercentage)i"/>
+						<set_value name="$tmpHull" operation="add" chance="if $tmpHull lt 98 then 100 else 0"/>
+						<set_value name="$tmpHull" operation="add" chance="if $tmpHull lt 98 then 100 else 0"/>
+	
+						<do_if value="global.$nfStationdestructionHulls? and not global.$nfStationdestructionHulls.{'$%1'.[$Object.macro.id]}?">
+							<set_value name="global.$nfStationdestructionHulls.{'$%1'.[$Object.macro.id]}" exact="[$tmpHull, 10].max"/>
+						</do_if>
+						<do_elseif value="global.$nfStationdestructionHulls? and global.$nfStationdestructionHulls.{'$%1'.[$Object.macro.id]} gt $tmpHull">
+							<set_value name="global.$nfStationdestructionHulls.{'$%1'.[$Object.macro.id]}" exact="[$tmpHull, 10].max"/>
+						</do_elseif>
+	
+						<debug_text text="'$%1 = %2,'.[$Object.macro.id, [$tmpHull, 10].max]" filter="scripts_verbose"  chance="0" />
+	
+						<destroy_object explosion="false" object="$Object" chance="if $kill then 100 else 0" />
+					</do_if>
+					<do_else>
+						<debug_text chance="0" text="'ERROR event.param2 wrong: ' + @event.param2.class" filter="error" />
+					</do_else>
+					<remove_value name="$tmpHull" />
+					<remove_value name="$Object" />
+					<remove_value name="$kill" />
+				</do_else>
+			</actions>
+		</cue>
 
 	</cues>
 </mdscript>

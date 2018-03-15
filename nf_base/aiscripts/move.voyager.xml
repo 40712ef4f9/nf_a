@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-<aiscript name="move.voyager" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd">
+<aiscript name="move.voyager" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
 	<params>
 		<param name="workspace" default="[this.ship.cluster]"/>
 		<param name="returnzone" default="this.ship.zone" />
@@ -9,10 +9,12 @@
 		<param name="cover" default="100" />
 		<param name="datapool" default="null" />
 		<param name="dispatchatfirstmatch" default="false" />
+		<param name="tradesubscription" default="null" />
 		<param name="debugchance" default="0" />
 	</params>
 	<interrupts>
 		<handler ref="AttackHandler" />
+		<handler ref="PlayerInput" />
 		<handler>
 			<conditions>
 				<check_any>
@@ -61,6 +63,9 @@
 				<find_station space="this.ship.zone" name="$th_stations" multiple="true" chance="if $ignoreknown then 0 else 100" />
 
 				<do_all exact="$th_stations.count" counter="$t">
+					<do_if value="$th_stations.{$t}.exists" negate="true">
+						<continue />
+					</do_if>
 					<do_if value="$th_stations.{$t}.owner.hasrelation.enemy.{this.ship.trueowner}" negate="true">
 						<do_if value="this.ship.isplayerowned">
 							<reveal_object object="$th_stations.{$t}" exact="25"/>
@@ -69,7 +74,7 @@
 							<add_encyclopedia_entry type="stationtypes" item="$th_stations.{$t}.macro.id" chance="if $th_stations.{$t}.name == $th_stations.{$t}.knownname then 0 else 100" />
 							<set_known object="$th_stations.{$t}" known="true" chance="if $th_stations.{$t}.name == $th_stations.{$t}.knownname then 0 else 100" />
 							<set_object_radar_visible object="$th_stations.{$t}"/>
-							<store_trade_offer_snapshot object="$th_stations.{$t}" chance="if not $th_stations.{$t}.hastradesubscription and ($th_stations.{$t}.resources.list.count or $th_stations.{$t}.products.list.count or $th_stations.{$t}.tradewares.list.count) then 100 else 0" />
+							<store_trade_offer_snapshot object="$th_stations.{$t}" chance="if $th_stations.{$t}.isoperational and not $th_stations.{$t}.hastradesubscription and ($th_stations.{$t}.resources.list.count or $th_stations.{$t}.products.list.count or $th_stations.{$t}.tradewares.list.count) then 100 else 0" />
 						</do_if>
 					</do_if>
 					<do_else>
@@ -188,12 +193,18 @@
 		<set_command command="command.explore"/>
 		<set_command_action commandaction="commandaction.calculating" />
 	</init>
+	<patch sinceversion="2" early="true">
+		<set_value name="$tradesubscription" exact="if this.ship.isclass.[class.ship_s, class.ship_m] then true else if this.combinedskill gt 75 then true else 0" />
+	</patch>
 	<attention min="unknown">
 		<actions>
 
 			<run_script name="'move.undock'" />
 
 			<set_value name="$run" exact="0"/>
+			<do_if value="$tradesubscription == null">
+				<set_value name="$tradesubscription" exact="if this.ship.isclass.[class.ship_s, class.ship_m] then true else if this.combinedskill gt 75 then true else false" />
+			</do_if>
 
 
 			<label name="start" />
@@ -469,9 +480,11 @@
 						<add_encyclopedia_entry type="stationtypes" item="$target.macro.id" chance="if $target.name == $target.knownname then 0 else 100" />
 						<set_known object="$target" known="true" chance="if $target.name == $target.knownname then 0 else 100" />
 						<set_object_radar_visible object="$target"/>
-						<store_trade_offer_snapshot object="$target" chance="if not $target.hastradesubscription and ($target.resources.list.count or $target.products.list.count or $target.tradewares.list.count) then 100 else 0" />
-						<add_trade_subscription object="$target" chance="if not $target.hastradesubscription and ($target.resources.list.count or $target.products.list.count or $target.tradewares.list.count) and ($target.owner.relationto.{this.ship.trueowner} ge $target.owner.relation.neutral.max or ($target.owner.relationto.{this.ship.trueowner} gt $target.owner.relation.neutral.min and this.ship.isclass.[class.ship_s, class.ship_m])) then 100 else 0" />
-						<reveal_object object="$target" exact="100"/>
+						<do_if value="$target.isoperational">
+							<store_trade_offer_snapshot object="$target" chance="if not $target.hastradesubscription and ($target.resources.list.count or $target.products.list.count or $target.tradewares.list.count) then 100 else 0" />
+							<add_trade_subscription object="$target" chance="if not $target.hastradesubscription and ($target.resources.list.count or $target.products.list.count or $target.tradewares.list.count) and ($target.owner.relationto.{this.ship.trueowner} ge $target.owner.relation.neutral.max or ($target.owner.relationto.{this.ship.trueowner} gt $target.owner.relation.neutral.min and $tradesubscription)) then 100 else 0" />
+							<reveal_object object="$target" exact="100"/>
+						</do_if>
 					</do_if>
 				</do_if>
 				<do_else>
@@ -575,16 +588,18 @@
 			<do_if value="$found_stations?">
 				<do_all exact="$found_stations.count" counter="$i">
 					<set_value name="$target" exact="$found_stations.{$i}"/>
-					<do_if value="this.ship.isplayerowned">
+					<do_if value="this.ship.isplayerowned and $target.exists">
 						<reveal_object object="$target" exact="25"/>
 						<add_encyclopedia_entry type="factions" item="$target.owner.id" chance="if $target.owner.knowntoplayer then 0 else 100" />
 						<set_faction_known faction="$target.owner" known="true" chance="if $target.owner.knowntoplayer then 0 else 100" />
 						<add_encyclopedia_entry type="stationtypes" item="$target.macro.id" chance="if $target.name == $target.knownname then 0 else 100" />
 						<set_known object="$target" known="true" chance="if $target.name == $target.knownname then 0 else 100" />
 						<set_object_radar_visible object="$target"/>
-						<store_trade_offer_snapshot object="$target" chance="if not $target.hastradesubscription and ($target.resources.list.count or $target.products.list.count or $target.tradewares.list.count) then 100 else 0" />
-						<add_trade_subscription object="$target" chance="if not $target.hastradesubscription and ($target.resources.list.count or $target.products.list.count or $target.tradewares.list.count) and ($target.owner.relationto.{this.ship.trueowner} ge $target.owner.relation.neutral.max or ($target.owner.relationto.{this.ship.trueowner} gt $target.owner.relation.neutral.min and this.ship.isclass.[class.ship_s, class.ship_m])) then 100 else 0" />
-						<reveal_object object="$target" exact="100"/>
+						<do_if value="$target.isoperational">
+							<store_trade_offer_snapshot object="$target" chance="if not $target.hastradesubscription and ($target.resources.list.count or $target.products.list.count or $target.tradewares.list.count) then 100 else 0" />
+							<add_trade_subscription object="$target" chance="if not $target.hastradesubscription and ($target.resources.list.count or $target.products.list.count or $target.tradewares.list.count) and ($target.owner.relationto.{this.ship.trueowner} ge $target.owner.relation.neutral.max or ($target.owner.relationto.{this.ship.trueowner} gt $target.owner.relation.neutral.min and $tradesubscription)) then 100 else 0" />
+							<reveal_object object="$target" exact="100"/>
+						</do_if>
 					</do_if>
 
 					<remove_value name="$target"/>
