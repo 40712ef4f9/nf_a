@@ -8,8 +8,9 @@
 					<event_game_loaded />
 				</check_any>
 			</conditions>
-			<delay min="200ms" />
+			<delay min="150ms" />
 			<actions>
+				<remove_value name="md.$shipparts"/>
 				<do_if value="md.$NFMMprocessesdSectors?" negate="true">
 					<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
 					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_BASE'"/>

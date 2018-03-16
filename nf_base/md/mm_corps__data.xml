@@ -4911,7 +4911,7 @@
 					<set_value name="$fourthChoice" exact="null"/>
 					<remove_value name="$requiredUnits"/>
 
-					<do_if value="$tmpConfig.$ships? and $tmpConfig.$ships.$fight.count and $tmpConfig.$ships.$trade.count and $tmpConfig.$ships.$build.count and $tmpConfig.$ships.$mine.count" chance="if $ShipYardOfTrust.owner == $_faction then 25 else 100">
+					<do_if value="$tmpConfig.$ships? and $tmpConfig.$ships.$fight.count and $tmpConfig.$ships.$trade.count and $tmpConfig.$ships.$build.count and $tmpConfig.$ships.$mine.count" chance="if not md.$shipparts? then 0 else if $ShipYardOfTrust.owner == $_faction then 25 else 100">
 						<set_value name="$keylist" exact="['build', 'trade', 'mine', 'fight']"/>
 						<do_if value="typeof $firstChoice != datatype.macro and $tmpConfig.$ships.{'$%1'.[$firstChoice]}? and $tmpConfig.$ships.{'$%1'.[$firstChoice]}.count">
 							<set_value name="$firstChoice" exact="$tmpConfig.$ships.{'$%1'.[$firstChoice]}.random"/>
