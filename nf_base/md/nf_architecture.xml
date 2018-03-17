@@ -189,6 +189,12 @@
 
 						<remove_value name="$tmp_Price"/>
 					</do_elseif>
+					<do_elseif value="player.platform and player.platform.owner.relationto.{player.entity.owner} gt player.platform.owner.relation.neutral.min">
+						<add_player_choice position="right" text="{2802,2706}" tooltip="{2802,2707}" section="nf_a_cArch_add_steal" selectable="(player.platform and player.platform.container.isclass.station and md.$NF_ArchiSpMacros.indexof.{player.platform.container.macro} == 0)" />
+					</do_elseif>
+					<do_else>
+						<add_player_choice position="right" text="if player.platform and player.platform.container.isclass.station then {2802,2706} else 'no station'" section="nf_a_cArch_add" selectable="false" />
+					</do_else>
 
 					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
 				</do_if>
