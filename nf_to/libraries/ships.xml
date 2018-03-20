@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<replace sel="/ships/ship[@id='te_destroyer_light']/@group">mmte_destroyer_light_grp</replace>  
+
+	<!--replace sel="/ships/ship[@id='te_destroyer_light']/@group">mmte_destroyer_light_grp</replace-->  
+	<remove sel="/ships/ship[@id='te_destroyer_light']/@macro" silent="1"/>
+	<remove sel="/ships/ship[@id='te_destroyer_light']/@group" silent="1"/>
+	<add sel="/ships/ship[@id='te_destroyer_light']" type="@group" >mmte_destroyer_light_grp</add>
 	<replace sel="/ships/ship[@id='te_carrier']/@group">mmte_carrier</replace>  
 
 

@@ -6,6 +6,8 @@
     <relation faction="goner" relation="-0.008" />
     <relation faction="searchlight" relation="-0.008" />
     <relation faction="mlspirate" relation="-0.008" />
+    <relation faction="ls_dark_space" relation="-0.008" />
+    <relation faction="ls_terran" relation="-0.008" />
   </add>
   <add sel="/factions/faction[@id='hayen']/relations">
     <relation faction="acmecorp" relation="-0.008" />
@@ -20,6 +22,12 @@
     <relation faction="acmecorp" relation="-0.008" />
   </add>
   <add sel="/factions/faction[@id='mlspirate']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='ls_dark_space']/relations">
+    <relation faction="acmecorp" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='ls_terran']/relations">
     <relation faction="acmecorp" relation="-0.008" />
   </add>
 
@@ -29,6 +37,8 @@
     <relation faction="goner" relation="-0.008" />
     <relation faction="searchlight" relation="-0.008" />
     <relation faction="mlspirate" relation="-0.008" />
+    <relation faction="ls_dark_space" relation="-0.008" />
+    <relation faction="ls_terran" relation="-0.008" />
   </add>
   <add sel="/factions/faction[@id='hayen']/relations">
     <relation faction="deepwater" relation="-0.008" />
@@ -43,6 +53,12 @@
     <relation faction="deepwater" relation="-0.008" />
   </add>
   <add sel="/factions/faction[@id='mlspirate']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='ls_dark_space']/relations">
+    <relation faction="deepwater" relation="-0.008" />
+  </add>
+  <add sel="/factions/faction[@id='ls_terran']/relations">
     <relation faction="deepwater" relation="-0.008" />
   </add>
 </diff>

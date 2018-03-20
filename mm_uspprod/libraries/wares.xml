@@ -122,6 +122,27 @@
 					<effect type="defencecontrol" product="0.03" />
 				</effects>
 			</production>
+			<!--production time="270" amount="9" method="default" name="{20206,101}">
+				<primary>
+					<ware ware="bioopticwiring" amount="6" />
+					<ware ware="energycells" amount="15" />
+					<ware ware="foodrations" amount="6" />
+					<ware ware="holtzmanfieldgenerator" amount="3" />
+					<ware ware="microchips" amount="3" />
+					<ware ware="reinforcedmetalplating" amount="3" />
+				</primary>
+				<secondary>
+					<ware ware="medicalsupplies" amount="3" />
+					<ware ware="spacefuel" amount="3" />
+				</secondary>
+				<effects>
+					<effect type="secondaryresource" product="0.15" />
+					<effect type="specialist" product="0.1" />
+					<effect type="manager" product="0.03" />
+					<effect type="engineer" product="0.03" />
+					<effect type="defencecontrol" product="0.03" />
+				</effects>
+			</production-->
 			<!--production time="30" amount="1" method="omicron" name="{20206,301}">
 				<primary>
 					<ware ware="bioelectricneurongel" amount="1" />
@@ -521,6 +542,55 @@
 		</production>
 	</add>
 
+	<add silent="1" sel="//wares/ware[@id='upg_sur_turret_medium_lb_ls_ter']/production[@method='default']" pos="after" >
+		<production time="10" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="1" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='upg_sur_turret_medium_pe_ls_ter']/production[@method='default']" pos="after" >
+		<production time="10" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="1" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='upg_sur_turret_small_mg_ls_ter']/production[@method='default']" pos="after" >
+		<production time="10" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="1" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='upg_sur_turret_medium_par']/production[@method='default']" pos="after" >
+		<production time="10" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="1" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='upg_sur_turret_small_par']/production[@method='default']" pos="after" >
+		<production time="10" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="1" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='upg_sur_turret_medium_bor']/production[@method='default']" pos="after" >
+		<production time="10" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="1" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='upg_sur_turret_small_bor']/production[@method='default']" pos="after" >
+		<production time="10" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="1" />
+			</primary>
+		</production>
+	</add>
 	<add silent="1" sel="//wares/ware[@id='upg_sur_turret_small_ter']/production[@method='default']" pos="after" >
 		<production time="10" amount="1" method="universalparts" name="Uniparts">
 			<primary>

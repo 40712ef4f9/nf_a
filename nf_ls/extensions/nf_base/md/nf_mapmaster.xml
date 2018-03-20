@@ -32,6 +32,7 @@
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone03_macro, macro.struct_bt_ol_laboratory_macro, faction.argon_colony]"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone05_macro, macro.struct_bt_ol_weaponrycomplex_macro, faction.argon_colony]"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone06_macro, macro.struct_bt_ol_fuelstation_macro, faction.argon_colony]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone01_macro, macro.landmarks_ls_h3_mine_macro, faction.argon_colony]" comment="1.3"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone05_macro, macro.struct_bt_ls_defence_macro, faction.argon_colony]"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone06_macro, macro.struct_bt_ls_defence_macro, faction.argon_colony]"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone08_macro, macro.struct_bt_ol_fuelstation_macro, faction.argon_colony]"/>
@@ -58,6 +59,7 @@
 					faction.goner
 					-->
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone03_macro, macro.struct_bt_ol_farm_complex_macro, faction.goner]"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone03_macro, macro.landmarks_ls_goner_station_macro, faction.goner]" comment="1.3"/>
 					<!--
 					faction.hayen
 					-->
@@ -66,6 +68,7 @@
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone07_macro, macro.struct_bt_te_pirate_outpost_02_macro, faction.hayen]" chance="0"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone07_macro, macro.struct_bt_ol_fuelstation_macro, faction.hayen]" comment="replace stuff"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone07_macro, macro.struct_bt_ol_laboratory_macro, faction.hayen]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone04_macro, macro.struct_bt_ls_small_station_macro, faction.hayen]" comment="1.3"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone09_macro, macro.struct_bt_ol_spacefuel_production_macro, faction.hayen]"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone09_macro, macro.struct_bt_te_pirate_outpost_01_macro, faction.hayen]" chance="0"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone09_macro, macro.struct_bt_te_pirate_outpost_02_macro, faction.hayen]" chance="0"/>
@@ -88,6 +91,9 @@
 					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
 					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
 					<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector03_Zone01_macro, macro.landmarks_xenon_factory_macro, faction.xenon]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector03_Zone01_macro, macro.landmarks_xenon_factory_macro, faction.xenon]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector03_Zone05_macro, macro.landmarks_xenon_factory_macro, faction.xenon]" comment="1.3"/>
 					<!--
 					faction.familyryak
 					-->
@@ -113,6 +119,83 @@
 					faction.teladi
 					-->
 					<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone002_macro, macro.struct_bt_te_warehouse_macro, faction.teladi]"/>
+					<!--
+					faction.ls_dark_space
+					-->
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone07_macro, macro.struct_bt_ls_small_station_macro, faction.ls_dark_space]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone11_macro, macro.struct_bt_dv_canteran_outpost_01_macro, faction.ls_dark_space]" chance="0" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone11_macro, macro.struct_bt_dv_canteran_outpost_03_macro, faction.ls_dark_space]" chance="0" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone11_macro, macro.struct_bt_alb_medical_supplies_macro, faction.ls_dark_space]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone11_macro, macro.struct_bt_alb_spice_farm_macro, faction.ls_dark_space]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone11_macro, macro.struct_bt_dv_wheat_farm_macro, faction.ls_dark_space]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone12_macro, macro.struct_bt_te_pirate_outpost_02_macro, faction.ls_dark_space]" chance="0" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone12_macro, macro.struct_bt_dv_canteran_outpost_02_macro, faction.ls_dark_space]" chance="0" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone12_macro, macro.struct_bt_ls_terran_solar_power_plant_macro, faction.ls_dark_space]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone12_macro, macro.struct_bt_dv_wheat_farm_macro, faction.ls_dark_space]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone13_macro, macro.struct_bt_te_pirate_outpost_01_macro, faction.ls_dark_space]" chance="0" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone13_macro, macro.struct_bt_ls_terran_fuelstation_macro, faction.ls_dark_space]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone13_macro, macro.struct_bt_dv_wheat_farm_macro, faction.ls_dark_space]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone13_macro, macro.struct_bt_dv_canteran_ringstation_01_macro, faction.ls_dark_space]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone16_macro, macro.struct_bt_dv_solar_power_plant_macro, faction.ls_dark_space]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone16_macro, macro.struct_bt_dv_canteran_ringstation_01_macro, faction.ls_dark_space]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone16_macro, macro.struct_bt_alb_warehouse_macro, faction.ls_dark_space]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector03_Zone03_macro, macro.landmarks_ls_aqueduct_macro, faction.ls_dark_space]" comment="1.3"/>
+					<!--
+					faction.ls_terran
+					-->
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone01_macro, macro.struct_bt_ls_terran_shipyard_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone01_macro, macro.struct_bt_ls_terran_fuelstation_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone01_macro, macro.struct_bt_ls_terran_solar_power_plant_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone01_macro, macro.struct_bt_ls_terran_solar_power_plant_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone02_macro, macro.struct_bt_ls_terran_crystal_refinement_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone02_macro, macro.struct_bt_ls_terran_water_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone02_macro, macro.struct_bt_ls_terran_water_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone03_macro, macro.struct_bt_ls_terran_metalwork_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone03_macro, macro.struct_bt_ls_terran_metalwork_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone03_macro, macro.struct_bt_ls_terran_metalwork_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone03_macro, macro.struct_bt_ls_terran_crystal_refinement_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone04_macro, macro.struct_bt_ls_terran_metalwork_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone04_macro, macro.struct_bt_ls_terran_crystal_refinement_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone04_macro, macro.struct_bt_ls_terran_constructionmaterial_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone08_macro, macro.struct_bt_ls_terran_solar_power_plant_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone08_macro, macro.struct_bt_ls_terran_solar_power_plant_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone08_macro, macro.struct_bt_ls_terran_solar_power_plant_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone08_macro, macro.struct_bt_ls_terran_food_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone01_macro, macro.struct_bt_ls_terran_drone_complex_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone01_macro, macro.struct_bt_ls_terran_weaponry_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone01_macro, macro.struct_bt_ls_terran_ringmegastation_01_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone02_macro, macro.struct_bt_ls_terran_cell_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone02_macro, macro.struct_bt_ls_terran_weaponry_complex_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone02_macro, macro.struct_bt_ls_terran_food_complex_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone02_macro, macro.struct_bt_ls_terran_cell_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone03_macro, macro.struct_bt_ls_terran_food_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone03_macro, macro.struct_bt_ls_terran_spice_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone03_macro, macro.struct_bt_ls_terran_fuelstation_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone04_macro, macro.struct_bt_ls_terran_meat_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone04_macro, macro.struct_bt_ls_terran_farm_complex_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone04_macro, macro.struct_bt_ls_terran_tech_complex_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone04_macro, macro.struct_bt_ls_terran_drone_factory_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone05_macro, macro.struct_bt_ls_terran_gas_mine_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone05_macro, macro.struct_bt_ls_terran_wheat_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone05_macro, macro.struct_bt_ls_terran_spice_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone05_macro, macro.struct_bt_ls_terran_laboratory_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone05_macro, macro.struct_bt_ls_terran_medical_supplies_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone06_macro, macro.struct_bt_ls_terran_gas_mine_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone06_macro, macro.struct_bt_ls_terran_high_energy_construction_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone06_macro, macro.struct_bt_ls_terran_hightec_construction_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone06_macro, macro.struct_bt_ls_terran_cell_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone07_macro, macro.struct_bt_ls_terran_meat_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone07_macro, macro.struct_bt_ls_terran_food_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone07_macro, macro.struct_bt_ls_terran_food_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone07_macro, macro.struct_bt_ls_terran_wheat_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone08_macro, macro.struct_bt_ls_terran_gas_mine_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone08_macro, macro.struct_bt_ls_terran_gas_mine_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone08_macro, macro.struct_bt_ls_terran_gas_mine_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone08_macro, macro.struct_bt_ls_terran_cell_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector03_Zone02_macro, macro.struct_bt_ls_terran_water_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector03_Zone02_macro, macro.struct_bt_ls_terran_water_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector03_Zone04_macro, macro.struct_bt_ls_terran_water_production_macro, faction.ls_terran]" comment="1.3"/>
+					<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector03_Zone04_macro, macro.struct_bt_ls_terran_ore_mine_macro, faction.ls_terran]" comment="1.3"/>
 				</do_if>
 	</add>
 
@@ -153,6 +236,7 @@
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone03_macro, macro.struct_bt_ol_laboratory_macro, faction.argon_colony]"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone05_macro, macro.struct_bt_ol_weaponrycomplex_macro, faction.argon_colony]"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone06_macro, macro.struct_bt_ol_fuelstation_macro, faction.argon_colony]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone01_macro, macro.landmarks_ls_h3_mine_macro, faction.argon_colony]" comment="1.3"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone05_macro, macro.struct_bt_ls_defence_macro, faction.argon_colony]"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone06_macro, macro.struct_bt_ls_defence_macro, faction.argon_colony]"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone08_macro, macro.struct_bt_ol_fuelstation_macro, faction.argon_colony]"/>
@@ -179,6 +263,7 @@
 			faction.goner
 			-->
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone03_macro, macro.struct_bt_ol_farm_complex_macro, faction.goner]"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector01_Zone03_macro, macro.landmarks_ls_goner_station_macro, faction.goner]" comment="1.3"/>
 			<!--
 			faction.hayen
 			-->
@@ -187,6 +272,7 @@
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone07_macro, macro.struct_bt_te_pirate_outpost_02_macro, faction.hayen]" chance="0"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone07_macro, macro.struct_bt_ol_fuelstation_macro, faction.hayen]" comment="replace stuff"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector02_Zone07_macro, macro.struct_bt_ol_laboratory_macro, faction.hayen]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone04_macro, macro.struct_bt_ls_small_station_macro, faction.hayen]" comment="1.3"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone09_macro, macro.struct_bt_ol_spacefuel_production_macro, faction.hayen]"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone09_macro, macro.struct_bt_te_pirate_outpost_01_macro, faction.hayen]" chance="0"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS_Sector03_Zone09_macro, macro.struct_bt_te_pirate_outpost_02_macro, faction.hayen]" chance="0"/>
@@ -209,6 +295,9 @@
 			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
 			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
 			<append_to_list name="$foobar" exact="[macro.tzonecluster_LSA_Sector01_Zone6_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector03_Zone01_macro, macro.landmarks_xenon_factory_macro, faction.xenon]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector03_Zone01_macro, macro.landmarks_xenon_factory_macro, faction.xenon]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector03_Zone05_macro, macro.landmarks_xenon_factory_macro, faction.xenon]" comment="1.3"/>
 			<!--
 			faction.familyryak
 			-->
@@ -234,6 +323,83 @@
 			faction.teladi
 			-->
 			<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone002_macro, macro.struct_bt_te_warehouse_macro, faction.teladi]"/>
+			<!--
+			faction.ls_dark_space
+			-->
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone07_macro, macro.struct_bt_ls_small_station_macro, faction.ls_dark_space]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone11_macro, macro.struct_bt_dv_canteran_outpost_01_macro, faction.ls_dark_space]" chance="0" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone11_macro, macro.struct_bt_dv_canteran_outpost_03_macro, faction.ls_dark_space]" chance="0" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone11_macro, macro.struct_bt_alb_medical_supplies_macro, faction.ls_dark_space]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone11_macro, macro.struct_bt_alb_spice_farm_macro, faction.ls_dark_space]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone11_macro, macro.struct_bt_dv_wheat_farm_macro, faction.ls_dark_space]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone12_macro, macro.struct_bt_te_pirate_outpost_02_macro, faction.ls_dark_space]" chance="0" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone12_macro, macro.struct_bt_dv_canteran_outpost_02_macro, faction.ls_dark_space]" chance="0" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone12_macro, macro.struct_bt_ls_terran_solar_power_plant_macro, faction.ls_dark_space]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone12_macro, macro.struct_bt_dv_wheat_farm_macro, faction.ls_dark_space]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone13_macro, macro.struct_bt_te_pirate_outpost_01_macro, faction.ls_dark_space]" chance="0" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone13_macro, macro.struct_bt_ls_terran_fuelstation_macro, faction.ls_dark_space]" comment="replace stuff"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone13_macro, macro.struct_bt_dv_wheat_farm_macro, faction.ls_dark_space]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone13_macro, macro.struct_bt_dv_canteran_ringstation_01_macro, faction.ls_dark_space]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone16_macro, macro.struct_bt_dv_solar_power_plant_macro, faction.ls_dark_space]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone16_macro, macro.struct_bt_dv_canteran_ringstation_01_macro, faction.ls_dark_space]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzonecluster_LS2_Sector01_Zone16_macro, macro.struct_bt_alb_warehouse_macro, faction.ls_dark_space]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector03_Zone03_macro, macro.landmarks_ls_aqueduct_macro, faction.ls_dark_space]" comment="1.3"/>
+			<!--
+			faction.ls_terran
+			-->
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone01_macro, macro.struct_bt_ls_terran_shipyard_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone01_macro, macro.struct_bt_ls_terran_fuelstation_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone01_macro, macro.struct_bt_ls_terran_solar_power_plant_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone01_macro, macro.struct_bt_ls_terran_solar_power_plant_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone02_macro, macro.struct_bt_ls_terran_crystal_refinement_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone02_macro, macro.struct_bt_ls_terran_water_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone02_macro, macro.struct_bt_ls_terran_water_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone03_macro, macro.struct_bt_ls_terran_metalwork_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone03_macro, macro.struct_bt_ls_terran_metalwork_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone03_macro, macro.struct_bt_ls_terran_metalwork_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone03_macro, macro.struct_bt_ls_terran_crystal_refinement_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone04_macro, macro.struct_bt_ls_terran_metalwork_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone04_macro, macro.struct_bt_ls_terran_crystal_refinement_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone04_macro, macro.struct_bt_ls_terran_constructionmaterial_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone08_macro, macro.struct_bt_ls_terran_solar_power_plant_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone08_macro, macro.struct_bt_ls_terran_solar_power_plant_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone08_macro, macro.struct_bt_ls_terran_solar_power_plant_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector01_Zone08_macro, macro.struct_bt_ls_terran_food_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone01_macro, macro.struct_bt_ls_terran_drone_complex_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone01_macro, macro.struct_bt_ls_terran_weaponry_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone01_macro, macro.struct_bt_ls_terran_ringmegastation_01_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone02_macro, macro.struct_bt_ls_terran_cell_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone02_macro, macro.struct_bt_ls_terran_weaponry_complex_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone02_macro, macro.struct_bt_ls_terran_food_complex_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone02_macro, macro.struct_bt_ls_terran_cell_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone03_macro, macro.struct_bt_ls_terran_food_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone03_macro, macro.struct_bt_ls_terran_spice_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone03_macro, macro.struct_bt_ls_terran_fuelstation_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone04_macro, macro.struct_bt_ls_terran_meat_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone04_macro, macro.struct_bt_ls_terran_farm_complex_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone04_macro, macro.struct_bt_ls_terran_tech_complex_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone04_macro, macro.struct_bt_ls_terran_drone_factory_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone05_macro, macro.struct_bt_ls_terran_gas_mine_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone05_macro, macro.struct_bt_ls_terran_wheat_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone05_macro, macro.struct_bt_ls_terran_spice_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone05_macro, macro.struct_bt_ls_terran_laboratory_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone05_macro, macro.struct_bt_ls_terran_medical_supplies_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone06_macro, macro.struct_bt_ls_terran_gas_mine_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone06_macro, macro.struct_bt_ls_terran_high_energy_construction_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone06_macro, macro.struct_bt_ls_terran_hightec_construction_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone06_macro, macro.struct_bt_ls_terran_cell_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone07_macro, macro.struct_bt_ls_terran_meat_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone07_macro, macro.struct_bt_ls_terran_food_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone07_macro, macro.struct_bt_ls_terran_food_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone07_macro, macro.struct_bt_ls_terran_wheat_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone08_macro, macro.struct_bt_ls_terran_gas_mine_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone08_macro, macro.struct_bt_ls_terran_gas_mine_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone08_macro, macro.struct_bt_ls_terran_gas_mine_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector02_Zone08_macro, macro.struct_bt_ls_terran_cell_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector03_Zone02_macro, macro.struct_bt_ls_terran_water_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector03_Zone02_macro, macro.struct_bt_ls_terran_water_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector03_Zone04_macro, macro.struct_bt_ls_terran_water_production_macro, faction.ls_terran]" comment="1.3"/>
+			<append_to_list name="$foobar" exact="[macro.tzoneCluster_LS2_Sector03_Zone04_macro, macro.struct_bt_ls_terran_ore_mine_macro, faction.ls_terran]" comment="1.3"/>
 		</do_if>
 	</add>
 </diff>

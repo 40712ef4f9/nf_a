@@ -353,7 +353,7 @@
 				</do_if>
 				<do_else>
 					<set_value name="$thisTargetZone" exact="event.param2" />
-					<set_value name="$Main_Factions" exact="if md.$nfFactions_Main? then md.$nfFactions_Main.clone else ['player', 'heartofalbion', 'plutarch', 'canteran', 'argongovernment', 'terracorp', 'atlas', 'xenon', 'familyryak', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'argon_colony', 'hayen', 'mlspirate', 'teladi']" />
+					<set_value name="$Main_Factions" exact="if md.$nfFactions_Main? then md.$nfFactions_Main.clone else ['player', 'heartofalbion', 'plutarch', 'canteran', 'argongovernment', 'terracorp', 'atlas', 'xenon', 'familyryak', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'argon_colony', 'hayen', 'mlspirate', 'teladi', 'ls_terran', 'ls_dark_space']" />
 					<set_value name="$problematics" exact="['asteroid_turret_m_01_macro']" />
 					<!--
 					<set_value name="$Main_FactionsShort" exact="['canteran', 'xenon', 'plutarch', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'argon_colony']"/>
@@ -381,7 +381,7 @@
 		<library name="SD_owner_check">
 			<actions>
 				<do_if value="$Main_Factions?" negate="true"> 
-					<set_value name="$Main_Factions" exact="if md.$nfFactions_Main? then md.$nfFactions_Main.clone else ['player', 'heartofalbion', 'plutarch', 'canteran', 'argongovernment', 'terracorp', 'atlas', 'xenon', 'familyryak', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'argon_colony', 'hayen', 'mlspirate', 'teladi']" />
+					<set_value name="$Main_Factions" exact="if md.$nfFactions_Main? then md.$nfFactions_Main.clone else ['player', 'heartofalbion', 'plutarch', 'canteran', 'argongovernment', 'terracorp', 'atlas', 'xenon', 'familyryak', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'argon_colony', 'hayen', 'mlspirate', 'teladi', 'ls_terran', 'ls_dark_space']" />
 				</do_if>
 				<set_value name="$ZO_temp" exact="1" />
 				<set_value name="$ZO_temp_main" exact="0" />
@@ -396,7 +396,7 @@
 
 				<do_if value="@$StationsSD.count gt 0" >
 					<do_all exact="$StationsSD.count" counter="$x">
-						<do_if value="$StationsSD.{$x}.hullpercentage lt 10" >
+						<do_if value="$StationsSD.{$x}.hullpercentage lt 10 or $StationsSD.{$x}.owner == faction.ownerless or not $StationsSD.{$x}.owner" >
 							<continue />
 						</do_if>
 						<do_if value="$StationsSD.{$x}.macro.id" list="$problematics">
@@ -462,7 +462,7 @@
 						<remove_value name="$ZO_temp_i"/>
 						<remove_value name="$tmp_count"/>
 
-						<do_if value="$tmp != $ZO_temp and $tmp != @$thisTargetZone.owner and ($thisTargetZone.owner.hasrelation.enemy.{$tmp} or not $Main_Factions.indexof.{$thisTargetZone.owner.id})" chance="if $simpleSD? then 0 else 100">
+						<do_if value="$tmp != $ZO_temp and $tmp != @$thisTargetZone.owner and $thisTargetZone.owner and ($thisTargetZone.owner.hasrelation.enemy.{$tmp} or not $Main_Factions.indexof.{$thisTargetZone.owner.id})" chance="if $simpleSD? then 0 else 100">
 							<find_station name="$Stations_old" space="$thisTargetZone" functional="true" multiple="true">
 								<match owner="faction.ownerless" negate="true"/>
 								<match owner="faction.civilian" negate="true"/>
@@ -512,7 +512,7 @@
 						</do_if>
 					</do_elseif>
 					<!-- non Mainfaction fallback -->
-					<do_elseif value="typeof $ZO_temp != datatype.faction and not $Main_Factions.indexof.{$thisTargetZone.owner.id}" >
+					<do_elseif value="typeof $ZO_temp != datatype.faction and $thisTargetZone.owner and not $Main_Factions.indexof.{$thisTargetZone.owner.id}" >
 						<do_if value="$ZO_temp_special">
 							<set_value name="$ZO_temp" exact="$ZO_temp_special" />
 						</do_if>
@@ -719,7 +719,7 @@
 					<set_value name="md.$police_factions" exact="table[]" />
 				</do_if>
 				<do_if value="$Main_Factions?" negate="true"> 
-					<set_value name="$Main_Factions" exact="if md.$nfFactions_Main? then md.$nfFactions_Main.clone else ['player', 'heartofalbion', 'plutarch', 'canteran', 'argongovernment', 'terracorp', 'atlas', 'xenon', 'familyryak', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'argon_colony', 'hayen', 'mlspirate', 'teladi']" />
+					<set_value name="$Main_Factions" exact="if md.$nfFactions_Main? then md.$nfFactions_Main.clone else ['player', 'heartofalbion', 'plutarch', 'canteran', 'argongovernment', 'terracorp', 'atlas', 'xenon', 'familyryak', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'argon_colony', 'hayen', 'mlspirate', 'teladi', 'ls_terran', 'ls_dark_space']" />
 				</do_if>
 				<do_if value="$Outlaw_Factions?" negate="true"> 
 					<set_value name="$Outlaw_Factions" exact="if md.$nfFactions_outlaw? then md.$nfFactions_outlaw.clone else ['xenon', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'atlas', 'khaak', 'hayen', 'mlspirate']" />

@@ -36,7 +36,7 @@
 				<do_if value="$stations.{$Counter}.hastradesubscription">
 					<continue />
 				</do_if>
-				<do_if value="$stations.{$Counter}.owner.knowntoplayer" negate="true">
+				<do_if value="$stations.{$Counter}.owner.knowntoplayer" negate="true" chance="if $stations.{$Counter}.owner then 100 else 0">
 					<set_faction_known faction="$stations.{$Counter}.owner" known="true" />
 					<set_value name="$toProcess" operation="subtract"/>
 				</do_if>

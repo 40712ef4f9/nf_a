@@ -69,8 +69,8 @@
 					<do_if value="$th_stations.{$t}.owner.hasrelation.enemy.{this.ship.trueowner}" negate="true">
 						<do_if value="this.ship.isplayerowned">
 							<reveal_object object="$th_stations.{$t}" exact="25"/>
-							<add_encyclopedia_entry type="factions" item="$th_stations.{$t}.owner.id" chance="if $th_stations.{$t}.owner.knowntoplayer then 0 else 100" />
-							<set_faction_known faction="$th_stations.{$t}.owner" known="true" chance="if $th_stations.{$t}.owner.knowntoplayer then 0 else 100" />
+							<add_encyclopedia_entry type="factions" item="$th_stations.{$t}.owner.id" chance="if not $th_stations.{$t}.owner or $th_stations.{$t}.owner and $th_stations.{$t}.owner.knowntoplayer then 0 else 100" />
+							<set_faction_known faction="$th_stations.{$t}.owner" known="true" chance="if not $th_stations.{$t}.owner or $th_stations.{$t}.owner and $th_stations.{$t}.owner.knowntoplayer then 0 else 100" />
 							<add_encyclopedia_entry type="stationtypes" item="$th_stations.{$t}.macro.id" chance="if $th_stations.{$t}.name == $th_stations.{$t}.knownname then 0 else 100" />
 							<set_known object="$th_stations.{$t}" known="true" chance="if $th_stations.{$t}.name == $th_stations.{$t}.knownname then 0 else 100" />
 							<set_object_radar_visible object="$th_stations.{$t}"/>
@@ -475,8 +475,8 @@
 				<do_if value="$target.owner.hasrelation.enemy.{this.ship.trueowner}" negate="true">
 					<do_if value="this.ship.isplayerowned">
 						<reveal_object object="$target" exact="25"/>
-						<add_encyclopedia_entry type="factions" item="$target.owner.id" chance="if $target.owner.knowntoplayer then 0 else 100" />
-						<set_faction_known faction="$target.owner" known="true" chance="if $target.owner.knowntoplayer then 0 else 100" />
+						<add_encyclopedia_entry type="factions" item="$target.owner.id" chance="if not $target.owner or $target.owner and $target.owner.knowntoplayer then 0 else 100" />
+						<set_faction_known faction="$target.owner" known="true" chance="if not $target.owner or $target.owner and $target.owner.knowntoplayer then 0 else 100" />
 						<add_encyclopedia_entry type="stationtypes" item="$target.macro.id" chance="if $target.name == $target.knownname then 0 else 100" />
 						<set_known object="$target" known="true" chance="if $target.name == $target.knownname then 0 else 100" />
 						<set_object_radar_visible object="$target"/>
@@ -590,8 +590,8 @@
 					<set_value name="$target" exact="$found_stations.{$i}"/>
 					<do_if value="this.ship.isplayerowned and $target.exists">
 						<reveal_object object="$target" exact="25"/>
-						<add_encyclopedia_entry type="factions" item="$target.owner.id" chance="if $target.owner.knowntoplayer then 0 else 100" />
-						<set_faction_known faction="$target.owner" known="true" chance="if $target.owner.knowntoplayer then 0 else 100" />
+						<add_encyclopedia_entry type="factions" item="$target.owner.id" chance="if not $target.owner or $target.owner and $target.owner.knowntoplayer then 0 else 100" />
+						<set_faction_known faction="$target.owner" known="true" chance="if not $target.owner or $target.owner and $target.owner.knowntoplayer then 0 else 100" />
 						<add_encyclopedia_entry type="stationtypes" item="$target.macro.id" chance="if $target.name == $target.knownname then 0 else 100" />
 						<set_known object="$target" known="true" chance="if $target.name == $target.knownname then 0 else 100" />
 						<set_object_radar_visible object="$target"/>

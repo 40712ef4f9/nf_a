@@ -46,8 +46,8 @@
 						$ignoreFuel = 0,
 						$HyperDrive = 1
 					]" comment="end $nfconfig"/>
-					<set_value name="md.$nfFactions_Main" exact="['player', 'heartofalbion', 'plutarch', 'canteran', 'argongovernment', 'xenon', 'familyryak', 'terracorp', 'atlas', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'argon_colony', 'hayen', 'mlspirate', 'teladi']" comment="end $nfFactions_Main"/>
-					<set_value name="md.$nfFactions_outlaw" exact="['xenon', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'atlas', 'khaak', 'hayen', 'mlspirate']" comment="end $nfFactions_outlaw"/>
+					<set_value name="md.$nfFactions_Main" exact="['player', 'heartofalbion', 'plutarch', 'canteran', 'argongovernment', 'xenon', 'familyryak', 'terracorp', 'atlas', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'argon_colony', 'hayen', 'mlspirate', 'teladi', 'ls_terran']" comment="end $nfFactions_Main"/>
+					<set_value name="md.$nfFactions_outlaw" exact="['xenon', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'atlas', 'khaak', 'hayen', 'mlspirate', 'ls_dark_space']" comment="end $nfFactions_outlaw"/>
 				</do_if>
 
 				<do_if value="player.module == 'ep1'">
@@ -132,7 +132,7 @@
 				-->
 				<find_zone groupname="$tempZones" space="player.galaxy" multiple="true" tempzone="false"/>
 				<create_group groupname="$tmpSpace" />
-				<set_value name="$Main_Factions" exact="if md.$nfFactions_Main? then md.$nfFactions_Main.clone else ['player', 'heartofalbion', 'plutarch', 'canteran', 'terracorp', 'atlas', 'argongovernment', 'xenon', 'familyryak', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'argon_colony', 'hayen', 'mlspirate', 'teladi']" />
+				<set_value name="$Main_Factions" exact="if md.$nfFactions_Main? then md.$nfFactions_Main.clone else ['player', 'heartofalbion', 'plutarch', 'canteran', 'terracorp', 'atlas', 'argongovernment', 'xenon', 'familyryak', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'argon_colony', 'hayen', 'mlspirate', 'teladi', 'ls_terran', 'ls_dark_space']" />
 				<set_value name="$problematics" exact="['asteroid_turret_m_01_macro']" />
 				<!-- SY areas -->
 				<find_station name="$tempStations" space="player.galaxy" functional="true" multiple="true">

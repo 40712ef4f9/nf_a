@@ -4911,7 +4911,15 @@
 					<set_value name="$fourthChoice" exact="null"/>
 					<remove_value name="$requiredUnits"/>
 
-					<do_if value="$tmpConfig.$ships? and $tmpConfig.$ships.$fight.count and $tmpConfig.$ships.$trade.count and $tmpConfig.$ships.$build.count and $tmpConfig.$ships.$mine.count" chance="if not md.$shipparts? then 0 else if $ShipYardOfTrust.owner == $_faction then 25 else 100">
+					<set_value name="$shipparts" exact="false"/>
+					<do_if value="md.$shipparts?">
+						<!-- add by shipparts-extension
+						<do_if value="$ShipYardOfTrust.cargo.{ware.shippart}.target">
+							<set_value name="$shipparts" exact="true"/>
+						</do_if>-->
+					</do_if>
+
+					<do_if value="$tmpConfig.$ships? and $tmpConfig.$ships.$fight.count and $tmpConfig.$ships.$trade.count and $tmpConfig.$ships.$build.count and $tmpConfig.$ships.$mine.count" chance="if not $shipparts then 0 else if $ShipYardOfTrust.owner == $_faction then 25 else 100">
 						<set_value name="$keylist" exact="['build', 'trade', 'mine', 'fight']"/>
 						<do_if value="typeof $firstChoice != datatype.macro and $tmpConfig.$ships.{'$%1'.[$firstChoice]}? and $tmpConfig.$ships.{'$%1'.[$firstChoice]}.count">
 							<set_value name="$firstChoice" exact="$tmpConfig.$ships.{'$%1'.[$firstChoice]}.random"/>
@@ -5098,6 +5106,7 @@
 				<do_else>
 <set_value name="$text3" exact="'** No SY available\n'" operation="add"/>
 				</do_else>
+				<remove_value name="$shipparts"/>
 			</actions>
 		</library>
 
