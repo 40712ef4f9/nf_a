@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<add sel="//cue[@name='NF_BASE_patch']/actions/remove_value[@name='md.$shipparts']" pos="after">
+		<set_value name="md.$shipparts"/>
+	</add>
+</diff>

@@ -38,9 +38,29 @@
 				<do_if value="global.$mmpiratesy_pfactions?" negate="true">
 					<set_value name="global.$mmpiratesy_pfactions" exact="[faction.reivers,faction.sovereignsyndicate,faction.hereticvanguards]"/>
 				</do_if>
+				<!--
+					NF Archi
+				-->
 				<do_if value="md.$NF_ArchiSpMacros?" negate="true">
 					<create_list name="md.$NF_ArchiSpMacros"/>
 				</do_if>
+				<do_else>
+					<do_all exact="md.$NF_ArchiSpMacros.count" counter="$j" reverse="true">
+						<do_if value="typeof md.$NF_ArchiSpMacros.{$j} == datatype.macro" negate="true">
+							<remove_value name="md.$NF_ArchiSpMacros.{$j}"/>
+						</do_if>
+					</do_all> 
+				</do_else>
+				<do_if value="md.$NF_ArchiSpMacrosShips?" negate="true">
+					<create_list name="md.$NF_ArchiSpMacrosShips"/>
+				</do_if>
+				<do_else>
+					<do_all exact="md.$NF_ArchiSpMacrosShips.count" counter="$j" reverse="true">
+						<do_if value="typeof md.$NF_ArchiSpMacrosShips.{$j} == datatype.macro" negate="true">
+							<remove_value name="md.$NF_ArchiSpMacrosShips.{$j}"/>
+						</do_if>
+					</do_all> 
+				</do_else>
 				<!--
 					NF Config
 				-->

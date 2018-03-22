@@ -35,35 +35,55 @@
   <add sel="//add_player_choice_sub[@section='g_askforway']" type="@chance" >0</add>
   <add sel="//add_player_choice_sub[@section='g_askforway']" pos="after">
     <!--add_player_choice_sub text="'Order / Copy a ship'" tooltip="Select a existing ship for COPY them, or ORDER a ship at default setup" comment="Clone a vessel" position="top_right" section="cArch_selectsomething" choiceparam="[0, 0, 'zone', event.object.container.zone, null, null, 'selectplayerobject', ['cArch_buildclone', null, null, true, false, true, false, true]]" chance="if event.object.container.isplayerowned then 100 else 0" /-->
-    <add_player_choice_sub text="'Special Workshop'" position="top_right" section="cArch_buildclone_menue"  />
+    <add_player_choice_sub text="{2802,2719}" comment="Special Workshop" position="top_right" section="cArch_buildclone_menue" chance="0"/>
   </add>
   <add sel="/mdscript[@name='NPC_Shiptrader']/cues/cue[@name='Base']/cues/cue[@name='SectionHandler']/actions/do_elseif[@value=&quot;event.param == 'cArch_repairslider'&quot;]" pos="after">
     <do_elseif value="event.param == 'cArch_selectsomething'">
       <open_conversation_menu menu="MapMenu" param="event.param2" param2="event.param3" />
       <add_conversation_view view="closeupdetailmonitor" />
     </do_elseif>
-	<do_elseif value="event.param == 'cArch_buildclone_order'">
-	  <signal_objects object="$actor.container" param="'SHIPORDER'" param2="[event.param2, faction.player, player.entity]" />
-	</do_elseif>
-	<do_elseif value="event.param == 'cArch_buildclone_menue'">
-		 <add_player_choice_sub text="'Order / Copy a ship'" tooltip="'Select a existing ship for COPY them, or ORDER a ship at default setup'" comment="Clone a vessel" position="top_right" section="cArch_selectsomething" choiceparam="[0, 0, 'zone', event.object.container.zone, null, null, 'selectplayerobject', ['cArch_buildclone', null, null, true, false, true, false, true]]" />
+	<do_elseif value="event.param == 'cArch_buildclone'">
+	  <do_if value="event.param2.{3}? and typeof event.param2.{3} == datatype.macro or event.param2.{3}.exists">
+		<set_value name="$cloneMacro" exact="if typeof event.param2.{3} == datatype.macro then event.param2.{3} else event.param2.{3}.macro" />
+		<set_value name="$tooltipText" exact="''" />
+		<set_value name="$tooltipText" exact="{2802,2730}" operation="add" chance="if $BuildModule.buildmacros.{1}.class == event.param2.{3}.class then 0 else 100"/>
+		<set_value name="$tooltipText" exact="{2802,2731}" operation="add" chance="if not $ship? and @$BuildModule.freedockslot and not @$actor.$shiptrader_isbusy then 0 else 100"/>
+		
+		<add_player_choice text="{2802,2724}.[$cloneMacro.name]" selectable="not $ship? and @$BuildModule.freedockslot and not @$actor.$shiptrader_isbusy and $BuildModule.buildmacros.{1}.class == event.param2.{3}.class" comment="build a vessel" section="cArch_selectUpgradesMenu" choiceparam="[ 0, 0, $actor, $BuildModule, null, $cloneMacro.id, '', 0, 1, $WareList ]" tooltip="$tooltipText" />
+		<remove_value name="$tooltipText"/>
 
 		<include_actions ref="md.NPC_Shiptrader_Pl.QueueListTooltipText" />
 
-		<add_player_choice text="'%1 Queue'.[$actor.container.name]" selectable="false" section="cArch_buildclone_menue" tooltip="$tooltipText" />
+		<add_player_choice text="{2802,2725}.[$cloneMacro.name]" selectable="@$cloneMacro.ware.maxprice*2 lt player.money and (not $actor.container.tradenpc.$orders? or $actor.container.tradenpc.$orders.count lt 6)" comment="order a vessel" section="cArch_buildclone_order" choiceparam="$cloneMacro" tooltip="$tooltipText" />
 		<remove_value name="$tooltipText"/>
-		<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+		<remove_value name="$cloneMacro"/>
+	  </do_if>
+
+	  <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
 	</do_elseif>
-  </add>
-  <add sel="/mdscript[@name='NPC_Shiptrader']/cues/cue[@name='Base']/cues/cue[@name='SectionHandler']/actions/do_elseif[@value=&quot;event.param == 'cArch_repairslider'&quot;]" pos="after">
-    <do_elseif value="event.param == 'cArch_buildclone' and event.param2.{3}? and event.param2.{3}.exists">
-	  <add_player_choice text="'Build [%1]'.[event.param2.{3}.macro.name]" selectable="not $actor.$shiptrader_isbusy and $BuildModule.buildmacros.{1}.class == event.param2.{3}.class" comment="build a vessel" section="cArch_selectUpgradesMenu" choiceparam="[ 0, 0, $actor, $BuildModule, null, event.param2.{3}.macro.id, '', 0, 1, $WareList ]" />
+
+	<do_elseif value="event.param == 'cArch_buildclone_order'">
+	  <signal_objects object="$actor.container" param="'SHIPORDER'" param2="[event.param2, faction.player, player.entity]" />
+	</do_elseif>
+
+	<do_elseif value="event.param == 'cArch_buildclone_blueprint'">
+	  <do_if value="md.$NF_ArchiSpMacrosShips? and md.$NF_ArchiSpMacrosShips.count">
+		<include_actions ref="md.NF_ARCHITECTURE.NF_Arch_ship_blueprints" />
+	  </do_if>
+	</do_elseif>
+
+	<do_elseif value="event.param == 'cArch_buildclone_menue'">
+	  <add_player_choice_sub text="{2802,2720}" tooltip="{2802,2721}" comment="Clone a vessel" position="top_right" section="cArch_selectsomething" choiceparam="[0, 0, 'zone', event.object.container.zone, null, null, 'selectplayerobject', ['cArch_buildclone', null, null, true, false, true, false, true]]" />
+
+	  <do_if value="md.$NF_ArchiSpMacrosShips? and md.$NF_ArchiSpMacrosShips.count">
+		<add_player_choice_sub text="{2802,2722}" tooltip="{2802,2723}" comment="Use Blueprint" position="right" section="cArch_buildclone_blueprint" choiceparam="[null, 1]" />
+	  </do_if>
 
 	  <include_actions ref="md.NPC_Shiptrader_Pl.QueueListTooltipText" />
 
-	  <add_player_choice text="'Order [%1]'.[event.param2.{3}.macro.name]" selectable="@event.param2.{3}.macro.ware.maxprice lt player.money and (not $actor.container.tradenpc.$orders? or $actor.container.tradenpc.$orders.count lt 6)" comment="order a vessel" section="cArch_buildclone_order" choiceparam="event.param2.{3}.macro" tooltip="$tooltipText" />
+	  <add_player_choice text="'%1 Queue'.[$actor.container.name]" selectable="false" section="cArch_buildclone_menue" tooltip="$tooltipText" />
 	  <remove_value name="$tooltipText"/>
-      <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
-    </do_elseif>
+	  <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+	</do_elseif>
   </add>
 </diff>

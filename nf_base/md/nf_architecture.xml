@@ -19,6 +19,9 @@
 				<do_if value="md.$NF_ArchiSpMacros?" negate="true">
 					<create_list name="md.$NF_ArchiSpMacros"/>
 				</do_if>
+				<do_if value="md.$NF_ArchiSpMacrosShips?" negate="true">
+					<create_list name="md.$NF_ArchiSpMacrosShips"/>
+				</do_if>
 				<create_list name="$build"/>
 				<set_value name="$target" exact="null" />
 				<set_value name="$baseMenu" exact="false" />
@@ -106,6 +109,10 @@
 									<add_player_choice		text="'%1'.[$target.name]"	position="$i" immediate="$target.architect.$specialMacroOrder?" tooltip="if $target.architect.$specialMacroOrder? then '%1\n%2'.[$target.architect.$specialMacroOrder.id, $target.architect.$specialMacroOrder.name] else ''" section="nf_a_cArch_set" choiceparam="$target" />
 								</do_elseif>
 								<do_elseif value="$todo_options_start le $todo_options_max">
+									<do_if value="$todo_options.{$todo_options_start} and typeof $todo_options.{$todo_options_start} == datatype.macro" negate="true">
+										<set_value name="$todo_options_start"  operation="add" exact="1" />
+										<continue />
+									</do_if>
 									<add_player_choice		text="'%1'.[$todo_options.{$todo_options_start}.name]"	position="$i" 	immediate="$todo_options.{$todo_options_start}.architect.$specialMacroOrder?" tooltip="if $todo_options.{$todo_options_start}.architect.$specialMacroOrder? then '%1\n%2'.[$todo_options.{$todo_options_start}.architect.$specialMacroOrder.id, $todo_options.{$todo_options_start}.architect.$specialMacroOrder.name] else ''" 	section="nf_a_cArch_set" choiceparam="$todo_options.{$todo_options_start}"/>
 									<set_value name="$todo_options_start"  operation="add" exact="1" />
 								</do_elseif>
@@ -177,10 +184,10 @@
 					<do_if value="player.platform and player.platform.container.isclass.station and md.$NF_ArchiSpMacros.indexof.{player.platform.container.macro}">
 						<add_player_choice position="right" text="{2802,2716}" section="nf_a_cArch_add" selectable="false" />
 					</do_if>
-					<do_elseif value="player.platform and player.platform.owner.relationto.{player.entity.owner} gt player.platform.owner.relation.member.mid">
+					<do_elseif value="player.platform and player.platform.container.isclass.station and player.platform.owner.relationto.{player.entity.owner} gt player.platform.owner.relation.member.mid">
 						<add_player_choice position="right" text="{2802,2706}" section="nf_a_cArch_add" selectable="(player.platform and player.platform.container.isclass.station and md.$NF_ArchiSpMacros.indexof.{player.platform.container.macro} == 0)" />
 					</do_elseif>
-					<do_elseif value="player.platform and player.platform.owner.relationto.{player.entity.owner} gt player.platform.owner.relation.friend.min and player.platform.container.tradenpc.exists">
+					<do_elseif value="player.platform and player.platform.container.isclass.station and player.platform.owner.relationto.{player.entity.owner} gt player.platform.owner.relation.friend.min and player.platform.container.tradenpc.exists">
 						<set_value name="$tmp_Price" exact="10000000Cr * ((player.platform.owner.relation.member.mid - player.platform.owner.relationto.{faction.player})f * 100)" />
 
 						<add_player_choice position="right" text="{2802,2706}" tooltip="{2802,2710}.[$tmp_Price.formatted.default]" section="nf_a_cArch_add_pay" 
@@ -189,8 +196,17 @@
 
 						<remove_value name="$tmp_Price"/>
 					</do_elseif>
-					<do_elseif value="player.platform and player.platform.owner.relationto.{player.entity.owner} gt player.platform.owner.relation.neutral.min">
+					<do_elseif value="player.platform and player.platform.container.isclass.station and player.platform.owner.relationto.{player.entity.owner} gt player.platform.owner.relation.neutral.min">
 						<add_player_choice position="right" text="{2802,2706}" tooltip="{2802,2707}" section="nf_a_cArch_add_steal" selectable="(player.platform and player.platform.container.isclass.station and md.$NF_ArchiSpMacros.indexof.{player.platform.container.macro} == 0)" />
+					</do_elseif>
+					<do_elseif value="player.platform and player.platform.container.isclass.ship and md.$NF_ArchiSpMacrosShips.indexof.{player.platform.container.macro}">
+						<add_player_choice position="right" text="{2802,2716}" section="nf_a_cArch_add" selectable="false" />
+					</do_elseif>
+					<do_elseif value="player.platform and player.platform.container.isclass.ship and player.platform.owner.relationto.{player.entity.owner} gt player.platform.owner.relation.member.mid">
+						<add_player_choice position="right" text="{2802,2717}" section="nf_a_cArch_add" selectable="(player.platform and player.platform.container.isclass.ship and md.$NF_ArchiSpMacrosShips.indexof.{player.platform.container.macro} == 0)" />
+					</do_elseif>
+					<do_elseif value="player.platform and player.platform.container.isclass.ship and player.platform.owner.relationto.{player.entity.owner} gt player.platform.owner.relation.neutral.min">
+						<add_player_choice position="right" text="{2802,2717}" tooltip="{2802,2707}" section="nf_a_cArch_add_steal" selectable="(player.platform and player.platform.container.isclass.ship and md.$NF_ArchiSpMacrosShips.indexof.{player.platform.container.macro} == 0)" />
 					</do_elseif>
 					<do_else>
 						<add_player_choice position="right" text="if player.platform and player.platform.container.isclass.station then {2802,2708} else {2802,2709}" section="nf_a_cArch_add" selectable="false" />
@@ -217,6 +233,13 @@
 					<append_to_list name="md.$NF_ArchiSpMacros" exact="player.platform.container.macro" chance="(md.$NF_ArchiSpMacros.indexof.{player.platform.container.macro} == 0)*100"/>
 					<write_to_logbook category="tips" text="{2802,2715}.[player.platform.container.knownname, player.platform.container.zone.name, player.platform.container.macro.id]"/>
 				</do_if>
+				<do_if value="md.$NF_ArchiSpMacrosShips?" negate="true">
+					<create_list name="md.$NF_ArchiSpMacrosShips"/>
+				</do_if>
+				<do_if value="player.platform and player.platform.container.isclass.ship">
+					<append_to_list name="md.$NF_ArchiSpMacrosShips" exact="player.platform.container.macro" chance="(md.$NF_ArchiSpMacrosShips.indexof.{player.platform.container.macro} == 0)*100"/>
+					<write_to_logbook category="tips" text="{2802,2715}.[player.platform.container.knownname, player.platform.container.sector.name, player.platform.container.macro.id]"/>
+				</do_if>
 			</actions>
 		</library>
 		<!--
@@ -233,6 +256,44 @@
 						<set_cover_owner object="player.primaryship" />
 					</do_else>
 				</do_if>
+			</actions>
+		</library>
+		<!--
+		* $BuildModule
+		<do_if value="md.$NF_ArchiSpMacrosShips? and md.$NF_ArchiSpMacrosShips.count">
+			<include_actions ref="md.NF_ARCHITECTURE.NF_Arch_ship_blueprints" />
+		</do_if>
+		-->
+		<library name="NF_Arch_ship_blueprints">
+			<actions>
+				<set_value name="$todo_options" exact="md.$NF_ArchiSpMacrosShips.clone"/>
+				<set_value name="$todo_options_max" exact="$todo_options.count" />
+				<set_value name="$todo_options_start" exact="if event.param2.{2}? then event.param2.{2} else 1" />
+				<do_if value="$todo_options_start gt 0">
+				
+					<do_all exact="6" counter="$i">
+						<do_if value="$i == 6 and ($todo_options_start + 1) le $todo_options_max">
+							<add_player_choice 		text="{2802,1000}.[$todo_options_start, $todo_options_max]" 	position="bottom_right" section="cArch_buildclone_blueprint" 		choiceparam="[null, $todo_options_start]"/>
+						</do_if>
+						<do_elseif value="$todo_options_start le $todo_options_max">
+							<do_if value="$todo_options.{$todo_options_start} and typeof $todo_options.{$todo_options_start} == datatype.macro" negate="true">
+								<set_value name="$todo_options_start"  operation="add" exact="1" />
+								<continue />
+							</do_if>
+                			<add_player_choice text="'%1'.[$todo_options.{$todo_options_start}.name]" selectable="$BuildModule.buildmacros.{1}.class == $todo_options.{$todo_options_start}.class" tooltip="if $BuildModule.buildmacros.{1}.class == $todo_options.{$todo_options_start}.class then $todo_options.{$todo_options_start}.id else {2802,2732}" section="cArch_buildclone" choiceparam="[ null, null, $todo_options.{$todo_options_start}]" />
+							<set_value name="$todo_options_start"  operation="add" exact="1" />
+						</do_elseif>
+						<do_elseif value="$i == 6">
+							<add_player_choice	text="{1002,20}" position="bottom_right" section="cArch_buildclone_menue" />
+							<!--add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/-->
+						</do_elseif>
+					</do_all>
+
+				</do_if>
+				<!--  clean  -->
+				<remove_value name="$todo_options_start"/>
+				<remove_value name="$todo_options_max"/>
+				<remove_value name="$todo_options"/>
 			</actions>
 		</library>
 	</cues>

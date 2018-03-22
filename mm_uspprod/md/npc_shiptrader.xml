@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff>
+  <replace sel="//add_player_choice_sub[@section='cArch_buildclone_menue']/@chance">if $actor.container.cargo.{ware.shippart}.target then 100 else 0</replace>
+</diff>

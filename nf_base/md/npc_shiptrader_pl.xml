@@ -144,7 +144,7 @@
                 <add_player_choice_sub text="{1002,12008}" comment="Where can I find ...?" section="g_askforway" position="top_right" baseparam="event.param2" />
               </do_else-->
               <do_if value="true">
-                <add_player_choice_sub text="'Special Workshop'" position="top_right" section="cArch_buildclone_menue"  />
+                <add_player_choice_sub text="{2802,2719}" comment="Special Workshop" position="top_right" section="cArch_buildclone_menue"  />
               </do_if>
               <do_if value="player.room != $actor.room">
                 <add_player_choice_sub text="{1002,12010}" comment="How can I find you?" section="g_askforway_finish" position="right" baseparam="event.param2" choiceparam="[$actor]" />
@@ -445,8 +445,8 @@
             </do_elseif>
 
             <do_elseif value="event.param == 'cArch_buildclone'">
-              <do_if value="event.param2.{3}? and event.param2.{3}.exists">
-                <!--
+              <do_if value="event.param2.{3}? and typeof event.param2.{3} == datatype.macro or event.param2.{3}.exists">
+               <!--
 				<set_value name="$cost" exact="0Cr" />
                 <set_value name="$selectedMacro" exact="event.param2.{3}.macro" />
 
@@ -468,7 +468,8 @@
                 <set_value name="$cost" exact="[$buildcost, $selectedMacro.ware.averageprice].max" operation="add"/>
                 <set_value name="$cost_2" exact="$cost" />
 
-                <set_value name="$drones" exact="[  unitcategory.defence, 
+                <set_value name="$drones" exact="[  
+                          unitcategory.defence, 
                           unitcategory.welder,
                           unitcategory.marine,
                           unitcategory.transport,
@@ -510,17 +511,19 @@
                 <remove_value name="$buildcost"/>
                 <remove_value name="$cost"/>
                 -->
+                <set_value name="$cloneMacro" exact="if typeof event.param2.{3} == datatype.macro then event.param2.{3} else event.param2.{3}.macro" />
 				<set_value name="$tooltipText" exact="''" />
-				<set_value name="$tooltipText" exact="'Wrong Size\n'" operation="add" chance="if $BuildModule.buildmacros.{1}.class == event.param2.{3}.class then 0 else 100"/>
-				<set_value name="$tooltipText" exact="'Trader is busy'" operation="add" chance="if not $ship? and @$BuildModule.freedockslot and not $actor.$shiptrader_isbusy then 0 else 100"/>
+				<set_value name="$tooltipText" exact="{2802,2730}" operation="add" chance="if $BuildModule.buildmacros.{1}.class == event.param2.{3}.class then 0 else 100"/>
+				<set_value name="$tooltipText" exact="{2802,2731}" operation="add" chance="if not $ship? and @$BuildModule.freedockslot and not @$actor.$shiptrader_isbusy then 0 else 100"/>
 				
-                <add_player_choice text="'Build [%1]'.[event.param2.{3}.macro.name]" selectable="not $ship? and @$BuildModule.freedockslot and not $actor.$shiptrader_isbusy and $BuildModule.buildmacros.{1}.class == event.param2.{3}.class" comment="build a vessel" section="cArch_selectUpgradesMenu" choiceparam="[ 0, 0, $actor, $BuildModule, null, event.param2.{3}.macro.id, '', 0, 1, $WareList ]" tooltip="$tooltipText" />
+                <add_player_choice text="{2802,2724}.[$cloneMacro.name]" selectable="not $ship? and @$BuildModule.freedockslot and not @$actor.$shiptrader_isbusy and $BuildModule.buildmacros.{1}.class == event.param2.{3}.class" comment="build a vessel" section="cArch_selectUpgradesMenu" choiceparam="[ 0, 0, $actor, $BuildModule, null, $cloneMacro.id, '', 0, 1, $WareList ]" tooltip="$tooltipText" />
 				<remove_value name="$tooltipText"/>
 
                 <include_actions ref="md.NPC_Shiptrader_Pl.QueueListTooltipText" />
 
-                <add_player_choice text="'Order [%1]'.[event.param2.{3}.macro.name]" selectable="@event.param2.{3}.macro.ware.maxprice*2 lt player.money and (not $actor.container.tradenpc.$orders? or $actor.container.tradenpc.$orders.count lt 6)" comment="order a vessel" section="cArch_buildclone_order" choiceparam="event.param2.{3}.macro" tooltip="$tooltipText" />
+                <add_player_choice text="{2802,2725}.[$cloneMacro.name]" selectable="@$cloneMacro.ware.maxprice*2 lt player.money and (not $actor.container.tradenpc.$orders? or $actor.container.tradenpc.$orders.count lt 6)" comment="order a vessel" section="cArch_buildclone_order" choiceparam="$cloneMacro" tooltip="$tooltipText" />
 				<remove_value name="$tooltipText"/>
+				<remove_value name="$cloneMacro"/>
               </do_if>
 
               <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
@@ -530,21 +533,32 @@
               <signal_objects object="$actor.container" param="'SHIPORDER'" param2="[event.param2, faction.player, player.entity]" />
             </do_elseif>
 
+            <do_elseif value="event.param == 'cArch_buildclone_blueprint'">
+              <do_if value="md.$NF_ArchiSpMacrosShips? and md.$NF_ArchiSpMacrosShips.count">
+                <include_actions ref="md.NF_ARCHITECTURE.NF_Arch_ship_blueprints" />
+              </do_if>
+            </do_elseif>
+
             <do_elseif value="event.param == 'cArch_buildclone_menue'">
-                 <add_player_choice_sub text="'Order / Copy a ship'" tooltip="'Select a existing ship for COPY them, or ORDER a ship at default setup'" comment="Clone a vessel" position="top_right" section="cArch_selectsomething" choiceparam="[0, 0, 'zone', event.object.container.zone, null, null, 'selectplayerobject', ['cArch_buildclone', null, null, true, false, true, false, true]]" />
+              <add_player_choice_sub text="{2802,2720}" tooltip="{2802,2721}" comment="Clone a vessel" position="top_right" section="cArch_selectsomething" choiceparam="[0, 0, 'zone', event.object.container.zone, null, null, 'selectplayerobject', ['cArch_buildclone', null, null, true, false, true, false, true]]" />
 
-                <include_actions ref="md.NPC_Shiptrader_Pl.QueueListTooltipText" />
+              <do_if value="md.$NF_ArchiSpMacrosShips? and md.$NF_ArchiSpMacrosShips.count">
+                <add_player_choice_sub text="{2802,2722}" tooltip="{2802,2723}" comment="Use Blueprint" position="right" section="cArch_buildclone_blueprint" choiceparam="[null, 1]" />
+              </do_if>
 
-                <add_player_choice text="'%1 Queue'.[$actor.container.name]" selectable="false" section="cArch_buildclone_menue" tooltip="$tooltipText" />
-				<remove_value name="$tooltipText"/>
-				<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+              <include_actions ref="md.NPC_Shiptrader_Pl.QueueListTooltipText" />
+
+              <add_player_choice text="'%1 Queue'.[$actor.container.name]" selectable="false" section="cArch_buildclone_menue" tooltip="$tooltipText" />
+              <remove_value name="$tooltipText"/>
+              <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
             </do_elseif>
 
            <do_elseif value="event.param == 'cArch_buildclone_do'">
               <do_if value="event.param2.{3}.isclass.[class.ship_xl, class.ship_l] and $BuildModule.buildmacros.{1}.class == event.param2.{3}.class">
                 <set_value name="$selectedMacro" exact="event.param2.{3}.macro" />
                 <create_list name="$droneplan" />
-                <set_value name="$drones" exact="[  unitcategory.defence, 
+                <set_value name="$drones" exact="[  
+                          unitcategory.defence, 
                           unitcategory.welder,
                           unitcategory.marine,
                           unitcategory.transport,
@@ -1026,20 +1040,20 @@
 			<set_value name="$QueueCount" exact="5" />
 			<do_if value="$actor.container.tradenpc.$orders?">
 			  <set_value name="$Queue" exact="$actor.container.tradenpc.$orders.clone" />
-			  <set_value name="$tooltipText" exact="'Queue:%1'.[$Queue.count]" />
+			  <set_value name="$tooltipText" exact="{2802,2735}.[$Queue.count]" />
 			  <do_all exact="$Queue.count" counter="$Count">
-				<set_value name="$tooltipText" exact="if $Queue.{$Count}.{2} == faction.player then '\nPL:%1'.[$Queue.{$Count}.{1}.name] else '\n*:%1'.[$Queue.{$Count}.{1}.name]" operation="add" />
+				<set_value name="$tooltipText" exact="if $Queue.{$Count}.{2} == faction.player then {2802,2736}.[$Queue.{$Count}.{1}.name] else {2802,2737}.[$Queue.{$Count}.{1}.name]" operation="add" />
 				<set_value name="$QueueCount" operation="subtract"/>
 			  </do_all>
 			  <do_all exact="$QueueCount" chance="($QueueCount gt 0)*100">
-				<set_value name="$tooltipText" exact="'\n--:--'" operation="add" />
+				<set_value name="$tooltipText" exact="{2802,2738}" operation="add" />
 			  </do_all>
 			  <remove_value name="$Queue"/>
 			</do_if>
 			<do_else>
-			  <set_value name="$tooltipText" exact="'Queue:0'" />
+			  <set_value name="$tooltipText" exact="{2802,2739}" />
 			  <do_all exact="$QueueCount" chance="($QueueCount gt 0)*100">
-				<set_value name="$tooltipText" exact="'\n--:--'" operation="add" />
+				<set_value name="$tooltipText" exact="{2802,2738}" operation="add" />
 			  </do_all>
 			</do_else>
 			<remove_value name="$QueueCount"/>
