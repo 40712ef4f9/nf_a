@@ -3854,12 +3854,17 @@
 						<append_to_list name="$build2" exact="'al'"/>
 					</do_if>
 
-					<do_any>
-						<append_to_list name="$build2" exact="'massenergy'" weight="20"/>
-						<append_to_list name="$build2" exact="'energy'" weight="20"/>
-						<append_to_list name="$build2" exact="'food'" weight="30"/>
-						<append_to_list name="$build2" exact="'drug'" weight="30"/>
-					</do_any>
+					<do_if value="$build.indexof.{'tech'} or $build.indexof.{'ship'} or $build.indexof.{'shippart'}" chance="75">
+						<set_value name="$build2" exact="$build"/>
+					</do_if>
+					<do_else>
+						<do_any>
+							<append_to_list name="$build2" exact="'massenergy'" weight="20"/>
+							<append_to_list name="$build2" exact="'energy'" weight="20"/>
+							<append_to_list name="$build2" exact="'food'" weight="30"/>
+							<append_to_list name="$build2" exact="'drug'" weight="30"/>
+						</do_any>
+					</do_else>
 			
 					<set_value name="$build" exact="$build2"/>
 
@@ -6922,10 +6927,10 @@
 						<owner exact="$faction"/>
 					</create_pilot>
 
-					<set_value name="$temp_object" exact="$pilot" />
+					<set_value name="$tempActor" exact="$pilot" />
 					<set_value name="$temp_Skill" exact="if $temp_shipyard.owner == $faction then true else false" />
 					<include_actions ref="md.NF_BASE.NF_skill_actor" />
-					<remove_value name="$temp_object"/>
+					<remove_value name="$tempActor"/>
 					<remove_value name="$temp_Skill"/>
 					
 					<share_actor_account actor="$pilot" otherobject="$_CEO"/>

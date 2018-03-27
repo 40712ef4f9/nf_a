@@ -83,6 +83,7 @@
 							$AdvJump = 0,
 							$autoRefuel = 1,
 							$ignoreFuel = 0,
+							$cheatMaxSkill = 0,
 							$HyperDrive = 1,
 							$buildOwnerNotice = 0,
 							$payOnUrSy = 1
@@ -623,6 +624,7 @@
 				</do_elseif>
 				<do_elseif value="event.param" exact="'nfconf_do_player_cheat'">
 					<add_player_choice section="nfconf_do_player_cheat" text="{40002,342}.[if global.$nfconfig.$ignoreFuel then $on else $off]"	position="top_left"		choiceparam="['ignoreFuel', 'do']" tooltip="{40002,343}"/>
+					<add_player_choice section="nfconf_do_player_cheat" text="{40002,344}.[if global.$nfconfig.$cheatMaxSkill then $on else $off]"	position="top_right"	choiceparam="['cheatMaxSkill', 'do']" />
 				</do_elseif>
 				<do_elseif value="event.param" exact="'nfconf_do_detail'" chance="(event.param2? and typeof event.param2 == datatype.list and (typeof event.param2.{1}).isstring)*100">
 					<create_list name="$add" />
@@ -755,7 +757,7 @@
 			<conditions>
 				<event_object_signalled object="player.galaxy" param="'learned.something'" />
 				<check_value value="event.param2? and event.param2.{2}? and event.param2.{1}.exists and typeof event.param2.{2} == datatype.ware" />
-				<check_value value="event.param2.{1}.combinedskill le 75" />
+				<check_value value="event.param2.{1}.combinedskill le 75 or (event.param2.{1}.isplayerowned and @global.$nfconfig.$cheatMaxSkill and event.param2.{1}.combinedskill le 99)" />
 			</conditions>
 			<actions>
 			  <do_if value="event.param2.{1}.inventory.{event.param2.{2}}.count == (event.param2.{1}.combinedskill)i*10" comment="inv.count req 10 - 740">
@@ -771,6 +773,15 @@
 					<remove_value name="$Skill"/>
 				  </do_if>
 			  </do_if>
+			  <do_elseif value="global.$nfconfig.$cheatMaxSkill and event.param2.{1}.combinedskill le 99">
+				<set_value name="$Skill" exact="[skilltype.leadership, skilltype.navigation, skilltype.combat, skilltype.engineering, skilltype.management, skilltype.morale, skilltype.science]" />
+				<do_all exact="$Skill.count" counter="$k">
+					<do_if value="event.param2.{1}.skill.{$Skill.{$k}} lt 4" >
+						<add_skill entity="event.param2.{1}" type="$Skill.{$k}" exact="5-(event.param2.{1}.skill.{$Skill.{$k}})i" />
+					</do_if>
+				</do_all>
+				<remove_value name="$Skill"/>
+			  </do_elseif>
 			  <do_elseif value="(event.param2.{1}.combinedskill)i" max="74">
 				<add_inventory entity="event.param2.{1}" ware="event.param2.{2}" exact="1" />
 			  </do_elseif>
@@ -1167,7 +1178,7 @@
 		</library>
 
 		<!--
-		<set_value name="$temp_object" exact="$Object" />
+		<set_value name="$tempActor" exact="$Object" />
 		<set_value name="$temp_Skill" exact="
 			[	
 				[skilltype.leadership,	'random', 3, 5],
@@ -1179,7 +1190,7 @@
 				[skilltype.science,		'random', 3, 5]
 			]" />
 		<include_actions ref="md.NF_BASE.NF_skill_actor" />
-		<remove_value name="$temp_object"/>
+		<remove_value name="$tempActor"/>
 		<remove_value name="$temp_Skill"/>
 		-->
 		<library name="NF_skill_actor">

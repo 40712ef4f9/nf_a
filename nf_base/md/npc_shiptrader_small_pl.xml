@@ -178,23 +178,21 @@
                 </do_all>
                 <set_value name="$shipscreated" exact="0" />
                 <do_all exact="$amount" counter="$i">
-                  <create_ship dock="$docks.{($i % $docks.count) + 1}" macro="$macro" name="$ship">
+                  <create_ship dock="$docks.{($i % $docks.count) + 1}" macro="$macro" name="$spawnedship">
                     <owner exact="$customer_faction" />
                     <pilot group="argon.pilot">
                       <owner exact="$customer_faction" />
-                      <skills>
-                        <skill type="combat" exact="5"/>
-                        <skill type="engineering" exact="5"/>
-                        <skill type="leadership" exact="5"/>
-                        <skill type="management" exact="5"/>
-                        <skill type="morale" exact="5"/>
-                        <skill type="navigation" exact="5"/>
-                        <skill type="science" exact="5"/>
-                      </skills>
                     </pilot>
                   </create_ship>
                   <do_if value="$spawnedship.exists">
                     <set_value name="$shipscreated" operation="add" exact="1" />
+
+                    <set_value name="$tempActor" exact="$spawnedship.pilot" />
+                    <set_value name="$temp_Skill" exact="if $actor.container.owner == $customer_faction then 'max' else if $customer_faction.relationto.{$actor.container.owner} gt $actor.container.owner.relation.friend.mid then true else false" />
+                    <include_actions ref="md.NF_BASE.NF_skill_actor" />
+                    <remove_value name="$tempActor"/>
+                    <remove_value name="$temp_Skill"/>
+
                     <do_if value="$droneplan">
                       <set_value name="$object" exact="$spawnedship" />
                       <include_actions ref="ApplyDroneplan" />

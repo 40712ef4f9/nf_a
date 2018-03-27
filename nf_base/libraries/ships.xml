@@ -594,6 +594,50 @@
 				<unit category="welder" mk="1" min="10" max="20"/>
 			</units>
 		</ship>
+
+		<ship id="acmecorp_trader_container_heavy_large_al" macro="units_size_xl_capital_destroyer_2_cargo_macro">
+			<category tags="[freighter, container]" faction="acmecorp" size="ship_xl"/>
+			<pilot ref="acmecorp_trader_random"/>
+			<defence ref="acmecorp_fighter_random"/>
+			<engineer ref="acmecorp_engineer_random"/>
+			<basket basket="drones"/>
+			<cargo>
+				<wares multiple="true" chance="70">
+					<fillpercent min="40" max="90"/>
+				</wares>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="30" max="80"/>
+				</wares>
+			</cargo>
+			<drop ref="ship_large_civilian"/>
+			<units>
+				<unit category="defence" mk="4" min="60" max="80"/>
+				<unit category="transport" mk="1" min="10" max="20"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+			</units>
+		</ship>
+		<ship id="acmecorp_trader_container_heavy_large_ol" macro="units_size_xl_cs_omicron_ship_02_y_macro">
+			<category tags="[freighter, container]" faction="acmecorp" size="ship_xl"/>
+			<pilot ref="acmecorp_trader_random"/>
+			<defence ref="acmecorp_fighter_random"/>
+			<engineer ref="acmecorp_engineer_random"/>
+			<basket basket="drones"/>
+			<cargo>
+				<wares multiple="true" chance="70">
+					<fillpercent min="40" max="90"/>
+				</wares>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="30" max="80"/>
+				</wares>
+			</cargo>
+			<drop ref="ship_large_civilian"/>
+			<units>
+				<unit category="defence" mk="4" min="60" max="80"/>
+				<unit category="transport" mk="1" min="10" max="20"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+			</units>
+		</ship>
+
 		<!-- ACME tradesupport -->
 		<ship id="acmecorp_trader_fuel_large" macro="units_size_l_kit_fuel_03_macro">
 			<category tags="[freighter]" faction="acmecorp" size="ship_l"/>

@@ -731,6 +731,9 @@
 
       <remove_value name="this.$missiles" />
       <remove_value name="this.$dronetargetsShare" />
+      <do_if value="@this.ship.pilot.$priotarget">
+        <remove_value name="this.ship.pilot.$priotarget" />
+      </do_if>
 
     </actions>
   </attention>
@@ -948,11 +951,17 @@
 
       <remove_value name="this.$missiles" />
       <remove_value name="this.$dronetargetsShare" />
+      <do_if value="@this.ship.pilot.$priotarget">
+        <remove_value name="this.ship.pilot.$priotarget" />
+      </do_if>
 
     </actions>
   </attention>
   <on_abort>
     <remove_value name="this.$missiles" />
     <remove_value name="this.$dronetargetsShare" />
+    <do_if value="@this.ship.pilot.$priotarget">
+      <remove_value name="this.ship.pilot.$priotarget" />
+    </do_if>
   </on_abort>
 </aiscript>
