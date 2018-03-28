@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <diff>
+	<add sel="/aiscript/interrupts">
+		<handler ref="discoverall" />
+	</add>
 	<add sel="//actions/label[@name='find trade run']" pos="after">
 	  <!-- Cover -->
       <do_if value="this.ship.owner" exact="this.ship.trueowner" chance="if global.$mmpiratesy_pfactions.indexof.{this.ship.trueowner} then 84 else 0">

@@ -722,7 +722,7 @@
 			<!--set_value name="$tmpConfig.$cheat" comment="for testing disable/remove later"/-->
 
 				<do_if value="$tmpConfig.$cheatEscorts?">
-					<set_value name="$_CEO.$cheatEscorts" exact="true" comment="cheat escortvessels"/>
+					<set_value name="$_CEO.$cheatEscorts" exact="$tmpConfig.$minBuildSpecial" comment="cheat escortvessels"/>
 				</do_if>
 				<do_else>
 					<remove_value name="$_CEO.$cheatEscorts"/>
@@ -3016,7 +3016,7 @@
 				<do_if value="['move.escort', 'BR.move.escort'].indexof.{$script} and $param.{1}.{1}? and $param.{1}.{1} == 'target'" chance="if not $noCommander? then 100 else 0">
 					<set_object_commander object="$Object" commander="$param.{1}.{2}" />
 				</do_if>
-				<do_elseif value="$Object.subordinates.count == 0 and ['move.patrol', 'BR.move.patrol', 'BR.move.plunder', 'move.patrol.route'].indexof.{$script}" chance="($_CEO.$cheatEscorts? and $_CEO.money gt $tmpConfig.$minBuildSpecial)*100">
+				<do_elseif value="$Object.subordinates.count == 0 and ['move.patrol', 'BR.move.patrol', 'BR.move.plunder', 'move.patrol.route'].indexof.{$script}" chance="($_CEO.$cheatEscorts? and $_CEO.money gt $_CEO.$cheatEscorts)*100">
 					<signal_objects object="$_CEO" param="'GIVE.ESCORTS'" param2="$Object" delay="60s"/>
 				</do_elseif>
 
@@ -3117,6 +3117,7 @@
 			<actions>
 				<debug_text chance="0" text="'Start'" />
 				<set_value name="$faction" exact="$_CEO.trueowner" />
+				<set_value name="$_faction" exact="$faction" />
 
 				<do_if value="event.param" exact="'INIT SHIP'">
 					<create_list name="$tmp_jobs"/>
@@ -4799,6 +4800,56 @@
 		</library>
 
 		<!-- 
+		<set_value name="$temp_Objects" exact="$Object / [$Object,$Object2]" />
+		<include_actions ref="md.MM_Corps__Data.MMCData_do_cheatressources" />
+		-->
+		<library name="MMCData_do_cheatressources">
+			<actions>
+				<do_if value="typeof $temp_Objects == datatype.list" negate="true">
+					<set_value name="$temp_Objects" exact="[$temp_Objects]"/>
+				</do_if>
+				<do_all exact="$temp_Objects.count" counter="$r">
+					<do_if value="$temp_Objects.{$r}.isoperational" negate="true">
+						<continue />
+					</do_if>
+					<do_if value="$temp_Objects.{$r}.isplayerowned and (not $tmpConfig? or not $tmpConfig.$cheat?)">
+						<continue />
+					</do_if>
+					<find_buy_offer buyer="$temp_Objects.{$r}" multiple="1" result="$buyoffers" wares="$temp_Objects.{$r}.resources.list"/>
+					<set_value name="$price" exact="0Cr"/>
+
+					<do_if value="@$temp_Objects.{$r}.tradenpc.$orders.count and @$temp_Objects.{$r}.tradenpc.$stop_trading gt player.age + 20min">
+						<set_value name="$temp_Objects.{$r}.tradenpc.$stop_trading" exact="player.age"/>
+					</do_if>
+					<do_elseif value="@$temp_Objects.{$r}.tradenpc.$orders.count and @$temp_Objects.{$r}.tradenpc.$stop_trading lt player.age" chance="0">
+						<signal_objects object="$temp_Objects.{$r}" param="'GOING_ON'" />
+					</do_elseif>
+
+					<do_all exact="$buyoffers.count" counter="$s">
+						<do_if value="$temp_Objects.{$r}.cargo.{$buyoffers.{$s}.ware}.count le $temp_Objects.{$r}.cargo.{$buyoffers.{$s}.ware}.target*0.1f">
+							<do_if value="false">
+								<!-- TODO: spawn div tradeships to deliver ressources -->
+							</do_if>
+							<do_else>
+								<add_cargo ware="$buyoffers.{$s}.ware" object="$temp_Objects.{$r}" exact="[$temp_Objects.{$r}.cargo.{$buyoffers.{$s}.ware}.max*0.2f, (($temp_Objects.{$r}.cargo.{$buyoffers.{$s}.ware}.target*0.2f)-$temp_Objects.{$r}.cargo.{$buyoffers.{$s}.ware}.count), $buyoffers.{$s}.offeramount*0.3f].min" result="$cheated" />
+								<do_if value="$cheated gt 0" chance="0">
+									<set_value name="$price" exact="$buyoffers.{$s}.ware.maxprice * $cheated" operation="add"/>
+								</do_if>
+								<remove_value name="$cheated"/>
+							</do_else>
+						</do_if>
+					</do_all>
+					<!--do_if value="$price" chance="0">
+						<transfer_money from="$temp_Objects.{$r}.tradenpc" to="$_CEO" amount="$price"/>
+					</do_if-->
+					<remove_value name="$buyoffers"/>
+					<remove_value name="$price"/>
+				</do_all>
+				<remove_value name="$temp_Objects"/>
+			</actions>
+		</library>
+
+		<!-- 
 		* $tmpConfig
 		* $valid*spaces
 		<set_value name="$_CEO" exact="global.$corp_CEO" />
@@ -4858,29 +4909,10 @@
 				<do_elseif value="$ShipYardOfTrust" negate="true" chance="if $ShipYardOfTrust2? and $ShipYardOfTrust2.count then 100 else 0">
 					<do_all exact="$ShipYardOfTrust2.count" counter="$y">
 						<do_if value="@$ShipYardOfTrust2.{$y}.tradenpc.$orders.count gt 1 and not $ShipYardOfTrust2.{$y}.tradenpc.$denyBuildRandomNPC?" comment="cheat" chance="($tmpConfig.$cheat? or (not $ShipYardOfTrust2.{$y}.isplayerowned and $tmpConfig.$cheatNPC? and $tmpConfig.$cheatNPC)) * 100">
-							<find_buy_offer buyer="$ShipYardOfTrust2.{$y}" multiple="1" result="$buyoffers" wares="$ShipYardOfTrust2.{$y}.resources.list"/>
-							<set_value name="$price" exact="0"/>
 
-							<do_if value="@$ShipYardOfTrust2.{$y}.tradenpc.$orders.count and @$ShipYardOfTrust2.{$y}.tradenpc.$stop_trading gt player.age + 20min">
-								<set_value name="$ShipYardOfTrust2.{$y}.tradenpc.$stop_trading" exact="player.age"/>
-							</do_if>
-							<do_elseif value="@$ShipYardOfTrust2.{$y}.tradenpc.$orders.count and @$ShipYardOfTrust2.{$y}.tradenpc.$stop_trading lt player.age" chance="0">
-								<signal_objects object="$ShipYardOfTrust2.{$y}" param="'GOING_ON'" />
-							</do_elseif>
-							<do_all exact="$buyoffers.count" counter="$z">
-								<do_if value="$ShipYardOfTrust2.{$y}.cargo.{$buyoffers.{$z}.ware}.count le $ShipYardOfTrust2.{$y}.cargo.{$buyoffers.{$z}.ware}.target/10">
-									<add_cargo ware="$buyoffers.{$z}.ware" object="$ShipYardOfTrust2.{$y}" exact="[$ShipYardOfTrust2.{$y}.cargo.{$buyoffers.{$z}.ware}.target/5, $buyoffers.{$z}.offeramount].min" result="$cheated" />
-									<do_if value="$cheated gt 0" chance="0">
-										<set_value name="$price" exact="$buyoffers.{$z}.ware.maxprice * $cheated" operation="add"/>
-									</do_if>
-									<remove_value name="$cheated"/>
-								</do_if>
-							</do_all>
-							<do_if value="$price">
-								<transfer_money from="$ShipYardOfTrust2.{$y}.tradenpc" to="$_CEO" amount="$price"/>
-							</do_if>
-							<remove_value name="$buyoffers"/>
-							<remove_value name="$price"/>
+							<set_value name="$temp_Objects" exact="$ShipYardOfTrust2.{$y}" />
+							<include_actions ref="md.MM_Corps__Data.MMCData_do_cheatressources" />
+
 						</do_if>
 					</do_all>
 				</do_elseif>
@@ -5080,24 +5112,10 @@
 
 					<do_if value="typeof $macro == datatype.macro and $ShipYardOfTrust.exists">
 						<do_if value="@$ShipYardOfTrust.tradenpc.$orders.count gt 1 and not $ShipYardOfTrust.tradenpc.$denyBuildRandomNPC?" comment="cheat" chance="($tmpConfig.$cheat? or (not $ShipYardOfTrust.isplayerowned and $tmpConfig.$cheatNPC? and $tmpConfig.$cheatNPC)) * 100">
-							<find_buy_offer buyer="$ShipYardOfTrust" multiple="1" result="$buyoffers" wares="$ShipYardOfTrust.resources.list"/>
-							<set_value name="$price" exact="0"/>
 
-							<do_all exact="$buyoffers.count" counter="$x">
-								<do_if value="$ShipYardOfTrust.cargo.{$buyoffers.{$x}.ware}.count le 12">
-									<add_cargo ware="$buyoffers.{$x}.ware" object="$ShipYardOfTrust" exact="[$ShipYardOfTrust.cargo.{$buyoffers.{$x}.ware}.target/5, $buyoffers.{$x}.offeramount].min" result="$cheated" />
-									<do_if value="$cheated gt 0" chance="0">
-										<set_value name="$price" exact="$buyoffers.{$x}.ware.maxprice * $cheated" operation="add"/>
-									</do_if>
-									<remove_value name="$cheated"/>
-								</do_if>
-							</do_all>
+							<set_value name="$temp_Objects" exact="$ShipYardOfTrust" />
+							<include_actions ref="md.MM_Corps__Data.MMCData_do_cheatressources" />
 
-							<do_if value="$price">
-								<transfer_money from="$ShipYardOfTrust.tradenpc" to="$_CEO" amount="$price"/>
-							</do_if>
-							<remove_value name="$buyoffers"/>
-							<remove_value name="$price"/>
 						</do_if>
 <set_value name="$text2" exact="'\n* Order: Ship: %1 SY: %2 [%3] %4 \n'.[$macro.id, $ShipYardOfTrust.knownname, $ShipYardOfTrust.zone.knownname, @$ShipYardOfTrust.tradenpc.$orders.count]" operation="add"/>
 						<signal_objects object="$ShipYardOfTrust" param="'SHIPORDER'" param2="[$macro, $_faction, $_CEO]" />

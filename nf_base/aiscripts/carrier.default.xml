@@ -374,7 +374,7 @@
       </do_elseif>
       <!-- move.escort / patrol End if is not in squad -->
       <do_elseif value="$commander.exists and $commander != $base and $commander.isclass.ship">
-        <run_script name="'move.escort'">
+        <run_script name="if global.$nfconfig.$Check? then 'BR.move.escort' else 'move.escort'">
           <param name="target" value="$commander" />
           <!--param name="allowstations" value="false" /-->
         </run_script>

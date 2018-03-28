@@ -773,7 +773,7 @@
 					<remove_value name="$Skill"/>
 				  </do_if>
 			  </do_if>
-			  <do_elseif value="global.$nfconfig.$cheatMaxSkill and event.param2.{1}.combinedskill le 99">
+			  <do_elseif value="event.param2.{1}.isplayerowned and @global.$nfconfig.$cheatMaxSkill and event.param2.{1}.combinedskill le 99">
 				<set_value name="$Skill" exact="[skilltype.leadership, skilltype.navigation, skilltype.combat, skilltype.engineering, skilltype.management, skilltype.morale, skilltype.science]" />
 				<do_all exact="$Skill.count" counter="$k">
 					<do_if value="event.param2.{1}.skill.{$Skill.{$k}} lt 4" >

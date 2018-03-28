@@ -599,8 +599,8 @@
 							<signal_objects object="$toCommand.{$c}" param="'undock'" />
 						</do_elseif>
 						<do_else>
-							<start_script object="event.object" name="'move.escort'">
-								<param name="target" value="event.object.container.commander" />
+							<start_script object="$toCommand.{$c}.pilot" name="if global.$nfconfig.$Check? then 'BR.move.escort' else 'move.escort'">
+								<param name="target" value="$toCommand.{$c}.commander" />
 							</start_script>
 						</do_else>
 					</do_all> 
@@ -1491,7 +1491,7 @@
 						<do_all exact="$theShipfollowers.count" counter="$i" >
 							<set_value name="$toCommand" exact="$theShipfollowers.{$i}" />
 							<set_object_commander object="$toCommand" commander="$theShip" />
-							<start_script name="'move.escort'" object="$toCommand.pilot">
+							<start_script name="if global.$nfconfig.$Check? then 'BR.move.escort' else 'move.escort'" object="$toCommand.pilot">
 								<param name="target" value="$theShip" />
 								<param name="formation" value="$formation" />
 							</start_script>
@@ -1849,7 +1849,7 @@
 							<set_value name="$theShipfollower" exact="$subordinates.{$i}" />
 							<do_if value="$theShipfollower.isclass.[class.ship_s, class.ship_m]">
 								<set_object_commander object="$theShipfollower" commander="$theShip" />
-								<start_script name="'move.escort'" object="$theShipfollower.pilot">
+								<start_script name="if global.$nfconfig.$Check? then 'BR.move.escort' else 'move.escort'" object="$theShipfollower.pilot">
 									<param name="target" value="$theShip" />
 									<param name="formation" value="$formation" />
 								</start_script>
@@ -1894,7 +1894,7 @@
 								<!--add_to_player_squad object="$theShipfollower" />
 								<remove_object_commander object="$theShipfollower"/>
 								<set_object_commander object="$theShipfollower" commander="player.primaryship" />
-								<start_script name="'move.escort'" object="$theShipfollower.pilot">
+								<start_script name="if global.$nfconfig.$Check? then 'BR.move.escort' else 'move.escort'" object="$theShipfollower.pilot">
 									<param name="target" value="player.primaryship" />
 									<param name="formation" value="$formation" />
 								</start_script-->
@@ -1923,7 +1923,7 @@
 							<do_if value="event.param2.{3}.isoperational">
 								<!--set_object_commander object="$theShipfollower" commander="player.primaryship" /-->
 								<!--do_if value="$i lt $subordinates.count/2">
-									<start_script name="'move.escort'" object="$theShipfollower.pilot">
+									<start_script name="if global.$nfconfig.$Check? then 'BR.move.escort' else 'move.escort'" object="$theShipfollower.pilot">
 										<param name="target" value="event.param2.{3}" />
 										<param name="formation" value="$formation" />
 									</start_script>

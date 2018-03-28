@@ -293,7 +293,11 @@
           <!-- Escort movement -->
           <!-- MICT: Only if this.ship lags behind by more than 1km.  Otherwise, formation movement should handle it. -->
           <do_elseif value="$MICT_InFormation?" negate="true">
-            <move_to object="this.ship" destination="$target" flightbehaviour="flightbehaviour.follow" forcesteering="not @$capship" usehighways="not @$capship" forcerotation="true">
+            <remove_value name="$boost"/>
+            <do_if value="this.ship.distanceto.{$target} gt 10km and ($capship or (not $capship and [command.attackobject, command.attackenemies].indexof.{@$target.pilot.command.value} == 0))" chance="this.combinedskill">
+              <set_value name="$boost" />
+            </do_if>
+            <move_to object="this.ship" destination="$target" flightbehaviour="flightbehaviour.follow" forcesteering="not @$capship" usehighways="not @$capship" boost="$boost?" forcerotation="true">
               <position x="$x" y="$y" z="$z"/>
               <rotation value="$target.rotation"/>
               <interrupt_after_time time="0s" comment="interrupt the blocking action, but the move continues"/>
@@ -329,7 +333,10 @@
                   <check_value value="this.mayattack.{event.param} or $target.mayattack.{event.param}" />
                   <check_value value="($target.distanceto.{event.param} le $pursuedistance) and (this.ship.distanceto.{event.param} le $pursuedistance)"/>
                 </check_all>
-                <event_object_changed_zone object="$target" />
+                <check_all>
+                  <event_object_changed_zone object="$target" />
+				  <check_value value="this.ship.isboostactive" negate="true"/>
+                </check_all>
                 <event_object_destroyed object="$target" />
                 <event_object_abandoned object="$target"/>
                 <check_all>
@@ -724,7 +731,11 @@
         </do_if>
 
         <do_elseif value="$MICT_InFormation?" negate="true">
-          <move_to object="this.ship" destination="$target" sinceversion="1">
+          <remove_value name="$boost"/>
+          <do_if value="this.ship.distanceto.{$target} gt 10km and ($capship or (not $capship and [command.attackobject, command.attackenemies].indexof.{@$target.pilot.command.value} == 0))" chance="this.combinedskill">
+            <set_value name="$boost" />
+          </do_if>
+          <move_to object="this.ship" destination="$target" boost="$boost?" sinceversion="1">
             <position object="$target" min="this.ship.size" max="this.ship.size + $target.size + 1km"/>
             <rotation value="$target.rotation"/>
             <interrupt_after_time time="0s" comment="interrupt the blocking action, but the move continues"/>

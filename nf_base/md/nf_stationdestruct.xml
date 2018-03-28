@@ -724,11 +724,11 @@
 				<do_if value="$Outlaw_Factions?" negate="true"> 
 					<set_value name="$Outlaw_Factions" exact="if md.$nfFactions_outlaw? then md.$nfFactions_outlaw.clone else ['xenon', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'atlas', 'khaak', 'hayen', 'mlspirate']" />
 				</do_if>
-				<find_sector groupname="$tempSector" space="player.galaxy" multiple="true"/>
-				<do_all exact="$tempSector.list.count" counter="$run">
+				<find_sector name="$tempSector" space="player.galaxy" multiple="true"/>
+				<do_all exact="$tempSector.count" counter="$run">
 
-					<find_zone groupname="$tmpSpace" space="$tempSector.list.{$run}" multiple="true" tempzone="false"/>
-					<set_value name="$tempTodo" exact="$tmpSpace.list.clone"/>
+					<find_zone name="$tmpSpace" space="$tempSector.{$run}" multiple="true" tempzone="false"/>
+					<set_value name="$tempTodo" exact="$tmpSpace.clone"/>
 					<set_value name="$ZO_temp_i" exact="table[]" />
 					<remove_value name="$tmpSpace"/>
 
@@ -768,18 +768,31 @@
 						<do_if value="$tmp.id" list="$Outlaw_Factions" chance="($tmp? and $tmp) * 100" comment="no pirate sectors, depends problems with masstraffic + -stations">
 							<set_value name="$tmp" exact="null"/>
 						</do_if>
-						<!--set_owner object="$tempSector.list.{$run}" faction="$tmp" /-->
+						<!--set_owner object="$tempSector.{$run}" faction="$tmp" /-->
 						<set_value name="$set_owner" exact="$tmp"/>
 					</do_if>
 					<do_else>
-						<!--set_owner object="$tempSector.list.{$run}" faction="null" /-->
+						<!--set_owner object="$tempSector.{$run}" faction="null" /-->
 						<set_value name="$set_owner" exact="null"/>
 					</do_else>
 					<remove_value name="$tmp"/>
 
 					<do_if value="$set_owner?"> 
-						<set_owner object="$tempSector.list.{$run}" faction="$set_owner" />
-						<set_value name="md.$police_factions.{'$%1'.[$tempSector.list.{$run}.macro.id]}" exact="$set_owner" />
+						<set_owner object="$tempSector.{$run}" faction="$set_owner" />
+						<set_value name="md.$police_factions.{'$%1'.[$tempSector.{$run}.macro.id]}" exact="$set_owner" />
+
+						<do_if value="$set_owner"> 
+							<do_if value="not $tempSector.{$run}.representative.{$set_owner}.{entitytype.lawenforcement}">
+								<create_representative_actor sector="$tempSector.{$run}" faction="$set_owner" type="entitytype.lawenforcement" name="$tmpActor" />
+								<do_if value="$actor">
+									<debug_text chance="0" text="'ReCreated representative of \'%1\' in sector \'%2\': %3 (%4)'.[$set_owner.knownname, $tempSector.{$run}.knownname, $tmpActor.knownname, $tmpActor]" filter="scripts_verbose" />
+								</do_if>
+								<do_else>
+									<debug_text chance="0" text="'Failed to create representative of \'%1\' in sector \'%2\' (for police faction in zone \'%3\')'.[$set_owner.knownname, $sectors.{$i}.knownname, $zones.{$j}.knownname]" filter="general" />
+								</do_else>
+							</do_if>
+							<remove_value name="$tmpActor" />
+						</do_if>
 					</do_if>
 					<remove_value name="$set_owner"/>
 				</do_all>

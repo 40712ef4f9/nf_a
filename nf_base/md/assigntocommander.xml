@@ -23,4 +23,8 @@
                   </start_script>
               </do_elseif>
 	</add>
+
+	<replace sel="/mdscript/cues/library/actions/do_if/do_if/do_else/do_if/do_if/do_if/start_script[@name=&quot;'move.escort'&quot;]/@name">if global.$nfconfig.$Check? then 'BR.move.escort' else 'move.escort'</replace>
+	<replace sel="/mdscript/cues/library/actions/do_if/do_if/do_else/do_if/do_if/do_else/start_script[@name=&quot;'move.escort'&quot;]/@name">if global.$nfconfig.$Check? then 'BR.move.escort' else 'move.escort'</replace>
+	<replace sel="/mdscript/cues/library/actions/do_else/do_if/start_script[@name=&quot;'move.escort'&quot;]/@name">if global.$nfconfig.$Check? then 'BR.move.escort' else 'move.escort'</replace>
 </diff>

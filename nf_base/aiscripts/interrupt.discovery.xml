@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="interrupt.discovery" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" priority="10" version="1">
+  <params>
+    <param name="debugoutputchance" default="0" />
+  </params>
+  <interrupts>
+    <library>
+      <handler name="discoverall">
+        <conditions>
+          <event_object_changed_zone object="this.ship" />
+          <check_value value="this.ship.isplayerowned" />
+          <check_value value="not this.ship.zone.isclass.highway and this.ship.zone.ismapzone" />
+        </conditions>
+        <actions>
+          <do_if value="this.ship.zone.name == this.ship.zone.knownname" negate="true" >
+            <set_known object="this.ship.zone" known="true"/>
+            <do_if value="this.ship.cluster.name == this.ship.cluster.knownname" negate="true">
+              <set_known object="this.ship.cluster" known="true"/>
+            </do_if>
+            <do_if value="this.ship.sector.name == this.ship.sector.knownname" negate="true">
+              <set_known object="this.ship.sector" known="true"/>
+            </do_if>
+          </do_if>
+
+          <find_station space="this.ship.zone" name="$th_stations" multiple="true" />
+
+          <do_all exact="$th_stations.count" counter="$t">
+            <do_if value="$th_stations.{$t}.exists" negate="true">
+              <continue />
+            </do_if>
+            <do_if value="$th_stations.{$t}.owner.hasrelation.enemy.{this.ship.trueowner}" negate="true">
+              <reveal_object object="$th_stations.{$t}" exact="this.combinedskill"/>
+              <add_encyclopedia_entry type="factions" item="$th_stations.{$t}.owner.id" chance="if not $th_stations.{$t}.owner or $th_stations.{$t}.owner and $th_stations.{$t}.owner.knowntoplayer then 0 else 100" />
+              <set_faction_known faction="$th_stations.{$t}.owner" known="true" chance="if not $th_stations.{$t}.owner or $th_stations.{$t}.owner and $th_stations.{$t}.owner.knowntoplayer then 0 else 100" />
+              <add_encyclopedia_entry type="stationtypes" item="$th_stations.{$t}.macro.id" chance="if $th_stations.{$t}.name == $th_stations.{$t}.knownname then 0 else 100" />
+              <set_known object="$th_stations.{$t}" known="true" chance="if $th_stations.{$t}.name == $th_stations.{$t}.knownname then 0 else 100" />
+              <set_object_radar_visible object="$th_stations.{$t}"/>
+              <store_trade_offer_snapshot object="$th_stations.{$t}" chance="if $th_stations.{$t}.isoperational and not $th_stations.{$t}.hastradesubscription and ($th_stations.{$t}.resources.list.count or $th_stations.{$t}.products.list.count or $th_stations.{$t}.tradewares.list.count) then this.combinedskill else 0" />
+            </do_if>
+          </do_all>
+          <remove_value name="$th_stations"/>
+
+          <find_object space="this.ship.zone" name="$th_objects" class="[class.gate, class.highwayentrygate, class.jumpbeacon, class.highwayexitgate]" multiple="true" chance="this.ship.isplayerowned *100"/>
+          <do_all exact="$th_objects.count" counter="$ojk" chance="$th_objects? *100">
+            <set_known object="$th_objects.{$ojk}" known="true" chance="this.combinedskill"/>
+            <do_if value="$th_objects.{$ojk}.isclass.gate and $th_objects.{$ojk}.isactive and $th_objects.{$ojk}.exit and $th_objects.{$ojk}.destination">
+              <set_known object="$th_objects.{$ojk}.exit" known="true" chance="this.combinedskill"/>
+              <set_known object="$th_objects.{$ojk}.destination" known="true" chance="this.combinedskill"/>
+              <set_known object="$th_objects.{$ojk}.destination.sector" known="true" chance="this.combinedskill"/>
+              <set_known object="$th_objects.{$ojk}.destination.cluster" known="true" chance="this.combinedskill"/>
+            </do_if>
+            <do_elseif value="$th_objects.{$ojk}.isclass.highwayentrygate and $th_objects.{$ojk}.highway and $th_objects.{$ojk}.exit and $th_objects.{$ojk}.destination">
+              <set_known object="$th_objects.{$ojk}.exit" known="true" chance="this.combinedskill"/>
+              <set_known object="$th_objects.{$ojk}.destination" known="true" chance="this.combinedskill"/>
+              <set_known object="$th_objects.{$ojk}.destination.sector" known="true" chance="this.combinedskill"/>
+              <set_known object="$th_objects.{$ojk}.destination.cluster" known="true" chance="this.combinedskill"/>
+              <set_known object="$th_objects.{$ojk}.highway" known="true" chance="this.combinedskill"/>
+            </do_elseif>
+            <do_elseif value="$th_objects.{$ojk}.isclass.highwayexitgate and $th_objects.{$ojk}.highway and $th_objects.{$ojk}.entry">
+              <set_known object="$th_objects.{$ojk}.entry" known="true" chance="this.combinedskill"/>
+              <set_known object="$th_objects.{$ojk}.entry.zone" known="true" chance="this.combinedskill"/>
+              <set_known object="$th_objects.{$ojk}.entry.sector" known="true" chance="this.combinedskill"/>
+              <set_known object="$th_objects.{$ojk}.entry.cluster" known="true" chance="this.combinedskill"/>
+              <set_known object="$th_objects.{$ojk}.highway" known="true" chance="this.combinedskill"/>
+            </do_elseif>
+          </do_all>
+          <remove_value name="$th_objects"/>
+        </actions>
+      </handler>
+    </library>
+  </interrupts>
+</aiscript>
