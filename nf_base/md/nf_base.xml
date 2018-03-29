@@ -1020,6 +1020,61 @@
 			</actions>
 		</cue>
 
+		<cue name="NF_BASE_SY_RES" instantiate="true" namespace="this">
+			<conditions>
+				<event_object_signalled object="player.galaxy" param="'do.cheat.waredelivery'" />
+			</conditions>
+			<delay min="10s" max="35s"/>
+			<actions>
+				<!-- faction -->
+				<set_value name="$faction" exact="faction.acmecorp" />
+				<do_if value="event.param2? and typeof event.param2 == datatype.list">
+					<!-- basics -->
+					<set_value name="$targetStation" exact="event.param2.{1}" />
+					<set_value name="$requiredWare" exact="event.param2.{2}" />
+					<set_value name="$maxWare" exact="(event.param2.{3})i" />
+					<!-- startzone -->
+					<find_zone name="$spawnZones" space="$targetStation.sector" tempzone="false" mapzone="true" multiple="true" />
+					<set_value name="$spawnZone" exact="$spawnZones.random" />
+					<do_all exact="$spawnZones.count" counter="$k">
+						<do_if value="$spawnZones.{$k} != player.primaryship.zone and $spawnZones.{$k} != $targetStation.zone" >
+							<set_value name="$spawnZone" exact="$spawnZones.{$k}" />
+							<break />
+						</do_if>
+					</do_all>
+					<remove_value name="$spawnZones"/>
+					<!-- Shiptype -->
+					<do_if value="$requiredWare.volume and ($requiredWare.volume * $maxWare)i le 25000">
+						<set_value name="$ref" exact="macro.units_size_m_universal_transport_macro"/>
+					</do_if>
+					<do_elseif value="$requiredWare.volume and ($requiredWare.volume * $maxWare)i gt 600000">
+						<set_value name="$ref" exact="macro.units_size_xl_kit_cargo_01_macro"/>
+					</do_elseif>
+					<do_else>
+						<set_value name="$ref" exact="macro.units_size_xl_cs_omicron_ship_04_mk2_macro"/>
+					</do_else>
+					<!-- spawn -->
+					<set_value name="$Elite" />
+					<set_value name="$clearAll" />
+					<include_actions ref="md.MM_Corps__Data.MMCData_ship_spawner" />
+					<do_if value="$createdShip.exists">
+						<!-- add ware -->
+						<add_cargo ware="$requiredWare" object="$createdShip" exact="[$createdShip.cargo.{$requiredWare}.max, $maxWare].min" />
+						<!-- start AI -->
+						<start_script object="$createdShip.pilot" name="'trade.ship.deliveronce'">
+							<param name="target" value="$targetStation"/>
+							<param name="warelist" value="[$requiredWare]"/>
+						</start_script>
+					</do_if>
+				</do_if>
+				<!-- clean -->
+				<remove_value name="$createdShip"/>
+				<remove_value name="$targetStation"/>
+				<remove_value name="$requiredWare"/>
+				<remove_value name="$maxWare"/>
+				<remove_value name="$faction"/>
+			</actions>
+		</cue>
 		<!--
 		<set_value name="$temp_select" exact="['group', race., tag., 'ref']" />
 		<set_value name="$temp_object" exact="$Object" />

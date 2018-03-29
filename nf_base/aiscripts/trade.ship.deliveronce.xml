@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="trade.ship.deliveronce" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+  <params>
+    <param name="target" default="null" />
+    <param name="warelist" default="this.ship.cargo.list" />
+    <param name="range" default="null" />
+    <param name="simple" default="null" />
+    <!--if $range == 'ranged' then $additionalparams defines min and max jumps for the buy and sell ranges [$minbuy, $maxbuy, $minsell, $maxsell]-->
+    <param name="additionalparams" default="null" />
+    <param name="debugchance" default="0" />
+    <param name="debugchance2" default="0" />
+  </params>
+  <interrupts>
+    <handler ref="TargetInvalidHandler" />
+    <handler ref="AttackHandler" />
+    <handler ref="ScannedHandler" />
+  </interrupts>
+  <init>
+    <do_if value="$target">
+      <set_command command="command.trade" param="$target" />
+    </do_if>
+    <do_elseif value="this.ship.commander">
+      <set_command command="command.trade" param="this.ship.commander" />
+    </do_elseif>
+    <do_else>
+      <set_command command="command.freetrade" />
+    </do_else>
+    <!-- Main action for waiting times -->
+    <set_command_action commandaction="commandaction.searchingtrades" />
+  </init>
+  <attention min="unknown">
+    <actions>
+
+      <!-- set up initial state for trade runs -->
+      <set_value name="this.$trade_failedfindruns" exact="0"/>
+
+      <label name="start" />
+      <set_value name="$buyoffer" exact="null" />
+      <set_value name="$selloffer" exact="null" />
+
+      <set_value name="$idletime" min="10s" max="30s" />
+
+      <run_script name="'move.idle'" >
+        <param name="TimeOut" value="$idletime" />
+      </run_script>
+
+      <!-- TODO: we should check for things like broken jump drive, so we can go in for repairs instead of endlessly trying to jump to a trade -->
+
+      <set_value name="$sellrange" exact="null"/>
+      <set_value name="$buyrange" exact="null"/>
+      <do_if value="not @$range.isclass.space">
+        <do_if value="$range" exact="'zone'">
+          <set_value name="$range" exact="this.ship.zone" />
+        </do_if>
+        <do_elseif value="$range" exact="'sector'">
+          <set_value name="$range" exact="this.ship.sector" />
+        </do_elseif>
+        <do_elseif value="$range" exact="'cluster'">
+          <set_value name="$range" exact="this.ship.cluster" />
+        </do_elseif>
+        <do_elseif value="$range" exact="'ranged'">
+          <set_value name="$range" exact="this.ship.cluster" />
+          <set_value name="$sellrange" exact="[$additionalparams.{1}, $additionalparams.{2}]"/>
+          <set_value name="$buyrange" exact="[$additionalparams.{3}, $additionalparams.{4}]"/>
+
+          <do_if value="this.$traderange_sellclusters?">
+            <remove_value name="this.$traderange_nexttime"/>
+            <remove_value name="this.$traderange_sellclusters"/>
+          </do_if>
+        </do_elseif>
+        <do_else>
+          <set_value name="$dafaultRange" />
+          <do_if value="this.ship.isclass.ship_l or this.ship.isclass.ship_xl">
+            <set_value name="$range" exact="this.ship.cluster" />
+          </do_if>
+          <do_else>
+            <set_value name="$range" exact="this.ship.sector" />
+          </do_else>
+        </do_else>
+      </do_if>
+
+
+      <label name="find trade run" />
+      <!-- get cargo -->
+      <set_value name="$currentcargo" exact="this.ship.cargo.list" />
+      <!-- strip fuel cells for own need from the list -->
+      <do_if value="not $warelist.indexof.{ware.fuelcells}">
+        <set_value name="$fuelindex" exact="$currentcargo.indexof.{ware.fuelcells}" />
+        <do_if value="$fuelindex">
+          <remove_value name="$currentcargo.{$fuelindex}" />
+        </do_if>
+      </do_if>
+      <do_else>
+        <!-- TODO: fuel trade ship needs to keep some for own use and the rest for trading -->
+      </do_else>
+
+      <do_if value="$dafaultRange? and this.$trade_failedfindruns gt 5">
+        <!-- search galaxywide -->
+        <do_if value="this.ship.isclass.ship_l or this.ship.isclass.ship_xl">
+          <set_value name="$range" exact="player.galaxy" />
+        </do_if>
+        <do_else>
+          <set_value name="$range" exact="this.ship.cluster" />
+        </do_else>
+      </do_if>
+      <do_elseif value="$dafaultRange? and this.$trade_failedfindruns gt 9">
+        <!-- not to far for only one piece -->
+        <do_if value="this.ship.isclass.ship_l or this.ship.isclass.ship_xl">
+          <set_value name="$range" exact="this.ship.cluster" />
+        </do_if>
+        <do_else>
+          <set_value name="$range" exact="this.ship.sector" />
+        </do_else>
+      </do_elseif>
+
+      <!-- try to find a buy offer for wares in our cargo first -->
+      <do_if value="$currentcargo.count gt 0 and $target.exists">
+        <!-- in case it was resources for our station, wait until we can deliver them -->
+        <debug_text filter="scripts_verbose" text="' checking if we can sell our current cargo to our homebase %1 %2.%3.%4'.[$target.knownname, $target.cluster.knownname, $target.sector.knownname, $target.zone.knownname]" chance="$debugchance" />
+        <find_buy_offer tradepartner="this.ship" buyer="$target" wares="$currentcargo" result="$buyoffer">
+          <amount min="1" />
+        </find_buy_offer>
+        <do_if value="$buyoffer.available">
+          <debug_text filter="scripts_verbose" text="'# have cargo on board that our homebase needs: %1 in %2 needs %3 %4'.[$buyoffer.buyer.knownname, $buyoffer.buyer.zone.knownname, $buyoffer.offeramount.{this}, $buyoffer.ware.name]" chance="$debugchance"/>
+          <resume label="perform trade run" />
+        </do_if>
+      </do_if>
+
+      <do_if value="$currentcargo.count gt 0">
+
+        <do_all exact="2" counter="$pass">
+          <do_all exact="$currentcargo.count" counter="$i" reverse="1">
+            <set_value name="$currentware" exact="$currentcargo.{$i}" />
+
+            <do_if value="$pass == 1">
+              <do_if value="$target.exists and $target.istraderestricted.{$currentware}" chance="0">
+                <find_buy_offer tradepartner="this.ship" wares="$currentware" space="$range" result="$buyoffer">
+                  <match_buyer class="class.ship_xl" owner="$target.owner" comment="try and find/prefer build platforms" />
+                </find_buy_offer>
+              </do_if>
+              <do_else>
+                <find_buy_offer tradepartner="this.ship" wares="$currentware" space="if $range == player.galaxy then this.ship.cluster else $range" result="$buyoffer" >
+                  <match_buyer class="class.ship_xl" comment="try and find/prefer build platforms" />
+                </find_buy_offer>
+              </do_else>
+              <do_if value="$buyoffer.exists">
+                <debug_text filter="scripts_verbose" text="'# builder ship trade run found: %1 in %2 needs %3 %4'.[$buyoffer.buyer.knownname, $buyoffer.buyer.zone.knownname, $buyoffer.offeramount.{this}, $buyoffer.ware.name]" chance="$debugchance"/>
+                <resume label="perform trade run" />
+              </do_if>
+              <wait min="3s" max="5s" />
+            </do_if>
+            <do_else>
+              <set_value name="$minofferamount" exact="if this.$trade_failedfindruns gt 10 then 1 else (this.ship.cargo.{$currentware}.count * 0.25f)i" />
+              <do_if value="$target.exists and $target.istraderestricted.{$currentware}" chance="0">
+                <!-- if we are only allowed to sell to our own faction anyway, ignore the price -->
+                <find_buy_offer tradepartner="this.ship" wares="$currentware" space="$range" result="$buyoffers" multiple="true">
+                  <match_buyer owner="$target.owner">
+                    <match negate="true" class="class.ship_xl" />
+                  </match_buyer>
+                  <offeramount min="$minofferamount" entity="this" />
+                </find_buy_offer>
+              </do_if>
+              <do_else>
+                <set_value name="$minbuyprice" exact="if this.$trade_failedfindruns gt 10 then 1Cr else $currentware.averageprice -2Cr" />
+                <find_buy_offer tradepartner="this.ship" wares="$currentware" space="$range" result="$buyoffers" multiple="true">
+                  <match_buyer>
+                    <match negate="true" class="class.ship_xl" />
+                  </match_buyer>
+                  <offeramount min="$minofferamount" entity="this" />
+                  <price min="$minbuyprice" />
+                </find_buy_offer>
+              </do_else>
+              <debug_text filter="scripts_verbose" text="'* %1 ::'.[this.$trade_failedfindruns] + ' found %1 buyoffers for at least %2 [%5Cr] %3 in %4 we have %6'.[$buyoffers.count, $minofferamount, $currentware, $range.knownname, $minbuyprice.formatted.default, this.ship.cargo.{$currentware}.count]" chance="$debugchance" />
+              <set_value name="$buyoffer" exact="null" />
+              <do_if value="$buyoffers.count gt 1">
+                <sort_trades sorter="amount" tradelist="$buyoffers" name="$sorted_offers" />
+                <set_value name="$buyoffer" exact="$sorted_offers.{1}" />
+                <do_all exact="$sorted_offers.count" counter="$Counter">
+                  <do_if value="$sorted_offers.{$Counter}.offeramount.{this} ge this.ship.cargo.{$currentware}.count">
+                    <set_value name="$buyoffer" exact="$sorted_offers.{$Counter}"/>
+                    <break/>
+                  </do_if>
+                </do_all>
+                <remove_value name="$sorted_offers"/>
+              </do_if>
+              <do_else>
+                <set_value name="$buyoffer" exact="if $buyoffers.count then $buyoffers.{1} else null" />
+              </do_else>
+              <remove_value name="$buyoffers" />
+              <do_if value="$buyoffer.exists">
+                <debug_text filter="scripts_verbose" text="'# have cargo on board that our homebase does not need, but we can sell it in the allowed range: %1 in %2 needs %3 %4'.[$buyoffer.buyer.knownname, $buyoffer.buyer.zone.knownname, $buyoffer.offeramount.{this}, $buyoffer.ware.name]" chance="$debugchance"/>
+                <resume label="perform trade run" />
+              </do_if>
+              <wait min="30s" max="90s"/>
+            </do_else>
+          </do_all>
+        </do_all>
+        <remove_value name="$minbuyprice" />
+        <remove_value name="$minofferamount" />
+
+        <!--If no trade was found then at least fly back to the buy area before checking again-->
+        <do_if value="not $selloffer.available and not $buyoffer.available">
+          <do_if value="this.$trade_failedfindruns gt 20">
+            <resume label="finish"/>
+          </do_if>
+          <set_value name="this.$trade_failedfindruns" operation="add"/>
+          <!--If the buyclusters are saved to the blackboard, fly to one of them-->
+          <do_if value="this.$traderange_buyclusters?">
+            <set_value name="$moveto" exact="true"/>
+            <do_if value="this.$traderange_buyclusters.count">
+              <!--Check if we are already in the buy area-->
+              <do_all exact="this.$traderange_buyclusters.count" counter="$Counter">
+                <do_if value="this.ship.hascontext.{this.$traderange_buyclusters.{$Counter}}">
+                  <set_value name="$moveto" exact="false"/>
+                  <break/>
+                </do_if>
+              </do_all>
+              <do_if value="$moveto">
+                <debug_text filter="scripts_verbose" text="'No trade was found and we are outside of the buy range. Flying back to buy range.'" chance="$debugchance"/>
+                <run_script name="'move.generic'">
+                  <param name="destination" value="this.$traderange_buyclusters.random" />
+                  <param name="endintargetzone" value="true" />
+                </run_script>
+              </do_if>
+              <remove_value name="$moveto"/>
+            </do_if>
+          </do_if>
+          <resume label="find trade run"/>
+        </do_if>
+      </do_if>
+
+      <label name="perform trade run"/>
+      <do_if value="$selloffer.available or $buyoffer.available">
+        <set_value name="this.$trade_failedfindruns" exact="0"/>
+
+        <do_if value="@this.ship.dockslot.component.external">
+          <!-- make sure we clear the docking area asap -->
+          <run_script name="'move.undock'" />
+        </do_if>
+        <do_else>
+          <wait min="10s" max="30s" />
+        </do_else>
+
+        <do_while value="$selloffer.available or $buyoffer.available">
+          <run_script name="'trade.performtraderun'">
+            <param name="selloffer" value="$selloffer" />
+            <param name="buyoffer" value="$buyoffer" />
+            <param name="debugchance" value="$debugchance" />
+            <save_retval name="success" variable="$success" />
+            <save_retval name="lasttrade" variable="$lasttrade" />
+          </run_script>
+          <do_if value="not $success">
+            <set_value name="this.$trade_failedfindruns" operation="add"/>
+            <set_value name="$selloffer" exact="null" />
+            <set_value name="$buyoffer" exact="null" />
+          </do_if>
+        </do_while>
+      </do_if>
+
+      <set_value name="$buyoffer" exact="null" />
+      <set_value name="$selloffer" exact="null" />
+
+      <label name="finish"/>
+      <!-- check if this is a jobship at the end of its lifetime -->
+      <do_if value="$currentcargo.count == 0 or this.$trade_failedfindruns gt 20">
+        <debug_text filter="scripts_verbose" text="'%1 doing job %2 has expired, die!'.[this.ship.knownname, this.ship.job]" chance="$debugchance" />
+        <set_value name="$bigship" exact="this.ship.isclass.ship_l or this.ship.isclass.ship_xl" />
+        <run_script name="'move.die'">
+          <param name="byjump" value="$bigship" />
+          <param name="byhighway" value="not $bigship" />
+          <param name="bydock" value="not $bigship" />
+          <param name="byidle" value="true" />
+        </run_script>
+      </do_if>
+
+      <resume label="find trade run" />
+
+      <debug_text filter="scripts_verbose" text="player.age + ' END OF SCRIPT!'" chance="$debugchance" />
+
+    </actions>
+  </attention>
+</aiscript>

@@ -3443,6 +3443,19 @@
 					<set_value name="$nextRelationCheck" exact="if $next_Check? and $next_Check.{5} then player.age + $next_Check.{5} else player.age + 12h" />
 				</do_if>
 
+				<!-- ECONOMY SUPPORT: order ware to build ships if required -->
+				<do_if value="not $nextSYcheck? or ($nextSYcheck? and $nextSYcheck lt player.age)" chance="if $tmpConfig? and not $tmpConfig.$cheat? and not $tmpConfig.$cheatNPC? then 100 else 0">
+					<find_station name="$temp_Objects" space="player.galaxy" functional="true" multiple="true">
+						<match_content class="class.buildmodule" />
+						<match owner="$_faction"/>
+					</find_station>
+					<do_if value="$_CEO.$isInvader?">
+						<set_value name="$tmpMax"/>
+					</do_if>
+					<include_actions ref="md.MM_Corps__Data.MMCData_do_cheatressources" />
+					<set_value name="$nextSYcheck" exact="if $next_Check? and @$next_Check.{6} then player.age + $next_Check.{6} else player.age + 3h" />
+				</do_if>
+
 				<!-- nothing left? -->
 				<do_if value="$_CEO.money lt 20000000Cr or ($_CEO.money gt 10000000000Cr and ($_CEO.$style != 'domination' or @$noBelongings == 'domination'))">
 					<!-- not even friends? -->
@@ -3467,7 +3480,7 @@
 				</do_else>
 
 <set_value name="$text2" exact="if $text3 then $text3 else ''" operation="add" />
-<debug_text text="'\n#############\n# CEO: %1 Cr [%2] \n'.[$_CEO.money.formatted.default, $_CEO.$style] + $text2 + '\n#\n#############'" filter="scripts_verbose" chance="100" />
+<debug_text text="'\n#############\n# CEO: %1 Cr [%2] \n'.[$_CEO.money.formatted.default, $_CEO.$style] + $text2 + '\n#\n#############'" filter="scripts_verbose" chance="0" />
 <remove_value name="$text2"/>
 <remove_value name="$text3"/>
 				<!-- predefine special jobs -->
@@ -4800,6 +4813,8 @@
 		</library>
 
 		<!-- 
+		<set_value name="$tmpMax" comment="optional"/>
+		<set_value name="$tmpInstand" comment="optional"/>
 		<set_value name="$temp_Objects" exact="$Object / [$Object,$Object2]" />
 		<include_actions ref="md.MM_Corps__Data.MMCData_do_cheatressources" />
 		-->
@@ -4815,6 +4830,7 @@
 					<do_if value="$temp_Objects.{$r}.isplayerowned and (not $tmpConfig? or not $tmpConfig.$cheat?)">
 						<continue />
 					</do_if>
+
 					<find_buy_offer buyer="$temp_Objects.{$r}" multiple="1" result="$buyoffers" wares="$temp_Objects.{$r}.resources.list"/>
 					<set_value name="$price" exact="0Cr"/>
 
@@ -4827,16 +4843,21 @@
 
 					<do_all exact="$buyoffers.count" counter="$s">
 						<do_if value="$temp_Objects.{$r}.cargo.{$buyoffers.{$s}.ware}.count le $temp_Objects.{$r}.cargo.{$buyoffers.{$s}.ware}.target*0.1f">
-							<do_if value="false">
-								<!-- TODO: spawn div tradeships to deliver ressources -->
-							</do_if>
-							<do_else>
+							<do_if value="$tmpInstand?">
 								<add_cargo ware="$buyoffers.{$s}.ware" object="$temp_Objects.{$r}" exact="[$temp_Objects.{$r}.cargo.{$buyoffers.{$s}.ware}.max*0.2f, (($temp_Objects.{$r}.cargo.{$buyoffers.{$s}.ware}.target*0.2f)-$temp_Objects.{$r}.cargo.{$buyoffers.{$s}.ware}.count), $buyoffers.{$s}.offeramount*0.3f].min" result="$cheated" />
 								<do_if value="$cheated gt 0" chance="0">
 									<set_value name="$price" exact="$buyoffers.{$s}.ware.maxprice * $cheated" operation="add"/>
 								</do_if>
 								<remove_value name="$cheated"/>
-							</do_else>
+							</do_if>
+							<do_elseif value="$temp_Objects.{$r}.cargo.{$buyoffers.{$s}.ware}.count lt 10 and $buyoffers.{$s}.offeramount gt $temp_Objects.{$r}.cargo.{$buyoffers.{$s}.ware}.target*0.9f and $tmpMax?">
+								<signal_objects object="player.galaxy" param="'do.cheat.waredelivery'" param2="[$temp_Objects.{$r}, $buyoffers.{$s}.ware, $buyoffers.{$s}.offeramount]" />
+							</do_elseif>
+							<do_elseif value="$buyoffers.{$s}.offeramount gt $temp_Objects.{$r}.cargo.{$buyoffers.{$s}.ware}.target*0.7f">
+								<set_value name="$temp_amount" exact="[$temp_Objects.{$r}.cargo.{$buyoffers.{$s}.ware}.max*0.2f, (($temp_Objects.{$r}.cargo.{$buyoffers.{$s}.ware}.target*0.3f)-$temp_Objects.{$r}.cargo.{$buyoffers.{$s}.ware}.count), $buyoffers.{$s}.offeramount*0.3f].min"/>
+								<signal_objects object="player.galaxy" param="'do.cheat.waredelivery'" param2="[$temp_Objects.{$r}, $buyoffers.{$s}.ware, $temp_amount]" />
+								<remove_value name="$temp_amount"/>
+							</do_elseif>
 						</do_if>
 					</do_all>
 					<!--do_if value="$price" chance="0">
@@ -4846,6 +4867,8 @@
 					<remove_value name="$price"/>
 				</do_all>
 				<remove_value name="$temp_Objects"/>
+				<remove_value name="$tmpInstand"/>
+				<remove_value name="$tmpMax"/>
 			</actions>
 		</library>
 
