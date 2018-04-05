@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="//label[@name='findfuel']" pos="after">
+	  <do_if value="this.$escortgroup? and this.$escortgroup.count">
+	    <signal_objects group="this.$escortgroup" param="'MICT_Refuel'" delay="1ms"/>
+	  </do_if>
+	</add>
+	<add sel="//actions/do_if/do_if/do_if[@value='this.ship.commander == player.primaryship']" pos="after">
+	  <do_elseif value="this.ship.isplayerowned and (this.ship.commander.pilot.$escortgroup? and this.ship.commander.pilot.$escortgroup.indexof.{this.ship}) or this.$squadrefuel?">
+	    <set_value name="$accountholder" exact="player.entity" />
+	  </do_elseif>
+	</add>
+	<add sel="//label[@name='finish']" pos="after">
+	  <remove_value name="this.$squadrefuel"/>
+	</add>
+</diff>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff>
+    <add sel="/aiscript/attention/actions/run_script" pos="before">
+	  <do_if value="this.$escortgroup? and this.$escortgroup.count">
+	    <signal_objects group="this.$escortgroup" param="'DO.Refuel'" delay="2s"/>
+	  </do_if>
+	</add>
+</diff>

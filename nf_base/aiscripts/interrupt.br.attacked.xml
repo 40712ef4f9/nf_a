@@ -51,7 +51,7 @@
                       <do_if value="true" chance="$ejectchance">
                         <!-- <debug_text text="'eject'" /> -->
                         <!-- TODO: send notification "I'm giving up!" -->
-						<substitute_text text="$logtext" source="{1016,80}" comment="Captured $SHIP$ in sector $SECTOR$.">
+                        <substitute_text text="$logtext" source="{1016,80}" comment="Captured $SHIP$ in sector $SECTOR$.">
                           <replace string="'$SHIP$'" with="this.ship.knownname" />
                           <replace string="'$SECTOR$'" with="this.sector.knownname" />
                         </substitute_text>
@@ -164,9 +164,9 @@
             <run_script name="'fight.attack.object'">
               <param name="target" value="$attacker"/>
               <param name="escort" value="this.ship.commander" comment="no error if there is no commander" />
-			  <!--<param name="escort" value="null" comment="no error if there is no commander" />-->
               <param name="pursuetargets" value="false" />
               <param name="allowothertargets" value="false" />
+              <param name="squad_attack" value="true"/>
             </run_script>
           </do_if>
           <do_else>

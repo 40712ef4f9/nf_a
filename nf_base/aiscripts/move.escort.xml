@@ -47,4 +47,12 @@
       <set_value name="$target" exact="this.ship.commander"/>
     </do_elseif>
   </add>
+  <add sel="/aiscript">
+  <on_abort>
+    <remove_value name="this.$brattackhandler"/>
+    <do_if value="$target.exists and $target.pilot.exists and $target.pilot.$escortgroup? and $target.pilot.$escortgroup.list.indexof.{this.ship}">
+      <remove_from_group group="$target.pilot.$escortgroup" object="this.ship"/>
+    </do_if>
+  </on_abort>
+  </add>
 </diff>

@@ -8,4 +8,23 @@
 	<add sel="//attention[@min='unknown']/actions/do_if[@value='this.zone != $target.zone']" pos="prepend">
 		<signal_objects object="this.ship" param="'follow'"/>
 	</add>
+  <add sel="/aiscript/interrupts">
+    <handler>
+      <conditions>
+        <event_object_signalled object="this.ship" param="'DO.Refuel'"/>
+        <check_value value="this.$config_autorefuel? and this.$config_autorefuel"/>
+        <check_value value="this.ship.isclass.[class.ship_xl, class.ship_l]"/>
+        <check_value value="this.ship.cargo.{ware.fuelcells}.count lt this.ship.cargo.{ware.fuelcells}.max"/>
+        <check_value value="$target.pilot.$escortgroup.indexof.{this.ship}"/>
+        <check_value value="this.command.param == $target"/>
+      </conditions>
+      <actions>
+        <do_if value="this.$escortgroup? and this.$escortgroup.count">
+          <signal_objects group="this.$escortgroup" param="'DO.Refuel'" delay="1s"/>
+        </do_if>
+        <set_value name="this.$squadrefuel" />
+        <run_interrupt_script name="'move.refuel'" abortscripts="true" resume="start" />
+      </actions>
+    </handler>
+  </add>
 </diff>

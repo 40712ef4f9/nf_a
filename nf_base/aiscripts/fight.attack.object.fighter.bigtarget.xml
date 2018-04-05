@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="//shoot_at[@slot='tag.primary_slot']" pos="before">
+		<do_if value="this.ship.subordinates.count gt 0">
+			<set_value name="$MICT_Subordinates" exact="this.ship.subordinates"/>
+			<do_all exact="$MICT_Subordinates.count" counter="$i">
+				<do_if value="$MICT_Subordinates.{$i}.isclass.[class.ship_m, class.ship_s]">
+					<do_if value="$MICT_Subordinates.{$i}.primarypurpose" exact="objectpurpose.fight">
+						<signal_objects object="$MICT_Subordinates.{$i}" param="'MICT_Attack'" param2="$bigtarget" param3="[true, $checkrelation]" delay="1ms"/>
+					</do_if>
+				</do_if>
+			</do_all>
+			<remove_value name="$MICT_Subordinates"/>
+		</do_if>
+	</add>
+</diff>

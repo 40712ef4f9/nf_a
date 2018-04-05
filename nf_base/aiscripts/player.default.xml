@@ -32,4 +32,36 @@
 	  <wait />
 	</add>
 	<replace sel="//handler/actions/do_if[@value=&quot;event.param == 'dock at'&quot;]/run_interrupt_script/@resume">wait</replace>
+	<!-- order given -->
+	<add sel="//handler[5]/actions" pos="prepend">
+		<do_if value="this.defensible.subordinates.count gt 0">
+			<set_value name="$subordinates" exact="this.defensible.subordinates"/>
+			<do_all exact="$subordinates.count" counter="$i">
+				<do_if value="$subordinates.{$i}.pilot.command.value" list="[command.attackenemies, command.attackobject]">
+					<signal_objects object="$subordinates.{$i}.pilot" param="'MICT_Disengage'" delay="1ms"/>
+				</do_if>
+				<do_elseif value="$subordinates.{$i}.pilot.command.value == command.refuel and $subordinates.{$i}.pilot.$squadrefuel?">
+					<remove_value name="$subordinates.{$i}.pilot.$squadrefuel"/>
+					<signal_objects object="$subordinates.{$i}" param="'MICT_Disengage'" delay="1ms"/>
+				</do_elseif>
+			</do_all>
+			<remove_value name="$subordinates"/>
+		</do_if>
+	</add>
+	<!-- ordered to stop -->
+	<add sel="//handler[7]/actions" pos="prepend">
+		<do_if value="this.defensible.subordinates.count gt 0">
+			<set_value name="$subordinates" exact="this.defensible.subordinates"/>
+			<do_all exact="$subordinates.count" counter="$i">
+				<do_if value="$subordinates.{$i}.pilot.command.value" list="[command.attackenemies, command.attackobject]">
+					<signal_objects object="$subordinates.{$i}" param="'MICT_Disengage'" delay="1ms"/>
+				</do_if>
+				<do_elseif value="$subordinates.{$i}.pilot.command.value == command.refuel and $subordinates.{$i}.pilot.$squadrefuel?">
+					<remove_value name="$subordinates.{$i}.pilot.$squadrefuel"/>
+					<signal_objects object="$subordinates.{$i}" param="'MICT_Disengage'" delay="1ms"/>
+				</do_elseif>
+			</do_all>
+			<remove_value name="$subordinates"/>
+		</do_if>
+	</add>
 </diff>

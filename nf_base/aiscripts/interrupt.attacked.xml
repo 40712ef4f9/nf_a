@@ -2,11 +2,11 @@
 <!-- Conquer_mod v020 -->
 <diff>
 	<!--replace sel="/aiscript/interrupts/library/handler/conditions/check_any/check_all/set_value[@name='$fleerespond']/@exact">global.$Disable_MoveFlee</replace-->
-	<add sel="/aiscript/interrupts/library/handler[@name='AttackHandler']/conditions/event_object_attacked" pos="after">
+	<!--add sel="/aiscript/interrupts/library/handler[@name='AttackHandler']/conditions/event_object_attacked" pos="after">
           <check_value value="this.defensible.isclass.ship and not this.ship.pilot.$brattackhandler?" />
-	</add>
+	</add-->
 	<add sel="//handler[@name='AttackHandler']/conditions/check_value[@value='not (this.command.value == command.attackobject and this.command.param == event.param)']" pos="before">
-			<check_value value="not [command.attackobject,command.patrol,command.escort].indexof.{this.command.value} or (this.ship.primarypurpose != objectpurpose.fight or (this.ship.primarypurpose == objectpurpose.fight and this.ship.hullpercentage lt 40 and this.ship.shieldpercentage lt 10))" />
-			<check_value value="this.ship.isboostactive or this.commandaction.value == commandaction.jumping" negate="true" />
+          <check_value value="not [command.attackobject,command.patrol,command.escort].indexof.{this.command.value} or (this.ship.primarypurpose != objectpurpose.fight or (this.ship.primarypurpose == objectpurpose.fight and this.ship.hullpercentage lt 40 and this.ship.shieldpercentage lt 10))" />
+          <check_value value="this.ship.isboostactive or this.commandaction.value == commandaction.jumping" negate="true" />
 	</add>
 </diff>

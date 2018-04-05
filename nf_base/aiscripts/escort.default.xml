@@ -86,7 +86,7 @@
       <label name="loop" />
       <!-- move.escort / patrol End if is not in squad -->
       <do_if value="$commander.exists and this.$escort == 'escort'">
-        <run_script name="'move.escort'">
+        <run_script name="if global.$nfconfig.$Check? then 'BR.move.escort' else 'move.escort'">
           <param name="target" value="$commander" />
           <param name="formation" value="$formation" />
         </run_script>
@@ -101,7 +101,7 @@
         </run_script>
       </do_elseif>
 
-      <do_elseif value="this.$escort == 'dock' and $gohome and $gohome.exists">
+      <do_elseif value="this.$escort == 'dock' and $gohome? and $gohome.exists">
         <run_script name="'move.dockat'">
           <param name="destination" value="$gohome" />
         </run_script>

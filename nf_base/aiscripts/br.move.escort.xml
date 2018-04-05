@@ -32,7 +32,8 @@
     <param name="debugoutputchance" default="0"/>
   </params>
   <interrupts>
-    <handler ref="AttackBRHandler" />
+    <!--handler ref="AttackBRHandler"/>
+    <handler ref="AttackHandler" /-->
     <handler ref="ScannedHandler" />
     <handler ref="TargetInvalidHandler" />
 
@@ -371,6 +372,9 @@
       </do_elseif>
 
       <label name="die" />
+      <do_if value="$target.exists and $target.pilot.exists and $target.pilot.$escortgroup? and $target.pilot.$escortgroup.list.indexof.{this.ship}">
+        <remove_from_group group="$target.pilot.$escortgroup" object="this.ship"/>
+      </do_if>
       <!-- Auto destroy -->
       <set_value name="$capship" exact="this.ship.isclass.[class.ship_l, class.ship_xl]"/>
       <run_script name="'move.die'" chance="(not this.$whatido? and not this.$escort?)*100">
@@ -486,6 +490,9 @@
       </do_elseif>
 
       <label name="die" />
+      <do_if value="$target.exists and $target.pilot.exists and $target.pilot.$escortgroup? and $target.pilot.$escortgroup.list.indexof.{this.ship}">
+        <remove_from_group group="$target.pilot.$escortgroup" object="this.ship"/>
+      </do_if>
       <!-- Auto destroy -->
       <set_value name="$capship" exact="this.ship.isclass.[class.ship_l,class.ship_xl]"/>
       <run_script name="'move.die'" sinceversion="3"  chance="(not this.$whatido? and not this.$escort?)*100">
@@ -499,5 +506,8 @@
   </attention>
   <on_abort>
     <remove_value name="this.$brattackhandler"/>
+    <do_if value="$target.exists and $target.pilot.exists and $target.pilot.$escortgroup? and $target.pilot.$escortgroup.list.indexof.{this.ship}">
+      <remove_from_group group="$target.pilot.$escortgroup" object="this.ship"/>
+    </do_if>
   </on_abort>
 </aiscript>

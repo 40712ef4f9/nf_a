@@ -30,7 +30,6 @@
     <param name="debugoutputchance" default="0"/>
   </params>
   <interrupts>
-    <handler ref="AttackBRHandler"/>
     <handler ref="ScannedHandler"/>
     <handler ref="TargetInvalidHandler"/>
 
@@ -47,9 +46,11 @@
                 <!-- Refuel should only apply to L and XL ships that are in formation with the Squadron Commander. -->
                 <event_object_signalled object="this.ship" param="'MICT_Refuel'"/>
                 <check_value value="$target.pilot.$escortgroup.indexof.{this.ship}"/>
+                <check_value value="this.command.param == $target"/>
               </check_all>
             </check_any>
             <check_value value="this.ship.isclass.[class.ship_xl, class.ship_l]"/>
+            <check_value value="this.command.value != command.refuel"/>
           </check_all>
         </check_any>
       </conditions>
@@ -58,6 +59,24 @@
           <set_value name="$MICT_squadron_destination" exact="event.param2"/>
         </do_if>
         <abort_called_scripts resume="start"/>
+      </actions>
+    </handler>
+
+    <handler>
+      <conditions>
+        <event_object_signalled object="this.ship" param="'DO.Refuel'"/>
+        <check_value value="this.$config_autorefuel? and this.$config_autorefuel"/>
+        <check_value value="this.ship.isclass.[class.ship_xl, class.ship_l]"/>
+        <check_value value="this.ship.cargo.{ware.fuelcells}.count lt this.ship.cargo.{ware.fuelcells}.max"/>
+        <check_value value="$target.pilot.$escortgroup.indexof.{this.ship}"/>
+        <check_value value="this.command.param == $target"/>
+      </conditions>
+      <actions>
+        <do_if value="this.$escortgroup? and this.$escortgroup.count">
+          <signal_objects group="this.$escortgroup" param="'DO.Refuel'" delay="1s"/>
+        </do_if>
+        <set_value name="this.$squadrefuel" />
+        <run_interrupt_script name="'move.refuel'" abortscripts="true" resume="start" />
       </actions>
     </handler>
 

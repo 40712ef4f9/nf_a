@@ -6,4 +6,17 @@
 		<set_turret_targets object="this.ship" preferredtarget="$target" target="if $additionaltargets and $additionaltargets.count then $additionaltargets else [$target]" />
 	  </do_if>
 	</add>
+	<add sel="//do_if[@value='(not this.ship.dps.primary and this.ship.dps.secondary) or (this.ship.dps.secondary gt 0 and player.age gt $delaymissiles)']" pos="before">
+		<do_if value="this.ship.subordinates.count gt 0">
+			<set_value name="$MICT_Subordinates" exact="this.ship.subordinates"/>
+			<do_all exact="$MICT_Subordinates.count" counter="$i">
+				<do_if value="$MICT_Subordinates.{$i}.isclass.[class.ship_m, class.ship_s]">
+					<do_if value="$MICT_Subordinates.{$i}.primarypurpose" exact="objectpurpose.fight">
+						<signal_objects object="$MICT_Subordinates.{$i}" param="'MICT_Attack'" param2="$target" param3="[true, $checkrelation]" delay="1ms"/>
+					</do_if>
+				</do_if>
+			</do_all>
+			<remove_value name="$MICT_Subordinates"/>
+		</do_if>
+	</add>
 </diff>

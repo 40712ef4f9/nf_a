@@ -37,10 +37,10 @@
       <conditions>
         <event_object_attacked object="$base" check="false" />
         <check_value value="$protect_base" />
-		<check_any>
-			<check_value value="this.command.value == command.patrol" />
-			<check_value value="this.command.value == command.escort" />
-		</check_any>
+        <check_any>
+          <check_value value="this.command.value == command.patrol" />
+          <check_value value="this.command.value == command.escort" />
+        </check_any>
         <check_value value="this.ship.zone == $base.zone" />
       </conditions>
       <actions>
@@ -91,6 +91,19 @@
       <actions>
         <remove_value name="this.$escort_switch_standby"/>
         <remove_value name="this.$commander_switch_standby"/>
+        <do_if value="this.defensible.subordinates.count gt 0">
+          <set_value name="$subordinates" exact="this.defensible.subordinates"/>
+          <do_all exact="$subordinates.count" counter="$i">
+            <do_if value="$subordinates.{$i}.pilot.command.value" list="[command.attackenemies, command.attackobject]">
+              <signal_objects object="$subordinates.{$i}" param="'MICT_Disengage'" delay="1ms"/>
+            </do_if>
+            <do_elseif value="$subordinates.{$i}.pilot.command.value == command.refuel and $subordinates.{$i}.pilot.$squadrefuel?">
+              <remove_value name="$subordinates.{$i}.pilot.$squadrefuel"/>
+              <signal_objects object="$subordinates.{$i}" param="'MICT_Disengage'" delay="1ms"/>
+            </do_elseif>
+          </do_all>
+          <remove_value name="$subordinates"/>
+        </do_if>
         <!-- dock at -->
         <do_if value="event.param == 'dock at'">
           <debug_text text="'Received order to dock at ' + event.param2.name" />
@@ -131,7 +144,7 @@
           <run_interrupt_script name="'command.fight.attack'" abortscripts="true" resume="init">
             <param name="target" value="event.param2" />
             <param name="checkrelation" value="false" />
-			<param name="speak" value="false" />
+            <param name="speak" value="false" />
           </run_interrupt_script>
         </do_elseif>
         <do_elseif value="event.param == 'attack plus'">
@@ -162,15 +175,15 @@
         <!-- Scoutjob in zone. -->
         <do_elseif value="event.param == 'scout zone'">
           <debug_text text="'Received order to scout zone ' + event.param2.knownname" />
-		  <set_command command="command.movetozone" param="event.param2"/>
-		  <run_interrupt_script name="'move.generic'" abortscripts="true" resume="voy">
-			<param name="destination" value="event.param2" />
-			<param name="endintargetzone" value="true" />
-		  </run_interrupt_script>
-		  <!--run_interrupt_script name="'move.voyager'" abortscripts="true" resume="init">
-			<param name="workspace" value="[event.param2]" />
-			<param name="returnzone" value="false" />
-		  </run_interrupt_script-->
+          <set_command command="command.movetozone" param="event.param2"/>
+          <run_interrupt_script name="'move.generic'" abortscripts="true" resume="voy">
+            <param name="destination" value="event.param2" />
+            <param name="endintargetzone" value="true" />
+          </run_interrupt_script>
+          <!--run_interrupt_script name="'move.voyager'" abortscripts="true" resume="init">
+      <param name="workspace" value="[event.param2]" />
+      <param name="returnzone" value="false" />
+      </run_interrupt_script-->
         </do_elseif>
         <!-- Advance Options -->
         <!-- Hold Position order hold position-->
@@ -203,18 +216,31 @@
         <check_value value="(not @this.$shiptrader_docking) and (not @this.$ship_parking) and (not this.ship.dockslot) and (not this.ship.docklink)" />
       </conditions>
       <actions>
-		<do_if value="this.$prev_commander?">
-		  <do_if value="this.$commander_switch_standby?">
-			<do_if value="$base.exists">
-			  <set_object_commander object="this.ship" commander="if this.$prev_commander.exists then this.$prev_commander else if $commander.exists then $commander else $base" />
-			  <remove_value name="this.$prev_commander"/>
-			  <remove_value name="this.$commander_switch_standby"/>
-			</do_if>
-		  </do_if>
-		  <do_else>
-			<set_value name="this.$commander_switch_standby" exact="true" />
-		  </do_else>
-		</do_if>
+        <do_if value="this.$prev_commander?">
+          <do_if value="this.$commander_switch_standby?">
+            <do_if value="$base.exists">
+              <set_object_commander object="this.ship" commander="if this.$prev_commander.exists then this.$prev_commander else if $commander.exists then $commander else $base" />
+              <remove_value name="this.$prev_commander"/>
+              <remove_value name="this.$commander_switch_standby"/>
+            </do_if>
+          </do_if>
+          <do_else>
+            <set_value name="this.$commander_switch_standby" exact="true" />
+          </do_else>
+        </do_if>
+        <do_if value="this.defensible.subordinates.count gt 0">
+          <set_value name="$subordinates" exact="this.defensible.subordinates"/>
+          <do_all exact="$subordinates.count" counter="$i">
+            <do_if value="$subordinates.{$i}.pilot.command.value" list="[command.attackenemies, command.attackobject]">
+              <signal_objects object="$subordinates.{$i}.pilot" param="'MICT_Disengage'" delay="1ms"/>
+            </do_if>
+            <do_elseif value="$subordinates.{$i}.pilot.command.value == command.refuel and $subordinates.{$i}.pilot.$squadrefuel?">
+              <remove_value name="$subordinates.{$i}.pilot.$squadrefuel"/>
+              <signal_objects object="$subordinates.{$i}" param="'MICT_Disengage'" delay="1ms"/>
+            </do_elseif>
+          </do_all>
+          <remove_value name="$subordinates"/>
+        </do_if>
         <!-- Save the actual command, to handle the cases in 'interrupt.stoporder' -->
         <set_value name="$command" exact="this.command.value" />
         <!-- To use blocking actions (move to a safe position), run this script -->
@@ -232,7 +258,7 @@
       </conditions>
       <actions>
         <set_value name="this.$prev_commander" exact="this.ship.commander" />
-		<set_object_commander object="this.ship" commander="player.primaryship" />
+        <set_object_commander object="this.ship" commander="player.primaryship" />
       </actions>
     </handler>
     <!-- Desactivate MODES-->
@@ -245,17 +271,17 @@
       <actions>
         <debug_text text="'Stop mode...'" />
         <cease_fire object="this.ship" weapontype="mining" />
-		<do_if value="this.$escort_switch_standby?">
-		  <do_if value="this.$do_escort? and this.$do_escort">
-			<set_value name="this.$do_escort" exact="false" />
-		  </do_if>
-		  <do_else>
-			<set_value name="this.$do_escort" exact="true" />
-		  </do_else>
-		</do_if>
-		<do_else>
-		  <set_value name="this.$escort_switch_standby" exact="true" />
-		</do_else>
+        <do_if value="this.$escort_switch_standby?">
+          <do_if value="this.$do_escort? and this.$do_escort">
+            <set_value name="this.$do_escort" exact="false" />
+          </do_if>
+          <do_else>
+            <set_value name="this.$do_escort" exact="true" />
+          </do_else>
+        </do_if>
+        <do_else>
+          <set_value name="this.$escort_switch_standby" exact="true" />
+        </do_else>
         <!-- recall drones -->
         <run_interrupt_script name="'lib.recall.drones'" abortscripts="true"  resume="init"/>
       </actions>
@@ -263,34 +289,34 @@
     <!-- escort -->
     <handler>
       <conditions>
-		  <check_any>
-			<event_object_signalled object="this.ship" param="'switch.mode'" />
-			<event_object_signalled object="this.ship" param="'switch.gohome'" />
-			<check_all>
-				<event_object_docked object="$commander" />
-				<check_value value="$gohome?" />
-			</check_all>
-		  </check_any>
+        <check_any>
+          <event_object_signalled object="this.ship" param="'switch.mode'" />
+          <event_object_signalled object="this.ship" param="'switch.gohome'" />
+          <check_all>
+            <event_object_docked object="$commander" />
+            <check_value value="$gohome?" />
+          </check_all>
+        </check_any>
       </conditions>
       <actions>
 
         <cease_fire object="this.ship" weapontype="mining" />
 
-		<do_if value="event.param == 'switch.mode'">
-			<do_if value="this.$escort == 'escort'">
-			  <set_value name="this.$escort" exact="'patrol'"/>
-			</do_if>
-			<do_else>
-			  <set_value name="this.$escort" exact="'escort'"/>
-			</do_else>
-		</do_if>
-		<do_elseif value="event.param == 'switch.gohome'">
-			<set_value name="this.$escort" exact="'escort'"/>
-			<set_value name="$gohome" exact="if event.param2 and event.param2.exists then event.param2 else if $base and $base.exists then $base else null"/>
-		</do_elseif>
-		<do_else>
-		  <set_value name="this.$escort" exact="'dock'"/>
-		</do_else>
+        <do_if value="event.param == 'switch.mode'">
+          <do_if value="this.$escort == 'escort'">
+            <set_value name="this.$escort" exact="'patrol'"/>
+          </do_if>
+          <do_else>
+            <set_value name="this.$escort" exact="'escort'"/>
+          </do_else>
+        </do_if>
+        <do_elseif value="event.param == 'switch.gohome'">
+          <set_value name="this.$escort" exact="'escort'"/>
+          <set_value name="$gohome" exact="if event.param2 and event.param2.exists then event.param2 else if $base and $base.exists then $base else null"/>
+        </do_elseif>
+        <do_else>
+          <set_value name="this.$escort" exact="'dock'"/>
+        </do_else>
 
         <!-- recall drones -->
         <run_interrupt_script name="'lib.recall.drones'" abortscripts="true"  resume="loop"/>
@@ -307,8 +333,8 @@
       <leave_formation object="this.ship" />
 
       <label name="init" />
-	  <remove_value name="$gohome" />
-	  <set_value name="this.$escort" exact="null"/>
+      <remove_value name="$gohome" />
+      <set_value name="this.$escort" exact="null"/>
       <clear_collision_filter object="this.ship" />
       <do_if value="this.$do_escort?" negate="true">
         <set_value name="this.$do_escort" exact="if $do_escort? and $do_escort then true else false" />
@@ -370,7 +396,7 @@
         <run_script name="'move.dockat'" sinceversion="3">
           <param name="destination" value="$gohome" />
         </run_script>
-		<resume label="end" />
+        <resume label="end" />
       </do_elseif>
       <!-- move.escort / patrol End if is not in squad -->
       <do_elseif value="$commander.exists and $commander != $base and $commander.isclass.ship">
@@ -404,41 +430,41 @@
       <resume label="loop" />
 
 
-	  <label name="stay" />
-	  <run_script name="'move.patrol'" sinceversion="2">
-		<param name="range" value="'zone'" />
-		<param name="engageenemies" value="false" />
-	  </run_script>
+      <label name="stay" />
+      <run_script name="'move.patrol'" sinceversion="2">
+        <param name="range" value="'zone'" />
+        <param name="engageenemies" value="false" />
+      </run_script>
 
-	  <label name="voy" />
-	  <run_script name="'move.voyager'" sinceversion="2">
-		<param name="workspace" value="[this.zone]" />
-		<param name="returnzone" value="false" />
-	  </run_script>
+      <label name="voy" />
+      <run_script name="'move.voyager'" sinceversion="2">
+        <param name="workspace" value="[this.zone]" />
+        <param name="returnzone" value="false" />
+      </run_script>
 
-	  <label name="wait" />
-	  <set_command_action commandaction="commandaction.standingby" />
-	  <!--debug_text text="'WAIT: %1 %2'.[this.ship.name, this.ship.zone.name]" filter="error" chance="100" /-->
-	  <wait />
+      <label name="wait" />
+      <set_command_action commandaction="commandaction.standingby" />
+      <!--debug_text text="'WAIT: %1 %2'.[this.ship.name, this.ship.zone.name]" filter="error" chance="100" /-->
+      <wait />
 
       <label name="end" />
       <debug_text text="' End script'" chance="$debugchance" />
 
-	  <remove_value name="this.$carrier" />
-	  <remove_value name="this.$escort" />
-	  <remove_value name="this.$do_escort"/>
-	  <remove_value name="this.$prev_commander"/>
-	  <remove_value name="this.$commander_switch_standby"/>
-	  <remove_value name="this.$escort_switch_standby"/>
-	  <clear_collision_filter object="this.ship" />
+      <remove_value name="this.$carrier" />
+      <remove_value name="this.$escort" />
+      <remove_value name="this.$do_escort"/>
+      <remove_value name="this.$prev_commander"/>
+      <remove_value name="this.$commander_switch_standby"/>
+      <remove_value name="this.$escort_switch_standby"/>
+      <clear_collision_filter object="this.ship" />
     </actions>
   </attention>
   <on_abort>
     <remove_value name="this.$carrier" />
-	<remove_value name="this.$escort" />
+    <remove_value name="this.$escort" />
     <remove_value name="this.$do_escort"/>
-	<remove_value name="this.$prev_commander"/>
-	<remove_value name="this.$commander_switch_standby"/>
+    <remove_value name="this.$prev_commander"/>
+    <remove_value name="this.$commander_switch_standby"/>
     <remove_value name="this.$escort_switch_standby"/>
     <clear_collision_filter object="this.ship" />
   </on_abort>
