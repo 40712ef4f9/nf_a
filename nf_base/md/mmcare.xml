@@ -309,6 +309,7 @@
 				</do_if>
 				<do_else>
 					<destroy_object object="$oldShip" explosion="false" />
+
 					<create_ship name="$Ship" macro="$Macro" zone="$Zone">
 						<defence actor="null"/>
 						<engineer actor="null"/>
@@ -316,6 +317,18 @@
 						<position value="$Position"/>
 						<rotation value="$Rotation"/>
 					</create_ship>
+					<set_value name="$tags" exact="[tag.turret_small_mg, tag.turret_small_sg, tag.turret_medium_pe, tag.turret_medium_lb, tag.turret_medium_sp, tag.turret_missile_df, tag.turret_missile_sm, tag.shieldgenerator]"/>
+					<do_if value="md.$LostSectors? and md.$LostSectors">
+						<set_value name="$tags_ls" exact="['turret_small_bor','turret_small_ter','turret_small_ls_ter','turret_medium_ls_ter','turret_medium_bor','turret_medium_par','turret_large_ls_ter','turret_small_sp','turret_small_te']"/><!-- 'turret_small_ls_ter' -->
+						<do_all exact="$tags.count" counter="$i">
+							<append_to_list name="$tags" exact="tag.{$tags_ls.{$i}}" />
+						</do_all>
+					</do_if>
+					<do_all exact="$tags.count" counter="$i">
+						<upgrade_object_by_tag object="$Ship" tag="$tags.{$i}" exact="0"/>
+					</do_all>
+					<remove_value name="$tags" />
+
 					<create_group groupname="$Objects"/>
 					<find_object_component groupname="$Objects" object="$Ship" class="class.destructible" multiple="true" invulnerable="false" functional="true" integrated="false"/>
 					<do_all exact="$Objects.list.count" counter="$Counter">
