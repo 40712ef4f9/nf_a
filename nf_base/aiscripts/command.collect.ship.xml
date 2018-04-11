@@ -8,6 +8,8 @@
     <param name="target" default="null" />
     <param name="destination" default="this.ship" />
     <param name="dockingslot" default="null" />
+    <param name="restore" default="false" />
+    <param name="pickup" default="true" />
     <param name="debugchance" default="0"/>
   </params>
   <init>
@@ -16,9 +18,8 @@
   <attention min="unknown">
     <actions>
 
-      <set_value name="$debugchance" exact="0" />
-
       <set_value name="$bigship" exact="this.ship.isclass.ship_xl or this.ship.isclass.ship_l" />
+
 
       <!-- Label to allow us to repeat indefinitely -->
       <label name="start" />
@@ -26,10 +27,18 @@
       <!-- command action for waiting time -->
       <set_command_action commandaction="commandaction.calculating" />
 
-      <do_if value="not $target.exists">
+      <do_if value="not $restore and $target.exists and $target.iswreck">
         <return />
       </do_if>
-      <set_command command="command.support" param="$target" />
+      <do_elseif value="not $target.exists and not $target.iswreck">
+        <return />
+      </do_elseif>
+      <do_elseif value="$target.exists and not $target.iswreck">
+        <set_command command="command.support" param="$target" />
+      </do_elseif>
+      <do_elseif value="$target.exists and $target.iswreck">
+        <set_command command="command.support" />
+      </do_elseif>
 
       <!-- recall drones -->
       <run_script name="'lib.recall.drones'" />      
@@ -40,6 +49,7 @@
         <wait exact="3s" />
         <resume label="start" />
       </do_if>
+
 
       <!-- Warp to different zone -->
       <label name="warp" />
@@ -59,16 +69,23 @@
         <wait exact="3s" />
       </do_if>
 
+
       <!-- ...and go there! -->
       <label name="move" />
-      <do_if value="not $target.exists">
+
+      <do_if value="not $restore and $target.exists and $target.iswreck">
         <return />
       </do_if>
+      <do_elseif value="not $target.exists and not $target.iswreck">
+        <return />
+      </do_elseif>
       
       <do_if value="$bigship">
         <!-- go close to player or wait-->
         <do_if value="this.ship.distanceto.{$target}" min="1km + this.ship.size">
-          <get_safe_pos object="$target" zone="$target.zone" radius="this.ship.size" direction="quadrant.up" direction2="quadrant.front" result="$safepos" allowyaxis="true" ignored="this.ship" />
+          <!--set_value name="$safepos" exact="position.[$target.position.x, $target.position.y + this.ship.size, $target.position.z]" chance="$secondTry? * 100"/-->
+          <get_safe_pos object="$target" zone="$target.zone" radius="this.ship.size/2" result="$safepos" allowyaxis="false" ignored="this.ship" value="position.[0, 500m, 0]" chance="$secondTry? * 100"/>
+          <get_safe_pos object="$target" zone="$target.zone" radius="this.ship.size" result="$safepos" allowyaxis="true" ignored="this.ship" direction="quadrant.up" direction2="quadrant.front" chance="if $secondTry? then 0 else 100" />
           <!-- Pick a target point near the object we need to follow -->
           <move_to object="this.ship" destination="$target.zone" usehighways="not $bigship" forceposition="true" forcesteering="not $bigship" finishonapproach="true" sinceversion="1" >
             <position value="$safepos" />
@@ -81,10 +98,21 @@
           <wait exact="1s" />
         </do_else>
 
+        <do_if value="this.ship.distanceto.{$target} gt 2km + this.ship.size and not $secondTry?">
+          <set_value name="$secondTry" />
+          <resume label="move" />
+        </do_if>
       </do_if>
 
-	  <stop_moving object="this.ship" />
-	  <wait exact="8s" />
+      <stop_moving object="this.ship" />
+
+      <do_if value="$restore">
+        <resume label="restore" />
+      </do_if>
+
+
+      <wait exact="8s" />
+
       <!-- check if there is a suitable dock at the destination at all -->
       <do_if value="$dockingslot">
         <do_if value="$destination.exists">
@@ -229,10 +257,22 @@
         <debug_text text="'move.dockat returns true but we are not docked!'" chance="$debugchance" />
       </do_if>
 
+
       <label name="endofdocking" />
       <do_if value="$target.trueowner == faction.ownerless and $target.dockslot">
         <set_owner object="$target" faction="this.ship.trueowner" overridenpc="true"/>
       </do_if>
+      <signal_objects object="this.ship" param="'hold position'" delay="5ms" />
+
+
+      <label name="restore" />
+      <do_if value="$restore">
+        <signal_objects object="player.computer" param="'Care.DO.restore'" param2="[$target, this.ship, $pickup]" />
+        <signal_objects object="this.ship" param="'hold position'" delay="5ms" />
+      </do_if>
+      <!--do_else>
+        <signal_objects object="this.ship" param="'stop order'" delay="3s"/>
+      </do_else-->
 
       <wait exact="1s" />
 

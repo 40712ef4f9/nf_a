@@ -1077,6 +1077,7 @@
                 <check_value value="$BuildModule?" />
               </conditions>
               <actions>
+                <signal_objects object="player.galaxy" param="'learned.something'" param2="[$actor, ware.inv_virtualseminarengineering, 'build', 10]" />
                 <do_if value="event.param == $BuildModule">
                   <do_if value="$actor.$build_base_stage">
                     <set_value name="$actor.$build_base_stage" exact="false"/>
@@ -1092,8 +1093,8 @@
                       <signal_objects object="player.galaxy" param="'init station'" param2="$station"/>
                     </do_if>
                     <!--do_else>
-            <create_ai_unit object="$station" />
-          </do_else-->
+                      <create_ai_unit object="$station" />
+                    </do_else-->
                   </do_if>
 
                   <do_if value="$station and $station.availablebuildslots.count == 0">

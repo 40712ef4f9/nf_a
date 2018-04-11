@@ -95,7 +95,7 @@
 						
 						<add_actor_to_room actor="$doEntity" object="$createdship" />
 						<assign_engineer actor="$doEntity" object="$createdship" />
-						<start_script object="$doEntity" name="'engineer.ai'"/>
+						<start_script object="$doEntity" name="if global.$nfconfig.$Check? then 'engineer.ai.plus2' else 'engineer.ai'"/>
 						<remove_value name="$doEntity"/>
 					</do_elseif>
 					<do_elseif value="$Ship.architect">

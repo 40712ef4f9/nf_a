@@ -2324,7 +2324,7 @@
 							<owner exact="if $faction? then $faction else $Object.owner"/>
 						</create_engineer>
 						<do_if value="$engineer.exists">
-							<start_script object="$engineer" name="'engineer.ai'"/>
+							<start_script object="$engineer" name="if global.$nfconfig.$Check? then 'engineer.ai.plus2' else 'engineer.ai'"/>
 						</do_if>
 					</do_else>
 
@@ -3457,24 +3457,25 @@
 				</do_if>
 
 				<!-- nothing left? -->
-				<do_if value="$_CEO.money lt 20000000Cr or ($_CEO.money gt 10000000000Cr and ($_CEO.$style != 'domination' or @$noBelongings == 'domination'))">
+				<do_if value="$_CEO.money lt 20000000Cr">
 					<!-- not even friends? -->
-					<do_if value="$_CEO.money gt 10000000000Cr and ($_CEO.$style != 'domination' or @$noBelongings == 'domination')">
-						<set_value name="$noBelongings" exact="'domination'"/>
-					</do_if>
-					<do_elseif value="$_CEO.money le 10Cr">
+					<do_if value="$_CEO.money le 10Cr">
 						<set_value name="$noBelongings" exact="'outofbusiness'"/>
 						<set_value name="$faction" exact="$_faction" />
 						<set_value name="$all" />
 						<include_actions ref="md.MM_Corps__Data.MMCData_disable_jobs" />
-					</do_elseif>
-					<do_elseif value="$_CEO.$style == 'cooperative' and not $noBelongings?">
-						<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_cooperative_future" />
+					</do_if>
+					<do_elseif value="not $noBelongings?">
+						<!-- get fresh money -->
+						<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_corp_future" />
 					</do_elseif>
 					<do_else>
 						<set_value name="$noBelongings" exact="$style.{2}"/>
 					</do_else>
 				</do_if>
+				<do_elseif value="$_CEO.money gt 10000000000Cr and ($_CEO.$style != 'domination' or @$noBelongings == 'domination')">
+					<set_value name="$noBelongings" exact="'domination'"/>
+				</do_elseif>
 				<do_else>
 					<remove_value name="$noBelongings"/>
 				</do_else>
@@ -4789,9 +4790,9 @@
 		</library>
 
 		<!-- 
-		<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_cooperative_future" />
+		<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_corp_future" />
 		-->
-		<library name="MMCData_doworker_include_cooperative_future">
+		<library name="MMCData_doworker_include_corp_future">
 			<actions>
 				<find_station name="$tmp_stations" space="player.galaxy" functional="true" multiple="true" recursive="true" chance="if not ($tmp_stations? and $tmp_stations.count) then 100 else 0">
 					<match owner="$_faction"/>

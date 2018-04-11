@@ -298,7 +298,7 @@
           <owner exact="$ship.owner"/>
         </create_engineer>
         <do_if value="$engineer.exists">
-          <start_script object="$engineer" name="'engineer.ai'"/>
+          <start_script object="$engineer" name="if global.$nfconfig.$Check? then 'engineer.ai.plus2' else 'engineer.ai'"/>
         </do_if>
         <create_defence_officer name="$defencenpc" ship="$ship" chance="if $defencenpc.exists then 0 else 100" >
           <select race="[race.argon, race.split, race.terran, race.teladi].random" tags="tag.defencecontrol"/>

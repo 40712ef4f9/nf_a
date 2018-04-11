@@ -567,7 +567,7 @@
 						<add_actor_to_room actor="$engineer" object="$target" />
 					</do_else>
 					<assign_engineer actor="$engineer" object="$target"/>
-					<start_script object="$engineer" name="'engineer.ai'"/>
+					<start_script object="$engineer" name="if global.$nfconfig.$Check? then 'engineer.ai.plus2' else 'engineer.ai'"/>
 					<remove_cue_actor actor="$engineer" cue="this"/>
 				</do_if>
 				<!-- add manager -->		
@@ -716,13 +716,13 @@ npc boarding
 	</add>
 	<add sel="//cue[@name='BoardingCycle']/actions/signal_cue_instantly[@cue='md.Notifications.PlayerBoarding']" type="@chance" >$isplayerprocess * 100</add>
 
-	<add sel="///show_notification[@details='$BoardingNotification']" type="@chance" >$isplayerprocess * 100</add>
+	<add sel="//show_notification[@details='$BoardingNotification']" type="@chance" >$isplayerprocess * 100</add>
 
 	<add sel="//start_conversation[@conversation='BoardingProgress_Advance_Conversation']" type="@chance" >$isplayerprocess * 100</add>
 	<add sel="//start_conversation[@conversation='BoardingProgress_Stalemate_Conversation']" type="@chance" >$isplayerprocess * 100</add>
 	<add sel="//start_conversation[@conversation='BoardingProgress_Retreat_Conversation']" type="@chance" >$isplayerprocess * 100</add>
-	<add sel="///actions/start_conversation[@conversation='BoardingResult_Retreat_Success_Conversation']" type="@chance" >$isplayerprocess * 100</add>
-	<add sel="///do_else/start_conversation[@conversation='BoardingResult_Retreat_Success_Conversation']" type="@chance" >$isplayerprocess * 100</add>
+	<add sel="//actions/start_conversation[@conversation='BoardingResult_Retreat_Success_Conversation']" type="@chance" >$isplayerprocess * 100</add>
+	<add sel="//do_else/start_conversation[@conversation='BoardingResult_Retreat_Success_Conversation']" type="@chance" >$isplayerprocess * 100</add>
 	<add sel="//start_conversation[@conversation='BoardingResult_Success_Conversation']" type="@chance" >$isplayerprocess * 100</add>
 	<add sel="//start_conversation[@conversation='BoardingResult_Failure_Conversation']" type="@chance" >$isplayerprocess * 100</add>
 

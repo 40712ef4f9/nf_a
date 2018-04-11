@@ -2,6 +2,7 @@
 <diff>
 	<add sel="//handler/conditions/check_any/event_object_signalled[@param=&quot;'withdraw battle'&quot;]" pos="after" >
           <event_object_signalled object="this.ship" param="'collect ship'" />
+          <event_object_signalled object="this.ship" param="'collect ship restore'" />
           <event_object_signalled object="this.ship" param="'tender action'" />
 	</add>
 	<add sel="//handler/actions/do_elseif[@value=&quot;event.param == 'attack enemies'&quot;]" pos="after" >
@@ -9,6 +10,14 @@
           <run_interrupt_script name="'command.collect.ship'" abortscripts="true" resume="init">
             <param name="target" value="event.param2" />
             <param name="dockingslot" value="event.param3" />
+          </run_interrupt_script>
+        </do_elseif>
+        <do_elseif value="event.param == 'collect ship restore'">
+          <run_interrupt_script name="'command.collect.ship'" abortscripts="true" resume="init">
+            <param name="target" value="event.param2" />
+            <param name="dockingslot" value="if event.param3? and event.param3 then event.param3 else null" />
+            <param name="restore" value="true" />
+            <param name="pickup" value="if event.param3? and event.param3 then true else false" />
           </run_interrupt_script>
         </do_elseif>
         <do_elseif value="event.param == 'tender action'">
@@ -38,7 +47,12 @@
 			<set_value name="$subordinates" exact="this.defensible.subordinates"/>
 			<do_all exact="$subordinates.count" counter="$i">
 				<do_if value="$subordinates.{$i}.pilot.command.value" list="[command.attackenemies, command.attackobject]">
-					<signal_objects object="$subordinates.{$i}.pilot" param="'MICT_Disengage'" delay="1ms"/>
+					<do_if value="event.param == 'withdraw battle'">
+						<signal_objects object="$subordinates.{$i}.pilot" param="'MICT_Disengage'" param2="true" delay="1ms"/>
+					</do_if>
+					<do_else>
+						<signal_objects object="$subordinates.{$i}.pilot" param="'MICT_Disengage'" delay="1ms"/>
+					</do_else>
 				</do_if>
 				<do_elseif value="$subordinates.{$i}.pilot.command.value == command.refuel and $subordinates.{$i}.pilot.$squadrefuel?">
 					<remove_value name="$subordinates.{$i}.pilot.$squadrefuel"/>

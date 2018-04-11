@@ -95,9 +95,8 @@
 						<set_value name="$baseMenu" exact="true" />
 					</do_if>
 					<do_elseif value="typeof event.param2 == datatype.list">
-						<set_value name="$todo_options_start" exact="0" />
-						<set_value name="$todo_options" exact="event.param2.{1}.clone"/>
-						<set_value name="$todo_options_start" exact="event.param2.{2}" />
+						<set_value name="$todo_options_start" exact="if event.param2.{2}? and event.param2.{2} then event.param2.{2} else 0" />
+						<set_value name="$todo_options" exact="if event.param2.{1}? and event.param2.{1}.count then event.param2.{1}.clone else if $build? and $build.count then $build.clone else []"/>
 						<set_value name="$todo_options_max" exact="$todo_options.count" />
 						<do_if value="$todo_options_start gt 0">
 						
@@ -174,7 +173,7 @@
 						<add_player_choice position="top_left" text="{2802,2702}.[$target.name]" section="nf_a_cArch_set" selectable="event.object.$specialMacroOrder?" choiceparam="$target" />
 					</do_if>
 					<do_else>
-						<add_player_choice_sub position="top_left" text="{2802,2703}" section="nf_a_cArch_set" selectable="event.object.$specialMacroOrder?" choiceparam="[$build, 1]" />
+						<add_player_choice_sub position="top_left" text="{2802,2703}" section="nf_a_cArch_set" selectable="event.object.$specialMacroOrder? and $build.count" choiceparam="[$build, 1]" />
 					</do_else>
 
 					<add_player_choice position="left" text="{2802,2704}.[$build.count]" section="nf_a_cArch_to_all" selectable="event.object.$specialMacroOrder? and $build.count" />

@@ -51,6 +51,7 @@
     <do_if value="$station.tradenpc and ($station.canbuildships or $station.canproduceships)">
       <signal_objects object="player.galaxy" param="'do.start.syscript'" param2="$station" />
     </do_if>
+    <signal_objects object="player.galaxy" param="'learned.something'" param2="[$actor, ware.inv_virtualseminarengineering, 'build', 10]" />
   </add>
   <!-- prevent connect to incompatible stations -->
   <replace sel="/mdscript[@name='NPC_Architect']/cues/cue/cues/cue[@name='SectionHandler']/actions/do_elseif[@value=&quot;event.param == 'cArch_deployatstation'&quot;]">

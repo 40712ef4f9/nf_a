@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="//cue[@name='SectionHandler']/actions/do_elseif/do_if[@value='$object.isclass.station']/do_if/do_if[@value='@$object.buildingmodule.ship.architect']" type="@chance" >if $object.canbuildships and $object.tradenpc then 0 else 100</add>
+</diff>

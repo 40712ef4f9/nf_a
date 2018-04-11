@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<aiscript name="engineer.ai.plus2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" >
+  <params>
+    <param name="debugoutputchance" default="0"/>
+    <param name="debugoutputchance2" default="0"/>
+  </params>
+  <interrupts>
+    <handler comment="Engineer hacked">
+      <conditions>
+        <event_object_signalled object="this.object" param="'engineer_hacked'" />
+      </conditions>
+      <actions>
+        <debug_text text="'engineer_hacked'" chance="$debugoutputchance" />
+        <set_value name="this.$hacked" exact="player.age + event.param2" />
+        <abort_called_scripts resume="loop"/>
+      </actions>
+    </handler>
+    <handler comment="Support object">
+      <conditions>
+        <event_object_signalled object="this.object" param="'engineer.support.this'" />
+        <check_value value="event.param2? and event.param2.exists and event.param2.isclass.[class.ship, class.station] and not this.defensible.trueowner.hasrelation.enemy.{event.param2.owner}"/>
+      </conditions>
+      <actions>
+        <set_value name="$Defensible" exact="event.param2" />
+        <set_value name="this.$Defensible" exact="event.param2" />
+        <abort_called_scripts resume="runprocess"/>
+      </actions>
+    </handler>
+  </interrupts>
+  <init>
+    <set_command command="command.repair" />
+    <set_command_action commandaction="commandaction.repairchecking" />
+    <set_value name="$Defensible" exact="this.defensible"/>
+    <set_value name="$isXLCarrier" exact="if this.defensible.macro.ismacro.{global.$mmcarriers_xl} then true else false"/>
+    <set_value name="$isStation" exact="if this.defensible.isclass.station then true else false"/>
+  </init>
+  <attention min="unknown">
+    <actions>
+      <!-- Job Engineers become MacGyvers -->
+      <do_if value="this.combinedskill" max="90" chance="if this.$doSupport? then 100 else 0">
+        <set_value name="$Skill" exact="[skilltype.leadership, skilltype.navigation, skilltype.combat, skilltype.engineering, skilltype.management, skilltype.morale, skilltype.science]" />
+        <do_all exact="$Skill.count" counter="$k">
+          <do_if value="this.skill.{$Skill.{$k}} le 4">
+            <add_skill entity="this" type="$Skill.{$k}" exact="5 - this.skill.{$Skill.{$k}}" />
+          </do_if>
+        </do_all>
+        <remove_value name="$Skill"/>
+      </do_if>
+
+
+      <label name="loop" />
+
+      <do_if value="this.$Defensible? and this.$Defensible.exists and this.$Defensible.isclass.[class.ship, class.station] and this.defensible.hullpercentage ge $hulldamagelimit">
+        <do_if value="(this.$Defensible.zone != this.defensible.zone and this.defensible.distanceto.{this.$Defensible} gt this.defensible.maxradarrange*0.6f) or this.defensible.distanceto.{this.$Defensible} gt this.defensible.maxradarrange">
+          <remove_value name="this.$Defensible"/>
+          <set_value name="$Defensible" exact="this.defensible"/>
+        </do_if>
+        <do_else>
+          <set_value name="$Defensible" exact="this.$Defensible"/>
+        </do_else>
+      </do_if>
+      <do_elseif value="$Defensible? and $Defensible.exists and $Defensible.isclass.[class.ship, class.station]" negate="true">
+        <set_value name="$Defensible" exact="this.defensible"/>
+      </do_elseif>
+
+      <do_if value="this.defensible.isclass.station">
+        <set_value name="$hulldamagelimit" exact="100" comment="below what percentage hull is a component considered damaged"/>
+      </do_if>
+      <do_else>
+        <set_value name="$hulldamagelimit" exact="60 + (40 * this.combinedskill / 100)" comment="below what percentage hull is a component considered damaged (ship engineer repairs up to a value between 60% and 100%, dependent on skill)"/>
+      </do_else>
+
+      <do_if value="$Defensible.hullpercentage lt 50">
+        <set_value name="$waittime" exact="30s"/>
+      </do_if>
+      <do_else>
+        <set_value name="$waittime" exact="5min"/>
+      </do_else>
+
+      <wait min="$waittime" max="$waittime*2" >
+        <interrupt>
+          <conditions>
+            <check_any>
+              <check_all>
+                <event_gravidar_has_scanned object="this.defensible" />
+                <check_value value="this.$doSupport?" />
+                <check_value value="not this.zone.isclass.highway" />
+                <check_value value="this.defensible.units.{unitcategory.welder}.count gt 0"/>
+                <count_gravidar_contacts result="$RepairTargets" object="this.defensible" class="[class.ship_l, class.ship_xl, class.ship_s, class.ship_m]" repairable="true" min="1">
+                  <match_distance object="this.defensible" max="this.defensible.maxradarrange*0.5f"/>
+                  <match_relation faction="this.defensible.trueowner" relation="neutral" comparison="ge" />
+                  <match_hull max="$hulldamagelimit" />
+                </count_gravidar_contacts>
+              </check_all>
+              <event_object_hull_damaged object="this.defensible" />
+              <event_object_attacked object="this.defensible" />
+            </check_any>
+          </conditions>
+          <actions>
+            <do_if value="event.name" exact="'event_gravidar_has_scanned'" chance="if this.defensible.hullpercentage ge $hulldamagelimit-4 then 100 else 0">
+              <!-- Select target based on the count gravidar already triggered -->
+              <do_all exact="$RepairTargets.count" counter="$i">
+                <do_if value="$Defensible == this.defensible">
+                  <set_value name="$Defensible" exact="$RepairTargets.{$i}"/>
+                </do_if>
+                <do_elseif value="this.defensible.trueowner == $Defensible.owner and this.defensible.trueowner == $RepairTargets.{$i}.owner and $RepairTargets.{$i}.hullpercentage lt @$Defensible.hullpercentage">
+                  <set_value name="$Defensible" exact="$RepairTargets.{$i}"/>
+                </do_elseif>
+                <do_elseif value="this.defensible.trueowner != $Defensible.owner and ($RepairTargets.{$i}.hullpercentage lt @$Defensible.hullpercentage or this.defensible.trueowner == $RepairTargets.{$i}.owner)">
+                  <set_value name="$Defensible" exact="$RepairTargets.{$i}"/>
+                </do_elseif>
+              </do_all>
+              <remove_value name="$RepairTargets"/>
+            </do_if>
+            <do_else>
+              <set_value name="$Defensible" exact="this.defensible"/>
+              <resume label="runprocess" />
+            </do_else>
+          </actions>
+        </interrupt>
+      </wait>
+
+      <!--NF Reload Units-->
+      <do_if value="this.defensible.units.maxcount and this.defensible.units.count == 0 and (not $nextUnitCheck? or ($nextUnitCheck? and $nextUnitCheck lt player.age))" chance="this.defensible.isclass.ship *100">
+        <signal_objects object="player.galaxy" param="'Reload.Units'" param2="this.defensible" />
+        <set_value name="$nextUnitCheck" exact="player.age + 12h"/>
+      </do_if>
+      <!-- / NF Reload Units-->
+
+      <do_if value="this.defensible.hullpercentage ge $hulldamagelimit-4">
+        <do_if value="$Defensible == this.defensible" chance="if this.$doSupport? or $isXLCarrier or $isStation then 100 else 0">
+          <create_group groupname="$RepairTargets" />
+          <create_group groupname="$stopgroup" />
+          <create_list name="$docks"/>
+          <do_all exact="4" counter="$j">
+            <find_dock_location container="this.defensible" size="[tag.dock_m, tag.dock_s, tag.dock_l, tag.dock_xl].{$j}" name="$dock" multiple="true"/>
+            <do_all exact="$dock.count" counter="$i">
+              <do_if value="$dock.{$i}" list="$docks" negate="true">
+                <append_to_list name="$docks" exact="$dock.{$i}"/>
+              </do_if>
+            </do_all>
+            <remove_value name="$dock"/>
+          </do_all>
+          <do_all exact="$docks.count" counter="$i">
+            <add_to_group groupname="$RepairTargets" list="$docks.{$i}.component.docked" chance="if $docks.{$i}.component.docked.count then 100 else 0"/>
+          </do_all>
+          <remove_value name="$docks"/>
+          <do_all exact="$RepairTargets.count" counter="$i">
+            <do_if value="$RepairTargets.{$i}.engineer.exists and $RepairTargets.{$i}.isclass.[class.ship_s, class.ship_m] and $RepairTargets.{$i}.engineer.isclass.npc and $RepairTargets.{$i}.hullpercentage ge 99">
+              <destroy_object object="$RepairTargets.{$i}.engineer"/>
+            </do_if>
+            <do_if value="$RepairTargets.{$i}.engineer.exists">
+              <add_to_group groupname="$stopgroup" object="$RepairTargets.{$i}" chance="if $stopgroup.list.indexof.{$RepairTargets.{$i}} then 0 else 100" />
+              <add_to_group groupname="$stopgroup" list="$RepairTargets.{$i}.subordinates" chance="if $RepairTargets.{$i}.subordinates.count then 100 else 0"/>
+            </do_if>
+          </do_all>
+          <do_all exact="$RepairTargets.count" counter="$i">
+            <do_if value="$RepairTargets.{$i}" list="$stopgroup.list">
+              <continue />
+            </do_if>
+            <do_if value="$RepairTargets.{$i}.hullpercentage ge $hulldamagelimit">
+              <continue />
+            </do_if>
+            <do_if value="$Defensible == this.defensible">
+              <set_value name="$Defensible" exact="$RepairTargets.{$i}"/>
+            </do_if>
+            <do_elseif value="this.defensible.trueowner == $Defensible.owner and this.defensible.trueowner == $RepairTargets.{$i}.owner and $RepairTargets.{$i}.hullpercentage lt @$Defensible.hullpercentage">
+              <set_value name="$Defensible" exact="$RepairTargets.{$i}"/>
+            </do_elseif>
+            <do_elseif value="this.defensible.trueowner != $Defensible.owner and ($RepairTargets.{$i}.hullpercentage lt @$Defensible.hullpercentage or this.defensible.trueowner == $RepairTargets.{$i}.owner)">
+              <set_value name="$Defensible" exact="$RepairTargets.{$i}"/>
+            </do_elseif>
+          </do_all>
+          <remove_value name="$RepairTargets"/>
+          <remove_value name="$stopgroup"/>
+        </do_if>
+
+        <do_if value="$Defensible == this.defensible" chance="if this.$doSupport? then 100 else 0">
+          <find_gravidar_contact name="$RepairTargets" object="this.defensible" class="[class.station]" multiple="true">
+            <match_distance object="this.defensible" max="this.defensible.maxradarrange*0.25f"/>
+            <match_relation faction="this.defensible.trueowner" relation="neutral" comparison="ge" />
+          </find_gravidar_contact>
+          <do_all exact="$RepairTargets.count" counter="$i">
+            <do_if value="$RepairTargets.{$i}.hullpercentage ge $hulldamagelimit">
+              <continue />
+            </do_if>
+            <do_if value="$Defensible == this.defensible">
+              <set_value name="$Defensible" exact="$RepairTargets.{$i}"/>
+            </do_if>
+            <do_elseif value="this.defensible.trueowner == $Defensible.owner and this.defensible.trueowner == $RepairTargets.{$i}.owner and $RepairTargets.{$i}.hullpercentage lt @$Defensible.hullpercentage">
+              <set_value name="$Defensible" exact="$RepairTargets.{$i}"/>
+            </do_elseif>
+            <do_elseif value="this.defensible.trueowner != $Defensible.owner and ($RepairTargets.{$i}.hullpercentage lt @$Defensible.hullpercentage or this.defensible.trueowner == $RepairTargets.{$i}.owner)">
+              <set_value name="$Defensible" exact="$RepairTargets.{$i}"/>
+            </do_elseif>
+          </do_all>
+          <remove_value name="$RepairTargets"/>
+        </do_if>
+
+        <do_if value="$Defensible? and $Defensible != this.defensible">
+          <set_value name="this.$Defensible" exact="$Defensible" />
+        </do_if>
+      </do_if>
+
+
+      <label name="runprocess" />
+      <do_if value="$Defensible? and $Defensible.exists and $Defensible.isclass.[class.ship, class.station]" negate="true">
+        <set_value name="$Defensible" exact="this.defensible" />
+      </do_if>
+
+      <run_script name="'engineer.ai.plus2.process'">
+        <param name="Defensible" value="$Defensible" />
+        <param name="debugoutputchance" value="$debugoutputchance" />
+        <param name="debugoutputchance2" value="$debugoutputchance2" />
+      </run_script>
+
+      <set_command_action commandaction="commandaction.repairchecking" />
+
+      <resume label="loop" />
+
+    </actions>
+  </attention>
+  <on_abort>
+    <remove_value name="this.$Defensible"/>
+    <remove_value name="this.$doSupport"/>
+  </on_abort>
+</aiscript>

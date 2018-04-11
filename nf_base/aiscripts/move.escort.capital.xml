@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <diff>
-    <replace sel="/aiscript/attention[@min='visible']/actions/do_if[@value='this.ship.distanceto.{$target} gt 20km']/run_script/@name">if not global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad then 'move.generic' else 'move.generic.carrier'</replace>
-    <replace sel="/aiscript/attention[@min='unknown']/actions/do_if[@value='this.zone != $target.zone']/run_script/@name">if not global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad then 'move.generic' else 'move.generic.carrier'</replace>
-	<add sel="//attention[@min='visible']/actions/do_if[@value='this.ship.distanceto.{$target} gt 20km']" pos="prepend">
-		<signal_objects object="this.ship" param="'follow'"/>
-	</add>
-	<add sel="//attention[@min='unknown']/actions/do_if[@value='this.zone != $target.zone']" pos="prepend">
-		<signal_objects object="this.ship" param="'follow'"/>
-	</add>
+  <replace sel="/aiscript/attention[@min='visible']/actions/do_if[@value='this.ship.distanceto.{$target} gt 20km']/run_script/@name">if not global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad then 'move.generic' else 'move.generic.carrier'</replace>
+  <replace sel="/aiscript/attention[@min='unknown']/actions/do_if[@value='this.zone != $target.zone']/run_script/@name">if not global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad then 'move.generic' else 'move.generic.carrier'</replace>
+  <add sel="//attention[@min='visible']/actions/do_if[@value='this.ship.distanceto.{$target} gt 20km']" pos="prepend">
+    <signal_objects object="this.ship" param="'follow'"/>
+  </add>
+  <add sel="//attention[@min='unknown']/actions/do_if[@value='this.zone != $target.zone']" pos="prepend">
+    <signal_objects object="this.ship" param="'follow'"/>
+  </add>
   <add sel="/aiscript/interrupts">
     <handler>
       <conditions>

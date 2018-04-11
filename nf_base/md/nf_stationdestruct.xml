@@ -781,10 +781,10 @@
 						<set_owner object="$tempSector.{$run}" faction="$set_owner" />
 						<set_value name="md.$police_factions.{'$%1'.[$tempSector.{$run}.macro.id]}" exact="$set_owner" />
 
-						<do_if value="$set_owner"> 
+						<do_if value="$set_owner" chance="0"> 
 							<do_if value="not $tempSector.{$run}.representative.{$set_owner}.{entitytype.lawenforcement}">
 								<create_representative_actor sector="$tempSector.{$run}" faction="$set_owner" type="entitytype.lawenforcement" name="$tmpActor" />
-								<do_if value="$actor">
+								<do_if value="$tmpActor">
 									<debug_text chance="0" text="'ReCreated representative of \'%1\' in sector \'%2\': %3 (%4)'.[$set_owner.knownname, $tempSector.{$run}.knownname, $tmpActor.knownname, $tmpActor]" filter="scripts_verbose" />
 								</do_if>
 								<do_else>
@@ -890,7 +890,7 @@
 							</create_platform_actor>
 							<assign_engineer actor="$engineer" object="$target"/>
 							<!-- npc difference -->
-							<start_script object="$engineer" name="if md.$stationengineerai? then md.$stationengineerai else 'engineer.ai'"/>
+							<start_script object="$engineer" name="if global.$nfconfig.$Check? then 'engineer.ai.plus2' else 'engineer.ai'"/>
 
 							<!-- add manager -->
 							<create_platform_actor name="$manager" dockingbay="$Stationdock.component" type="entitytype.manager"> 
@@ -1047,7 +1047,7 @@
 							</create_cue_actor>
 							<set_entity_type entity="$engineer" type="entitytype.engineer" />          
 							<assign_engineer object="$target" actor="$engineer" />            
-							<start_script object="$engineer" name="if md.$stationengineerai? then md.$stationengineerai else 'engineer.ai'" />
+							<start_script object="$engineer" name="if global.$nfconfig.$Check? then 'engineer.ai.plus2' else 'engineer.ai'" />
 
 							<create_ai_unit object="$target" />
 							

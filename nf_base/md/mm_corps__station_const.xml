@@ -426,6 +426,7 @@
 						</do_all>
 						<remove_value name="$Skill"/>
 						<set_value name="$name" exact="$CVShip.architect.name"/>
+						<set_value name="$inventory" exact="$CVShip.architect.inventory.{ware.inv_virtualseminarengineering}.count"/>
 					</do_if>
 					<do_else>
 						<set_value name="$temp_Skill" exact="'max'" />
@@ -439,9 +440,13 @@
 					<include_actions ref="md.NF_BASE.NF_create_actor" />
 	
 					<set_object_name object="$newActor" name="$name" chance="$name?*100"/>
+					<do_if value="$inventory">
+						<add_inventory entity="$newActor" ware="ware.inv_virtualseminarengineering" exact="$inventory" />
+					</do_if>
 	
 					<remove_value name="$newActor"/>
 					<remove_value name="$name"/>
+					<remove_value name="$inventory"/>
 					<remove_value name="$target_dock"/>
 	
 					<start_script object="$CVShip.pilot" name="'move.shipjobs'">
@@ -975,6 +980,7 @@
 									</do_all>
 									<remove_value name="$Skill"/>
 									<set_value name="$name" exact="$CVShip.architect.name"/>
+									<set_value name="$inventory" exact="$CVShip.architect.inventory.{ware.inv_virtualseminarengineering}.count"/>
 									<destroy_object object="$CVShip.architect"/>
 
 									<set_value name="$temp_select" exact="[null, race.argon, tag.architect, null, null]" />
@@ -987,9 +993,13 @@
 										<share_actor_account actor="$shiparch" otherobject="$CEO"/>
 									</do_if>
 									<set_object_name object="$newActor" name="$name" />
+									<do_if value="$inventory">
+										<add_inventory entity="$newActor" ware="ware.inv_virtualseminarengineering" exact="$inventory" />
+									</do_if>
 
 									<remove_value name="$newActor"/>
 									<remove_value name="$name"/>
+									<remove_value name="$inventory"/>
 									<remove_value name="$target_dock"/>
 									<remove_value name="$shiparch"/>
 								</do_if>

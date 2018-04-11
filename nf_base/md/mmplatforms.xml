@@ -360,7 +360,7 @@
 						</create_platform_actor>
 						<assign_engineer actor="$engineer" object="$createdStation"/>
 						<!-- npc difference -->			
-						<start_script object="$engineer" name="if md.$stationengineerai? then md.$stationengineerai else 'engineer.ai'"/>
+						<start_script object="$engineer" name="if global.$nfconfig.$Check? then 'engineer.ai.plus2' else 'engineer.ai'"/>
 
 						<!-- add manager -->			
 						<create_platform_actor name="$manager" dockingbay="$Stationdock.component" type="entitytype.manager"> 

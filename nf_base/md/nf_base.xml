@@ -35,8 +35,59 @@
 				<do_if value="global.$randumbuild_blacklist?" negate="true">
 					<create_list name="global.$randumbuild_blacklist"/>
 				</do_if>
+
 				<do_if value="global.$mmpiratesy_pfactions?" negate="true">
-					<set_value name="global.$mmpiratesy_pfactions" exact="[faction.reivers,faction.sovereignsyndicate,faction.hereticvanguards]"/>
+					<create_list name="global.$mmpiratesy_pfactions"/>
+				</do_if>
+				<do_if value="global.$mmpiratesy_pfactions?">
+					<set_value name="$todo" exact="
+						[
+								faction.reivers,
+								faction.sovereignsyndicate,
+								faction.hereticvanguards
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="global.$mmpiratesy_pfactions.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="global.$mmpiratesy_pfactions" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+
+				<do_if value="global.$move_escort_should_purpose_fight?" negate="true">
+					<create_list name="global.$move_escort_should_purpose_fight"/>
+				</do_if>
+				<do_if value="global.$move_escort_should_purpose_fight?">
+					<set_value name="$todo" exact="
+						[
+								macro.units_size_l_dv_kit_new_defence_01_macro
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="global.$move_escort_should_purpose_fight.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="global.$move_escort_should_purpose_fight" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+
+				<do_if value="global.$move_escort_bomber?" negate="true">
+					<create_list name="global.$move_escort_bomber"/>
+				</do_if>
+				<do_if value="global.$move_escort_bomber?">
+					<set_value name="$todo" exact="
+						[
+								macro.units_size_s_torpedo_bomber_macro, 
+								macro.units_size_m_xenon_bomber_01_macro
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="global.$move_escort_bomber.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="global.$move_escort_bomber" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
 				</do_if>
 				<!--
 					NF Archi
@@ -757,7 +808,7 @@
 			<conditions>
 				<event_object_signalled object="player.galaxy" param="'learned.something'" />
 				<check_value value="event.param2? and event.param2.{2}? and event.param2.{1}.exists and typeof event.param2.{2} == datatype.ware" />
-				<check_value value="event.param2.{1}.combinedskill le 75 or (event.param2.{1}.isplayerowned and @global.$nfconfig.$cheatMaxSkill and event.param2.{1}.combinedskill le 99)" />
+				<check_value value="event.param2.{1}.exists and event.param2.{1}.combinedskill le 75 or (event.param2.{1}.isplayerowned and @global.$nfconfig.$cheatMaxSkill and event.param2.{1}.combinedskill le 99)" />
 			</conditions>
 			<actions>
 			  <do_if value="event.param2.{1}.inventory.{event.param2.{2}}.count == (event.param2.{1}.combinedskill)i*10" comment="inv.count req 10 - 740">
@@ -783,7 +834,7 @@
 				<remove_value name="$Skill"/>
 			  </do_elseif>
 			  <do_elseif value="(event.param2.{1}.combinedskill)i" max="74">
-				<add_inventory entity="event.param2.{1}" ware="event.param2.{2}" exact="1" />
+				<add_inventory entity="event.param2.{1}" ware="event.param2.{2}" exact="if event.param2.{4}? then (event.param2.{4})i else 1" />
 			  </do_elseif>
 			  <debug_text chance="0" text="'%4 %5 %1 skilled inv:%2 cs:%3 :: %6'.[event.param2.{1}.knownname, event.param2.{1}.inventory.{event.param2.{2}}.count, event.param2.{1}.combinedskill, event.param2.{1}, event.param2.{1}.typename, @event.param2.{3}]"/>
 			</actions>
@@ -1198,7 +1249,8 @@
 							<start_script object="$tempActor" name="if $temp_object.isclass.ship then 'fight.defend.capital' else if $temp_faction == faction.player then 'fight.station.player' else 'fight.attack.object'"/>
 						</do_elseif>
 						<do_elseif value="$temp_assign" exact="'engineer'">
-							<start_script object="$tempActor" name="'engineer.ai'"/>
+							<!--start_script object="$tempActor" name="'engineer.ai'"/-->
+							<start_script object="$tempActor" name="'engineer.ai.plus2'"/>
 						</do_elseif>
 						<do_elseif value="$temp_assign" exact="'manager'">
 							<do_if value="$temp_object.canbuildships">

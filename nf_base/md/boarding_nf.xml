@@ -1571,7 +1571,7 @@ If ownerless, make easier/skip steps
                                           <add_actor_to_room actor="$engineer" object="$target" />
                                         </do_else>
                                         <assign_engineer actor="$engineer" object="$target"/>
-                                        <start_script object="$engineer" name="'engineer.ai'"/>
+                                        <start_script object="$engineer" name="if global.$nfconfig.$Check? then 'engineer.ai.plus2' else 'engineer.ai'"/>
                                         <remove_cue_actor actor="$engineer" cue="this"/>
                                       </do_if>
                                       <!-- add manager -->    

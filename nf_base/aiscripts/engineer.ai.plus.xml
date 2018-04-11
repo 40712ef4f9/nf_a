@@ -216,9 +216,6 @@
               </match>
             </match_any>
           </find_object_component>
-          <do_if value="$PossibleElements.count">
-            <resume label="startrepair" />
-          </do_if>
         </do_if>
         <!--find large, non surface element destructibles-->
         <find_object_component chance="$FindChance" groupname="$PossibleElements" object="this.$Defensible" class="class.destructible" surfaceelement="false" checkoperational="false" multiple="true">
@@ -386,7 +383,7 @@
             <!-- set the repair command action -->
             <set_command_action commandaction="commandaction.repairingto" param="this.$Defensible" />
             <!-- repair the hull -->
-            <set_object_hull object="this.$Defensible" exact="(this.$Defensible.hullpercentage)i + $addedhullpercentage" />
+            <set_object_hull object="this.$Defensible" exact="this.$Defensible.hullpercentage + $addedhullpercentage" />
             <debug_text text="'repaired main object ' + this.$Defensible + ' ' + this.$Defensible.knownname + ' to hull value ' + this.$Defensible.hull + ' (' + this.$Defensible.hullpercentage + '%)'" chance="$debugoutputchance" />
             <do_if value="this.$Defensible.hullpercentage ge $hulldamagelimit">
               <debug_text text="this.$Defensible + ' ' + this.$Defensible.knownname + ' was repaired as much as possible.'" chance="$debugoutputchance"/>

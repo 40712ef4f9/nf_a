@@ -817,7 +817,7 @@
                 <remove_value name="$temp_Skill"/>
 
                 <assign_engineer object="$ship" actor="$shipeng" />
-                <start_script object="$shipeng" name="'engineer.ai'"/>
+                <start_script object="$shipeng" name="if global.$nfconfig.$Check? then 'engineer.ai.plus2' else 'engineer.ai'"/>
                 <!-- Defense argon.defence -->
                 <create_platform_actor name="$shipdefence" dockingbay="$target_dock.component" group="split.generic" type="entitytype.defencecontrol"> 
                   <owner exact="$customer_faction"/>
@@ -1341,7 +1341,7 @@
                 <do_if value="$engineer?">
                   <assign_engineer object="$soldship2" actor="$engineer" />
                   <do_if value="$engineer.container">
-                    <start_script object="$engineer" name="'engineer.ai'" />
+                    <start_script object="$engineer" name="if global.$nfconfig.$Check? then 'engineer.ai.plus2' else 'engineer.ai'" />
                   </do_if>
 
                   <remove_cue_actor actor="$engineer" cue="this" />

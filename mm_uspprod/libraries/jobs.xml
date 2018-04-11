@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jobs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="libraries.xsd">
+	<!-- ACME tradesupport 	-->
+	<job id="acmecorp_special_ol_shippart_trader" name="{20204,601} {20402,10}">
+		<expirationtime min="86400" max="259200"/>
+		<task task="trade.ship.ranged">
+			<param name="minbuy" int="0"/>
+			<param name="maxbuy" int="3"/>
+			<param name="minsell" int="0"/>
+			<param name="maxsell" int="3"/>
+		</task>
+		<quota cluster="3" sector="1" zone="1"/>
+		<basket basket="shippart"/>
+		<location class="cluster" macro="cluster_c_macro"/>
+		<ship ref="acmecorp_trader_all_large">
+			<owner exact="acmecorp" overridenpc="true"/>
+		</ship>
+	</job>
+	<job id="acmecorp_special_shippart_trader" name="{20204,601} {20402,10}">
+		<expirationtime min="86400" max="259200"/>
+		<task task="trade.ship.ranged">
+			<param name="minbuy" int="0"/>
+			<param name="maxbuy" int="3"/>
+			<param name="minsell" int="0"/>
+			<param name="maxsell" int="3"/>
+		</task>
+		<quota cluster="3" sector="1" zone="1"/>
+		<basket basket="shippart"/>
+		<location class="cluster" macro="cluster_b_macro"/>
+		<ship ref="acmecorp_trader_all_large">
+			<owner exact="acmecorp" overridenpc="true"/>
+		</ship>
+	</job>
+</jobs>

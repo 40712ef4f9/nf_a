@@ -58,6 +58,10 @@
         <do_if value="event.param" exact="'MICT_Go'">
           <set_value name="$MICT_squadron_destination" exact="event.param2"/>
         </do_if>
+        <do_if value="event.param == 'MICT_Disengage' and event.param2? and event.param2">
+          <signal_objects object="this.ship.defencenpc" param="'stop attack'" param2="'permanent'" comment="Set Hold Fire Mode" />
+          <signal_objects object="this.ship.defencenpc" param="'stop attack'" param2="'stop permanent'" comment="Set Hold Fire Mode" delay="20s" />
+        </do_if>
         <abort_called_scripts resume="start"/>
       </actions>
     </handler>
@@ -96,7 +100,6 @@
   <init>
     <!-- Command already set on move.escort <set_command command="command.escort" param="$target"/> -->
     <set_command_action commandaction="commandaction.flying"/>
-    <set_value name="this.$brattackhandler" exact="true" />
     <!-- distance to check and abort attacks -->
     <set_value name="$pursuedistance" exact="5km + $target.size" />
   </init>
@@ -161,7 +164,7 @@
         v0.11: except when escorting non-combat ships.  In that case, blow up all hostiles around it. -->
       <do_if value="$MICT_SquadAttack? 
               and ($target.primarypurpose == objectpurpose.fight 
-                or $target.macro.ismacro.{macro.units_size_l_dv_kit_new_defence_01_macro}) 
+                or $target.macro.ismacro.{global.$move_escort_should_purpose_fight}) 
               and (@$target.pilot.command.value != command.attackenemies) 
               and (@$target.pilot.command.value != command.attackobject) 
               and (@$target.pilot.command.value != command.patrol)">
@@ -286,7 +289,7 @@
 
         <!-- MICT: If separated from commander, but in the same zone, jump to within 1km of the commander. -->
         <do_if value="not $MICT_SquadAttack? and not $target.isboostactive">
-          <do_if value="this.ship.distanceto.{$target} gt this.ship.size + $target.size + 5km">
+          <do_if value="this.ship.distanceto.{$target} gt $separation*2">
             <do_if value="@$MICT_InFormation">
               <leave_formation object="this.ship"/>
               <remove_value name="$MICT_InFormation"/>
@@ -313,7 +316,7 @@
           <!-- MICT: Only if this.ship lags behind by more than 1km.  Otherwise, formation movement should handle it. -->
           <do_elseif value="$MICT_InFormation?" negate="true">
             <remove_value name="$boost"/>
-            <do_if value="this.ship.distanceto.{$target} gt 10km and ($capship or (not $capship and [command.attackobject, command.attackenemies].indexof.{@$target.pilot.command.value} == 0))" chance="this.combinedskill">
+            <do_if value="this.ship.distanceto.{$target} gt $separation*4 and ($capship or (not $capship and [command.attackobject, command.attackenemies].indexof.{@$target.pilot.command.value} == 0))" chance="this.combinedskill">
               <set_value name="$boost" />
             </do_if>
             <move_to object="this.ship" destination="$target" flightbehaviour="flightbehaviour.follow" forcesteering="not @$capship" usehighways="not @$capship" boost="$boost?" forcerotation="true">
@@ -536,6 +539,16 @@
 
       <set_value name="$capship" exact="this.ship.isclass.[class.ship_l,class.ship_xl]"/>
       <set_value name="$MICT_capescort" exact="$target.isclass.[class.ship_l,class.ship_xl]"/>
+      <set_value name="$separation" exact="$formationparam"/>
+      <do_if value="not $separation">
+        <do_if value="$capship">
+          <set_value name="$separation" exact="[400m + $target.length, 400m + this.ship.length, [this.ship.maxcombatrange.turrets, 4000m].min].max"/>
+          <!--set_value name="$separation" exact="[400m + $target.length, 400m + this.ship.length].max"/-->
+        </do_if>
+        <do_else>
+          <set_value name="$separation" exact="[400m, this.ship.length].max"/>
+        </do_else>
+      </do_if>
 
       <do_if value="@$MICT_InFormation">
         <leave_formation object="this.ship"/>
@@ -605,13 +618,13 @@
           Commander is non-combatant, and has less than pristine shields. -->
       <do_if value="$target.isoperational 
         and ( this.ship.primarypurpose == objectpurpose.fight 
-          or this.ship.macro.ismacro.{macro.units_size_l_dv_kit_new_defence_01_macro} )
+          or this.ship.macro.ismacro.{global.$move_escort_should_purpose_fight} )
         and ( [command.attackobject, command.attackenemies, command.patrol].indexof.{@$target.pilot.command.value}
           or ( $target.primarypurpose != objectpurpose.fight 
-            and not $target.macro.ismacro.{macro.units_size_l_dv_kit_new_defence_01_macro} 
+            and not $target.macro.ismacro.{global.$move_escort_should_purpose_fight} 
             and $target.shield lt $target.maxshield ) 
           or this.race == race.split 
-          or $target.macro.ismacro.[macro.units_size_s_torpedo_bomber_macro, macro.units_size_m_xenon_bomber_01_macro])">
+          or $target.macro.ismacro.{global.$move_escort_bomber})">
 
         <!-- MICT: If no target has been designated, find a suitable target. -->
         <do_if value="not $MICT_OOZ_SquadAttack?">
@@ -751,7 +764,7 @@
 
         <do_elseif value="$MICT_InFormation?" negate="true">
           <remove_value name="$boost"/>
-          <do_if value="this.ship.distanceto.{$target} gt 10km and ($capship or (not $capship and [command.attackobject, command.attackenemies].indexof.{@$target.pilot.command.value} == 0))" chance="this.combinedskill">
+          <do_if value="this.ship.distanceto.{$target} gt $separation*4 and ($capship or (not $capship and [command.attackobject, command.attackenemies].indexof.{@$target.pilot.command.value} == 0))" chance="this.combinedskill">
             <set_value name="$boost" />
           </do_if>
           <move_to object="this.ship" destination="$target" boost="$boost?" sinceversion="1">

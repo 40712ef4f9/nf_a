@@ -28,6 +28,7 @@
 						</do_if>
 						<set_value name="$Skill" exact="[skilltype.leadership, skilltype.navigation, skilltype.combat, skilltype.engineering, skilltype.management, skilltype.morale, skilltype.science]" />
 						<set_value name="$name" exact="event.object.container.architect.name"/>
+						<set_value name="$inventory" exact="event.object.container.architect.inventory.{ware.inv_virtualseminarengineering}.count"/>
 						<create_list name="$temp_Skill"/>
 						<do_all exact="$Skill.count" counter="$k">
 							<append_to_list name="$temp_Skill" exact="[$Skill.{$k},	'exact', event.object.container.architect.skill.{$Skill.{$k}}]" />
@@ -42,8 +43,12 @@
 						<include_actions ref="md.NF_BASE.NF_create_actor" />
 
 						<set_object_name object="$newActor" name="$name" />
+						<do_if value="$inventory">
+							<add_inventory entity="$newActor" ware="ware.inv_virtualseminarengineering" exact="$inventory" />
+						</do_if>
 						<remove_value name="$newActor"/>
 						<remove_value name="$name"/>
+						<remove_value name="$inventory"/>
 						<remove_value name="$target_dock"/>
 						<remove_value name="$shiparch"/>
 					</do_if>
