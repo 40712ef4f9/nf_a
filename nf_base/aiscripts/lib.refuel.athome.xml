@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="lib.refuel.athome" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" priority="5">
+  <attention min="unknown">
+    <actions>
+	  <find_object_component name="$jumpdrive" object="this.ship" class="class.jumpdrive" checkoperational="false"/>
+	  <do_if value="this.sector" exact="this.ship.commander.sector">
+		<do_if value="this.zone" exact="this.ship.commander.zone" negate="true">
+		  <run_script name="'move.nohighway'">
+			<param name="target" value="this.ship.commander"/>
+		  </run_script>
+		</do_if>
+	  </do_if>
+	  <do_else>
+		<do_if value="$jumpdrive.isoperational">
+		  <run_script name="'move.jump'" >
+			<param name="autorefuel" value="false"/>
+			<param name="destination" value="this.ship.commander"/>
+		  </run_script>
+		</do_if>
+	  </do_else>
+	  <remove_value name="$jumpdrive"/>
+
+	  <run_script name="'move.refuel'" />
+    </actions>
+  </attention>
+</aiscript>

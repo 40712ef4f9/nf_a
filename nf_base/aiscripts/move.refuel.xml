@@ -4,6 +4,7 @@
 	  <do_if value="this.$escortgroup? and this.$escortgroup.count">
 	    <signal_objects group="this.$escortgroup" param="'MICT_Refuel'" delay="1ms"/>
 	  </do_if>
+	  <remove_value name="this.$doRefuelnext" />
 	</add>
 	<add sel="//actions/do_if/do_if/do_if[@value='this.ship.commander == player.primaryship']" pos="after">
 	  <do_elseif value="this.ship.isplayerowned and (this.ship.commander.pilot.$escortgroup? and this.ship.commander.pilot.$escortgroup.indexof.{this.ship}) or this.$squadrefuel?">

@@ -87,6 +87,18 @@
 				</do_if>
 			</actions>
 		</handler>
+		<handler>
+		  <conditions>
+			<event_object_signalled object="this.ship" param="'DO.Refuel.athome'"/>
+			<check_value value="this.ship.isclass.[class.ship_xl, class.ship_l]"/>
+			<check_value value="not this.ship.isplayerowned or this.$config_autorefuel? and this.$config_autorefuel"/>
+			<check_value value="this.ship.cargo.{ware.fuelcells}.count lt this.ship.cargo.{ware.fuelcells}.max*0.8f"/>
+			<check_value value="this.ship.commander.exists and this.ship.commander.products.list.indexof.{ware.fuelcells}"/>
+		  </conditions>
+		  <actions>
+			<run_interrupt_script name="'lib.refuel.athome'" abortscripts="true" resume="find trade run" />
+		  </actions>
+		</handler>
 	</add>
   <add sel="/aiscript/attention[@min='unknown']/actions/do_if[@value='this.ship.jobexpired']" pos="after">
       <do_if value="this.ship.pilot.$end_of_work? and this.ship.pilot.$end_of_work lt player.age">
@@ -103,4 +115,10 @@
   </add>
   <replace sel="//set_value[@exact=&quot;'trade.findsimpletraderun'&quot;]/@exact">'trade.findsimpletraderun.nf'</replace>
   <replace sel="//set_value[@exact=&quot;'trade.findfreetraderun'&quot;]/@exact">'trade.findfreetraderun.nf'</replace>
+  <add sel="//label[@name='find trade run']" pos="after">
+	  <do_if value="this.$doRefuelnext?">
+		  <signal_objects object="this.ship" param="'DO.Refuel.athome'" delay="1s"/>
+		  <remove_value name="this.$doRefuelnext" />
+	  </do_if>
+  </add>
 </diff>

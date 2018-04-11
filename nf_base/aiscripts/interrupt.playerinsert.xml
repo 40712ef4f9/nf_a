@@ -7,41 +7,42 @@
     <library>
       <handler name="PlayerInput">
         <conditions>
-          <check_any>
-            <event_object_signalled object="this.ship" param="'dock at'" />
-            <event_object_signalled object="this.ship" param="'take me to'" />
-            <event_object_signalled object="this.ship" param="'refuel'" />
-            <event_object_signalled object="this.ship" param="'start mining'" />
-            <event_object_signalled object="this.ship" param="'attack object'" />
-            <event_object_signalled object="this.ship" param="'attack enemies'" />
-            <event_object_signalled object="this.ship" param="'hold position'" />
-            <event_object_signalled object="this.ship" param="'fly to me'" />
-            <event_object_signalled object="this.ship" param="'fly to pos'" />
-            <event_object_signalled object="this.ship" param="'withdraw battle'" />
-            <event_object_signalled object="this.ship" param="'clear shoppinglist'" />
-            <event_object_signalled object="this.ship" param="'miningmode'" />
-            <event_object_signalled object="this.ship" param="'collectcargo'" />
-            <event_object_signalled object="this.ship" param="'stop order'" />
-            <event_object_signalled object="this.ship" param="'modeoff'" />
-            <event_object_signalled object="this.ship" param="'collect ship'" />
-            <event_object_signalled object="this.ship" param="'tender action'" />
-          </check_any>
+          <event_object_signalled object="this.ship"/>
           <check_value value="this.ship.isplayerowned" />
+		  <check_value value="event.param" list="[
+		  		'dock at',
+				'take me to',
+				'refuel',
+				'start mining',
+				'attack object',
+				'attack enemies',
+				'hold position',
+				'fly to me',
+				'fly to pos',
+				'withdraw battle',
+				'clear shoppinglist',
+				'miningmode',
+				'collectcargo',
+				'stop order',
+				'modeoff',
+				'collect ship',
+				'tender action'
+		  ]"/>
         </conditions>
         <actions>
-          <signal_objects object="player.galaxy" param="'do.start.pldefault'" param2="this.ship" delay="20ms"/>
           <do_if value="event.param3? and event.param2?">
-            <signal_objects object="this.ship" param="event.param" param2="event.param2" param3="event.param3" delay="2s" />
+            <signal_objects object="this.ship" param="event.param" param2="event.param2" param3="event.param3" delay="10s" />
           </do_if>
           <do_elseif value="event.param3? and not event.param2?">
-            <signal_objects object="this.ship" param="event.param" param3="event.param3" delay="2s" />
+            <signal_objects object="this.ship" param="event.param" param3="event.param3" delay="10s" />
           </do_elseif>
           <do_elseif value="event.param2?">
-            <signal_objects object="this.ship" param="event.param" param2="event.param2" delay="2s" />
+            <signal_objects object="this.ship" param="event.param" param2="event.param2" delay="10s" />
           </do_elseif>
           <do_else>
-            <signal_objects object="this.ship" param="event.param" delay="2s" />
+            <signal_objects object="this.ship" param="event.param" delay="10s" />
           </do_else>
+          <signal_objects object="player.galaxy" param="'do.start.pldefault'" param2="this.ship" delay="20ms"/>
         </actions>
       </handler>
     </library>

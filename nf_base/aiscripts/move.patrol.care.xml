@@ -409,6 +409,6 @@
     </do_if>
     <destroy_object object="this.ship.engineer" chance="if this.ship.isclass.[class.ship_s, class.ship_m] then 100 else 0"/>
     <start_script object="this.ship.engineer" name="'engineer.ai.plus2'" chance="if this.ship.isclass.[class.ship_l, class.ship_xl] and not this.ship.engineer.$doSupport? then 100 else 0"/>
-    <remove_value name="this.ship.engineer.$doSupport" chance="if this.ship.isclass.[class.ship_l, class.ship_xl] and this.ship.engineer.$doSupport then 100 else 0"/>
+    <remove_value name="this.ship.engineer.$doSupport" chance="if this.ship.isclass.[class.ship_l, class.ship_xl] and this.ship.engineer.$doSupport? then 100 else 0"/>
   </on_abort>
 </aiscript>

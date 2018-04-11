@@ -8,11 +8,11 @@
 		  <set_value name="$Corp_factionBuy" exact="if $tradeoffer.buyer then $tradeoffer.buyer.owner else this.ship.trueowner" />
 		  <set_value name="$Corp_factionSell" exact="if $tradeoffer.seller then $tradeoffer.seller.owner else this.ship.trueowner" />
 		  <set_value name="$Corp_price" exact="$amount * $tradeoffer.unitprice" />
-		  <do_if value="$Corp_factionBuy != $Corp_factionSell"> 
-			  <do_if value="$Corp_factionBuy.relationto.{$Corp_factionSell} lt 0"> 
+		  <do_if value="$Corp_factionBuy != $Corp_factionSell">
+			  <do_if value="$Corp_factionBuy.relationto.{$Corp_factionSell} lt 0">
 		  		<set_value name="$Corp_boost" exact="0.00008LF + (0.00016LF / (1000000Cr)LF * ($Corp_price)LF)" />
 			  </do_if>
-			  <do_elseif  value="$Corp_factionBuy.relationto.{$Corp_factionSell} lt $Corp_factionBuy.relation.friend.min"> 
+			  <do_elseif  value="$Corp_factionBuy.relationto.{$Corp_factionSell} lt $Corp_factionBuy.relation.friend.min">
 		  		<set_value name="$Corp_boost" exact="0.00006LF + (0.00016LF / (5000000Cr)LF * ($Corp_price)LF)" />
 			  </do_elseif>
 			  <do_else>
@@ -26,18 +26,19 @@
 		</do_if>
 	</add>
 	<add sel="//execute_trade" pos="after">
-		<do_if value="$traderesult and $Corp_boost? and $Corp_boost and $Corp_factionBuy and $Corp_factionSell and $Corp_factionBuy != $Corp_factionSell">
-		  <do_if value="$Corp_factionBuy == faction.player or $Corp_factionSell == faction.player"> 
-		  	<signal_objects object="player.computer" param="'MM Relation'" param2="[if $Corp_factionBuy == faction.player then $Corp_factionSell else $Corp_factionBuy, $Corp_boost]"/>
-		  </do_if>
-		  <do_else>
-		  	<add_faction_relation faction="$Corp_factionBuy" otherfaction="$Corp_factionSell" value="$Corp_boost" silent="true" chance="if $Corp_factionBuy.relationto.{$Corp_factionSell} lt $Corp_factionBuy.relation.member.min then 100 else 0"/>
-		  </do_else>
-<debug_text text="'%1 %2 : %3 [%4 lt %5]'.[$Corp_factionBuy.id, $Corp_factionSell.id, $Corp_boost, $Corp_factionBuy.relationto.{$Corp_factionSell}, $Corp_factionBuy.relation.member.min]" filter="error" chance="0" />
+		<do_if value="$Corp_boost?">
+			<do_if value="$traderesult and $Corp_boost and $Corp_factionBuy and $Corp_factionSell and $Corp_factionBuy != $Corp_factionSell">
+			  <do_if value="$Corp_factionBuy == faction.player or $Corp_factionSell == faction.player">
+				<signal_objects object="player.computer" param="'MM Relation'" param2="[if $Corp_factionBuy == faction.player then $Corp_factionSell else $Corp_factionBuy, $Corp_boost]"/>
+			  </do_if>
+			  <do_else>
+				<add_faction_relation faction="$Corp_factionBuy" otherfaction="$Corp_factionSell" value="$Corp_boost" silent="true" chance="if $Corp_factionBuy.relationto.{$Corp_factionSell} lt $Corp_factionBuy.relation.member.min then 100 else 0"/>
+			  </do_else>
+			</do_if>
+			<remove_value name="$Corp_factionBuy"/>
+			<remove_value name="$Corp_factionSell"/>
+			<remove_value name="$Corp_boost"/>
 		</do_if>
-		<remove_value name="$Corp_factionBuy"/>
-		<remove_value name="$Corp_factionSell"/>
-		<remove_value name="$Corp_boost"/>
 	</add>
 	<!--replace sel="/aiscript/attention/actions/do_if[@value='not $targetobject.isoperational']">
 		<do_if value="not $targetobject.isoperational or @this.ship.owner.relationto.{$targetobject.owner} le this.ship.owner.relation.enemy.min">
@@ -73,15 +74,23 @@
 		</do_if>
 	</add-->
 	<add sel="//label[@name='move to target object']" pos="after">
-		<do_if value="$tradeware == ware.fuelcells">		
+		<do_if value="$tradeware == ware.fuelcells">
 			<set_value name="this.$skipRefuel" />
 		</do_if>
-		<do_else>		
+		<do_else>
 			<remove_value name="this.$skipRefuel" />
 		</do_else>
 	</add>
-	<add sel="//label[@name='finish']" pos="after">
-		<remove_value name="this.$skipRefuel" />
+	<add sel="//actions/do_if[@value=&quot;$failreason != ''&quot;]/do_if[@value='this.ship.isclass.ship_xl or this.ship.isclass.ship_l']" pos="after">
+		<do_if value="this.$skipRefuel?" comment="no success">
+			<remove_value name="this.$skipRefuel" />
+		</do_if>
+	</add>
+	<add sel="(//actions/do_else/do_if[@value='this.ship.isclass.ship_xl or this.ship.isclass.ship_l'])[2]" pos="after">
+		<do_if value="this.$skipRefuel?" comment="success goto homebase and refuel">
+			<set_value name="this.$doRefuelnext" />
+			<remove_value name="this.$skipRefuel" />
+		</do_if>
 	</add>
 	<add sel="/aiscript/on_abort">
 		<remove_value name="this.$skipRefuel" />
@@ -89,26 +98,28 @@
 
 
 	<add sel="//label[@name='check trade offers']" pos="after">
-		<do_if value="$targetobject? and $targetobject">		
+		<do_if value="$targetobject? and $targetobject">
 			<remove_from_group group="$oberserve" object="$targetobject" chance="if $oberserve? then 100 else 0"/>
 		</do_if>
 	</add>
 	<add sel="//init">
-		<create_group groupname="$oberserve" />
-		<do_if value="$selloffer.available and $buyoffer.available">		
-			<add_to_group groupname="$oberserve" object="$selloffer.seller" chance="if $selloffer.seller == this.ship then 0 else if $selloffer.seller then 100 else 0"/>
-			<add_to_group groupname="$oberserve" object="$selloffer.buyer" chance="if $selloffer.buyer == this.ship then 0 else if $selloffer.buyer then 100 else 0"/>
-			<add_to_group groupname="$oberserve" object="$buyoffer.seller" chance="if $buyoffer.seller == this.ship then 0 else if $buyoffer.seller then 100 else 0"/>
-			<add_to_group groupname="$oberserve" object="$buyoffer.buyer" chance="if $buyoffer.buyer == this.ship then 0 else if $buyoffer.buyer then 100 else 0"/>
+		<do_if value="true">
+			<create_group groupname="$oberserve" />
+			<do_if value="$selloffer.available and $buyoffer.available">
+				<add_to_group groupname="$oberserve" object="$selloffer.seller" chance="if $selloffer.seller == this.ship then 0 else if $selloffer.seller then 100 else 0"/>
+				<add_to_group groupname="$oberserve" object="$selloffer.buyer" chance="if $selloffer.buyer == this.ship then 0 else if $selloffer.buyer then 100 else 0"/>
+				<add_to_group groupname="$oberserve" object="$buyoffer.seller" chance="if $buyoffer.seller == this.ship then 0 else if $buyoffer.seller then 100 else 0"/>
+				<add_to_group groupname="$oberserve" object="$buyoffer.buyer" chance="if $buyoffer.buyer == this.ship then 0 else if $buyoffer.buyer then 100 else 0"/>
+			</do_if>
+			<do_elseif value="$selloffer.available">
+				<add_to_group groupname="$oberserve" object="$selloffer.seller" chance="if $selloffer.seller == this.ship then 0 else if $selloffer.seller then 100 else 0"/>
+				<add_to_group groupname="$oberserve" object="$selloffer.buyer" chance="if $selloffer.buyer == this.ship then 0 else if $selloffer.buyer then 100 else 0"/>
+			</do_elseif>
+			<do_elseif value="$buyoffer.available">
+				<add_to_group groupname="$oberserve" object="$buyoffer.seller" chance="if $buyoffer.seller == this.ship then 0 else if $buyoffer.seller then 100 else 0"/>
+				<add_to_group groupname="$oberserve" object="$buyoffer.buyer" chance="if $buyoffer.buyer == this.ship then 0 else if $buyoffer.buyer then 100 else 0"/>
+			</do_elseif>
 		</do_if>
-		<do_elseif value="$selloffer.available">		
-			<add_to_group groupname="$oberserve" object="$selloffer.seller" chance="if $selloffer.seller == this.ship then 0 else if $selloffer.seller then 100 else 0"/>
-			<add_to_group groupname="$oberserve" object="$selloffer.buyer" chance="if $selloffer.buyer == this.ship then 0 else if $selloffer.buyer then 100 else 0"/>
-		</do_elseif>
-		<do_elseif value="$buyoffer.available">		
-			<add_to_group groupname="$oberserve" object="$buyoffer.seller" chance="if $buyoffer.seller == this.ship then 0 else if $buyoffer.seller then 100 else 0"/>
-			<add_to_group groupname="$oberserve" object="$buyoffer.buyer" chance="if $buyoffer.buyer == this.ship then 0 else if $buyoffer.buyer then 100 else 0"/>
-		</do_elseif>
 	</add>
 	<add sel="/aiscript">
 		<interrupts>
