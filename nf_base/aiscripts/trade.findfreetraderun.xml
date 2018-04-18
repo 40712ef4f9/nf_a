@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="//actions/run_script[@name=&quot;'move.idle'&quot;]" type="@chance" >if this.ship.isclass.[class.ship_s, class.ship_m] and @this.ship.dockslot and not @this.ship.dockslot.component.external then 0 else 100</add> 
+	<add sel="//actions/run_script[@name=&quot;'move.idle'&quot;]" pos="after">
+		<wait exact="$idletime" chance="if this.ship.isclass.[class.ship_s, class.ship_m] and @this.ship.dockslot and not @this.ship.dockslot.component.external then 100 else 0"/>
+	</add>
+</diff>

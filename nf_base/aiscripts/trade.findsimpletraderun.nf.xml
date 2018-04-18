@@ -110,7 +110,7 @@
                 <append_to_list name="$productionoffers" exact="$currentoffer" />
               </do_else>
             </do_if>
-            <wait min="1s" max="3s"/>
+            <wait min="1s" max="7s"/>
           </do_all>
           <debug_text text="player.age + ': found %1 tradewareoffers and %2 productionoffers'.[$tradewareoffers.count, $productionoffers.count]" chance="$debugchance" />
           <do_if value="$tradewareoffers.count gt 0">

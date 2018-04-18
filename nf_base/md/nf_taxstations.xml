@@ -7,7 +7,7 @@
 			<check_value value="global.$nfconfig.$taxStationsPL"/>
 		</conditions>
 		<actions>
-			<debug_text text="'Start'" />
+			<debug_text chance="0" text="'Start'" />
 			<set_value name="$TotalTax" exact="0"/>
 			<find_station name="$Stations" space="player.galaxy" functional="true" multiple="true" >
 				<match_relation faction="faction.player" relation="enemy" negate="true"/>
@@ -37,7 +37,7 @@
 			</do_if>
 			<remove_value name="$PreviousPlayerMoney"/>
 			<remove_value name="$TotalTax"/>
-			<debug_text text="'end'" />
+			<debug_text chance="0" text="'end'" />
        </actions>
 	</cue>
 
@@ -47,7 +47,7 @@
 			<check_value value="global.$nfconfig.$npcExpensesPL"/>
 		</conditions>
 		<actions>
-			<debug_text text="'Start'" />
+			<debug_text chance="0" text="'Start'" />
 			<!-- This cue here is all about salaries -->
 			<!--<set_value name="$Specialists" exact="[entitytype.specialistagriculture, entitytype.specialistpowerstorage, entitytype.specialistfood, entitytype.specialistchemical, entitytype.specialistprecision, entitytype.specialistweapons, entitytype.specialistpharmaceuticals, entitytype.specialistmetals, entitytype.specialistgeophysics, entitytype.specialistsurfacesystems, entitytype.specialistpowersupply, entitytype.specialistaquatics]"/>-->
 			<set_value name="$Salary" exact="0"/>
@@ -134,7 +134,7 @@
 			<remove_value name="$money"/>
 			<remove_value name="$message"/>
 			<remove_value name="$PreviousPlayerMoney"/>
-			<debug_text text="'end'" />
+			<debug_text chance="0" text="'end'" />
        </actions>
 	</cue>		
 </cues>

@@ -4,4 +4,114 @@
 	<replace sel="//set_value[@exact='[this.ship.cargo.{$ware}.free, $homebase.cargo.{$ware}.target].min']/@exact">[this.ship.cargo.{$ware}.free, $homebase.cargo.{$ware}.target - $homebase.cargo.{$ware}.count].min</replace>
 	<replace sel="//do_else/set_value[@name='$homebaseresources']/@exact">if $homebase.resources.list.count then $homebase.resources.list else if $homebase.tradewares.list.count then $homebase.tradewares.list else $homebase.resources.list</replace>
 	<replace sel="//do_if[@value='not $iswarehouse and $resourceoffers.count == 0']/@value">$resourceoffers.count == 0</replace>
+
+	<add sel="//label[@name='loop']" pos="after">
+      <do_if value="$homebase.exists and $homebase.isoperational and $homebase.trueowner != faction.ownerless" negate="true">
+        <do_if value="this.$whatido?">
+          <set_value name="this.$whatido" exact="'mining.ship.free'" />
+        </do_if>
+        <set_value name="$homebase" exact="null" />
+        <set_value name="$failreason" exact="'ERR_HOMEBASE_DEAD %1'.[if this.$whatido? then this.$whatido else '' ]" />
+        <resume label="finish" />
+      </do_if>
+	</add>
+	<add sel="//label[@name='finish']" pos="after">
+      <do_if value="this.ship.isjobship or not this.$whatido?" chance="if this.ship.isplayerowned then 0 else 100">
+        <set_value name="$bigship" exact="this.ship.isclass.ship_l or this.ship.isclass.ship_xl" />
+        <run_script name="'move.die'">
+          <param name="byjump" value="$bigship" />
+          <param name="byhighway" value="not $bigship" />
+          <param name="bydock" value="not $bigship" />
+          <param name="byidle" value="true" />
+        </run_script>
+      </do_if>
+	</add>
+	<add sel="//label[@name='loop']" pos="after" >
+		<set_value name="$warebasket_chance" exact="100" />
+		<do_if value="this.$mine_restrictions.$ware? and this.$mine_restrictions.$ware.count" chance="if $done? then 0 else 100">
+			<find_buy_offer buyer="$homebase" multiple="1" result="$buyoffers" wares="this.$mine_restrictions.$ware" tradepartner="this.ship">
+				<stocklevel min="0.20f" />
+			</find_buy_offer>
+			<do_if value="$buyoffers.count">
+			  <set_value name="$warebasket" exact="this.$mine_restrictions.$ware" />
+			  <set_value name="$warebasket_chance" exact="0" />
+			</do_if>
+		  <!--set_value name="$done" exact="1" /-->
+		  <remove_value name="$buyoffers"/>
+		</do_if>
+	</add>
+	<add sel="//do_if[@value='this.ship.commander.isoperational']" type="@chance" >if $warebasket_chance? then $warebasket_chance else 100</add>
+
+	<!-- debug -->
+	<add sel="//do_if[@value='this.ship.commander.isoperational']" pos="before"><debug_text text="'%1 : %2 wares'.[this.ship.name, $warebasket]" filter="error" chance="if this.$mine_restrictions? then 0 else 0" /></add>
+	<add sel="//do_if[@value='this.ship.commander.isoperational']" pos="after"><debug_text text="'%1 : %3 wares of %2'.[this.ship.name, $warebasket, @$warebasket_restricted]" filter="error" chance="if this.$mine_restrictions? then 0 else 0" /></add>
+	<add sel="//find_buy_offer[@wares='$warebasket']" pos="after"><debug_text text="'%1 : %2 offers %3/%4'.[this.ship.name, $buyoffers.count, $warebasket, @$warebasket_restricted]" filter="error" chance="if this.$mine_restrictions? then 0 else 0" /></add>
+
+	<add sel="//do_if[@value='this.ship.commander.isoperational']" >
+		<do_if value="this.$mine_restrictions.$tags? and this.$mine_restrictions.$tags.count">
+			<set_value name="$warebasket_restricted" exact="$warebasket.clone" />
+			<do_all exact="$warebasket_restricted.count" counter="$i" reverse="true">
+				<set_value name="$doware" exact="$warebasket_restricted.{$i}" />
+				<set_value name="$doware_tag" exact="null" />
+				<set_value name="$doware_tag" exact="tag.container"	chance="if $doware.tags.indexof.{tag.container} then 100 else 0" />
+				<set_value name="$doware_tag" exact="tag.bulk" 		chance="if $doware.tags.indexof.{tag.bulk} then 100 else 0" />
+				<set_value name="$doware_tag" exact="tag.energy"	chance="if $doware.tags.indexof.{tag.energy} then 100 else 0" />
+				<set_value name="$doware_tag" exact="tag.liquid"	chance="if $doware.tags.indexof.{tag.liquid} then 100 else 0" />
+				<do_if value="this.$mine_restrictions.$tags.indexof.{$doware_tag}">
+					<remove_value name="$warebasket_restricted.{$i}"/>
+				</do_if>
+			</do_all>
+			<remove_value name="$doware_tag"/>
+			<remove_value name="$doware"/>
+		</do_if>
+	</add>
+	<replace sel="//find_buy_offer[@wares='$warebasket']/@wares">if $warebasket_restricted? and $warebasket_restricted.count then $warebasket_restricted else $warebasket</replace>
+
+	<add sel="//do_if[@value='$zones.count']" pos="prepend">
+		<set_value name="$range_zone" exact="0" />
+		<set_value name="$range" exact="0" />
+		<set_value name="$range_w" exact="0" />
+		<do_if value="this.$whitelist? and this.$whitelist.count">
+			<set_value name="$range_w" exact="100" />
+		</do_if>
+		<do_elseif value="this.$mine_range?">
+			<do_if value="this.$mine_range == 1">
+				<set_value name="$range_zone" exact="100" />
+			</do_if>
+			<do_else>
+				<set_value name="$range" exact="100" />
+			</do_else>
+		</do_elseif>
+		<do_elseif value="this.ship.isclass.[class.ship_s, class.ship_m]">
+				<set_value name="$range" exact="100" />
+		</do_elseif>
+		<set_value name="$enemyarea" exact="0" />
+		<do_all exact="$zones.count" counter="$i" reverse="true" ><!--chance="[$range_zone, $range, $range_w].max" -->
+			<do_if value="$zones.{$i} != $homebase.zone" chance="$range_zone">
+				<remove_value name="$zones.{$i}"/>
+				<remove_value name="$temp_secwares.{$i}"/>
+			</do_if>
+			<do_elseif value="$zones.{$i}.sector != $homebase.sector" chance="$range">
+				<remove_value name="$zones.{$i}"/>
+				<remove_value name="$temp_secwares.{$i}"/>
+			</do_elseif>
+			<do_elseif value="this.$whitelist.indexof.{$zones.{$i}.sector} or this.$whitelist.indexof.{$zones.{$i}}" negate="true" chance="$range_w">
+				<remove_value name="$zones.{$i}"/>
+				<remove_value name="$temp_secwares.{$i}"/>
+			</do_elseif>
+			<do_elseif value="$zones.{$i}.owner and $zones.{$i}.owner.hasrelation.enemy.{this.ship.trueowner}">
+				<set_value name="$enemyarea" operation="add" />
+			</do_elseif>
+		</do_all>
+		<do_all exact="$zones.count" counter="$i" reverse="true" chance="if $enemyarea and $enemyarea lt $zones.count then 100 else 0">
+			<do_if value="$zones.{$i}.owner and $zones.{$i}.owner.hasrelation.enemy.{this.ship.trueowner}">
+				<remove_value name="$zones.{$i}"/>
+				<remove_value name="$temp_secwares.{$i}"/>
+			</do_if>
+		</do_all>
+		<remove_value name="$enemyarea"/>
+		<remove_value name="$range_zone"/>
+		<remove_value name="$range_w"/>
+		<remove_value name="$range"/>
+	</add>
 </diff>

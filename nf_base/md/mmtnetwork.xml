@@ -1,0 +1,1379 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mdscript name="MM_TNetwork" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+		<cue name="MMTN_init">
+		  <actions>
+				<do_if value="global.$tradestationnetwork?" negate="true">
+					<set_value name="global.$tradestationnetwork" exact="[
+							macro.struct_bt_alb_warehouse_macro
+						]"/>
+				</do_if>
+		  </actions>
+		</cue>
+<!--		
+		<cue name="MMTN_advcom" instantiate="true" >
+			<conditions>
+				<check_any>
+				  <event_conversation_next_section section="mmadvcom_main" />
+				  <event_conversation_returned_to_section section="mmadvcom_main" />
+				</check_any>
+				<check_value value="event.object.trueowner" exact="faction.player" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_any>
+				  <check_value value="event.object.type" exact="entitytype.commander" />
+				  <check_value value="event.object.type" exact="entitytype.pilot" />
+				</check_any>
+			</conditions>
+			<actions>
+				<do_if value="event.param" exact="'mmadvcom_main'">
+					<add_player_choice text="'Do Plunder at ...'" section="gOrders_advancedflytopos" selectable="player.platform? and player.platform and (player.platform.container.resources.list.count or player.platform.container.tradewares.list.count) and (event.object.container.units.{unitcategory.transport}.count or event.object.container.isclass.[class.ship_s, class.ship_m])" tooltip="'player need to docked at trading station/CV to use these warelist'" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectposition', ['mmntplund_do_selected']]"/>
+				</do_if>
+			</actions>
+		</cue>
+-->
+		<cue name="MMTN_do_pl" instantiate="true" >
+			<conditions>
+				<event_conversation_next_section section="mmntplund_do_selected" />
+				<check_value value="event.object.trueowner" exact="faction.player" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_any>
+				  <check_value value="event.object.type" exact="entitytype.commander" />
+				  <check_value value="event.object.type" exact="entitytype.pilot" />
+				</check_any>
+			</conditions>
+			<actions>
+				<do_if value="event.param2.{3}.isclass.[class.sector, class.cluster, class.zone]">
+					<do_if value="event.object.container.commander == player.primaryship">
+						<remove_object_commander object="event.object.container" />
+					</do_if>	
+					<start_script name="'move.plunder.player'" object="event.object">
+						<param name="range" value="if event.object.container.isclass.[class.ship_l, class.ship_xl] and event.param2.{3}.isclass.cluster then 'cluster' else if event.param2.{3}.isclass.zone then 'zone' else 'sector'" />
+						<param name="space" value="event.param2.{3}" />
+						<param name="basebasket" value="if player.platform.container.resources.list.count then player.platform.container.resources.list else player.platform.container.tradewares.list" />
+						<param name="checkrelation" value="true" />
+						<param name="allowstations" value="true" />
+						<param name="waitforcommand" value="true" />
+					</start_script>
+					<do_if value="event.object.container.defencenpc">
+						<set_value name="event.object.container.defencenpc.$config_attackenemies" exact="1"/>
+					</do_if>	
+				</do_if>
+			</actions>
+		</cue>
+
+		<!--  conversation hook  -->
+		<cue name="MMTN_base" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="gMain_propertyResult" />
+					<event_conversation_next_section section="gMain_propertyResult" />
+					<event_conversation_returned_to_section section="gMain_propertyResult" />
+				</check_any>
+				<check_value value="event.param2.owner" exact="faction.player" />
+				<check_value value="event.param2.macro.ismacro.{global.$tradestationnetwork}" />
+			</conditions>
+			<actions>
+            	<!--add_player_choice_subconv text="{2802,1201}" position="right" conversation="mmtn_menu" actor="event.param2.tradenpc" baseparam="event.param2" /-->
+				<add_player_choice_subconv text="{2802,1201}" position="right" conversation="mmtn_range" actor="event.param2.tradenpc" baseparam="event.param2" />
+			</actions>
+		</cue>
+
+		<cue name="MMTN_work_inandout_ship" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="default" />
+					<event_conversation_returned_to_section section="default" />
+					<event_conversation_next_section section="mmtnshipinandout"/>
+					<event_conversation_next_section section="mmtnshipmining"/>
+				</check_any>
+				<check_any>
+					<check_value value="event.object.type" exact="entitytype.commander" />
+					<check_value value="event.object.type" exact="entitytype.pilot" />
+				</check_any>
+				<check_value value="event.object.owner" exact="faction.player" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_value value="event.object.container.commander? and @event.object.container.commander.subordinates.{entitytype.manager}.indexof.{event.object.container}" />
+			</conditions>
+			<actions>
+				<do_if value="event.param" exact="'mmtnshipinandout'">
+					<!--  basic data  -->
+					<set_value name="$cargotypes" exact="[	[{20205,100}, tag.container, ware.dumbfiremissile, 1],
+															[{20205,700}, tag.energy, ware.energycells, 2],
+															[{20205,200}, tag.bulk, ware.ore, 4],
+															[{20205,300}, tag.liquid, ware.water, 5] ]" />
+					<set_value name="$rename" exact="false" />
+					<!--  check name  -->
+					<do_if value="event.object.$trade_restrictions? or event.object.$trade_inandout? or event.object.container.macro.name == event.object.container.name ">
+						<set_value name="$name_cargo" exact="null"/>
+						<include_actions ref="MMTN_rename" />
+						
+						<do_if value="event.object.container.name == $name">
+							<set_value name="$rename" exact="true" />
+						</do_if>
+					</do_if>
+				
+					<!--  do set data  -->
+					<do_if value="event.param2.{1}? and event.param2.{1} == 'do'">
+						<do_if value="not event.object.$trade_inandout?">
+							<set_value name="event.object.$trade_inandout" exact="1"/>
+						</do_if>
+						<do_elseif value="event.object.$trade_inandout" exact="1">
+							<set_value name="event.object.$trade_inandout" exact="2"/>
+						</do_elseif>
+						<do_elseif value="event.object.$trade_inandout" exact="2">
+							<set_value name="event.object.$trade_inandout" exact="3"/>
+						</do_elseif>
+						<do_elseif value="event.object.$trade_inandout" exact="3">
+							<set_value name="event.object.$trade_inandout" exact="4"/>
+						</do_elseif>
+						<do_else>
+							<remove_value name="event.object.$trade_inandout"/>
+						</do_else>
+					</do_if>
+					<do_elseif value="event.param2.{1}? and event.param2.{1} == 'do_global'">
+						<do_if value="not event.object.$trade_global?">
+							<set_value name="event.object.$trade_global" exact="1"/>
+						</do_if>
+						<do_elseif value="event.object.$trade_global" exact="1">
+							<set_value name="event.object.$trade_global" exact="2"/>
+						</do_elseif>
+						<do_else>
+							<remove_value name="event.object.$trade_global"/>
+						</do_else>
+					</do_elseif>
+					<do_elseif value="event.param2.{1}? and event.param2.{1} == 'do_refact'">
+						<do_if value="not event.object.$refact?">
+							<set_value name="event.object.$refact" exact="1"/>
+						</do_if>
+						<do_elseif value="event.object.$refact" exact="1">
+							<set_value name="event.object.$refact" exact="2"/>
+						</do_elseif>
+						<do_elseif value="event.object.$refact" exact="2">
+							<set_value name="event.object.$refact" exact="3"/>
+						</do_elseif>
+						<do_else>
+							<remove_value name="event.object.$refact"/>
+						</do_else>
+					</do_elseif>
+					<do_elseif value="event.param2.{1}? and event.param2.{1} == 'do_blacklist'">
+						<set_value name="$commander" exact="event.object.container.commander"/>
+						<!-- generate/read ranges -->
+						<do_if value="$commander.tradenpc.$trade_zones? and player.age lt $commander.tradenpc.$trade_zones_next">
+							<!-- use cache -->
+							<set_value name="$trade_zones" exact="$commander.tradenpc.$trade_zones.clone" />
+						</do_if>
+						<do_else>
+							<create_group groupname="$Trade_stations" />
+							<create_list name="$trade_zones_unsorted"/>
+							<create_list name="$trade_zones"/>
+							<!-- find stations and get zones -->
+							<do_all exact="global.$tradestationnetwork.count" counter="$m" reverse="true">
+								<find_station name="$tempstation" macro="global.$tradestationnetwork.{$m}" space="player.galaxy" owner="$commander.owner" multiple="true" />
+								<do_if value="$tempstation">
+									<add_to_group groupname="$Trade_stations" list="$tempstation" />
+								</do_if>
+								<remove_value name="$tempstation"/>
+							</do_all>
+							<do_all exact="$Trade_stations.count" counter="$z">
+								<do_if value="$trade_zones_unsorted.indexof.{$Trade_stations.{$z}.zone}" negate="true">
+									<append_to_list name="$trade_zones_unsorted" exact="$Trade_stations.{$z}.zone" chance="if $Trade_stations.{$z}.zone == $commander.zone then 0 else 100"/>
+								</do_if>
+							</do_all>
+							<remove_value name="$Trade_stations"/>
+							<!-- consider gatedistance -->
+							<do_if value="$commander.tradenpc.$trade_zones_range? and $commander.tradenpc.$trade_zones_range ge 0">
+								<do_all exact="$trade_zones_unsorted.count" counter="$z" reverse="true">
+									<do_if value="$commander.gatedistance.{$trade_zones_unsorted.{$z}} gt $commander.tradenpc.$trade_zones_range">
+										<remove_value name="$trade_zones_unsorted.{$z}"/>
+									</do_if>
+								</do_all>
+							</do_if>
+							<!-- sort gatedistance -->
+							<set_value name="$run" exact="0" />
+							<set_value name="$distance_max" exact="0" />
+							<do_while value="$trade_zones_unsorted.count gt 0">
+								<do_all exact="$trade_zones_unsorted.count" counter="$z" reverse="true">
+									<do_if value="$trade_zones_unsorted.{$z}.isclass.zone and $trade_zones_unsorted.{$z}.exists" negate="true">
+										<remove_value name="$trade_zones_unsorted.{$z}"/>
+										<continue />
+									</do_if>
+									<set_value name="$distance" exact="$commander.gatedistance.{$trade_zones_unsorted.{$z}}" />
+									<set_value name="$distance_max" exact="$distance" chance="if $distance_max lt $distance then 100 else 0" />
+									<do_if value="$distance == $run">
+										<append_to_list name="$trade_zones" exact="$trade_zones_unsorted.{$z}"/>
+										<remove_value name="$trade_zones_unsorted.{$z}"/>
+									</do_if>
+								</do_all>
+								<remove_value name="$distance"/>
+								<set_value name="$run" operation="add"/>
+								<break chance="if $run gt $distance_max then 100 else 0"/>
+							</do_while>
+							<remove_value name="$run"/>
+							<remove_value name="$distance_max"/>
+							<remove_value name="$trade_zones_unsorted"/>
+							<!-- cache zones -->
+							<do_if value="$commander.tradenpc?">
+								<set_value name="$commander.tradenpc.$trade_zones" exact="$trade_zones.clone" />
+								<set_value name="$commander.tradenpc.$trade_zones_next" exact="player.age + 2h" />
+							</do_if>
+						</do_else> 
+						<!-- do changes -->
+						<do_if value="event.param2.{2}? and (event.param2.{2} == 'zone' or event.param2.{2} == 'reset')">
+							<!-- init -->
+							<do_if value="not event.object.$trade_zones_blacklist?">
+								<create_list name="event.object.$trade_zones_blacklist"/>
+							</do_if>
+							<!-- do -->
+							<do_if value="event.param2.{2} == 'zone' and event.object.$trade_zones_blacklist.indexof.{event.param2.{4}}">
+								<do_if value="event.object.$trade_zones_blacklist.indexof.{event.param2.{4}}">
+									<remove_value name="event.object.$trade_zones_blacklist.{event.object.$trade_zones_blacklist.indexof.{event.param2.{4}}}"/>
+								</do_if>
+							</do_if>
+							<do_elseif value="event.param2.{2} == 'zone'">
+								<append_to_list name="event.object.$trade_zones_blacklist" exact="event.param2.{4}" />
+							</do_elseif>
+							<!-- remove outdatet ranges -->
+							<do_if value="event.object.$trade_zones_blacklist.count">
+								<do_all exact="event.object.$trade_zones_blacklist.count" counter="$z" reverse="true">
+									<do_if value="$trade_zones.indexof.{event.object.$trade_zones_blacklist.{$z}}" negate="true">
+										<remove_value name="event.object.$trade_zones_blacklist.{$z}"/>
+									</do_if>
+								</do_all>
+							</do_if>
+							<!-- clear -->
+							<do_if value="event.param2.{2} == 'reset' or event.object.$trade_zones_blacklist.count == 0">
+								<remove_value name="event.object.$trade_zones_blacklist"/>
+							</do_if>
+						</do_if>
+						<!-- class ship_m -->
+						<do_if value="$trade_zones.count and @event.object.$trade_global == 1 and event.object.container.isclass.[class.ship_s, class.ship_m]">
+							<do_if value="not event.object.$trade_zones_blacklist?">
+								<create_list name="event.object.$trade_zones_blacklist"/>
+							</do_if>
+							<do_all exact="$trade_zones.count" counter="$z" reverse="true">
+								<do_if value="$commander.gatedistance.{$trade_zones.{$z}} gt 1 and event.object.$trade_zones_blacklist.indexof.{$trade_zones.{$z}} == 0">
+									<append_to_list name="event.object.$trade_zones_blacklist" exact="$trade_zones.{$z}" />
+								</do_if>
+							</do_all>
+						</do_if>
+					</do_elseif>
+					<do_elseif value="event.param2.{1}? and event.param2.{1} == 'do_range'">
+						<do_if value="not event.object.$trade_range?">
+							<set_value name="event.object.$trade_range" exact="1"/>
+						</do_if>
+						<do_elseif value="event.object.$trade_range" exact="1" chance="if event.object.container.commander.maxradarrange gt 30km then 100 else 0">
+							<set_value name="event.object.$trade_range" exact="2"/>
+						</do_elseif>
+						<do_else>
+							<remove_value name="event.object.$trade_range"/>
+						</do_else>
+					</do_elseif>
+					<do_elseif value="event.param2.{1}? and event.param2.{1} == 'do_update_name'">
+						<set_value name="$rename" exact="true" />
+					</do_elseif>
+					<do_elseif value="event.param2.{1}? and event.param2.{1} == 'do_restrict'">
+						<do_if value="not event.object.$trade_restrictions?">
+							<set_value name="event.object.$trade_restrictions" exact="table[$tags = [], $tags_sell = [], $tags_buy = []]"/><!-- , $ware = [] -->
+						</do_if>
+						<do_if value="event.param2.{2} == 'tag' and (event.object.$trade_restrictions.$tags.indexof.{event.param2.{3}} or event.object.$trade_restrictions.$tags_buy.indexof.{event.param2.{3}} or event.object.$trade_restrictions.$tags_sell.indexof.{event.param2.{3}})">
+							<do_if value="event.object.$trade_restrictions.$tags_sell.indexof.{event.param2.{3}}">
+								<remove_value name="event.object.$trade_restrictions.$tags_sell.{event.object.$trade_restrictions.$tags_sell.indexof.{event.param2.{3}}}"/>
+							</do_if>
+							<do_if value="event.object.$trade_restrictions.$tags_buy.indexof.{event.param2.{3}}">
+								<remove_value name="event.object.$trade_restrictions.$tags_buy.{event.object.$trade_restrictions.$tags_buy.indexof.{event.param2.{3}}}"/>
+								<do_if value="event.object.$trade_restrictions.$tags_sell.indexof.{event.param2.{3}}" negate="true">
+									<append_to_list name="event.object.$trade_restrictions.$tags_sell" exact="event.param2.{3}" />
+								</do_if>
+							</do_if>
+							<do_if value="event.object.$trade_restrictions.$tags.indexof.{event.param2.{3}}">
+								<remove_value name="event.object.$trade_restrictions.$tags.{event.object.$trade_restrictions.$tags.indexof.{event.param2.{3}}}"/>
+								<do_if value="event.object.$trade_restrictions.$tags_buy.indexof.{event.param2.{3}}" negate="true">
+									<append_to_list name="event.object.$trade_restrictions.$tags_buy" exact="event.param2.{3}" />
+								</do_if>
+							</do_if>
+						</do_if>
+						<do_elseif value="event.param2.{2} == 'tag'">
+							<append_to_list name="event.object.$trade_restrictions.$tags" exact="event.param2.{3}" />
+						</do_elseif>
+						<!--do_elseif value="event.param2.{2} == 'ware' and event.object.$trade_restrictions.$ware.indexof.{event.param2.{3}}">
+							<do_all exact="event.object.$trade_restrictions.$ware.count" counter="$i" reverse="true">
+								<do_if value="event.object.$trade_restrictions.$ware.{$i} == event.param2.{3}">
+									<remove_value name="event.object.$trade_restrictions.$ware.{$i}"/>
+									<break />
+								</do_if>
+							</do_all>
+						</do_elseif>
+						<do_elseif value="event.param2.{2} == 'ware'">
+							<append_to_list name="event.object.$trade_restrictions.$ware" exact="event.param2.{3}" />
+						</do_elseif-->
+
+						<do_if value="event.param2.{2} == 'reset' or (event.object.$trade_restrictions.$tags.count == 0 and event.object.$trade_restrictions.$tags_buy.count == 0 and event.object.$trade_restrictions.$tags_sell.count == 0)">
+							<remove_value name="event.object.$trade_restrictions"/>
+						</do_if>
+					</do_elseif>
+
+					<!-- rename ship -->
+					<do_if value="$rename">
+						<remove_value name="$name"/>
+						<include_actions ref="MMTN_rename" />						
+						
+						<do_if value="event.object.container.isclass.ship and event.object.container.name != $name">
+							<do_if value="event.object.container.macro.name == $name">
+								<set_object_name object="event.object.container" name="''" />
+							</do_if>
+							<do_else>
+								<set_object_name object="event.object.container" name="$name" />
+							</do_else>
+						</do_if>
+						<remove_value name="$name"/>
+					</do_if>
+
+					<!-- menue -->
+					<do_if value="event.param2.{2}? and event.param2.{2} == 'tag'">
+						<do_all exact="$cargotypes.count" counter="$i">
+							<add_player_choice text="'%1 [%2]'.[$cargotypes.{$i}.{1}, if not @event.object.$trade_restrictions.$tags.indexof.{$cargotypes.{$i}.{2}} then ( if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} or @event.object.$trade_restrictions.$tags_sell.indexof.{$cargotypes.{$i}.{2}} then ( if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} then {1001,2917} else {1001,2916} )  else {1001,2826} ) else	{1001,2686}]" immediate="@event.object.$trade_restrictions.$tags.indexof.{$cargotypes.{$i}.{2}}" position="$cargotypes.{$i}.{4}" selectable="event.object.container.cargo.{$cargotypes.{$i}.{3}}.max and (@event.object.$trade_restrictions.$tags.count+1 lt $cargotypes.count or @event.object.$trade_restrictions.$tags.indexof.{$cargotypes.{$i}.{2}})" section="mmtnshipinandout" choiceparam="['do_restrict', 'tag', $cargotypes.{$i}.{2}]" />
+						</do_all>
+
+						<add_player_choice text="{1001,6101}" selectable="event.object.$trade_restrictions?" section="mmtnshipinandout" choiceparam="['do_restrict', 'reset']" />
+					</do_if>
+					<do_elseif value="event.param2.{1}? and event.param2.{1} == 'do_blacklist' and event.param2.{2} != 'reset'">
+						<set_value name="$todo_options_start" exact="if event.param2.{3}? and event.param2.{3} gt 0 then event.param2.{3} else 1" />
+						<set_value name="$todo_options_start2" exact="$todo_options_start" />
+						<set_value name="$todo_options_max" exact="$trade_zones.count" />
+	
+						<do_all exact="6" counter="$i">
+							<do_if value="$i == 6 and ($todo_options_start + 1) le $todo_options_max">
+								<add_player_choice 		text="{2802,1200}.[$todo_options_start, $todo_options_max]" 	position="bottom_right" section="mmtnshipinandout" 		choiceparam="['do_blacklist', null, $todo_options_start]"/>
+							</do_if>
+							<do_elseif value="$todo_options_start le $todo_options_max">
+								<set_value name="$zStations" exact="''" />
+								<find_station name="$tempstation" space="$trade_zones.{$todo_options_start}" owner="$commander.owner" multiple="true" />
+								<do_if value="$tempstation.count">
+									<set_value name="$zStations" exact="'\n'" operation="add"/>
+									<do_all exact="$tempstation.count" counter="$z" reverse="true">
+										<set_value name="$zStations" exact="$tempstation.{$z}.knownname" operation="add"/>
+										<set_value name="$zStations" exact="', '" operation="add" chance="if $z != 1 then 100 else 0"/>
+									</do_all>
+								</do_if>								
+								<set_value name="$tooltip" exact="'%2 %3\n%1%4'.[$trade_zones.{$todo_options_start}.sector.knownname, $trade_zones.{$todo_options_start}.cluster.knownname, if @$commander.gatedistance.{$trade_zones.{$todo_options_start}} ge 1 then '[%1]'.[$commander.gatedistance.{$trade_zones.{$todo_options_start}}] else '', $zStations]" />
+								<remove_value name="$zStations"/>
+								<remove_value name="$tempstation"/>
+								<add_player_choice		text="'%1 [%2]'.[$trade_zones.{$todo_options_start}.knownname, if not @event.object.$trade_zones_blacklist.indexof.{$trade_zones.{$todo_options_start}} or @$commander.tradenpc.$trade_zones_blacklist.indexof.{$trade_zones.{$todo_options_start}} then {2802,1228} else {1001,4600}]" tooltip="$tooltip" selectable="@event.object.$trade_zones_blacklist.indexof.{$trade_zones.{$todo_options_start}} or not @$commander.tradenpc.$trade_zones_blacklist.indexof.{$trade_zones.{$todo_options_start}}" immediate="@event.object.$trade_zones_blacklist.indexof.{$trade_zones.{$todo_options_start}}"	position="$i" 		section="mmtnshipinandout" choiceparam="['do_blacklist', 'zone', $todo_options_start2, $trade_zones.{$todo_options_start}]"/>
+								<remove_value name="$tooltip"/>
+								<set_value name="$todo_options_start"  operation="add" exact="1" /> 
+							</do_elseif>
+							<do_elseif value="$i == 6">
+								<add_player_choice text="{1002,20}" position="bottom_right" section="mmtnshipinandout" />
+							</do_elseif>
+						</do_all>
+						<!--  clean  -->
+						<remove_value name="$todo_options_start2"/>
+						<remove_value name="$todo_options_start"/>
+						<remove_value name="$todo_options_max"/>
+						<remove_value name="$trade_zones"/>
+						<remove_value name="$commander"/>
+					</do_elseif>
+					<do_elseif value="event.param2.{1}? and ['do_globaltrades', 'do_global', 'do_refact', 'do_blacklist'].indexof.{event.param2.{1}}">
+						<add_player_choice text="{2802,1202}.[if event.object.$trade_global? then (if event.object.$trade_global == 1 then {1001,2617} else {1001,2618}) else {1001,2661}]" position="top_left" section="mmtnshipinandout" choiceparam="['do_global']" />
+						<add_player_choice text="{2802,1239}" position="left" section="mmtnshipinandout" choiceparam="['do_blacklist', null]" selectable="(not (@event.object.$trade_global == 2 or (@event.object.container.commander.tradenpc.$trade_global == 2 and @event.object.$trade_global != 1)) and event.object.container.isclass.[class.ship_l, class.ship_xl]) or (@event.object.$trade_global == 1 and event.object.container.isclass.ship_m)"/>
+						<add_player_choice text="{1001,6101}" position="bottom_left" section="mmtnshipinandout" choiceparam="['do_blacklist', 'reset']" selectable="@event.object.$trade_zones_blacklist.count"/>
+						<add_player_choice text="'%1 [%2]'.[{2802,1245}, if @event.object.$refact then if event.object.$refact == 1 then {1001,2916} else if event.object.$refact == 2 then {1001,2917} else {1001,2617} else {2802,1228}]" position="right" section="mmtnshipinandout" tooltip="'limit trading to own faction'" choiceparam="['do_refact']" />
+						<add_player_choice text="{1002,20}" position="bottom_right" section="mmtnshipinandout" />
+					</do_elseif>
+					<do_else>
+						<add_player_choice text="if event.object.$trade_inandout? then (if event.object.$trade_inandout == 1 then '[75/25] '+{1001,2826} else (if event.object.$trade_inandout == 2 then {1001,2826}+' [25/75]' else (if event.object.$trade_inandout == 3 then {1001,2916} else {1001,2917}))) else {1001,2826}" position="top_left" section="mmtnshipinandout" choiceparam="['do']" />
+						<add_player_choice text="{2802,1202}.[if event.object.$trade_global? then (if event.object.$trade_global == 1 then {1001,2617} else {1001,2618}) else {1001,2661}]" position="left" section="mmtnshipinandout" choiceparam="['do_globaltrades']" chance="if event.object.container.isclass.[class.ship_m, class.ship_l, class.ship_xl] and @event.object.container.commander.macro.ismacro.{global.$tradestationnetwork} then 100 else 0" />
+						<add_player_choice_sub text="{1001,1401}" position="bottom_left" section="mmtnshipinandout" choiceparam="['menue', 'tag']" />
+						<add_player_choice text="$name" position="top_right" section="mmtnshipinandout" immediate="event.object.container.name != $name" choiceparam="['do_update_name']" chance="if $name? and not $rename then 100 else 0"/>
+						<add_player_choice text="{2802,1227}.[if event.object.$trade_range? then (if event.object.$trade_range == 1 then event.object.container.commander.zone.name else if event.object.container.isclass.[class.ship_s, class.ship_m] then event.object.container.commander.cluster.name else event.object.container.commander.sector.name) else {2802,1228}]" tooltip="{2802,1229}" position="right" section="mmtnshipinandout" choiceparam="['do_range']" selectable="not event.object.$tgr_min_sell?" />
+					</do_else>
+					<remove_value name="$rename"/>
+					<remove_value name="$name"/>
+					<remove_value name="$cargotypes"/>
+
+
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				</do_if>
+				<do_elseif value="event.param" exact="'mmtnshipmining'">
+					<!--  basic data  -->
+					<set_value name="$cargotypes" exact="[	[{20205,200}, tag.bulk, ware.ore, 4],
+															[{20205,300}, tag.liquid, ware.water, 5] ]" />
+					<set_value name="$rename" exact="false" />
+					<!--  check name -->
+					<do_if value="event.object.$mine_restrictions? or event.object.$mine_inandout? or event.object.container.macro.name == event.object.container.name ">
+						<set_value name="$name_cargo" exact="null"/>
+						<include_actions ref="MMTN_rename_mine" />						
+						
+						<do_if value="event.object.container.name == $name">
+							<set_value name="$rename" exact="true" />
+						</do_if>
+					</do_if>
+
+					<!--  do set data  -->
+					<do_if value="event.param2.{1}? and event.param2.{1} == 'do_range'">
+						<do_if value="not event.object.$mine_range?">
+							<set_value name="event.object.$mine_range" exact="1"/>
+						</do_if>
+						<do_elseif value="event.object.$mine_range" exact="1" chance="if event.object.container.commander.maxradarrange gt 30km and event.object.container.isclass.[class.ship_l, class.ship_xl] then 100 else 0">
+							<set_value name="event.object.$mine_range" exact="2"/>
+						</do_elseif>
+						<do_else>
+							<remove_value name="event.object.$mine_range"/>
+						</do_else>
+					</do_if>
+					<do_elseif value="event.param2.{1}? and event.param2.{1} == 'do_update_name'">
+						<set_value name="$rename" exact="true" />
+					</do_elseif>
+					<do_elseif value="event.param2.{1}? and event.param2.{1} == 'do_restrict'">
+						<do_if value="not event.object.$mine_restrictions?">
+							<set_value name="event.object.$mine_restrictions" exact="table[$tags = [], $ware = []]"/>
+						</do_if>
+						<do_if value="event.param2.{2} == 'tag' and event.object.$mine_restrictions.$tags.indexof.{event.param2.{3}}">
+							<do_if value="event.object.$mine_restrictions.$tags.indexof.{event.param2.{3}}">
+								<remove_value name="event.object.$mine_restrictions.$tags.{event.object.$mine_restrictions.$tags.indexof.{event.param2.{3}}}"/>
+							</do_if>
+						</do_if>
+						<do_elseif value="event.param2.{2} == 'tag'">
+							<append_to_list name="event.object.$mine_restrictions.$tags" exact="event.param2.{3}" />
+						</do_elseif>
+						<do_elseif value="event.param2.{2} == 'ware' and event.object.$mine_restrictions.$ware.indexof.{event.param2.{4}}">
+							<do_if value="event.object.$mine_restrictions.$ware.indexof.{event.param2.{4}}">
+								<remove_value name="event.object.$mine_restrictions.$ware.{event.object.$mine_restrictions.$ware.indexof.{event.param2.{4}}}"/>
+							</do_if>
+						</do_elseif>
+						<do_elseif value="event.param2.{2} == 'ware'">
+							<append_to_list name="event.object.$mine_restrictions.$ware" exact="event.param2.{4}" />
+						</do_elseif>
+
+						<do_if value="event.param2.{2} == 'reset' or (event.object.$mine_restrictions.$tags.count == 0 and event.object.$mine_restrictions.$ware.count == 0)">
+							<remove_value name="event.object.$mine_restrictions"/>
+						</do_if>
+					</do_elseif>
+
+					<!-- rename ship -->
+					<do_if value="$rename">
+						<remove_value name="$name"/>
+						<include_actions ref="MMTN_rename_mine" />						
+						
+						<do_if value="event.object.container.isclass.ship and event.object.container.name != $name">
+							<do_if value="event.object.container.macro.name == $name">
+								<set_object_name object="event.object.container" name="''" />
+							</do_if>
+							<do_else>
+								<set_object_name object="event.object.container" name="$name" />
+							</do_else>
+						</do_if>
+						<remove_value name="$name"/>
+					</do_if>
+
+					<!-- menue -->
+					<do_if value="event.param2.{2}? and event.param2.{2} == 'tag'">
+						<do_all exact="$cargotypes.count" counter="$i">
+							<add_player_choice text="'%1 [%2]'.[$cargotypes.{$i}.{1}, if not @event.object.$mine_restrictions.$tags.indexof.{$cargotypes.{$i}.{2}} then {2802,1228} else {1001,2686}]" immediate="@event.object.$mine_restrictions.$tags.indexof.{$cargotypes.{$i}.{2}}" position="$cargotypes.{$i}.{4}" selectable="event.object.container.cargo.{$cargotypes.{$i}.{3}}.max and (@event.object.$mine_restrictions.$tags.count+1 lt $cargotypes.count or @event.object.$mine_restrictions.$tags.indexof.{$cargotypes.{$i}.{2}})" section="mmtnshipmining" choiceparam="['do_restrict', 'tag', $cargotypes.{$i}.{2}]" />
+						</do_all>
+
+						<add_player_choice text="{1001,46}" position="bottom_left" immediate="@event.object.$mine_restrictions.$ware.count" section="mmtnshipmining" choiceparam="['menue', 'ware', 1]" />
+						<add_player_choice text="{1001,6101}" selectable="event.object.$mine_restrictions?" section="mmtnshipmining" choiceparam="['do_restrict', 'reset']" />
+					</do_if>
+					<do_elseif value="event.param2.{2}? and event.param2.{2} == 'ware'">
+						<create_list name="$warebasket" />
+						<do_if value="event.object.container.commander.isoperational">
+							<set_value name="$resources" exact="event.object.container.commander.resources.list" />
+							<do_all exact="$resources.count" counter="$i">
+								<set_value name="$ware" exact="$resources.{$i}" />
+								<do_if value="($ware.tags.indexof.{tag.minable}) and (event.object.container.cargo.{$ware}.max gt 0)">
+									<do_if value="event.object.container.units.collect.{$ware}.count gt 0">
+										<do_if value="$warebasket.indexof.{$ware}" exact="0">
+											<append_to_list name="$warebasket" exact="$ware" />
+										</do_if>
+									</do_if>
+								</do_if>
+							</do_all>
+							<!-- support working for trade stations / warehouses as well -->
+							<set_value name="$tradewares" exact="event.object.container.commander.tradewares.list" />
+							<do_all exact="$tradewares.count" counter="$i">
+								<set_value name="$ware" exact="$tradewares.{$i}" />
+								<do_if value="($ware.tags.indexof.{tag.minable}) and (event.object.container.cargo.{$ware}.max gt 0)">
+									<do_if value="event.object.container.units.collect.{$ware}.count gt 0">
+										<do_if value="$warebasket.indexof.{$ware}" exact="0">
+											<append_to_list name="$warebasket" exact="$ware" />
+										</do_if>
+									</do_if>
+								</do_if>
+							</do_all>
+							<remove_value name="$resources" />
+							<remove_value name="$tradewares" />
+						</do_if>
+
+						<set_value name="$todo_options_start" exact="if event.param2.{3}? and event.param2.{3} gt 0 then event.param2.{3} else 1" />
+						<set_value name="$todo_options_start2" exact="$todo_options_start" />
+						<set_value name="$todo_options_max" exact="$warebasket.count" />
+	
+						<do_all exact="6" counter="$i">
+							<do_if value="$i == 6 and ($todo_options_start + 1) le $todo_options_max">
+								<add_player_choice 		text="{2802,1200}.[$todo_options_start, $todo_options_max]" 	position="bottom_right" section="mmtnshipmining" 		choiceparam="['menue', 'ware', $todo_options_start]"/>
+							</do_if>
+							<do_elseif value="$todo_options_start le $todo_options_max">
+								<add_player_choice		text="'%1 [%2]'.[$warebasket.{$todo_options_start}.name, if not @event.object.$mine_restrictions.$ware.indexof.{$warebasket.{$todo_options_start}} then {2802,1228} else {2802,1238}]" immediate="@event.object.$mine_restrictions.$ware.indexof.{$warebasket.{$todo_options_start}}"	position="$i" 		section="mmtnshipmining" choiceparam="['do_restrict', 'ware', $todo_options_start2, $warebasket.{$todo_options_start}]"/>
+								<set_value name="$todo_options_start"  operation="add" exact="1" /> 
+							</do_elseif>
+							<do_elseif value="$i == 6">
+								<add_player_choice text="{1002,20}" position="bottom_right" section="mmtnshipmining" choiceparam="['menue', 'tag']" />
+							</do_elseif>
+						</do_all>
+						<!--  clean  -->
+						<remove_value name="$todo_options_start2"/>
+						<remove_value name="$todo_options_start"/>
+						<remove_value name="$todo_options_max"/>
+						<remove_value name="$warebasket"/>
+					</do_elseif>
+					<do_else>
+						<add_player_choice_sub text="{1001,1401}" position="bottom_left" section="mmtnshipmining" choiceparam="['menue', 'tag']" />
+						<add_player_choice text="$name" position="top_right" section="mmtnshipmining" immediate="event.object.container.name != $name" choiceparam="['do_update_name']" chance="if $name? and not $rename then 100 else 0"/>
+						<add_player_choice text="{2802,1227}.[if event.object.$mine_range? then (if event.object.$mine_range == 1 then event.object.container.commander.zone.name else if event.object.container.isclass.[class.ship_s, class.ship_m] then event.object.container.commander.cluster.name else event.object.container.commander.sector.name) else {2802,1228}]" tooltip="{2802,1229}" position="right" section="mmtnshipmining" choiceparam="['do_range']" />
+
+					</do_else>
+					<remove_value name="$rename"/>
+					<remove_value name="$name"/>
+					<remove_value name="$cargotypes"/>
+
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				</do_elseif>
+				<do_else>
+					<!-- trade -->
+					<add_player_choice_sub text="if event.object.$trade_inandout? then (if event.object.$trade_inandout == 1  or event.object.$trade_inandout == 3 then {1001,2916} else {1001,2917}) else {1001,2826}" selectable="event.object.command.value == command.trade" tooltip="if event.object.command.value == command.trade then {2802,1240} else if event.object.command.value == command.dockat or event.object.commandaction.value == commandaction.undocking then {2802,1241} else {2802,1242}" position="left" section="mmtnshipinandout" chance="if event.object.command.value == command.freemining or event.object.command.value == command.mining then 0 else 100" />
+
+					<!-- mining -->
+					<add_player_choice_sub text="{2802,1234}" selectable="event.object.command.value == command.freemining or event.object.command.value == command.mining" tooltip="''" position="left" section="mmtnshipmining" chance="if event.object.command.value == command.freemining or event.object.command.value == command.mining then 100 else 0" />
+				</do_else>
+			</actions>
+		</cue>
+
+		<cue name="MMTN_work_jobswitch" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="default" />
+					<event_conversation_returned_to_section section="default" />
+					<event_conversation_next_section sectionprefix="mmtnshipjobswitch"/>
+				</check_any>
+				<check_value value="event.object.type" exact="entitytype.commander" />
+				<check_value value="event.object.owner" exact="faction.player" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_value value="event.object.container.commander? and @event.object.container.commander.isclass.station" />
+			</conditions>
+			<actions>
+				<do_if value="event.param" exact="'mmtnshipjobswitch_menu'">
+					<set_value name="$Object" exact="event.object.container.commander" />
+					<set_value name="$subordinate" exact="event.object.container" />
+					<do_if value="$subordinate != @$Object.buildingmodule.container">
+
+						<include_actions ref="MMTN_tradewares_list" />
+					
+						<set_value name="$maxrange" exact="$Object.sector" />
+						<do_if value="$Object.tradenpc.$config_subordinate_range?">
+							<set_value name="$maxrange" exact="$Object.tradenpc.$config_subordinate_range" />
+						</do_if>
+						<do_else>
+							<do_if value="$subordinate.isclass.[class.ship_l, class.ship_xl] and ($Object.maxradarrange gt 30km)">
+								<set_value name="$maxrange" exact="$Object.cluster" />
+							</do_if>
+						</do_else>
+					
+						<create_list name="$collect_warelist" />
+						<do_all exact="$warelist.count" counter="$i">
+							<set_value name="$ware" exact="$warelist.{$i}" />
+							<do_if value="$ware.tags.indexof.{tag.minable}">
+								<do_if value="$subordinate.units.collect.{$ware}.count gt 0">
+									<append_to_list name="$collect_warelist" exact="$warelist.{$i}" />
+								</do_if>
+							</do_if>
+						</do_all>
+					
+						<add_player_choice text="{2802,1234}" selectable="$collect_warelist.count gt 0 and $subordinate.commanderentity.type != entitytype.defencecontrol" tooltip="{2802,1243}" section="mmtnshipjobswitch" choiceparam="['mining', $collect_warelist]" />
+						<add_player_choice text="{2802,1235}" selectable="$warelist.count gt 0 and $subordinate.commanderentity.type != entitytype.defencecontrol" section="mmtnshipjobswitch" choiceparam="['trade', $warelist, $maxrange]" />
+						<add_player_choice text="{2802,1236}" selectable="$subordinate.dps.all gt 50.0f" section="mmtnshipjobswitch" choiceparam="['patrol']" />
+						<add_player_choice text="{2802,1237}" selectable="event.object.command.value" section="mmtnshipjobswitch" choiceparam="['pause']" />
+
+						<do_if value="$subordinate.commanderentity.type == entitytype.defencecontrol and $subordinate.cargo.{ware.energycells}.max and $subordinate.cargo.{ware.dumbfiremissile}.max and $subordinate.cargo.{ware.ore}.max and $subordinate.cargo.{ware.water}.max">
+							<!-- $subordinate.isclass.[class.ship_l, class.ship_xl] and -->
+							<add_player_choice text="{2802,1244}" selectable="($subordinate.units.{unitcategory.transport}.count or $subordinate.isclass.[class.ship_s, class.ship_m]) and $warelist.count" section="mmtnshipjobswitch" choiceparam="['patrolcollect']" />
+						</do_if>
+						<do_elseif value="$subordinate.commanderentity.type == entitytype.manager and $subordinate.cargo.{ware.energycells}.max and $subordinate.cargo.{ware.dumbfiremissile}.max and $subordinate.cargo.{ware.ore}.max and $subordinate.cargo.{ware.water}.max">
+							<add_player_choice_sub text="'Ranged'" tooltip="'trade Galaxy wide'" section="mmtnshipjobswitch_galaxy" immediate="event.object.$tgr_min_sell?" />
+						</do_elseif>
+
+						<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				
+						<remove_value name="$warelist" />
+						<remove_value name="$collect_warelist" />
+						<remove_value name="$maxrange" />
+					</do_if>
+					<remove_value name="$Object" />
+					<remove_value name="$subordinate" />
+				</do_if>
+
+				<do_elseif value="event.param == 'mmtnshipjobswitch_galaxy'">  
+					<set_value name="$Station" exact="event.object.container.commander" />
+					<set_value name="$range" exact="null" />
+					<set_value name="$type" exact="null" />
+					<do_if value="not $Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['min', 'sell']}?">
+						<set_value name="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['min', 'sell']}" exact="1"/>
+						<set_value name="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['min', 'buy']}" exact="1"/>
+					</do_if>
+					<do_if value="not $Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['max', 'sell']}?">
+						<set_value name="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['max', 'sell']}" exact="1"/>
+						<set_value name="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['max', 'buy']}" exact="1"/>
+						<find_cluster groupname="$clusters" multiple="true" />
+						<do_all exact="$clusters.count" counter="$i">
+							<set_value name="$tmp" exact="$Station.gatedistance.{$clusters.{$i}}"/>
+							<do_if value="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['max', 'sell']} lt $tmp">
+								<set_value name="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['max', 'sell']}" exact="$tmp"/>
+								<set_value name="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['max', 'buy']}" exact="$tmp"/>
+							</do_if>
+						</do_all>
+						<remove_value name="$clusters"/>
+						<remove_value name="$tmp"/>
+					</do_if>
+
+					<do_if value="event.param2? and typeof event.param2 == datatype.list">
+						<set_value name="$range" exact="if event.param2.{1} == 'max' then 'max' else 'min'"/>
+						<set_value name="$type" exact="if event.param2.{3} == 'buy' then 'buy' else 'sell'"/>
+						<set_value name="$range_min" exact="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['min', $type]}"/>
+						<set_value name="$range_max" exact="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['max', $type]}"/>
+
+						<do_if value="event.param2.{2}" exact="'add'">
+							<do_if value="not $Station.tradenpc.{'$trade_galaxy_range_%1_%2'.[$range, $type]}?">
+								<set_value name="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.[$range, $type]}" exact="1"/>
+							</do_if>
+							<do_elseif value="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.[$range, $type]}?">
+								<set_value name="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.[$range, $type]}" operation="add"/>
+							</do_elseif>
+						</do_if>
+						<do_elseif value="event.param2.{2}" exact="'sub'">
+							<do_if value="not $Station.tradenpc.{'$trade_galaxy_range_%1_%2'.[$range, $type]}? or $Station.tradenpc.{'$trade_galaxy_range_%1_%2'.[$range, $type]} lt 1">
+								<set_value name="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.[$range, $type]}" exact="1"/>
+							</do_if>
+							<do_elseif value="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.[$range, $type]}?">
+								<set_value name="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.[$range, $type]}" operation="subtract"/>
+							</do_elseif>
+						</do_elseif>
+
+						<do_if value="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['min', $type]} gt $Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['max', $type]}">
+							<do_if value="$range == 'max' and $Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['min', $type]} le 1">
+								<show_help position="8" log="false" force="true" duration="2s" custom="'Error: not possible'" />
+								<set_value name="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['min', $type]}" exact="$range_min"/>
+								<set_value name="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['max', $type]}" exact="$range_max"/>
+							</do_if>
+							<do_elseif value="$range == 'min'">
+								<set_value name="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['max', $type]}" operation="add"/>
+							</do_elseif>
+							<do_else>
+								<set_value name="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['min', $type]}" operation="subtract"/>
+							</do_else>
+						</do_if>
+
+						<find_cluster name="$clusters" multiple="true" presentation="false">
+							<match_gate_distance object="$Station" min="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['min', $type]}" max="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['max', $type]}"/>
+						</find_cluster>
+
+						<do_if value="$clusters.count == 0">
+							<show_help position="8" log="false" force="true" duration="2s" custom="'Error: not possible, out of range'" />
+							<set_value name="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['min', $type]}" exact="$range_min"/>
+							<set_value name="$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['max', $type]}" exact="$range_max"/>
+						</do_if>
+						<remove_value name="$clusters"/>
+						<remove_value name="$range_min"/>
+						<remove_value name="$range_max"/>
+					</do_if>
+
+					<add_player_choice position="top_right" text="{2802,1206}" section="mmtnshipjobswitch_galaxy" choiceparam="[$range, 'add', $type]" selectable="$type and $range" tooltip="'add %1 %2'.[$range, $type]" />
+					<add_player_choice position="right" text="{2802,1207}" section="mmtnshipjobswitch_galaxy" choiceparam="[$range, 'sub', $type]" selectable="$type and $range" tooltip="'subtract %1 %2'.[$range, $type]" />
+
+					<add_player_choice text="'sell [%1 / %2]'.[$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['min', 'sell']}, $Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['max', 'sell']}]" tooltip="if $type == 'sell' and $range then $range else ''" section="mmtnshipjobswitch_galaxy" choiceparam="[if $range == 'min' then 'max' else 'min', null, 'sell']" immediate="$type == 'sell'"/>
+					<add_player_choice text="'buy [%1 / %2]'.[$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['min', 'buy']}, $Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['max', 'buy']}]" tooltip="if $type == 'buy' and $range then $range else ''" section="mmtnshipjobswitch_galaxy" choiceparam="[if $range == 'min' then 'max' else 'max', null, 'buy']" immediate="$type == 'buy'"/>
+
+					<add_player_choice text="'%1 Trading'.[if event.object.$tgr_min_sell? then 'Restart' else 'Start']" section="mmtnshipjobswitch" 
+																tooltip="if event.object.$tgr_min_sell? then 'Trade ranged:\nsell min: %1 max: %2\nbuy min: %3 max: %4'.[@event.object.$tgr_min_sell, @event.object.$tgr_max_sell, @event.object.$tgr_min_buy, @event.object.$tgr_max_buy] else ''" 
+																choiceparam="['traderanged', [$Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['min', 'sell']}, $Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['max', 'sell']}, $Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['min', 'buy']}, $Station.tradenpc.{'$trade_galaxy_range_%1_%2'.['max', 'buy']}]]" 
+																/>
+
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+					<remove_value name="$range"/>
+					<remove_value name="$type"/>
+					<remove_value name="$Station"/>
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmtnshipjobswitch'">
+					<do_if value="event.param2.{1}" exact="'mining'">
+						<set_value name="$keepwares" exact="[ware.fuelcells]" />
+						<set_value name="$cargowares" exact="event.object.container.cargo.list" />
+						<do_all exact="$cargowares.count" counter="$c">
+							<do_if value="$keepwares.indexof.{$cargowares.{$c}}">
+								<continue />
+							</do_if>
+							<set_value name="$currentware" exact="$cargowares.{$c}"/>
+							<do_if value="event.object.container.commander.cargo.{$currentware}.max">
+								<add_cargo ware="$currentware" object="event.object.container.commander" exact="[event.object.container.commander.cargo.{$currentware}.free, event.object.container.commander.cargo.{$currentware}.target - event.object.container.commander.cargo.{$currentware}.count, event.object.container.cargo.{$currentware}.count].min"  result="$transfer"/>
+								<remove_cargo object="event.object.container" ware="$currentware" exact="$transfer"/>
+							</do_if>
+							<drop_cargo object="event.object.container" ware="$currentware" exact="event.object.container.cargo.{$currentware}.count"/>
+						</do_all>
+						<remove_value name="$compensation" />
+						<remove_value name="$currentware" />
+						<remove_value name="$cargowares" />
+						<remove_value name="$keepwares" />
+
+						<start_script name="'mining.ship.station'" object="event.object">
+							<param name="warebasket" value="event.param2.{2}" />
+						</start_script>
+					</do_if>
+					<do_elseif value="event.param2.{1}" exact="'trade'">
+						<start_script name="'trade.ship'" object="event.object">
+							<param name="warelist" value="event.param2.{2}" />
+							<param name="range" value="event.param2.{3}" />
+						</start_script>
+						<do_if value="event.object.container.defencenpc">
+							<set_value name="event.object.container.defencenpc.$config_attackenemies" exact="0"/>
+						</do_if>	
+					</do_elseif>
+					<do_elseif value="event.param2.{1}" exact="'patrol'">
+						<start_script name="'move.patrol'" object="event.object">
+							<param name="range" value="'station'" comment="this Object" />
+							<param name="range_max" value="event.object.container.commander.size/2 + event.object.container.maxradarrange/2" />
+							<param name="allowstations" value="false" />
+						</start_script>
+						<do_if value="event.object.container.defencenpc">
+							<set_value name="event.object.container.defencenpc.$config_attackenemies" exact="1"/>
+						</do_if>	
+					</do_elseif>
+					<do_elseif value="event.param2.{1}" exact="'patrolcollect'">
+						<do_if value="event.object.container.commander.architect.$config_subordinate_range? or event.object.container.commander.tradenpc.$config_subordinate_range?">
+							<set_value name="$config_subordinate_range" exact="if event.object.container.commanderentity.$config_subordinate_range? then event.object.container.commanderentity.$config_subordinate_range else 
+																				if event.object.container.commander.architect.$config_subordinate_range? then event.object.container.commander.architect.$config_subordinate_range else event.object.container.commander.tradenpc.$config_subordinate_range" />
+							<do_if value="this.ship.isclass.[class.ship_l, class.ship_xl]">
+								<do_if value="['zone','sector','cluster'].indexof.{$config_subordinate_range}">
+									<set_value name="$range" exact="$config_subordinate_range" />
+								</do_if>
+								<do_else>
+									<set_value name="$range" exact="'sector'" />
+								</do_else>
+							</do_if>
+							<do_else>
+								<do_if value="['zone','sector'].indexof.{$config_subordinate_range}">
+									<set_value name="$range" exact="$config_subordinate_range" />
+								</do_if>
+								<do_else>
+									<set_value name="$range" exact="'sector'" />
+								</do_else>
+							</do_else>
+						</do_if>
+						<do_else>
+							<do_if value="event.object.container.isclass.[class.ship_l, class.ship_xl]">
+								<set_value name="$range" exact="'cluster'" />
+							</do_if>
+							<do_else>
+								<set_value name="$range" exact="'zone'" />
+							</do_else>
+						</do_else>
+						<start_script name="'move.plunder.player'" object="event.object">
+							<param name="range" value="$range" comment="this Object" />
+							<param name="basebasket" value="if event.object.container.commander.resources.list.count then event.object.container.commander.resources.list else event.object.container.commander.tradewares.list" />
+							<param name="checkrelation" value="true" />
+						</start_script>
+						<remove_value name="$range" />
+						<remove_value name="$config_subordinate_range" />
+						<do_if value="event.object.container.defencenpc">
+							<set_value name="event.object.container.defencenpc.$config_attackenemies" exact="1"/>
+						</do_if>	
+					</do_elseif>
+					<do_elseif value="event.param2.{1}" exact="'traderanged'">
+						<set_value name="$Object" exact="event.object.container.commander" />
+						<set_value name="$subordinate" exact="event.object.container" />
+						<include_actions ref="MMTN_tradewares_list" />
+
+						<start_script name="'trade.ship'" object="event.object">
+							<param name="warelist" value="$warelist" />
+							<param name="range" value="'ranged'" />
+							<param name="additionalparams" value="event.param2.{2}" />
+						</start_script>
+						<remove_value name="event.object.$trade_range"/>
+						<set_value name="event.object.$tgr_min_sell" exact="event.param2.{2}.{1}" />
+						<set_value name="event.object.$tgr_max_sell" exact="event.param2.{2}.{2}" />
+						<set_value name="event.object.$tgr_min_buy" exact="event.param2.{2}.{3}" />
+						<set_value name="event.object.$tgr_max_buy" exact="event.param2.{2}.{4}" />
+						<do_if value="$subordinate.defencenpc">
+							<set_value name="$subordinate.defencenpc.$config_attackenemies" exact="0"/>
+						</do_if>	
+
+						<remove_value name="$warelist"/>
+						<remove_value name="$Object"/>
+						<remove_value name="$subordinate"/>
+					</do_elseif>
+					<do_else>
+						<find_dock_location container="event.object.container.commander" size="event.object.container.docksize" name="$dock" />
+						<do_if value="$dock and not $dock.component.external">
+							<start_script object="event.object" name="'move.dockat'">
+								<param name="destination" value="event.object.container.commander" />
+								<param name="dockingslot" value="$dock" />
+							</start_script>
+						</do_if>
+						<do_else>
+							<start_script name="'move.patrol'" object="event.object">
+								<param name="range" value="'station'" comment="this Object" />
+								<param name="range_max" value="event.object.container.commander.size/2 + event.object.container.maxradarrange/2" />
+								<param name="engageenemies" value="false" />
+								<param name="allowstations" value="false" />
+							</start_script>
+						</do_else>
+						<remove_value name="$dock" />
+						<do_if value="event.object.container.defencenpc">
+							<set_value name="event.object.container.defencenpc.$config_attackenemies" exact="0"/>
+						</do_if>	
+					</do_else>
+				</do_elseif>
+				<do_else>
+					<add_player_choice text="{2802,1233}" position="top_right" section="mmtnshipjobswitch_menu" chance="if @event.object.ship.buildanchor then 0 else 100"/>
+				</do_else>
+			</actions>
+		</cue>
+
+		<cue name="MMTN_work_cargofix_ship" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_next_section section="mmadvcom_next"/>
+					<event_conversation_returned_to_section section="mmadvcom_next" />
+					<event_conversation_next_section section="mmtnshipcargofix"/>
+				</check_any>
+				<check_value value="event.object.type" exact="entitytype.commander" />
+				<check_value value="event.object.owner" exact="faction.player" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_value value="md.$todo_factions_npc?" />
+			</conditions>
+			<actions>
+				<do_if value="event.param" exact="'mmtnshipcargofix'">
+					<set_value name="$keepwares" exact="[ware.fuelcells]" />
+					<set_value name="$cargowares" exact="event.object.container.cargo.list" />
+					<set_value name="$log_text" exact="'%1 [%2]'.[event.object.container.knownname, event.object.container.owner.name]"/>
+					<set_value name="$log_chance" exact="0"/>
+					<do_all exact="$cargowares.count" counter="$c">
+					  <set_value name="$currentware" exact="$cargowares.{$c}"/>
+					  <do_if value="$keepwares.indexof.{$currentware} == 0">
+						<set_value name="$compensation" exact="event.object.container.cargo.{$currentware}.count / 2 * $currentware.minprice"/>
+						<reward_player money="$compensation" />
+						<set_value name="$log_text" exact="'\n*%1 %2: %3'.[event.object.container.cargo.{$currentware}.count, $currentware.name, $compensation.formatted.default]" operation="add"/>
+						<set_value name="$log_chance" exact="100"/>
+						<remove_cargo object="event.object.container" ware="$currentware" exact="event.object.container.cargo.{$currentware}.count"/>
+					  </do_if>
+					</do_all>
+					<write_to_logbook category="upkeep" text="$log_text" queued="false" chance="$log_chance"/>
+					<remove_value name="$log_text" />
+					<remove_value name="$log_chance" />
+					<remove_value name="$compensation" />
+					<remove_value name="$currentware" />
+					<remove_value name="$cargowares" />
+					<remove_value name="$keepwares" />
+				</do_if>
+				<do_else>
+					<add_player_choice text="'Lagerraum leeren'" position="top_right" section="mmtnshipcargofix" />
+				</do_else>
+			</actions>
+		</cue>
+
+		<cue name="MMTN_work_cargofix" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_next_section section="mmtncargofix"/>
+					<event_conversation_next_section section="mmtncargostart"/>
+				</check_any>
+			</conditions>
+			<actions>
+				<set_value name="$Station" exact="event.object.container" />
+				<set_value name="$multi" exact="0.4" />
+				<do_if value="event.param" exact="'mmtncargofix'">
+					<set_value name="$sourcelist" exact="$Station.cargo.list"/>
+					<set_value name="$multi" exact="0.8" />
+				</do_if>
+				<do_elseif value="event.param" exact="'mmtncargostart'">
+					<set_value name="$sourcelist" exact="$Station.tradewares.list"/>
+				</do_elseif>
+				<do_all exact="$sourcelist.count" counter="$i">
+					<do_if value="$Station.cargo.{$sourcelist.{$i}}.count" min="1">
+						<remove_cargo object="$Station" ware="$sourcelist.{$i}" exact="$Station.cargo.{$sourcelist.{$i}}.count" />
+					</do_if>
+					<do_if value="$Station.cargo.{$sourcelist.{$i}}.target gt 0">
+						<add_cargo object="$Station" ware="$sourcelist.{$i}" exact="$Station.cargo.{$sourcelist.{$i}}.target * $multi" />
+					</do_if>
+				</do_all>
+				<remove_value name="$sourcelist"/>
+				<remove_value name="$multi"/>
+				<remove_value name="$Station"/>
+			</actions>
+		</cue>
+
+		<!--  options submenu  -->
+		<cue name="MMTN_work_menu" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="mmtn_menu" />
+					<event_conversation_returned_to_section section="mmtn_menu" />
+					<event_conversation_started conversation="mmtn_range" />
+					<event_conversation_returned_to_section section="mmtn_range" />
+					<event_conversation_next_section sectionprefix="mmtn_"/>
+				</check_any>
+			</conditions>
+			<actions>
+				<set_value name="$Station" exact="event.object.container" />
+
+				<do_if value="event.param == 'mmtn_range'">  
+					<set_value name="$Station.tradenpc.$trade_zones_next" exact="player.age" chance="if $Station.tradenpc.$trade_zones_next? then 0 else 100" />
+					<do_if value="event.param2?">
+						<do_if value="event.param2" exact="'add'">
+							<set_value name="$Station.tradenpc.$trade_zones_range" exact="0" chance="if $Station.tradenpc.$trade_zones_range? then 0 else 100" />
+							<set_value name="$Station.tradenpc.$trade_zones_range" operation="add" />
+						</do_if>
+						<do_elseif value="event.param2" exact="'sub'">
+							<set_value name="$Station.tradenpc.$trade_zones_range" exact="0" chance="if $Station.tradenpc.$trade_zones_range? then 0 else 100" />
+							<set_value name="$Station.tradenpc.$trade_zones_range" operation="subtract" />
+							<!--set_value name="$Station.tradenpc.$trade_zones_range" exact="null" chance="if $Station.tradenpc.$trade_zones_range lt 0 then 100 else 0" /-->
+							<remove_value name="$Station.tradenpc.$trade_zones_range" chance="if $Station.tradenpc.$trade_zones_range lt 0 then 100 else 0"/>
+						</do_elseif>
+						<do_elseif value="event.param2" exact="'do_global'">
+							<do_if value="not $Station.tradenpc.$trade_global?">
+								<set_value name="$Station.tradenpc.$trade_global" exact="2"/>
+							</do_if>
+							<do_elseif value="$Station.tradenpc.$trade_global" exact="1">
+								<set_value name="$Station.tradenpc.$trade_global" exact="2"/>
+							</do_elseif>
+							<do_else>
+								<remove_value name="$Station.tradenpc.$trade_global"/>
+							</do_else>
+						</do_elseif>
+						<do_elseif value="event.param2" exact="'forceupdate'">
+							<set_value name="$Station.tradenpc.$trade_zones_next" exact="player.age - 60s" />
+						</do_elseif>
+					</do_if>
+					<set_value name="$range" exact="$Station.tradenpc.$trade_zones_range" chance="if $Station.tradenpc.$trade_zones_range? then 100 else 0" />
+					<set_value name="$range" exact="{2802,1208}" chance="if not $Station.tradenpc.$trade_zones_range? then 100 else 0" />
+
+					<add_player_choice text="{2802,1206}" section="mmtn_range" choiceparam="'add'" />
+					<add_player_choice text="{2802,1205}.[$range]" section="mmtn_range" choiceparam="'forceupdate'" immediate="player.age lt $Station.tradenpc.$trade_zones_next and event.param2?"/>
+					<add_player_choice text="{2802,1207}" section="mmtn_range" choiceparam="'sub'" />
+					<add_player_choice text="{2802,1202}.[if $Station.tradenpc.$trade_global? then (if $Station.tradenpc.$trade_global == 2 then {2802,1215} else {2802,1216}) else {2802,1216}]" section="mmtn_range" choiceparam="'do_global'" />
+					<!--add_player_choice_sub text="{2802,1225}" section="mmtnmakedistancelist" /-->
+					<add_player_choice_sub text="{2802,1239}" section="mmtn_blacklist" />
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+					<remove_value name="$range"/>
+				</do_if>
+				<do_elseif value="event.param == 'mmtn_blacklist'">  
+					<!-- generate/read ranges -->
+					<do_if value="event.object.$trade_zones? and player.age lt event.object.$trade_zones_next">
+						<!-- use cache -->
+						<set_value name="$trade_zones" exact="event.object.$trade_zones" />
+					</do_if>
+					<do_else>
+						<create_group groupname="$Trade_stations" />
+						<create_list name="$trade_zones_unsorted"/>
+						<create_list name="$trade_zones"/>
+						<!-- find stations and get zones -->
+						<do_all exact="global.$tradestationnetwork.count" counter="$m" reverse="true">
+							<find_station name="$tempstation" macro="global.$tradestationnetwork.{$m}" space="player.galaxy" owner="event.object.container.owner" multiple="true" />
+							<do_if value="$tempstation">
+								<add_to_group groupname="$Trade_stations" list="$tempstation" />
+							</do_if>
+							<remove_value name="$tempstation"/>
+						</do_all>
+						<do_all exact="$Trade_stations.count" counter="$z">
+							<do_if value="$trade_zones_unsorted.indexof.{$Trade_stations.{$z}.zone}" negate="true">
+								<append_to_list name="$trade_zones_unsorted" exact="$Trade_stations.{$z}.zone" chance="if $Trade_stations.{$z}.zone == event.object.container.zone then 0 else 100"/>
+							</do_if>
+						</do_all>
+						<remove_value name="$Trade_stations"/>
+						<!-- consider gatedistance -->
+						<do_if value="event.object.$trade_zones_range? and event.object.$trade_zones_range ge 0">
+							<do_all exact="$trade_zones_unsorted.count" counter="$z" reverse="true">
+								<do_if value="event.object.container.gatedistance.{$trade_zones_unsorted.{$z}} gt event.object.$trade_zones_range">
+									<remove_value name="$trade_zones_unsorted.{$z}"/>
+								</do_if>
+							</do_all>
+						</do_if>
+						<!-- sort gatedistance -->
+						<set_value name="$run" exact="0" />
+						<set_value name="$distance_max" exact="0" />
+						<do_while value="$trade_zones_unsorted.count gt 0">
+							<do_all exact="$trade_zones_unsorted.count" counter="$z" reverse="true">
+								<do_if value="$trade_zones_unsorted.{$z}.isclass.zone and $trade_zones_unsorted.{$z}.exists" negate="true">
+									<remove_value name="$trade_zones_unsorted.{$z}"/>
+									<continue />
+								</do_if>
+								<set_value name="$distance" exact="event.object.container.gatedistance.{$trade_zones_unsorted.{$z}}" />
+								<set_value name="$distance_max" exact="$distance" chance="if $distance_max lt $distance then 100 else 0" />
+								<do_if value="$distance == $run">
+									<append_to_list name="$trade_zones" exact="$trade_zones_unsorted.{$z}"/>
+									<remove_value name="$trade_zones_unsorted.{$z}"/>
+								</do_if>
+							</do_all>
+							<remove_value name="$distance"/>
+							<set_value name="$run" operation="add"/>
+							<break chance="if $run gt $distance_max then 100 else 0"/>
+						</do_while>
+						<remove_value name="$run"/>
+						<remove_value name="$distance_max"/>
+						<remove_value name="$trade_zones_unsorted"/>
+						<!-- cache zones -->
+						<do_if value="event.object.container.tradenpc?">
+							<set_value name="event.object.$trade_zones" exact="$trade_zones" />
+							<set_value name="event.object.$trade_zones_next" exact="player.age + 2h" />
+						</do_if>
+					</do_else> 
+					<!-- do changes -->
+					<do_if value="event.param2.{1}? and event.param2.{1} == 'do_restrict'">
+						<!-- init -->
+						<do_if value="not event.object.$trade_zones_blacklist?">
+							<create_list name="event.object.$trade_zones_blacklist"/>
+						</do_if>
+						<!-- do -->
+						<do_if value="event.param2.{2} == 'zone' and event.object.$trade_zones_blacklist.indexof.{event.param2.{4}}">
+							<do_if value="event.object.$trade_zones_blacklist.indexof.{event.param2.{4}}">
+								<remove_value name="event.object.$trade_zones_blacklist.{event.object.$trade_zones_blacklist.indexof.{event.param2.{4}}}"/>
+							</do_if>
+						</do_if>
+						<do_elseif value="event.param2.{2} == 'zone'">
+							<append_to_list name="event.object.$trade_zones_blacklist" exact="event.param2.{4}" />
+						</do_elseif>
+						<!-- remove outdatet ranges -->
+						<do_if value="event.object.$trade_zones_blacklist.count">
+							<do_all exact="event.object.$trade_zones_blacklist.count" counter="$z" reverse="true">
+								<do_if value="$trade_zones.indexof.{event.object.$trade_zones_blacklist.{$z}}" negate="true">
+									<remove_value name="event.object.$trade_zones_blacklist.{$z}"/>
+								</do_if>
+							</do_all>
+						</do_if>
+						<!-- clear -->
+						<do_if value="event.param2.{2} == 'reset' or event.object.$trade_zones_blacklist.count == 0">
+							<remove_value name="event.object.$trade_zones_blacklist"/>
+						</do_if>
+					</do_if>
+					<!-- show ranges -->
+					<set_value name="$todo_options_start" exact="if event.param2.{3}? and event.param2.{3} gt 0 then event.param2.{3} else 1" />
+					<set_value name="$todo_options_start2" exact="$todo_options_start" />
+					<set_value name="$todo_options_max" exact="$trade_zones.count" />
+
+					<do_all exact="6" counter="$i">
+						<do_if value="$i == 6 and ($todo_options_start + 1) le $todo_options_max">
+							<add_player_choice 		text="{2802,1200}.[$todo_options_start, $todo_options_max]" 	position="bottom_right" section="mmtn_blacklist" 		choiceparam="[null, null, $todo_options_start]"/>
+						</do_if>
+						<do_elseif value="$todo_options_start le $todo_options_max">
+							<set_value name="$zStations" exact="''" />
+							<find_station name="$tempstation" space="$trade_zones.{$todo_options_start}" owner="event.object.container.owner" multiple="true" />
+							<do_if value="$tempstation.count">
+								<set_value name="$zStations" exact="'\n'" operation="add"/>
+								<do_all exact="$tempstation.count" counter="$z" reverse="true">
+									<set_value name="$zStations" exact="$tempstation.{$z}.knownname" operation="add"/>
+									<set_value name="$zStations" exact="', '" operation="add" chance="if $z != 1 then 100 else 0"/>
+								</do_all>
+							</do_if>								
+							<set_value name="$tooltip" exact="'%2 %3\n%1%4'.[$trade_zones.{$todo_options_start}.sector.knownname, $trade_zones.{$todo_options_start}.cluster.knownname, if @event.object.container.gatedistance.{$trade_zones.{$todo_options_start}} ge 1 then '[%1]'.[event.object.container.gatedistance.{$trade_zones.{$todo_options_start}}] else '', $zStations]" />
+							<remove_value name="$zStations"/>
+							<remove_value name="$tempstation"/>
+							<add_player_choice		text="'%1 [%2]'.[$trade_zones.{$todo_options_start}.knownname, if not @event.object.$trade_zones_blacklist.indexof.{$trade_zones.{$todo_options_start}} then {2802,1228} else {1001,4600}]" tooltip="$tooltip" immediate="@event.object.$trade_zones_blacklist.indexof.{$trade_zones.{$todo_options_start}}"	position="$i" 		section="mmtn_blacklist" choiceparam="['do_restrict', 'zone', $todo_options_start2, $trade_zones.{$todo_options_start}]"/>
+							<remove_value name="$tooltip"/>
+							<set_value name="$todo_options_start"  operation="add" exact="1" />
+						</do_elseif>
+						<do_elseif value="$i == 6">
+							<add_player_choice text="{1002,20}" position="bottom_right" section="mmtn_range" />
+						</do_elseif>
+					</do_all>
+					<!--  clean  -->
+					<remove_value name="$todo_options_start2"/>
+					<remove_value name="$todo_options_start"/>
+					<remove_value name="$todo_options_max"/>
+					<remove_value name="$trade_zones"/>
+				</do_elseif>
+				<do_elseif value="event.param == 'mmtn_menu'">  
+					<add_player_choice_sub text="{2802,1212}" position="right" section="mmtn_cheats" />
+					<add_player_choice_sub text="{2802,1211}" position="bottom_left"  section="mmtn_range" />
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				</do_elseif>
+				<do_elseif value="event.param == 'mmtn_cheats'">  
+					<add_player_choice_sub text="{2802,1213}" section="mmtncargofix" />
+					<add_player_choice_sub text="{2802,1214}" section="mmtncargostart" />
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				</do_elseif>
+
+				<remove_value name="$Station"/>
+			</actions>
+		</cue>
+
+		<cue name="MMTN_network_list" instantiate="true">
+		  <conditions>
+			<event_conversation_next_section section="mmtnmakedistancelist"/>
+		  </conditions>
+		  <actions>
+			<set_value name="$text" exact="''"/>
+			<create_group groupname="$Trade_stations_tmp" />
+			<!-- find stations and get zones -->
+			<do_all exact="global.$tradestationnetwork.count" counter="$m" reverse="true">
+				<find_station name="$tempstation" macro="global.$tradestationnetwork.{$m}" space="player.galaxy" owner="event.object.container.owner" multiple="true" />
+				<do_if value="$tempstation">
+					<add_to_group groupname="$Trade_stations_tmp" list="$tempstation" />
+				</do_if>
+				<remove_value name="$tempstation"/>
+			</do_all>
+			<create_list name="$Trade_stations"/>
+			<do_all exact="$Trade_stations_tmp.count" counter="$z">
+				<append_to_list name="$Trade_stations" exact="$Trade_stations_tmp.{$z}"/>
+			</do_all>
+			<remove_value name="$Trade_stations_tmp"/>
+			<!-- sort gatedistance -->
+			<set_value name="$run" exact="0" />
+			<set_value name="$init" exact="false" />
+			<set_value name="$distance_max" exact="0" />
+			<do_while value="$Trade_stations.count gt 0">
+				<set_value name="$head" exact="false" />
+				<set_value name="$zone" exact="null"/>
+				<set_value name="$sector" exact="null"/>
+				<set_value name="$cluster" exact="null"/>
+				<do_if value="$init" negate="true">
+					<set_value name="$text" exact="'%1 '.[event.object.container.name]" operation="add"/>
+					<set_value name="$init" exact="true"/>
+				</do_if>
+				<do_all exact="$Trade_stations.count" counter="$z" reverse="true">
+					<set_value name="$distance" exact="event.object.container.gatedistance.{$Trade_stations.{$z}.zone}" />
+					<set_value name="$distance_max" exact="$distance" chance="if $distance_max lt $distance then 100 else 0" />
+					<do_if value="$distance == $run">
+						<do_if value="$Trade_stations.{$z} == event.object.container">
+							<remove_value name="$Trade_stations.{$z}"/>
+							<continue />
+						</do_if>
+						<do_if value="$head" negate="true">
+							<set_value name="$head" exact="true" />
+							<do_if value="event.object.container.tradenpc.$trade_zones_range? and $distance gt event.object.container.tradenpc.$trade_zones_range">
+								<set_value name="$head" exact="true" />
+								<set_value name="$text" exact="'\n+++[ %1 ] OUT OF RANGE +++ \n'.[$distance]" operation="add"/>
+							</do_if>
+							<do_else>
+								<set_value name="$head" exact="true" />
+								<set_value name="$text" exact="'\n+++[ %1 ] IN RANGE +++ \n'.[$distance]" operation="add"/>
+							</do_else>
+						</do_if>
+						<!--do_if value="$cluster == $Trade_stations.{$z}.cluster" negate="true">
+							<set_value name="$cluster" exact="$Trade_stations.{$z}.cluster"/>
+							<set_value name="$text" exact="'|_ %1 \n'.[$cluster.name]" operation="add"/>
+						</do_if>
+						<do_if value="$sector == $Trade_stations.{$z}.sector" negate="true">
+							<set_value name="$sector" exact="$Trade_stations.{$z}.sector"/>
+							<set_value name="$text" exact="' |_ %1 \n'.[$sector.name]" operation="add"/>
+						</do_if>
+						<do_if value="$zone == $Trade_stations.{$z}.zone" negate="true">
+							<set_value name="$zone" exact="$Trade_stations.{$z}.zone"/>
+							<set_value name="$text" exact="'  |_ %1 \n'.[$zone.name]" operation="add"/>
+						</do_if-->
+						<set_value name="$text" exact="' * %1 [%2.] '.[$Trade_stations.{$z}.name, $Trade_stations.{$z}.sector.name]" operation="add"/>
+						<remove_value name="$Trade_stations.{$z}"/>
+					</do_if>
+				</do_all>
+				<remove_value name="$distance"/>
+				<set_value name="$run" operation="add"/>
+				<break chance="if $run gt $distance_max then 100 else 0"/>
+			</do_while>
+			<do_if value="$init">
+				<write_to_logbook category="tips" text="$text"/>
+				<show_help position="9" log="false" force="true" duration="3s" custom="{2802,1226}" />
+			</do_if>
+			<do_else>
+				<show_help position="9" log="false" force="true" duration="3s" custom="{1001,5705}" />
+			</do_else>
+			<remove_value name="$head"/>
+			<remove_value name="$run"/>
+			<remove_value name="$init"/>
+			<remove_value name="$distance_max"/>
+			<remove_value name="$cluster"/>
+			<remove_value name="$sector"/>
+			<remove_value name="$zone"/>
+			<remove_value name="$Trade_stations"/>
+			<remove_value name="$text"/>
+			<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+		  </actions>
+		</cue>
+
+		<library name="MMTN_tradewares_mine">
+			<actions>
+				<set_value name="$todo_options" exact="
+					[
+						ware.crystals,
+						ware.ice,
+						ware.ore,
+						ware.ions,
+						ware.plasma,
+						ware.nividium,
+						ware.silicon,
+						ware.hydrogen
+					]
+				"/>
+			</actions>
+		</library>
+		<!--
+		<set_value name="$Object" exact="event.object.container.commander" />
+		<set_value name="$subordinate" exact="event.object.container" />
+		<include_actions ref="MMTN_tradewares_list" />
+
+		<remove_value name="$warelist"/>
+		-->
+
+		<library name="MMTN_tradewares_list">
+			<actions>
+				<set_value name="$resources" exact="$Object.resources.list" />
+				<set_value name="$products" exact="$Object.products.list" />
+				<set_value name="$tradewares" exact="$Object.tradewares.list" />
+				<evaluate_ammo_storage object="$Object" wares="$ammowares" type="missile" />
+				<create_list name="$warelist" />
+				<do_all exact="$resources.count" counter="$i">
+					<set_value name="$ware" exact="$resources.{$i}" />
+					<do_if value="$subordinate.cargo.{$ware}.max gt 0">
+						<do_if value="$warelist.indexof.{$ware}" exact="0">
+							<append_to_list name="$warelist" exact="$ware" />
+						</do_if>
+					</do_if>
+				</do_all>
+				<do_all exact="$products.count" counter="$i">
+					<set_value name="$ware" exact="$products.{$i}" />
+					<do_if value="$subordinate.cargo.{$ware}.max gt 0">
+						<do_if value="$warelist.indexof.{$ware}" exact="0">
+							<append_to_list name="$warelist" exact="$ware" />
+						</do_if>
+					</do_if>
+				</do_all>
+				<do_all exact="$tradewares.count" counter="$i">
+					<set_value name="$ware" exact="$tradewares.{$i}" />
+					<do_if value="$subordinate.cargo.{$ware}.max gt 0">
+						<do_if value="$warelist.indexof.{$ware}" exact="0">
+							<append_to_list name="$warelist" exact="$ware" />
+						</do_if>
+					</do_if>
+				</do_all>
+				<do_all exact="$ammowares.count" counter="$i">
+					<set_value name="$ware" exact="$ammowares.{$i}" />
+					<do_if value="$subordinate.cargo.{$ware}.max gt 0">
+						<do_if value="$warelist.indexof.{$ware}" exact="0">
+							<append_to_list name="$warelist" exact="$ware" />
+						</do_if>
+					</do_if>
+				</do_all>
+				<remove_value name="$resources" />
+				<remove_value name="$products" />
+				<remove_value name="$tradewares" />
+				<remove_value name="$ammowares" />
+				<remove_value name="$ware" />
+			</actions>
+		</library>
+		<library name="MMTN_rename">
+			<actions>
+				<set_value name="$name_cargo" exact="null"/>
+				<do_all exact="$cargotypes.count" counter="$i">
+					<do_if value="@event.object.$trade_inandout == 4 and not (@event.object.$trade_restrictions.$tags.indexof.{$cargotypes.{$i}.{2}} or @event.object.$trade_restrictions.$tags_sell.indexof.{$cargotypes.{$i}.{2}}) and event.object.container.cargo.{$cargotypes.{$i}.{3}}.max">
+						<do_if value="$name_cargo == null">
+							<set_value name="$name_cargo" exact="(if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} or @event.object.$trade_restrictions.$tags_sell.indexof.{$cargotypes.{$i}.{2}} then (if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} then {2802,1222} else {2802,1221}) else '') + $cargotypes.{$i}.{1}"/>
+						</do_if>
+						<do_else>
+							<set_value name="$name_cargo" exact="$name_cargo + '/' + (if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} or @event.object.$trade_restrictions.$tags_sell.indexof.{$cargotypes.{$i}.{2}} then (if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} then {2802,1222} else {2802,1221}) else '') + $cargotypes.{$i}.{1}"/>
+						</do_else>
+					</do_if>
+
+					<do_elseif value="@event.object.$trade_inandout == 3 and not (@event.object.$trade_restrictions.$tags.indexof.{$cargotypes.{$i}.{2}} or @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}}) and event.object.container.cargo.{$cargotypes.{$i}.{3}}.max">
+						<do_if value="$name_cargo == null">
+							<set_value name="$name_cargo" exact="(if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} or @event.object.$trade_restrictions.$tags_sell.indexof.{$cargotypes.{$i}.{2}} then (if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} then {2802,1222} else {2802,1221}) else '') + $cargotypes.{$i}.{1}"/>
+						</do_if>
+						<do_else>
+							<set_value name="$name_cargo" exact="$name_cargo + '/' + (if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} or @event.object.$trade_restrictions.$tags_sell.indexof.{$cargotypes.{$i}.{2}} then (if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} then {2802,1222} else {2802,1221}) else '') + $cargotypes.{$i}.{1}"/>
+						</do_else>
+					</do_elseif>
+
+					<do_elseif value="not (@event.object.$trade_inandout == 3 or @event.object.$trade_inandout == 4) and not @event.object.$trade_restrictions.$tags.indexof.{$cargotypes.{$i}.{2}} and event.object.container.cargo.{$cargotypes.{$i}.{3}}.max">
+						<do_if value="$name_cargo == null">
+							<set_value name="$name_cargo" exact="(if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} or @event.object.$trade_restrictions.$tags_sell.indexof.{$cargotypes.{$i}.{2}} then (if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} then {2802,1222} else {2802,1221}) else '') + $cargotypes.{$i}.{1}"/>
+						</do_if>
+						<do_else>
+							<set_value name="$name_cargo" exact="$name_cargo + '/' + (if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} or @event.object.$trade_restrictions.$tags_sell.indexof.{$cargotypes.{$i}.{2}} then (if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} then {2802,1222} else {2802,1221}) else '') + $cargotypes.{$i}.{1}"/>
+						</do_else>
+					</do_elseif>
+<!--
+					<do_if value="not @event.object.$trade_restrictions.$tags.indexof.{$cargotypes.{$i}.{2}} and event.object.container.cargo.{$cargotypes.{$i}.{3}}.max">
+						<do_if value="$name_cargo == null">
+							<set_value name="$name_cargo" exact="(if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} or @event.object.$trade_restrictions.$tags_sell.indexof.{$cargotypes.{$i}.{2}} then (if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} then {2802,1222} else {2802,1221}) else '') + $cargotypes.{$i}.{1}"/>
+						</do_if>
+						<do_else>
+							<set_value name="$name_cargo" exact="$name_cargo + '/' + (if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} or @event.object.$trade_restrictions.$tags_sell.indexof.{$cargotypes.{$i}.{2}} then (if @event.object.$trade_restrictions.$tags_buy.indexof.{$cargotypes.{$i}.{2}} then {2802,1222} else {2802,1221}) else '') + $cargotypes.{$i}.{1}"/>
+						</do_else>
+					</do_if>
+-->
+				</do_all>
+
+				<do_if value="event.object.$trade_inandout? and event.object.$trade_restrictions?">
+					<!-- if event.object.$trade_inandout == 1 or event.object.$trade_inandout == 3 then (if event.object.$trade_inandout == 3 then '++'+{1001,2916} else '+'+{1001,2916}) else (if event.object.$trade_inandout == 4 then '++'+{1001,2917} else '+'+{1001,2917}) -->
+					<set_value name="$name" exact="'%2 %1%4%5 [%3]'.[event.object.container.macro.name, if event.object.$trade_inandout == 1 or event.object.$trade_inandout == 3 then (if event.object.$trade_inandout == 3 then {2802,1217} else {2802,1218}) else (if event.object.$trade_inandout == 4 then {2802,1220} else {2802,1219}), $name_cargo, if event.object.$trade_global? then (if @event.object.$trade_global == 1 then {2802,1223} else {2802,1224}) else '', if event.object.$trade_range? then (if @event.object.$trade_range == 1 then {2802,1231} else {2802,1232}) else '']" />
+				</do_if>
+				<do_elseif value="event.object.$trade_restrictions?">
+					<set_value name="$name" exact="'%1%4%5 [%3]'.[event.object.container.macro.name, null, $name_cargo, if event.object.$trade_global? then (if @event.object.$trade_global == 1 then {2802,1223} else {2802,1224}) else '', if event.object.$trade_range? then (if @event.object.$trade_range == 1 then {2802,1231} else {2802,1232}) else '']" />
+				</do_elseif>
+				<do_elseif value="event.object.$trade_inandout?">
+					<set_value name="$name" exact="'%2 %1%4%5'.[event.object.container.macro.name, if event.object.$trade_inandout == 1 or event.object.$trade_inandout == 3 then (if event.object.$trade_inandout == 3 then {2802,1217} else {2802,1218}) else (if event.object.$trade_inandout == 4 then {2802,1220} else {2802,1219}), $name_cargo, if event.object.$trade_global? then (if @event.object.$trade_global == 1 then {2802,1223} else {2802,1224}) else '', if event.object.$trade_range? then (if @event.object.$trade_range == 1 then {2802,1231} else {2802,1232}) else '']" />
+				</do_elseif>
+				<do_elseif value="event.object.$trade_global?">
+					<set_value name="$name" exact="'%1%4%5'.[event.object.container.macro.name, null, $name_cargo, if event.object.$trade_global? then (if @event.object.$trade_global == 1 then {2802,1223} else {2802,1224}) else '', if event.object.$trade_range? then (if @event.object.$trade_range == 1 then {2802,1231} else {2802,1232}) else '']" />
+				</do_elseif>
+				<do_elseif value="event.object.$trade_range?">
+					<set_value name="$name" exact="'%1%5'.[event.object.container.macro.name, null, $name_cargo, if event.object.$trade_global? then (if @event.object.$trade_global == 1 then {2802,1223} else {2802,1224}) else '', if event.object.$trade_range? then (if @event.object.$trade_range == 1 then {2802,1231} else {2802,1232}) else '' ]" />
+				</do_elseif>
+				<do_else>
+					<set_value name="$name" exact="event.object.container.macro.name" />
+				</do_else>
+				<remove_value name="$name_cargo"/>
+			</actions>
+		</library>
+		<library name="MMTN_rename_mine">
+			<actions>
+				<set_value name="$name_cargo" exact="null"/>
+				<do_if value="event.object.$mine_restrictions.$ware? and event.object.$mine_restrictions.$ware.count">
+					<do_all exact="event.object.$mine_restrictions.$ware.count" counter="$i">
+						<do_if value="event.object.container.cargo.{event.object.$mine_restrictions.$ware.{$i}}.max">
+							<do_if value="$name_cargo == null">
+								<set_value name="$name_cargo" exact="event.object.$mine_restrictions.$ware.{$i}.id"/>
+							</do_if>
+							<do_else>
+								<set_value name="$name_cargo" exact="$name_cargo + '/' + event.object.$mine_restrictions.$ware.{$i}.id"/>
+							</do_else>
+						</do_if>
+					</do_all>
+				</do_if>
+				<set_value name="$name_cargo2" exact="null"/>
+				<do_all exact="$cargotypes.count" counter="$i">
+					<do_if value="not @event.object.$mine_restrictions.$tags.indexof.{$cargotypes.{$i}.{2}} and event.object.container.cargo.{$cargotypes.{$i}.{3}}.max">
+						<do_if value="$name_cargo2 == null">
+							<set_value name="$name_cargo2" exact="$cargotypes.{$i}.{1}"/>
+						</do_if>
+						<do_else>
+							<set_value name="$name_cargo2" exact="$name_cargo2 + '/' + $cargotypes.{$i}.{1}"/>
+						</do_else>
+					</do_if>
+				</do_all>
+				<do_if value="$name_cargo and $name_cargo2">
+					<set_value name="$name_cargo" exact="$name_cargo + '|' + $name_cargo2"/>
+				</do_if>
+				<do_elseif value="$name_cargo2">
+					<set_value name="$name_cargo" exact="$name_cargo2"/>
+				</do_elseif>
+				<do_if value="event.object.$mine_restrictions?">
+					<set_value name="$name" exact="'%1%3 [%2]'.[event.object.container.macro.name, $name_cargo, if event.object.$mine_range? then (if @event.object.$mine_range == 1 then {2802,1231} else {2802,1232}) else '']" />
+				</do_if>
+				<do_elseif value="event.object.$mine_range?">
+					<set_value name="$name" exact="'%1%3'.[event.object.container.macro.name, $name_cargo, if event.object.$mine_range? then (if @event.object.$mine_range == 1 then {2802,1231} else {2802,1232}) else '']" />
+				</do_elseif>
+				<do_else>
+					<set_value name="$name" exact="event.object.container.macro.name" />
+				</do_else>
+				<remove_value name="$name_cargo"/>
+				<remove_value name="$name_cargo2"/>
+			</actions>
+		</library>
+	</cues>
+</mdscript>

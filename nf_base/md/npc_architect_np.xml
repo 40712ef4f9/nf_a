@@ -756,7 +756,7 @@
           </conditions>
           <delay exact="2s" />
           <actions>
-            <debug_text text="'start'" />
+            <debug_text chance="0" text="'start'" />
             <do_if value="$actor.$jobDetails? and $actor.$jobDetails.keys.list.count and $actor.$jobDetails.$BuildLocation.child == null">
 
               <set_value name="$selectedMacro" exact="$actor.$jobDetails.$StationMacro" />
@@ -770,7 +770,7 @@
                 <append_to_list name="$actor.$jobDetails.$CEO.$JOBS" exact="[if md.CM_Config.Settings.$Check? then 'BR.move.patrol' else 'move.patrol', $actor.$jobDetails.$BuildZone, [ ['range', 'zone'] ] ]"/>
               </do_if>
             </do_if>
-            <debug_text text="'end'" />
+            <debug_text chance="0" text="'end'" />
           </actions>
         </cue>
 
@@ -827,7 +827,7 @@
 
                 <reset_cue cue="MoveBuilderShip"/>
                 <remove_build_location_claim buildlocation="$location" />
-                <debug_text text="'end'" />
+                <debug_text chance="0" text="'end'" />
               </actions>
             </cue>
 
@@ -859,7 +859,7 @@
                 <cue name="CheckBuildLocationObstructed_Build">
                   <delay exact="$checkdelay" />
                   <actions>
-                    <debug_text text="'%1 Start'.[$actor.ship]" />
+                    <debug_text chance="0" text="'%1 Start'.[$actor.ship]" />
                     <do_if value="$location.child != null">
                       <!-- TODO: abort cleanly -->
                     </do_if>
@@ -898,7 +898,7 @@
                                         else 
                                           if $actor.container.owner.name then $actor.container.owner.name else $actor.container.owner.id, 
                                         $selectedMacro.name]"
-                chance="if global.$nfconfig.$buildOwnerNotice then 100 else 0"/>
+                			chance="if global.$nfconfig.$buildOwnerNotice then 100 else 0"/>
 
                         <!-- build all stages, with 100% armament + shielding -->
                         <create_list name="$BuildPlanList"/>
@@ -945,7 +945,7 @@
 
                       </do_else>
                     </do_else>
-                    <debug_text text="'end'" />
+                    <debug_text chance="0" text="'end'" />
                   </actions>
                 </cue>
               </cues>
@@ -1032,7 +1032,7 @@
               </conditions>
               <actions>
                 <do_if value="event.name == 'event_game_loaded' and not $actorContainer? and $station.exists and $actor.container? and $actor.container.exists">
-                  <debug_text text="'Reset: e.O: %1  A: %2  AC %3, St %4'.[@event.object, @$actor, @$actor.container, @$station]" />
+                  <debug_text chance="0" text="'Reset: e.O: %1  A: %2  AC %3, St %4'.[@event.object, @$actor, @$actor.container, @$station]" />
                   <set_value name="$actorContainer" exact="$actor.container" />
                   <reset_cue cue="this" />
                 </do_if>
@@ -1067,7 +1067,7 @@
 
                   <reset_cue cue="BuildFinished_Wait" />
                 </do_else>
-                <debug_text text="'end'" />
+                <debug_text chance="0" text="'end'" />
               </actions>
             </cue>
 

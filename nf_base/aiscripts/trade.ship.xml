@@ -101,24 +101,77 @@
 		</handler>
 	</add>
   <add sel="/aiscript/attention[@min='unknown']/actions/do_if[@value='this.ship.jobexpired']" pos="after">
-      <do_if value="this.ship.pilot.$end_of_work? and this.ship.pilot.$end_of_work lt player.age">
-        <debug_text text="'%1 doing job %2 has expired, die!'.[this.ship.knownname, this.ship.job]" chance="$debugchance" />
-		<write_to_logbook category="general" text="'EOL: %1 [%2 / %3]'.[this.ship.knownname, @this.ship.pilot.$end_of_work, player.age]" chance="100"/>
-        <set_value name="$bigship" exact="this.ship.isclass.ship_l or this.ship.isclass.ship_xl" />
-        <run_script name="'move.die'">
-          <param name="byjump" value="$bigship" />
-          <param name="byhighway" value="not $bigship" />
-          <param name="bydock" value="not $bigship" />
-          <param name="byidle" value="true" />
-        </run_script>
+      <do_if value="true">
+		<do_if value="this.ship.pilot.$end_of_work? and this.ship.pilot.$end_of_work lt player.age">
+		  <debug_text text="'%1 doing job %2 has expired, die!'.[this.ship.knownname, this.ship.job]" chance="$debugchance" />
+		  <write_to_logbook category="general" text="'EOL: %1 [%2 / %3]'.[this.ship.knownname, @this.ship.pilot.$end_of_work, player.age]" chance="100"/>
+		  <set_value name="$bigship" exact="this.ship.isclass.ship_l or this.ship.isclass.ship_xl" />
+		  <run_script name="'move.die'">
+			<param name="byjump" value="$bigship" />
+			<param name="byhighway" value="not $bigship" />
+			<param name="bydock" value="not $bigship" />
+			<param name="byidle" value="true" />
+		  </run_script>
+		</do_if>
+
+		<do_if value="$traderunscript" exact="'trade.findtraderun'">
+		  <set_value name="$traderunscript" exact="'trade.findtraderun.nf'" />
+		</do_if>
+  
+		<do_if value="$tmpIdle?" negate="true">
+		  <set_value name="$findrun" exact="if this.$trade_failedfindruns? and this.$trade_failedfindruns gt 7 then 8 else if not this.$trade_failedfindruns? or this.$trade_failedfindruns lt 1 then 1 else this.$trade_failedfindruns"/>
+		  <do_if value="$range.isclass.zone">
+			<set_value name="$rangemulti" exact="1" />
+		  </do_if>
+		  <do_elseif value="$range.isclass.sector">
+			<set_value name="$rangemulti" exact="2" />
+		  </do_elseif>
+		  <do_elseif value="$range.isclass.cluster">
+			<set_value name="$rangemulti" exact="3" />
+		  </do_elseif>
+		  <do_else>
+			<set_value name="$rangemulti" exact="5" />
+		  </do_else>
+		  <set_value name="$tmpIdle" min="[30s, 10s*$findrun*$rangemulti].max" max="[90s, 20s*$findrun*$rangemulti, [player.timewarp.factor*70, 480s].min].max"/>
+		  <remove_value name="$rangemulti" />
+		  <remove_value name="$findrun" />
+		</do_if>
+		
+		<wait exact="$tmpIdle"/>
+		<remove_value name="$tmpIdle" />
       </do_if>
   </add>
   <replace sel="//set_value[@exact=&quot;'trade.findsimpletraderun'&quot;]/@exact">'trade.findsimpletraderun.nf'</replace>
   <replace sel="//set_value[@exact=&quot;'trade.findfreetraderun'&quot;]/@exact">'trade.findfreetraderun.nf'</replace>
+  <replace sel="//set_value[@exact=&quot;'trade.findtraderun'&quot;]/@exact">'trade.findtraderun.nf'</replace>
   <add sel="//label[@name='find trade run']" pos="after">
 	  <do_if value="this.$doRefuelnext?">
 		  <signal_objects object="this.ship" param="'DO.Refuel.athome'" delay="1s"/>
 		  <remove_value name="this.$doRefuelnext" />
 	  </do_if>
+	  <do_if value="@this.ship.commander">
+		  <do_if value="this.ship.commander.exists and this.ship.commander.isoperational and this.ship.commander.trueowner != faction.ownerless" negate="true">
+			<do_if value="this.$whatido?" negate="true" chance="if this.ship.isplayerowned then 0 else 100">
+			  <set_value name="this.ship.pilot.$end_of_work" exact="player.age" />
+			</do_if>
+			<do_else>
+			  <remove_object_commander object="this.ship" />
+			  <resume label="start"/>
+			</do_else>
+		  </do_if>
+	  </do_if>
+  </add>
+  <add sel="//aiscript" >
+    <on_abort>
+	  <remove_value name="this.$doRefuelnext" />
+	  <remove_value name="this.$homespace" />
+	  <remove_value name="this.$traderange_clusters"/>
+	  <remove_value name="this.$traderange_sellclusters"/>
+	  <remove_value name="this.$traderange_buyclusters"/>
+	  <remove_value name="this.$tgr_min_sell"/>
+	  <remove_value name="this.$tgr_max_sell"/>
+	  <remove_value name="this.$tgr_min_buy"/>
+	  <remove_value name="this.$tgr_max_buy"/>
+    </on_abort>
   </add>
 </diff>

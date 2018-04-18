@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-<aiscript name="BR.fight.attack.object.capital" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+<aiscript name="BR.fight.attack.object.capital" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
   <!--
 
   Capital ship (defense officer NPC) vs Object (any class)
@@ -115,7 +115,7 @@
         <clear_group group="$validbigguntarget" chance="if $validbigguntarget? then 100 else 0"/>
         <!-- Remove the target to stop shooting at it, when owner changes -->
         <set_value name="$target" exact="null" chance="if event.name == 'event_object_changed_owner' then 100 else 0"/>
-        <set_value name="$nextenemycheck" exact="player.age + 3s"/>
+        <set_value name="$nextenemycheck" exact="player.age + player.timewarp.factor*3"/>
         <abort_called_scripts resume="finish"/>
       </actions>
     </handler>
@@ -132,7 +132,7 @@
         <add_to_group groupname="this.$missiles" object="event.param2" />
         <do_if value="not $intercept? or ($intercept? and $intercept lt player.age)" chance="if this.ship.subordinates.count then 100 else 0">
           <signal_objects object="this.ship" param="'intercept missile'"/>
-          <set_value name="$intercept" exact="player.age+2s" />
+          <set_value name="$intercept" exact="player.age+player.timewarp.factor*2" />
         </do_if>
       </actions>
     </handler>
@@ -212,7 +212,7 @@
         <set_value name="$skillpower" exact="this.ship.engineer.combinedskill" operation="add" chance="this.ship.engineer.exists*100"/>
         <set_value name="$skillpower" exact="if $skillpower gt 3 then $skillpower / 3 else $skillpower"/>
         <set_value name="$temp" exact="100 - $thiscombinedskill" comment="100 - (0-100)"/>
-        <set_value name="$nextenemycheck" min="player.age + 10s" max="player.age + 20s + ($temp*1s)"/>
+        <set_value name="$nextenemycheck" min="player.age + 10s" max=" player.age + [(20*player.timewarp.factor + $temp*1s), 240s].min"/>
         <remove_value name="$temp" />
 
         <!-- Create/clean list of enemies -->
@@ -424,6 +424,7 @@
                     <set_value name="$result" exact="false"/>
                     <check_line_of_sight name="$result" object="this.ship" target="$targetComps.list.{$j}" chance="if $thiscombinedskill ge 80 then 100 else 0"/>
                     <add_to_group groupname="$targetsInSight" object="$targetComps.list.{$j}" chance="if $result then 100 else 0"/>
+                    <wait exact="player.timewarp.factor/100" sinceversion="2" chance="player.timewarp.active*100" />
                   </do_all>
                 </do_else>
                 <!--add station hull parts as valid targets of opportunity for offensive DO/NPC. Big targets, dont have skillchecks here -->
@@ -471,6 +472,7 @@
                         <check_line_of_sight name="$result" object="this.ship" target="$targetComps.list.{$j}" chance="if $thiscombinedskill ge 80 then 100 else 0"/>
                         <add_to_group groupname="$targetsInSight" object="$targetComps.list.{$j}" chance="if $result then 100 else 0"/>
                       </do_if>
+                      <wait exact="player.timewarp.factor/100" sinceversion="2" chance="player.timewarp.active*100" />
                     </do_all>
                   </do_else>
                   <!--add the main object as well. Might be pontless if indestructible...-->
@@ -530,6 +532,7 @@
               </do_else>
             </do_else>
           </do_if>
+          <wait exact="player.timewarp.factor/3" sinceversion="2" />
         </do_all>
         <remove_value name="$TroopShip" />
 
@@ -836,6 +839,7 @@
 
       <!-- ok, we have found enemies, let's do something about them -->
       <set_value name="$attacktime" min="player.age + 30s" max="player.age + 40s" />
+      <set_value name="$attacktime" exact="player.timewarp.factor*10" operation="add" chance="player.timewarp.active*100"/>
       <!-- Fight -->
       <do_if value="$enemies.count" min="1">
         <!-- Simulate the attack -->
@@ -848,7 +852,7 @@
         <set_command_action commandaction="commandaction.standingby" />
       </do_else>
 
-      <set_value name="$waittime" exact="1s" />
+      <set_value name="$waittime" exact="player.timewarp.factor*5" />
       <!-- For each enemy, apply strength-->
       <do_while value="$enemies.count" min="1">
         <debug_text text=" ' unknown. ' + this.ship + ' fight. enemies: ' + $enemies " chance="$debugoutputchance" />
@@ -859,7 +863,7 @@
           </do_if>
           <do_if value="not @$MaxEnemies">
             <!-- Search/Attacking waiting time -->
-            <set_value name="$waittime" min="1s" max="4s" profile="increasing" />
+            <set_value name="$waittime" min="player.timewarp.factor" max="[player.timewarp.factor * 4, 60s].min" profile="increasing" />
             <wait exact="$waittime"/>
 
             <!--The maximum amount of enemies to be hit in this volley, based on the number of operational turrets-->
@@ -912,7 +916,7 @@
                   <apply_attackstrength object="$target" attacker="this.ship" strength="$result * ($waittime)f" result="$isdead" />
                   <debug_text text="'%1 OOS. Apply strength of %2 against %3 is: %4(%5|%6). Is killed: %7'.[player.age,this.ship.knownname,$target.knownname,$result * ($waittime)f,$target.hull,$target.shield,$isdead]" chance="$debugoutputchance" />
                   <!--Wait so that attack/killed events are processed-->
-                  <wait exact="1ms"/>
+                  <wait exact="player.timewarp.factor/30"/>
                 </do_if>
                 <do_else>
                   <debug_text text="'%1 OOS. Apply out of range of %2 against %3. Distance %4, fire range %5'.[player.age,this.ship.knownname,$target.knownname,this.ship.distanceto.{$target},$FiringRange]" chance="$debugoutputchance" />
@@ -931,6 +935,7 @@
             <set_value name="$MaxEnemies" operation="subtract"/>
           </do_if>
         </do_all>
+        <wait exact="player.timewarp.factor/5" sinceversion="2" />
         <!-- Avoid an infite loop-->
         <do_if value="player.age" min="$attacktime">
           <break/>
@@ -943,7 +948,7 @@
       <label name="finish" />
       <!-- Continue if the Config is Attack  or if there is still a target -->
       <do_if value="@this.$config_attackenemies or $target.isoperational">
-        <wait min="5s" max="10s" />
+        <wait min="5s" max="[player.timewarp.factor * 10, 60s].min" />
         <resume label="FindEnemies"/>
       </do_if>
 

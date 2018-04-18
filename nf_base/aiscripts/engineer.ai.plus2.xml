@@ -77,7 +77,7 @@
         <set_value name="$waittime" exact="5min"/>
       </do_else>
 
-      <wait min="$waittime" max="$waittime*2" >
+      <wait min="$waittime" max="$waittime*3" >
         <interrupt>
           <conditions>
             <check_any>

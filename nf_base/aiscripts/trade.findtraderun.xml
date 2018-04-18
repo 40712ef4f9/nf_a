@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff>
+	<add sel="//label[@name='start']" pos="after">
+        <do_if value="not $findrun?">
+          <set_value name="$findrun" exact="1" />
+        </do_if>
+        <do_elseif value="$findrun gt 5">
+          <set_value name="$findrun" exact="6" />
+        </do_elseif>
+        <do_else>
+          <set_value name="$findrun" operation="add" />
+        </do_else>
+
+        <do_if value="$range.isclass.zone">
+          <set_value name="$rangemulti" exact="1" />
+        </do_if>
+        <do_elseif value="$range.isclass.sector">
+          <set_value name="$rangemulti" exact="2" />
+        </do_elseif>
+        <do_elseif value="$range.isclass.cluster">
+          <set_value name="$rangemulti" exact="3" />
+        </do_elseif>
+        <do_else>
+          <set_value name="$rangemulti" exact="5" />
+        </do_else>
+	</add>
+<!--
+	<replace sel="(//wait[@min='10s']/@min)[3]">[10s, 10s*@$findrun*@$rangemulti].max</replace>
+	<replace sel="(//wait[@max='20s']/@max)[3]">[30s, 20s*@$findrun*@$rangemulti].max</replace>
+	<replace sel="(//wait[@min='10s']/@min)[2]">[10s, 10s*@$findrun*@$rangemulti].max</replace>
+	<replace sel="(//wait[@max='20s']/@max)[2]">[30s, 20s*@$findrun*@$rangemulti].max</replace>
+	<replace sel="(//wait[@min='10s']/@min)[1]">[10s, 10s*@$findrun*@$rangemulti].max</replace>
+	<replace sel="(//wait[@max='20s']/@max)[1]">[30s, 20s*@$findrun*@$rangemulti].max</replace>
+
+	<replace sel="(//wait[@min='3s']/@min)[2]">[5s, 3s*@$findrun*@$rangemulti].max</replace>
+	<replace sel="(//wait[@max='5s']/@max)[2]">[9s, 5s*@$findrun*@$rangemulti].max</replace>
+	<replace sel="(//wait[@min='3s']/@min)[1]">[5s, 3s*@$findrun*@$rangemulti].max</replace>
+	<replace sel="(//wait[@max='5s']/@max)[1]">[9s, 5s*@$findrun*@$rangemulti].max</replace>
+-->
+	<replace sel="//set_value[@name='$idletime']/@min">[30s, 30s*@$findrun*@$rangemulti].max</replace>
+	<replace sel="//set_value[@name='$idletime']/@max">[90s, 50s*@$findrun*@$rangemulti].max</replace>
+	<add sel="//label[@name='start']" pos="after" >
+		<do_if value="this.$trade_range? and this.ship.commander?">
+			<do_if value="this.ship.isclass.[class.ship_l, class.ship_xl]">
+				<do_if value="this.$trade_range == 1">
+					<set_value name="$range" exact="this.ship.commander.zone" />
+				</do_if>
+				<do_else>
+					<set_value name="$range" exact="this.ship.commander.sector" />
+				</do_else>
+			</do_if>
+			<do_else>
+				<do_if value="this.$trade_range == 1">
+					<set_value name="$range" exact="this.ship.commander.zone" />
+				</do_if>
+				<do_else chance="if this.ship.commander.maxradarrange gt 30km then 100 else 0">
+					<set_value name="$range" exact="this.ship.commander.cluster" />
+				</do_else>
+			</do_else>
+		</do_if>
+		<do_elseif value="this.ship.isclass.[class.ship_s, class.ship_m] and this.ship.commander?">
+			<do_if value="not $range.isclass.[class.sector, class.zone]">
+				<set_value name="$range" exact="this.ship.commander.sector" />
+			</do_if>
+		</do_elseif>
+	</add>
+
+
+	<add sel="//actions/find_sell_offer" pos="before" >
+		<!-- fallback for possibly unlisted sell only tradeware -->
+		<do_if value="this.ship.commander.isoperational and $warelist.count == 0">
+			<set_value name="$cargowares" exact="$homebase.cargo.list" />
+			<do_all exact="$cargowares.count" counter="$i">
+				<set_value name="$ware" exact="$cargowares.{$i}" />
+				<do_if value="this.ship.cargo.{$ware}.max gt 0 and ( $homebase.buyprice.{$ware} or $homebase.sellprice.{$ware} )">
+					<do_if value="$warelist.indexof.{$ware}" exact="0">
+<debug_text text="'unlisted Ware found %1'.[$ware.id]" filter="error" />
+						<append_to_list name="$warelist" exact="$ware" />
+					</do_if>
+				</do_if>
+			</do_all>
+			<remove_value name="$cargowares" />
+			<remove_value name="$ware" />
+		</do_if>
+		<!-- sell stuff -->
+       <create_list name="$selloffers"/>
+       <set_value name="$warelist_temp" exact="$warelist.clone" />
+       <do_if value="this.$trade_restrictions.$tags_sell? and this.$trade_restrictions.$tags_sell.count">
+		 <do_all exact="$warelist_temp.count" counter="$i" reverse="true">
+		 	<set_value name="$doware" exact="$warelist_temp.{$i}" />
+			<set_value name="$doware_tag" exact="null" />
+			<set_value name="$doware_tag" exact="tag.container"	chance="if $doware.tags.indexof.{tag.container} then 100 else 0" />
+			<set_value name="$doware_tag" exact="tag.bulk" 		chance="if $doware.tags.indexof.{tag.bulk} then 100 else 0" />
+			<set_value name="$doware_tag" exact="tag.energy"	chance="if $doware.tags.indexof.{tag.energy} then 100 else 0" />
+			<set_value name="$doware_tag" exact="tag.liquid"	chance="if $doware.tags.indexof.{tag.liquid} then 100 else 0" />
+			<do_if value="this.$trade_restrictions.$tags_sell.indexof.{$doware_tag}">
+			  <remove_value name="$warelist_temp.{$i}"/>
+			</do_if>
+		  </do_all>
+		  <remove_value name="$doware_tag"/>
+		  <remove_value name="$doware"/>
+		</do_if>
+	</add>
+	<replace sel="//actions/find_sell_offer/@wares">$warelist_temp</replace>
+	<add sel="//actions/find_sell_offer" type="@chance" >if this.$trade_inandout? and (this.$trade_inandout == 1 or this.$trade_inandout == 3) then (if this.$trade_inandout == 1 then 25 else 0) else 100</add>
+
+	<add sel="//actions/find_sell_offer"><stocklevel min="0.3f" /></add>
+
+	<add sel="//actions/find_sell_offer" pos="after" >
+      <!-- sell ware fallback to no price limitation -->
+	  <do_if value="$selloffers.count == 0" chance="if this.$trade_inandout? and (this.$trade_inandout == 2 or this.$trade_inandout == 4) then 100 else 0">
+        <find_sell_offer tradepartner="this.ship" seller="this.ship.commander" wares="$warelist_temp" result="$selloffers" multiple="true">
+          <amount min="1" />
+        </find_sell_offer>
+      </do_if>
+	</add>
+
+	<!-- <replace sel="//do_if[@value='$selloffers.count gt 0']/do_all/do_all/do_if/do_else/do_if[@value='@$selloffers.{$i}.restriction.faction']/find_buy_offer/relativeprice/@min">$selloffers.{$i}.relativeprice-0.000001f</replace>
+	<replace sel="//do_if[@value='$selloffers.count gt 0']/do_all/do_all/do_if/do_else/do_else/find_buy_offer/relativeprice/@min">$selloffers.{$i}.relativeprice-0.000001f</replace> -->
+	<add sel="//do_if[@value='$selloffers.count gt 0']/do_all/do_all/do_if/do_else/do_if[@value='$buyoffer.exists']" pos="before" >
+	  <do_if value="$buyoffer.exists and $buyoffer.buyer == $selloffers.{$i}.seller">
+		<set_value name="$buyoffer" exact="null" />
+	  </do_if>
+	  <do_if value="$buyoffer.exists and ($buyoffer.buyer.macro.ismacro.{global.$tradestationnetwork} or $buyoffer.buyer.macro.ismacro.[macro.struct_econ_ref_ar_pmc_north_macro, macro.struct_econ_ref_ar_pmc_orbital_l_macro]) and this.ship.commander.macro.ismacro.{global.$tradestationnetwork}">
+		  <do_if value="$selloffers.{$i}.stocklevel lt 0.8f or $buyoffer.stocklevel gt 0.5f">
+			<set_value name="$buyoffer" exact="null" />
+		  </do_if>
+      </do_if>
+	</add>
+
+	<add sel="//actions/find_buy_offer"  pos="before" >
+       <remove_value name="$warelist_temp"/>
+       <create_list name="$buyoffers"/>
+       <do_if value="this.$trade_restrictions.$tags_buy? and this.$trade_restrictions.$tags_buy.count">
+		 <do_all exact="$warelist.count" counter="$i" reverse="true">
+		 	<set_value name="$doware" exact="$warelist.{$i}" />
+			<set_value name="$doware_tag" exact="null" />
+			<set_value name="$doware_tag" exact="tag.container"	chance="if $doware.tags.indexof.{tag.container} then 100 else 0" />
+			<set_value name="$doware_tag" exact="tag.bulk" 		chance="if $doware.tags.indexof.{tag.bulk} then 100 else 0" />
+			<set_value name="$doware_tag" exact="tag.energy"	chance="if $doware.tags.indexof.{tag.energy} then 100 else 0" />
+			<set_value name="$doware_tag" exact="tag.liquid"	chance="if $doware.tags.indexof.{tag.liquid} then 100 else 0" />
+			<do_if value="this.$trade_restrictions.$tags_buy.indexof.{$doware_tag}">
+			  <remove_value name="$warelist.{$i}"/>
+			</do_if>
+		  </do_all>
+		  <remove_value name="$doware_tag"/>
+		  <remove_value name="$doware"/>
+		</do_if>
+	</add>
+	<add sel="//actions/find_buy_offer" type="@chance" >if this.$trade_inandout? and (this.$trade_inandout == 2 or this.$trade_inandout == 4) then (if this.$trade_inandout == 2 then 25 else 0) else 100</add>
+
+	<add sel="//do_all[@exact='$ammowares.count']" pos="before" >
+       <do_if value="this.$trade_restrictions?">
+		 <do_all exact="$warelist.count" counter="$i" reverse="true">
+		 	<set_value name="$doware" exact="$warelist.{$i}" />
+			<set_value name="$doware_tag" exact="null" />
+			<set_value name="$doware_tag" exact="tag.container"	chance="if $doware.tags.indexof.{tag.container} then 100 else 0" />
+			<set_value name="$doware_tag" exact="tag.bulk" 		chance="if $doware.tags.indexof.{tag.bulk} then 100 else 0" />
+			<set_value name="$doware_tag" exact="tag.energy"	chance="if $doware.tags.indexof.{tag.energy} then 100 else 0" />
+			<set_value name="$doware_tag" exact="tag.liquid"	chance="if $doware.tags.indexof.{tag.liquid} then 100 else 0" />
+			<do_if value="this.$trade_restrictions.$tags.indexof.{$doware_tag}"><!--  or this.$trade_restrictions.$ware.indexof.{$doware} -->
+			  <remove_value name="$warelist.{$i}"/>
+			</do_if>
+		  </do_all>
+		  <remove_value name="$doware_tag"/>
+		  <remove_value name="$doware"/>
+		</do_if>
+	</add>
+<!--
+	<add sel="/aiscript/attention/actions/find_buy_offer"><stocklevel min="if this.ship.commander.isclass.station then if this.$trade_inandout? and (this.$trade_inandout == 1 or this.$trade_inandout == 3) then 0.05f else 0.2f else 0f" /></add>
+-->
+	<add sel="//do_if[@value='$buyoffers.count gt 0']/do_all[@reverse='true']" pos="prepend">
+		<do_if value="@$buyoffers.{$i}.offeramount" negate="true">
+			<continue />
+		</do_if>
+		<do_if value="this.ship.commander.tradewares.list.indexof.{$buyoffers.{$i}.ware}">
+			<do_if value="($buyoffers.{$i}.offeramount.{this})f / ([$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target,$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.free].min)f lt (if this.ship.commander.isclass.station then if this.$trade_inandout? and (this.$trade_inandout == 1 or this.$trade_inandout == 3) then 0.05f else 0.2f else 0f)">
+				<continue />
+			</do_if>
+		</do_if>
+		<do_else>
+			<do_if value="($buyoffers.{$i}.offeramount.{this})f / ($buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target)f lt (if this.ship.commander.isclass.station then if this.$trade_inandout? and (this.$trade_inandout == 1 or this.$trade_inandout == 3) then 0.05f else 0.2f else 0f)" chance="if $buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target then 100 else 0">
+				<continue />
+			</do_if>
+		</do_else>
+	</add>
+
+	<add sel="//do_if[@value='$buyoffers.count gt 0']" pos="prepend">
+        <do_if value="true">
+			<create_list name="$trade_zones"/>
+			<!-- share all wares from the own Tradestation-Network -->
+			<do_if value="(@this.$trade_global == 1 or this.ship.isclass.[class.ship_l, class.ship_xl]) and this.ship.commander? and this.ship.commander.macro.ismacro.{global.$tradestationnetwork}">
+				<do_if value="this.ship.commander.tradenpc.$trade_zones? and player.age lt this.ship.commander.tradenpc.$trade_zones_next">
+					<!-- use cache -->
+					<set_value name="$trade_zones" exact="this.ship.commander.tradenpc.$trade_zones.clone" />
+				</do_if>
+				<do_else>
+					<create_group groupname="$Trade_stations" />
+					<create_list name="$trade_zones_unsorted"/>
+					<!-- find stations and get zones -->
+					<do_all exact="global.$tradestationnetwork.count" counter="$m" reverse="true">
+						<find_station name="$tempstation" macro="global.$tradestationnetwork.{$m}" space="player.galaxy" owner="this.ship.commander.owner" multiple="true" />
+						<do_if value="$tempstation">
+							<add_to_group groupname="$Trade_stations" list="$tempstation" />
+						</do_if>
+						<remove_value name="$tempstation"/>
+					</do_all>
+					<do_all exact="$Trade_stations.count" counter="$z">
+						<do_if value="$trade_zones_unsorted.indexof.{$Trade_stations.{$z}.zone}" negate="true">
+							<append_to_list name="$trade_zones_unsorted" exact="$Trade_stations.{$z}.zone" chance="if $Trade_stations.{$z}.zone == this.ship.commander.zone then 0 else 100"/>
+						</do_if>
+					</do_all>
+					<remove_value name="$Trade_stations"/>
+					<!-- consider gatedistance -->
+					<do_if value="this.ship.commander.tradenpc.$trade_zones_range? and this.ship.commander.tradenpc.$trade_zones_range ge 0">
+						<do_all exact="$trade_zones_unsorted.count" counter="$z" reverse="true">
+							<do_if value="this.ship.commander.gatedistance.{$trade_zones_unsorted.{$z}} gt this.ship.commander.tradenpc.$trade_zones_range">
+								<remove_value name="$trade_zones_unsorted.{$z}"/>
+							</do_if>
+						</do_all>
+					</do_if>
+					<!-- sort gatedistance -->
+					<set_value name="$run" exact="0" />
+					<set_value name="$distance_max" exact="0" />
+					<do_while value="$trade_zones_unsorted.count gt 0">
+						<do_all exact="$trade_zones_unsorted.count" counter="$z" reverse="true">
+							<do_if value="$trade_zones_unsorted.{$z}.isclass.zone and $trade_zones_unsorted.{$z}.exists" negate="true">
+								<remove_value name="$trade_zones_unsorted.{$z}"/>
+								<continue />
+							</do_if>
+							<set_value name="$distance" exact="this.ship.commander.gatedistance.{$trade_zones_unsorted.{$z}}" />
+							<set_value name="$distance_max" exact="$distance" chance="if $distance_max lt $distance then 100 else 0" />
+							<do_if value="$distance == $run">
+								<append_to_list name="$trade_zones" exact="$trade_zones_unsorted.{$z}"/>
+								<remove_value name="$trade_zones_unsorted.{$z}"/>
+							</do_if>
+						</do_all>
+						<remove_value name="$distance"/>
+						<set_value name="$run" operation="add"/>
+						<break chance="if $run gt $distance_max then 100 else 0"/>
+					</do_while>
+					<remove_value name="$run"/>
+					<remove_value name="$distance_max"/>
+					<remove_value name="$trade_zones_unsorted"/>
+					<!-- cache zones -->
+					<do_if value="this.ship.commander.tradenpc?">
+						<set_value name="this.ship.commander.tradenpc.$trade_zones" exact="$trade_zones.clone" />
+						<set_value name="this.ship.commander.tradenpc.$trade_zones_next" exact="player.age + 2h" />
+					</do_if>
+				</do_else>
+				<!-- remove blacklisted zones -->
+				<do_if value="this.ship.commander.tradenpc.$trade_zones_blacklist?">
+					<do_all exact="this.ship.commander.tradenpc.$trade_zones_blacklist.count" counter="$z">
+						<do_if value="$trade_zones.indexof.{this.ship.commander.tradenpc.$trade_zones_blacklist.{$z}}">
+							<remove_value name="$trade_zones.{$trade_zones.indexof.{this.ship.commander.tradenpc.$trade_zones_blacklist.{$z}}}"/>
+						</do_if>
+					</do_all>
+				</do_if>
+				<do_if value="this.ship.isclass.ship_m">
+					<do_if value="not this.$trade_zones_blacklist?">
+						<create_list name="this.$trade_zones_blacklist"/>
+					</do_if>
+					<do_all exact="$trade_zones.count" counter="$z">
+						<do_if value="this.ship.commander.gatedistance.{$trade_zones.{$z}} gt 1 and this.$trade_zones_blacklist.indexof.{$trade_zones.{$z}} == 0">
+							<append_to_list name="this.$trade_zones_blacklist" exact="$trade_zones.{$z}" />
+						</do_if>
+					</do_all>
+				</do_if>
+				<do_if value="this.$trade_zones_blacklist?">
+					<do_all exact="this.$trade_zones_blacklist.count" counter="$z" reverse="true">
+						<do_if value="$trade_zones.indexof.{this.$trade_zones_blacklist.{$z}}">
+							<remove_value name="$trade_zones.{$trade_zones.indexof.{this.$trade_zones_blacklist.{$z}}}"/>
+						</do_if>
+						<do_elseif value="this.ship.isclass.ship_m">
+							<remove_value name="this.$trade_zones_blacklist.{$z}"/>
+						</do_elseif>
+					</do_all>
+				</do_if>
+			</do_if>
+			<do_elseif value="this.ship.isclass.ship_m and this.$trade_zones_blacklist?">
+				<remove_value name="this.$trade_zones_blacklist"/>
+			</do_elseif>
+         </do_if>
+	</add>
+	<!--<add sel="//do_all[@exact='$buyoffers.count']/do_if[@value='@$buyoffers.{$i}.restriction.faction']/find_sell_offer" ><relativeprice max="$buyoffers.{$i}.relativeprice+0.000001f" /></add> 
+	<add sel="//do_all[@exact='$buyoffers.count']/do_else/find_sell_offer" ><relativeprice max="$buyoffers.{$i}.relativeprice+0.000001f" /></add> -->
+	<add sel="//do_all/do_if[@value='$selloffer.exists']" type="@chance" >if $selloffer.exists and $buyoffers.{$i}.buyer == $selloffer.seller then 0 else 100</add> 
+
+	<add sel="//do_all/do_if[@value='$selloffer.exists']" pos="after">
+			<do_all exact="$trade_zones.count" counter="$ti" chance="if not $trade_zones? or @this.$trade_global == 2 or (@this.ship.commander.tradenpc.$trade_global == 2 and @this.$trade_global != 1) then 0 else 100">
+				<do_if value="$trade_zones.{$ti}.exists" negate="true">
+					<continue />
+				</do_if>
+				<find_sell_offer tradepartner="this.ship" wares="$buyoffers.{$i}.ware" space="$trade_zones.{$ti}" result="$selloffer">
+					<price max="$buyoffers.{$i}.unitprice"/>
+					<stocklevel min="0.5f" comment="this effectively means the price must be below the average price to be considered"/>
+					<match_seller owner="this.ship.commander.owner" />
+				</find_sell_offer>
+				<do_if value="$selloffer.exists">
+					<set_value name="$buyoffer" exact="$buyoffers.{$i}" />
+<!--write_to_logbook category="tips" text="'Clusteruebergreifender (run %7 ware %8) Handel \n Ware: %1 [%5 / %6]Cr \n Kaeufer: %2 von %3 \n Verkaeufer: %4'.[$selloffer.ware.name, this.ship.name, this.ship.commander.name, $selloffer.seller.name, $selloffer.unitprice.formatted.default, $selloffer.ware.averageprice.formatted.default, $ti, $i]"/-->
+					<resume label="finish" />
+				</do_if>
+
+				<wait min="1s" max="7s"/>
+			</do_all>
+	</add>
+
+	<add sel="//run_script[@name=&quot;'move.idle'&quot;]" pos="before"><remove_value name="$trade_zones"/></add>
+	<add sel="//label[@name='finish']" pos="after"><remove_value name="$trade_zones"/></add>
+
+	<add sel="//run_script[@name=&quot;'move.idle'&quot;]" type="@chance" >if this.ship.isclass.[class.ship_s, class.ship_m] and @this.ship.dockslot and not @this.ship.dockslot.component.external then 0 else 100</add> 
+	<add sel="//run_script[@name=&quot;'move.idle'&quot;]" pos="after">
+		<wait exact="$idletime" chance="if this.ship.isclass.[class.ship_s, class.ship_m] and @this.ship.dockslot and not @this.ship.dockslot.component.external then 100 else 0"/>
+	</add>
+	<!-- this.$refact -->
+	<replace sel="//do_all[@exact='$buyoffers.count']/do_if[@value='@$buyoffers.{$i}.restriction.faction']/find_sell_offer/match_seller/@owner" >if @$buyoffers.{$i}.restriction.faction then $buyoffers.{$i}.restriction.faction else this.ship.trueowner</replace> 
+	<replace sel="//do_all[@exact='$buyoffers.count']/do_if[@value='@$buyoffers.{$i}.restriction.faction']/@value" >@$buyoffers.{$i}.restriction.faction or @this.$refact == 3 or @this.$refact == 1</replace> 
+	<replace sel="//do_if[@value='$selloffers.count gt 0']/do_all/do_all/do_if/do_else/do_if[@value='@$selloffers.{$i}.restriction.faction']/find_buy_offer/match_buyer/@owner" >if @$selloffers.{$i}.restriction.faction then $selloffers.{$i}.restriction.faction else this.ship.trueowner</replace> 
+	<replace sel="//do_if[@value='$selloffers.count gt 0']/do_all/do_all/do_if/do_else/do_if[@value='@$selloffers.{$i}.restriction.faction']/@value" >@$selloffers.{$i}.restriction.faction or @this.$refact ge 2</replace> 
+	<replace sel="//do_if[@value='$selloffers.count gt 0']/do_all/do_all/do_if/do_if/do_if[@value='@$selloffers.{$i}.restriction.faction']/find_buy_offer/match_buyer/@owner" >if @$selloffers.{$i}.restriction.faction then $selloffers.{$i}.restriction.faction else this.ship.trueowner</replace> 
+	<replace sel="//do_if[@value='$selloffers.count gt 0']/do_all/do_all/do_if/do_if/do_if[@value='@$selloffers.{$i}.restriction.faction']/@value" >@$selloffers.{$i}.restriction.faction or @this.$refact ge 2</replace> 
+</diff>

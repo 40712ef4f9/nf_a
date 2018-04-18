@@ -42,4 +42,10 @@
 		</do_if>
 		<remove_value name="$tempCheckHull" /> 
 	</add>
+
+	<add sel="//set_value[@name='$repairfrequency']" pos="after">
+      <set_value name="$repairfrequency" exact="player.timewarp.factor*3" operation="add" chance="player.timewarp.active*100"/>
+	</add>
+	<add sel="//wait[@max='$repairfrequency + 1s']" type="@profile" >increasing</add> 
+	<replace sel="//wait[@max='$repairfrequency + 1s']/@max">$repairfrequency + player.timewarp.factor*3</replace>
 </diff>

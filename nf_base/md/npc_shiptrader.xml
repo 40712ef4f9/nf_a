@@ -86,4 +86,10 @@
 	  <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
 	</do_elseif>
   </add>
+
+  <add sel="/mdscript[@name='NPC_Shiptrader']/cues/cue/cues/cue[@name='DefaultComm']/actions/do_else/do_else/do_if[@value='$ship?']" pos="after">
+	<do_elseif value="$BuildModule.buildanchor? and $BuildModule.buildanchor">
+	  <add_player_choice_sub text="{1002,4008}" position="left" section="cArch_buildcost" choiceparam="[0, 0, $actor, $BuildModule, $BuildModule.buildanchor, $BuildModule.buildanchor.macro.id]" comment="Show resource status" />
+	</do_elseif>
+  </add>
 </diff>

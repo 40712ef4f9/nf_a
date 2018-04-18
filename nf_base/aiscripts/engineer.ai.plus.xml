@@ -65,6 +65,7 @@
 
       <!-- init -->
       <set_value name="$repairfrequency" exact="10s" />
+      <set_value name="$repairfrequency" exact="player.timewarp.factor*3" operation="add" chance="player.timewarp.active*100"/>
       <set_value name="$nextelementcheck" exact="0" />
       <set_value name="$baserepairrate" exact="50" />
       <set_value name="$CurrentElement" exact="null"/>
@@ -165,7 +166,7 @@
       <!--MICT end-->
 
       <debug_text text="'Begin wait'" chance="$debugoutputchance2"/>
-      <wait min="$repairfrequency" max="$repairfrequency + 1s" sinceversion="2"/>
+      <wait min="$repairfrequency" max="$repairfrequency + player.timewarp.factor" profile="increasing" sinceversion="2"/>
 
       <!--MICT after coffee break check-->
       <do_if value="this.$Defensible.iswreck">

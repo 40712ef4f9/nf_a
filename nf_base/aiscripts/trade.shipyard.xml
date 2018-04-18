@@ -523,6 +523,8 @@
   </add>
 
   <add sel="//do_if[@value='this.$BuildShips.count == 0']" type="@chance" >if (this.$BuildRandom? and this.station.isplayerowned) or (this.$orders? and this.$orders.count) then 100 else 0</add>
+  <replace sel="//do_if[@value='this.$BuildShips.count == 0']/@value" >this.$BuildShips.count == 0 and this.station.availableunits.{unitcategory.welder}.count gt 5</replace>
+
   <add sel="//do_if[@value='$buildmodule.exists']" pos="before" >
     <set_value name="$customer_faction" exact="this.station.owner" />
     <set_value name="$orderID" exact="null" />

@@ -50,7 +50,7 @@
       </do_if>
 
       <debug_text text="'Begin wait'" chance="$debugoutputchance2"/>
-      <wait min="$repairfrequency" max="$repairfrequency + 5s" />
+      <wait min="$repairfrequency" max="$repairfrequency + player.timewarp.factor*6" />
 
       <!--after coffee break check-->
       <do_if value="$Defensible.iswreck">
@@ -102,7 +102,7 @@
       <!--This can be quite expensive so only do it once finished with the $CurrentElement-->
       <do_if value="player.age" min="$nextelementcheck">
         <create_group groupname="$PossibleElements"/>
-        <set_value name="$nextelementcheck" min="player.age + 1min" max="player.age + 2min"/>
+        <set_value name="$nextelementcheck" min="player.age + player.timewarp.factor*60" max="player.age + player.timewarp.factor*120"/>
         <set_value name="$FindChance" exact="100"/>
 
         <!--If ship, find engines and jumpdrives - High priority-->

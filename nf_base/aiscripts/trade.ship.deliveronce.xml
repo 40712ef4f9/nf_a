@@ -38,7 +38,7 @@
       <set_value name="$buyoffer" exact="null" />
       <set_value name="$selloffer" exact="null" />
 
-      <set_value name="$idletime" min="10s" max="30s" />
+      <set_value name="$idletime" min="10s" max="30*player.timewarp.factor" />
 
       <run_script name="'move.idle'" >
         <param name="TimeOut" value="$idletime" />

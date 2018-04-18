@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<diff>
+	<replace sel="//wait[@min='100ms']/@min">player.timewarp.factor*0.2f</replace>
+	<replace sel="//wait[@max='500ms']/@max">player.timewarp.factor</replace>
+	<add sel="//do_if[@value='$DoMove']/do_if[3]" pos="before" >
+	  <do_if value="this.ship.distanceto.[$Anchor, position.[0,0,0]] gt $Anchor.size/4">
+	    <get_safe_pos result="$randpos" value="position.[0,0,0]" radius="this.ship.size" zone="$Anchor"/>
+	  </do_if>
+	</add>
+</diff>

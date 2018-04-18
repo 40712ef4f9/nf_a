@@ -1071,6 +1071,219 @@
 			</actions>
 		</cue>
 
+		<cue name="NF_RemoveJOBS" instantiate="true" >
+			<conditions>
+				<event_game_loaded />
+				<check_value value="global.$nfconfig? and not global.$nfconfig.$plotSafe?" />
+			</conditions>
+			<delay min="48s" max="60s"/>
+			<actions>
+				<find_ship name="$temp_ships" multiple="true" space="player.galaxy" class="[class.ship_xl, class.ship_l, class.ship_m, class.ship_s]" recursive="true" functional="true"/>
+
+				<set_value name="$temp_results" exact="table[
+							$trader = 0,
+							$patrol = 0,
+							$escorts = 0,
+							$unknown = 0,
+							$unknownC = 0,
+							$build = 0,
+							$mine = 0,
+							$plunder = 0,
+							$nothing = 0,
+
+							$station = 0,
+							$job = 0,
+							$corpJob = 0,
+
+							$ship_xl = 0,
+							$ship_l = 0,
+							$ship_m = 0,
+							$ship_s = 0
+				]" />
+
+				<set_value name="$temp_important" exact="0"/>
+
+				<create_list name="$temp_jobs" />
+				<create_group groupname="$temp_toDestroy" />
+
+				<do_all exact="$temp_ships.count" counter="$s">
+					<do_if value="$temp_ships.{$s}.exists and $temp_ships.{$s}.isoperational" negate="true">
+						<continue />
+					</do_if>
+
+					<set_value name="$temp_results.{'$%1'.[$temp_ships.{$s}.class]}" operation="add"/>
+
+					<do_if value="$temp_ships.{$s}.pilot.$whatido?"> 
+						<do_if value="$temp_ships.{$s}.pilot.$whatido" list="['trade.ship', 'trade.ship.ranged']">
+							<do_if value="$temp_ships.{$s}.commander and $temp_ships.{$s}.commander.isclass.station">
+								<set_value name="$temp_results.$station" operation="add"/>
+								<set_value name="$temp_results.$trader" operation="add"/>
+							</do_if>
+							<do_else>
+								<set_value name="$temp_results.$trader" operation="add"/>
+							</do_else>
+							<do_if value="$temp_ships.{$s}.defencenpc">
+								<do_if value="$temp_ships.{$s}.defencenpc.$config_attackenemies?">
+									<remove_value name="$temp_ships.{$s}.defencenpc.$config_attackenemies" />
+									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'update config'"  />
+								</do_if>
+								<do_else>
+									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'stop attack'"  />
+								</do_else>
+							</do_if>
+						</do_if>
+						<do_elseif value="$temp_ships.{$s}.pilot.$whatido" list="['move.patrol', 'BR.move.patrol', 'move.patrol.route']">
+							<set_value name="$temp_results.$patrol" operation="add"/>
+						</do_elseif>
+						<do_elseif value="$temp_ships.{$s}.pilot.$whatido" list="['mining.ship.free', 'mining.ship.station', 'mining.ship.player']">
+							<do_if value="$temp_ships.{$s}.commander and $temp_ships.{$s}.commander.isclass.station">
+								<set_value name="$temp_results.$station" operation="add"/>
+								<set_value name="$temp_results.$mine" operation="add"/>
+							</do_if>
+							<do_else>
+								<set_value name="$temp_results.$mine" operation="add"/>
+							</do_else>
+							<do_if value="$temp_ships.{$s}.defencenpc">
+								<do_if value="$temp_ships.{$s}.defencenpc.$config_attackenemies?">
+									<remove_value name="$temp_ships.{$s}.defencenpc.$config_attackenemies" />
+									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'update config'"  />
+								</do_if>
+								<do_else>
+									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'stop attack'"  />
+								</do_else>
+							</do_if>
+						</do_elseif>
+						<do_elseif value="$temp_ships.{$s}.pilot.$whatido" list="['move.plunder']">
+							<set_value name="$temp_results.$plunder" operation="add"/>
+						</do_elseif>
+						<do_elseif value="$temp_ships.{$s}.pilot.$whatido" list="['move.escort', 'BR.move.escort', 'carrier.default']">
+							<set_value name="$temp_results.$escorts" operation="add"/>
+						</do_elseif>
+						<do_elseif value="$temp_ships.{$s}.pilot.$whatido" list="['move.buildership']">
+							<set_value name="$temp_results.$build" operation="add"/>
+							<do_if value="$temp_ships.{$s}.defencenpc">
+								<do_if value="$temp_ships.{$s}.defencenpc.$config_attackenemies?">
+									<remove_value name="$temp_ships.{$s}.defencenpc.$config_attackenemies" />
+									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'update config'"  />
+								</do_if>
+								<do_else>
+									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'stop attack'"  />
+								</do_else>
+							</do_if>
+						</do_elseif>
+						<do_elseif value="$temp_ships.{$s}.pilot.$whatido" list="['move.idle']">
+							<set_value name="$temp_results.$nothing" operation="add"/>
+							<do_if value="$temp_ships.{$s}.defencenpc">
+								<do_if value="$temp_ships.{$s}.defencenpc.$config_attackenemies?">
+									<remove_value name="$temp_ships.{$s}.defencenpc.$config_attackenemies" />
+									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'update config'"  />
+								</do_if>
+								<do_else>
+									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'stop attack'"  />
+								</do_else>
+							</do_if>
+						</do_elseif>
+						<do_else>
+							<set_value name="$temp_results.$unknownC" operation="add"/>
+						</do_else>
+					</do_if> 
+					<do_elseif value="not $temp_ships.{$s}.pilot.$whatido? and $temp_ships.{$s}.primarypurpose == objectpurpose.build and $temp_ships.{$s}.buildmodule.buildanchor.exists">
+						<set_value name="$temp_results.$build" operation="add"/>
+					</do_elseif>
+					<do_elseif value="$temp_ships.{$s}.isplayerowned">
+						<do_if value="@$temp_ships.{$s}.pilot.command.value" list="[command.freemining, command.freetrade, command.collect, command.mining, command.trade]">
+							<do_if value="$temp_ships.{$s}.defencenpc">
+								<do_if value="$temp_ships.{$s}.defencenpc.$config_attackenemies?">
+									<remove_value name="$temp_ships.{$s}.defencenpc.$config_attackenemies" />
+									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'update config'"  />
+								</do_if>
+								<do_else>
+									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'stop attack'"  />
+								</do_else>
+							</do_if>
+						</do_if>
+					</do_elseif>
+					<do_else>
+						<do_if value="@$temp_ships.{$s}.pilot.command.value" list="[command.patrol]">
+							<set_value name="$temp_results.$patrol" operation="add"/>
+						</do_if>
+						<do_elseif value="@$temp_ships.{$s}.pilot.command.value" list="[command.escort, command.protect]">
+							<set_value name="$temp_results.$escorts" operation="add"/>
+						</do_elseif>
+						<do_elseif value="$temp_ships.{$s}.commander.exists and $temp_ships.{$s}.pilot.$carrier?">
+							<set_value name="$temp_results.$escorts" operation="add"/>
+						</do_elseif>
+						<do_else>
+							<set_value name="$temp_results.$unknown" operation="add"/>
+						</do_else>
+
+						<do_if value="$temp_ships.{$s}.isjobship and $temp_ships.{$s}.trueowner and global.$factionCEOs.{'$' + $temp_ships.{$s}.trueowner.id}?">
+							<set_value name="$temp_results.$corpJob" operation="add"/>
+	
+							<do_if value="$temp_ships.{$s}.ismasstraffic">
+								<continue />
+							</do_if>
+							<do_elseif value="$temp_ships.{$s}.ismission">
+								<continue />
+							</do_elseif>
+							<do_elseif value="$temp_ships.{$s}.job and $temp_jobs.indexof.{$temp_ships.{$s}.job} == 0">
+								<append_to_list name="$temp_jobs" exact="$temp_ships.{$s}.job"/>
+							</do_elseif>
+	
+							<do_if value="true" chance="$temp_important" comment="remove immediately">
+								<get_control_entities object="$temp_ships.{$s}" groupname="$ControlEntities"/>
+								<do_all exact="$ControlEntities.count" counter="$Counter">
+									<abort_scripts entity="$ControlEntities.{$Counter}"/>
+								</do_all>
+								<remove_value name="$ControlEntities" />
+							</do_if>
+	
+							<add_to_group groupname="$temp_toDestroy" object="$temp_ships.{$s}" />
+						</do_if>
+						<do_elseif value="$temp_ships.{$s}.isjobship">
+							<set_value name="$temp_results.$job" operation="add"/>
+							<do_if value="@$temp_ships.{$s}.pilot.command.value" list="[command.freemining, command.freetrade, command.collect, command.mining, command.trade]">
+								<do_if value="$temp_ships.{$s}.defencenpc">
+									<do_if value="$temp_ships.{$s}.defencenpc.$config_attackenemies?">
+										<remove_value name="$temp_ships.{$s}.defencenpc.$config_attackenemies" />
+										<signal_objects object="$temp_ships.{$s}.defencenpc" param="'update config'"  />
+									</do_if>
+									<do_else>
+										<signal_objects object="$temp_ships.{$s}.defencenpc" param="'stop attack'"  />
+									</do_else>
+								</do_if>
+							</do_if>
+						</do_elseif>
+					</do_else>
+				</do_all>
+
+				<do_all exact="$temp_jobs.count" counter="$x">
+					<substitute_text text="$testJobId" source="$temp_jobs.{$x}" >
+						<replace string="'escort'" with="'match'" />
+					</substitute_text>
+					<do_if value="$testJobId != $temp_jobs.{$x}" >
+						<!-- escorts only active with mainjobs -->
+					</do_if>
+					<do_else>
+						<set_job_active job="$temp_jobs.{$x}" activate="false" />
+					</do_else>
+					<remove_value name="$testJobId" />
+				</do_all>
+
+				<debug_text text="'UniShips[%1] jbs%2=%4 :: %3'.[$temp_ships.count, $temp_jobs.count, $temp_results, $temp_toDestroy.list.count]" filter="scripts_verbose" chance="0" />
+
+				<do_all exact="$temp_toDestroy.list.count" counter="$Counter" reverse="true" chance="$temp_important" comment="remove immediately">
+					<destroy_object object="$temp_toDestroy.list.{$Counter}"/>
+				</do_all>
+
+				<remove_value name="$temp_jobs" />
+				<remove_value name="$temp_results" />
+				<remove_value name="$temp_ships" />
+				<remove_value name="$temp_toDestroy" />
+				<remove_value name="$temp_important" />
+			</actions>
+		</cue>
+
 		<cue name="NF_BASE_SY_RES" instantiate="true" namespace="this">
 			<conditions>
 				<event_object_signalled object="player.galaxy" param="'do.cheat.waredelivery'" />
