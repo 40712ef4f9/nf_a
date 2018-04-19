@@ -226,19 +226,6 @@
           <debug_text text="player.age + ' checking if we can sell our current cargo somewhere else'" chance="$debugchance" />
           <do_all exact="2" counter="$pass">
             <do_all exact="$currentcargo.count" counter="$i" reverse="1">
-              <do_if value="@$buyoffers.{$i}.offeramount" negate="true">
-                <continue />
-              </do_if>
-              <do_if value="this.ship.commander.tradewares.list.indexof.{$buyoffers.{$i}.ware}">
-                <do_if value="($buyoffers.{$i}.offeramount.{this})f / ([$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target,$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.free].min)f lt (if this.ship.commander.isclass.station then if this.$trade_inandout? and (this.$trade_inandout == 1 or this.$trade_inandout == 3) then 0.05f else 0.2f else 0f)">
-                  <continue />
-                </do_if>
-              </do_if>
-              <do_else>
-                <do_if value="($buyoffers.{$i}.offeramount.{this})f / ($buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target)f lt (if this.ship.commander.isclass.station then if this.$trade_inandout? and (this.$trade_inandout == 1 or this.$trade_inandout == 3) then 0.05f else 0.2f else 0f)" chance="if $buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target then 100 else 0">
-                  <continue />
-                </do_if>
-              </do_else>
               <set_value name="$currentware" exact="$currentcargo.{$i}" />
               <do_if value="this.ship.commander.resources.{$currentware}.exists">
                 <!-- don't sell potential resources for our homebase to someone else, just keep them. We will be able to deliver them later -->
@@ -588,15 +575,18 @@
             <continue />
           </do_if>
           <do_all exact="$selloffers.count" counter="$i">
-			<set_value name="$tmpSpace" exact="$tradeClusters.{'$sell%1'.[$f]}.clone" />
-			<do_all exact="$tmpSpace.count">
+            <do_if value="$selloffers.{$i}.available" negate="true">
+              <continue />
+            </do_if>
+            <set_value name="$tmpSpace" exact="$tradeClusters.{'$sell%1'.[$f]}.clone" />
+            <do_all exact="$tmpSpace.count">
               <set_value name="$tmpRange" exact="$tmpSpace.random" />
               <do_if value="$tmpRange.exists" negate="true">
                 <continue />
               </do_if>
               <remove_value name="$tmpSpace.{$tmpSpace.indexof.{$tmpRange}}"/>
               <do_if value="$selloffers.{$i}.available" negate="true">
-                <continue />
+                <break />
               </do_if>
               <do_if value="@$selloffers.{$i}.restriction.faction or @this.$refact ge 2">
                 <!-- if there is a faction restriction for this ware, don't look for buyers of a different faction! -->
@@ -795,6 +785,19 @@
         <set_value name="$buyoffers" exact="$offertable.keys.sorted" />
         <!-- $table.keys.sorted gives us the listed sorted by values from lowest to highest, so we need to iterate in reverse -->
         <do_all exact="$buyoffers.count" counter="$i" reverse="true">
+          <do_if value="$buyoffers.{$i}.available" negate="true">
+            <continue />
+          </do_if>
+          <do_if value="this.ship.commander.tradewares.list.indexof.{$buyoffers.{$i}.ware}">
+            <do_if value="($buyoffers.{$i}.offeramount.{this})f / ([$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target,$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.free].min)f lt (if this.ship.commander.isclass.station then if this.$trade_inandout? and (this.$trade_inandout == 1 or this.$trade_inandout == 3) then 0.05f else 0.2f else 0f)">
+              <continue />
+            </do_if>
+          </do_if>
+          <do_else>
+            <do_if value="($buyoffers.{$i}.offeramount.{this})f / ($buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target)f lt (if this.ship.commander.isclass.station then if this.$trade_inandout? and (this.$trade_inandout == 1 or this.$trade_inandout == 3) then 0.05f else 0.2f else 0f)" chance="if $buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target then 100 else 0">
+              <continue />
+            </do_if>
+          </do_else>
           <do_if value="@$buyoffers.{$i}.restriction.faction or @this.$refact == 3 or @this.$refact == 1">
             <!-- if there is a faction restriction for this ware, don't look for sellers of a different faction! -->
             <find_sell_offer tradepartner="this.ship" wares="$buyoffers.{$i}.ware" space="$range" result="$selloffer">
@@ -813,6 +816,9 @@
           </do_if>
           <!-- tradenetwork -->
           <do_all exact="$trade_zones.count" counter="$ti" chance="if not $trade_zones? or @this.$trade_global == 2 or (@this.ship.commander.tradenpc.$trade_global == 2 and @this.$trade_global != 1) then 0 else 100">
+            <do_if value="$buyoffers.{$i}.available" negate="true">
+              <break />
+            </do_if>
             <do_if value="$trade_zones.{$ti}.exists" negate="true">
               <continue />
             </do_if>
@@ -838,6 +844,19 @@
           </do_if>
           <!-- $table.keys.sorted gives us the listed sorted by values from lowest to highest, so we need to iterate in reverse -->
           <do_all exact="$buyoffers.count" counter="$i" reverse="true">
+            <do_if value="$buyoffers.{$i}.available" negate="true">
+              <continue />
+            </do_if>
+            <do_if value="this.ship.commander.tradewares.list.indexof.{$buyoffers.{$i}.ware} or this.ship.commander.products.list.indexof.{$buyoffers.{$i}.ware} or this.ship.commander.resources.list.indexof.{$buyoffers.{$i}.ware}">
+              <do_if value="($buyoffers.{$i}.offeramount.{this})f / ([$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target,$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.free].min)f le (if this.ship.commander.isclass.station then if this.$trade_inandout? and (this.$trade_inandout == 1 or this.$trade_inandout == 3) then 0.05f else 0.2f else 0f)">
+                <continue />
+              </do_if>
+            </do_if>
+            <!--do_else>
+              <do_if value="($buyoffers.{$i}.offeramount.{this})f / ($buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target)f lt (if this.ship.commander.isclass.station then if this.$trade_inandout? and (this.$trade_inandout == 1 or this.$trade_inandout == 3) then 0.05f else 0.2f else 0f)" chance="if $buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target then 100 else 0">
+                <continue />
+              </do_if>
+            </do_else-->
             <set_value name="$tmpSpace" exact="$tradeClusters.{'$buy%1'.[$f]}.clone" />
             <do_all exact="$tmpSpace.count">
               <set_value name="$tmpRange" exact="$tmpSpace.random" />
@@ -846,7 +865,7 @@
               </do_if>
               <remove_value name="$tmpSpace.{$tmpSpace.indexof.{$tmpRange}}"/>
               <do_if value="$buyoffers.{$i}.available" negate="true">
-                <continue />
+                <break />
               </do_if>
               <do_if value="@$buyoffers.{$i}.restriction.faction or @this.$refact == 3 or @this.$refact == 1">
                 <!-- if there is a faction restriction for this ware, don't look for sellers of a different faction! -->

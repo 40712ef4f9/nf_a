@@ -79,7 +79,7 @@
 					<do_all exact="$stations.count" counter="$Counter">
 						<set_value name="$negrelation" exact="if $stations.{$Counter}.relationto.{this.ship} lt $stations.{$Counter}.owner.relation.neutral.min then $stations.{$Counter}.relationto.{this.ship} else null" />
 						<do_if value="$negrelation">
-						  <add_relation_boost object="$stations.{$Counter}" otherobject="this" value="this.owner.relation.neutral.mid - $negrelation" decay="1" delay="30min" silent="true" />
+						  <add_relation_boost object="$stations.{$Counter}" otherobject="this.ship" value="this.owner.relation.neutral.mid - $negrelation" decay="1" delay="30min" silent="true" />
 						</do_if>
 						<remove_value name="$negrelation"/>
 					</do_all>
