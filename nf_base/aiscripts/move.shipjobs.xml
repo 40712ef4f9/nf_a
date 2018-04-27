@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-<aiscript name="move.shipjobs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
+<aiscript name="move.shipjobs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="3">
 	<params>
 		<param name="run_script_name" default="'move.die'" comment="run_script"/>
 		<param name="run_script_param" default="null"/>
@@ -15,6 +15,9 @@
 			<actions>
 				<do_if value="event.param2? and event.param2 and (event.param2.isclass.zone or (event.param2.component? and event.param2.component.isclass.zone))">
 					<set_value name="$destination" exact="event.param2"/>
+				</do_if>
+				<do_if value="this.$whatido" exact="$run_script_name" negate="true">
+					<set_value name="$run_script_name" exact="this.$whatido"/>
 				</do_if>
 
 				<do_if value="$destination? and $destination">
@@ -165,6 +168,19 @@
 					<param name="basebasket" value="if this.$params.$basebasket? then this.$params.$basebasket else null" />
 				</run_script>
 			</do_if>
+			<do_elseif value="$run_script_name" exact="'move.plunder.taxi'">
+				<remove_object_commander object="this.ship" />
+				<run_script name="$run_script_name" sinceversion="2" >
+					<param name="range" value="if this.$params.$range? then this.$params.$range else 'sector'" />
+					<param name="squadleader" value="if this.$params.$squadleader? then this.$params.$squadleader else null" />
+					<param name="customerbase" value="if this.$params.$customerbase? then this.$params.$customerbase else null" />
+					<param name="range_min" value="if this.$params.$range_min? then this.$params.$range_min else 5km" />
+					<param name="range_max" value="if this.$params.$range_max? then this.$params.$range_max else this.ship.maxradarrange" />
+					<param name="returntobase" value="if this.$params.$returntobase? then this.$params.$returntobase else true" />
+					<param name="checkrelation" value="if this.$params.$checkrelation? then this.$params.$checkrelation else false" />
+					<param name="basebasket" value="if this.$params.$basebasket? then this.$params.$basebasket else null" />
+				</run_script>
+			</do_elseif>
 			<do_elseif value="$run_script_name" exact="'move.patrol'">
 				<remove_object_commander object="this.ship" />
 				<run_script name="'move.patrol'" >
@@ -321,6 +337,16 @@
 					<param name="cover" value="if this.$params.$cover? then this.$params.$cover else 100" />
 					<param name="datapool" value="if this.$params.$datapool? then this.$params.$datapool else null" />
 					<param name="dispatchatfirstmatch" value="if this.$params.$dispatchatfirstmatch? then this.$params.$dispatchatfirstmatch else false" />
+				</run_script>
+			</do_elseif>
+			<do_elseif value="$run_script_name" exact="'carrier.default'">
+				<run_script name="$run_script_name" sinceversion="2" >
+					<param name="base" value="if this.$params.$base? then this.$params.$base else this.ship.commander" />
+					<param name="commander" value="if this.$params.$commander? then this.$params.$commander else this.ship.commander" />
+					<param name="formation" value="if this.$params.$formation? then this.$params.$formation else formationshape.invpointguard" />
+					<param name="protect_base" value="if this.$params.$protect_base? then this.$params.$protect_base else false" />
+					<param name="do_escort" value="if this.$params.$do_escort? then this.$params.$do_escort else false" />
+					<param name="escort" value="if this.$params.$escort? then this.$params.$escort else false" />
 				</run_script>
 			</do_elseif>
 			<do_elseif value="$run_script_name" list="['BR.move.escort','move.escort']">

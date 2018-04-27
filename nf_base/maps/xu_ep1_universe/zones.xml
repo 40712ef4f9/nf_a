@@ -236,6 +236,7 @@
 	<remove sel="//macro[@name='tzoneCluster_A_Sector01_Zone94_macro']/connections/connection[@ref='buildcon1']" />
 	<remove sel="//macro[@name='tzoneCluster_A_Sector01_Zone94_macro']/connections/connection[@ref='buildcon2']" />
 	<replace sel="//macro[@name='tzoneCluster_A_Sector01_Zone94_macro']/connections/connection[@name='struct_econ_agri_ar_unique_megafarmlands_macro']/macro/properties/identification/@owner">civilian</replace>
+	<!--remove sel="//macro[@name='tzoneCluster_A_Sector01_Zone94_macro']/connections/connection[@name='struct_econ_agri_ar_unique_megafarmlands_macro']" /-->
 	<add sel="//macro[@name='tzoneCluster_A_Sector01_Zone94_macro']/connections">
 		<connection ref="buildcon1">
 			<offset>
@@ -252,6 +253,12 @@
 				<position x="35000" y="29000" z="9000" />
 			</offset>
 		</connection>
+		<!--connection ref="buildcon4">
+			<offset>
+				<position x="0.0" y="-831.25" z="0.0" />
+				<quaternion qx="0" qy="0" qz="0" qw="1" />
+			</offset>
+		</connection-->
 		<connection ref="buildconnpc1">
 			<offset>
 				<position x="13000" y="16000" z="-37000" />
@@ -4166,6 +4173,12 @@
 		<connection ref="buildcon3">
 			<offset>
 				<position x="35000" y="29000" z="9000" />
+			</offset>
+		</connection>
+		<connection ref="buildcon4">
+			<offset>
+				<position x="5921.875" y="4335.9375" z="5511.71875" />
+				<quaternion qx="0" qy="0" qz="0" qw="1" />
 			</offset>
 		</connection>
 		<connection ref="buildconnpc1">

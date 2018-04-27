@@ -79,6 +79,7 @@
           <event_object_signalled object="this.ship" param="'refuel'" />
           <event_object_signalled object="this.ship" param="'start mining'" />
           <event_object_signalled object="this.ship" param="'attack object'" />
+          <event_object_signalled object="this.ship" param="'attack object squad'" />
           <event_object_signalled object="this.ship" param="'attack plus'" />
           <event_object_signalled object="this.ship" param="'attack enemies'" />
           <event_object_signalled object="this.ship" param="'fight enemies'" />
@@ -91,7 +92,19 @@
       <actions>
         <remove_value name="this.$escort_switch_standby"/>
         <remove_value name="this.$commander_switch_standby"/>
-        <do_if value="this.defensible.subordinates.count gt 0">
+        <!-- undock -->
+        <do_if value="this.ship.dockslot != null and event.param == 'dock at' and this.ship.dockslot.component.container == event.param2">
+          <abort_called_scripts resume="wait"/>
+        </do_if>
+        <do_elseif value="this.ship.dockslot != null">
+          <run_interrupt_script name="'command.undock'" abortscripts="true" resume="wait">
+            <param name="param" value="event.param" />
+            <param name="param2" value="event.param2" />
+            <param name="param3" value="event.param3" />
+          </run_interrupt_script>
+        </do_elseif>
+        <!-- MICT -->
+        <do_if value="this.defensible.subordinates.count gt 0 and ['withdraw battle','fly to pos','hold position'].indexof.{event.param}">
           <set_value name="$subordinates" exact="this.defensible.subordinates"/>
           <do_all exact="$subordinates.count" counter="$i">
             <do_if value="$subordinates.{$i}.pilot.command.value" list="[command.attackenemies, command.attackobject]">
@@ -106,6 +119,14 @@
         </do_if>
         <!-- dock at -->
         <do_if value="event.param == 'dock at'">
+          <do_if value="this.ship.dockslot and this.ship.dockslot.component.container == event.param2">
+            <abort_called_scripts resume="wait"/>
+          </do_if>
+          <do_if value="this.defensible.subordinates.count gt 0">
+            <do_all exact="this.defensible.subordinates.count" counter="$i">
+              <signal_objects object="this.defensible.subordinates.{$i}" param="event.param" param2="event.param2" param3="event.param3" delay="2s"/>
+            </do_all>
+          </do_if>
           <debug_text text="'Received order to dock at ' + event.param2.name" />
           <run_interrupt_script name="'move.dockat'" abortscripts="true" resume="wait">
             <param name="destination" value="event.param2" />
@@ -113,6 +134,11 @@
           </run_interrupt_script>
         </do_if>
         <do_elseif value="event.param == 'dock at end'">
+          <do_if value="this.defensible.subordinates.count gt 0">
+            <do_all exact="this.defensible.subordinates.count" counter="$i">
+              <signal_objects object="this.defensible.subordinates.{$i}" param="event.param" param2="event.param2" param3="event.param3" delay="2s"/>
+            </do_all>
+          </do_if>
           <debug_text text="'Received order to final dock at ' + event.param2.name" />
           <run_interrupt_script name="'move.dockat'" abortscripts="true" resume="end">
             <param name="destination" value="event.param2" />
@@ -147,6 +173,25 @@
             <param name="speak" value="false" />
           </run_interrupt_script>
         </do_elseif>
+        <do_elseif value="event.param == 'attack object squad'">
+          <debug_text text="'Received order to attack to ' + event.param2.knownname" />
+          <do_if value="not event.param3 or event.param3 == this.ship">
+            <set_value name="$commander" exact="$base"/>
+            <set_value name="$do_escort" exact="null"/>
+            <!--remove_object_commander object="this.ship" /-->
+			<run_interrupt_script name="'command.fight.attack'" abortscripts="true" resume="dock">
+              <param name="target" value="event.param2" />
+              <param name="checkrelation" value="false" />
+              <param name="speak" value="false" />
+            </run_interrupt_script>
+          </do_if>
+          <do_else>
+            <set_value name="$commander" exact="event.param3"/>
+            <set_value name="$do_escort" exact="true"/>
+            <set_object_commander object="this.ship" commander="event.param3" />
+			<abort_called_scripts resume="init"/>
+          </do_else>
+        </do_elseif>
         <do_elseif value="event.param == 'attack plus'">
           <debug_text text="'Received order to attack to ' + event.param2.knownname" />
           <run_interrupt_script name="'fight.attack.object.plus'" abortscripts="true" resume="init">
@@ -176,7 +221,7 @@
         <do_elseif value="event.param == 'scout zone'">
           <debug_text text="'Received order to scout zone ' + event.param2.knownname" />
           <set_command command="command.movetozone" param="event.param2"/>
-          <run_interrupt_script name="'move.generic'" abortscripts="true" resume="voy">
+          <run_interrupt_script name="if not global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad then 'move.generic' else if this.ship.macro.ismacro.{global.$mmcarriers} then 'move.generic.carrier' else 'move.generic'" abortscripts="true" resume="voy">
             <param name="destination" value="event.param2" />
             <param name="endintargetzone" value="true" />
           </run_interrupt_script>
@@ -300,8 +345,6 @@
       </conditions>
       <actions>
 
-        <cease_fire object="this.ship" weapontype="mining" />
-
         <do_if value="event.param == 'switch.mode'">
           <do_if value="this.$escort == 'escort'">
             <set_value name="this.$escort" exact="'patrol'"/>
@@ -318,8 +361,7 @@
           <set_value name="this.$escort" exact="'dock'"/>
         </do_else>
 
-        <!-- recall drones -->
-        <run_interrupt_script name="'lib.recall.drones'" abortscripts="true"  resume="loop"/>
+        <abort_called_scripts resume="loop"/>
       </actions>
     </handler>
   </interrupts>
@@ -334,10 +376,9 @@
 
       <label name="init" />
       <remove_value name="$gohome" />
-      <set_value name="this.$escort" exact="null"/>
       <clear_collision_filter object="this.ship" />
       <do_if value="this.$do_escort?" negate="true">
-        <set_value name="this.$do_escort" exact="if $do_escort? and $do_escort then true else false" />
+        <set_value name="this.$do_escort" exact="if $do_escort? and $do_escort then 'escort' else false" />
       </do_if>
       <do_if value="$base? and $base.exists" negate="true">
         <set_value name="$base" exact="if this.ship.commander.exists then this.ship.commander else if this.ship.isplayerowned then player.primaryship else null"/>
@@ -445,6 +486,12 @@
       <label name="wait" />
       <set_command_action commandaction="commandaction.standingby" />
       <!--debug_text text="'WAIT: %1 %2'.[this.ship.name, this.ship.zone.name]" filter="error" chance="100" /-->
+      <wait />
+
+      <label name="dock" />
+      <set_command_action commandaction="commandaction.standingby" />
+      <wait min="5s" max="10s" />
+      <signal_objects object="this.ship" param="'dock at'" param2="$base" delay="100ms"/>
       <wait />
 
       <label name="end" />

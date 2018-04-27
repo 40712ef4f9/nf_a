@@ -4,7 +4,7 @@
 		<handler ref="discoverall" />
 	</add>
 	<add sel="//actions/label[@name='find trade run']" pos="after">
-	  <!-- Cover -->
+	  <!-- Cover [deprecated]
       <do_if value="this.ship.owner" exact="this.ship.trueowner" chance="if global.$mmpiratesy_pfactions.indexof.{this.ship.trueowner} then 84 else 0">
 		<get_control_entities groupname="$Entities" object="this.ship"/>
 		<set_value name="$faction" exact="faction.acmecorp"/>
@@ -26,6 +26,15 @@
 		<set_cover_owner object="this.ship"/>
 		<remove_value name="$Entities"/>
       </do_elseif>
+	  -->
+      <do_if value="this.ship.owner" exact="this.ship.trueowner" negate="true" >
+		<get_control_entities groupname="$Entities" object="this.ship"/>
+		<do_all exact="$Entities.count" counter="$j" > 
+			<set_cover_owner object="$Entities.{$j}"/>
+		</do_all> 
+		<set_cover_owner object="this.ship"/>
+		<remove_value name="$Entities"/>
+      </do_if>
 	</add>
 	<add sel="//actions/do_if[@value='this.ship.jobexpired']" pos="prepend">
 	  <!-- unCover -->
@@ -59,7 +68,7 @@
 				</do_if>
 			</actions>
 		</handler>
-		<handler>
+		<!--handler>
 			<conditions>
 				<event_object_changed_zone object="this.ship" />
 				<check_value value="not this.ship.zone.isclass.highway and this.ship.zone.ismapzone" />
@@ -86,7 +95,7 @@
 					<remove_value name="$stations"/>
 				</do_if>
 			</actions>
-		</handler>
+		</handler-->
 		<handler>
 		  <conditions>
 			<event_object_signalled object="this.ship" param="'DO.Refuel.athome'"/>

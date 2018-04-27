@@ -3388,7 +3388,7 @@
 					<include_actions ref="md.MM_Corps__Data.MMCData_ship_sell" />
 <set_value name="$text2" exact="'%1 sold? [%2]\n'.[$shipNothingTodo.count, $_CEO.money.formatted.default]" operation="add" />
 				</do_if>
-				<do_elseif value="$shipNothingTodo.count" chance="if $_CEO.money lt ($tmpConfig.$minBuyShip * 0.66f) then 100 else 0">
+				<do_elseif value="$shipNothingTodo.count" chance="if $_CEO.money lt ($tmpConfig.$minBuyShipTop * 0.66f) then 100 else 0">
 <set_value name="$text2" exact="'* Sell %1 ships [%2] -- '.[$shipNothingTodo.count, $_CEO.money.formatted.default]" operation="add" />
 					<do_all exact="$shipNothingTodo.count" counter="$r" reverse="true">
 						<do_if value="$shipNothingTodo.{$r}.primarypurpose == objectpurpose.build" negate="true">

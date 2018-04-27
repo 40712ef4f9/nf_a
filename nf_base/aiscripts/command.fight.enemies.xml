@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <diff>
-    <replace sel="/aiscript/attention/actions/do_if/run_script/@name">if not global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad then 'move.generic' else 'move.generic.carrier'</replace>
+    <replace sel="/aiscript/attention/actions/do_if/run_script/@name">if not global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad then 'move.generic' else if this.ship.macro.ismacro.{global.$mmcarriers} then 'move.generic.carrier' else 'move.generic'</replace>
 </diff>

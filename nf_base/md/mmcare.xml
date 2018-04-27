@@ -287,26 +287,30 @@
 		-->
 		<library name="MM_Care_restore_do">
 			<actions>
-				<set_value name="$Macro" exact="$oldShip.macro"/>
-				<set_value name="$Position" exact="$oldShip.position"/>
-				<set_value name="$Rotation" exact="$oldShip.rotation"/>
-				<set_value name="$Zone" exact="$oldShip.zone"/>
+				<set_value name="$Macro" exact="if $oldShip.exists then $oldShip.macro else null"/>
+				<set_value name="$Position" exact="if $oldShip.exists then $oldShip.position else null"/>
+				<set_value name="$Rotation" exact="if $oldShip.exists then $oldShip.rotation else null"/>
+				<set_value name="$Zone" exact="if $oldShip.exists then $oldShip.zone else $theShip.zone"/>
 				<set_value name="$breakupChance" exact="210"/>
 				<set_value name="$breakupChance" exact="20" operation="add" chance="if $Macro.class == class.ship_xl then 100 else 0"/>
 				<set_value name="$breakupChance" exact="$theShip.pilot.combinedskill" operation="subtract" chance="if $theShip.pilot and $theShip.pilot.exists then 100 else 0"/>
 				<set_value name="$breakupChance" exact="$theShip.engineer.combinedskill" operation="subtract" chance="if $theShip.engineer and $theShip.engineer.exists then 100 else 0"/>
 				
-				<do_if value="true" chance="[100, $breakupChance].min">
+				<do_if value="$oldShip.exists" negate="true">
+					<show_help position="8" log="true" force="true" duration="5s" custom="'ERROR: Wrack not exists anymore in %1'.[$Zone.knownname]" />
+				</do_if>
+				<do_elseif value="true" chance="[100, $breakupChance].min">
 					<do_if value="md.$mmcareWrecks?" negate="true">
 						<create_list name="md.$mmcareWrecks"/>
 					</do_if>
 					<do_if value="md.$mmcareWrecks.indexof.{$oldShip}" negate="true">
 						<append_to_list name="md.$mmcareWrecks" exact="$oldShip" />
 					</do_if>
-					<show_help position="8" log="false" force="true" duration="5s" custom="'INFO: Repair not possible'" />
+					<show_help position="8" log="true" force="true" duration="5s" custom="'INFO: Repair of %1 not possible in %2'.[$oldShip.knownname, $oldShip.zone.knownname]" />
+					
 					<!-- TODO: Target got destroyed at salvage -->
 					<!-- TODO: Recycling Option (Shippart) -->
-				</do_if>
+				</do_elseif>
 				<do_else>
 					<destroy_object object="$oldShip" explosion="false" />
 

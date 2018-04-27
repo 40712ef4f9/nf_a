@@ -125,7 +125,7 @@
           <!--set_value name="$separation" exact="[400m + $target.length, 400m + this.ship.length].max"/-->
         </do_if>
         <do_else>
-          <set_value name="$separation" exact="[400m, this.ship.length].max"/>
+          <set_value name="$separation" exact="[400m, this.ship.length*2, 400m + $target.length].max"/>
         </do_else>
       </do_if>
       <set_value name="$nmax" exact="$formationparam2"/>
@@ -246,7 +246,7 @@
               <!--set_value name="$formationparam" exact="[400m + $target.length, 400m + this.ship.length].max"/-->
             </do_if>
             <do_else>
-              <set_value name="$formationparam" exact="[100m, this.ship.length].max"/>
+              <set_value name="$formationparam" exact="[100m, this.ship.length*2, 400m + $target.length].max"/>
             </do_else>
             <create_formation object="$target" formation="$MICT_formation" param="$formationparam" param2="$formationparam2"/>
             <join_formation leader="$target" object="this.ship"/>
@@ -289,7 +289,7 @@
 
         <!-- MICT: If separated from commander, but in the same zone, jump to within 1km of the commander. -->
         <do_if value="not $MICT_SquadAttack? and not $target.isboostactive">
-          <do_if value="this.ship.distanceto.{$target} gt $separation*2">
+          <do_if value="this.ship.distanceto.{$target} gt $separation*4">
             <do_if value="@$MICT_InFormation">
               <leave_formation object="this.ship"/>
               <remove_value name="$MICT_InFormation"/>
@@ -546,7 +546,7 @@
           <!--set_value name="$separation" exact="[400m + $target.length, 400m + this.ship.length].max"/-->
         </do_if>
         <do_else>
-          <set_value name="$separation" exact="[400m, this.ship.length].max"/>
+          <set_value name="$separation" exact="[400m, this.ship.length*2, 400m + $target.length].max"/>
         </do_else>
       </do_if>
 
@@ -735,7 +735,7 @@
               <!--set_value name="$formationparam" exact="[400m + $target.length, 400m + this.ship.length].max"/-->
             </do_if>
             <do_else>
-              <set_value name="$formationparam" exact="[100m, this.ship.length].max"/>
+              <set_value name="$formationparam" exact="[100m, this.ship.length*2, 400m + $target.length].max"/>
             </do_else>
             <create_formation object="$target" formation="$MICT_formation" param="$formationparam" param2="$formationparam2"/>
             <join_formation leader="$target" object="this.ship"/>
@@ -749,7 +749,7 @@
       <!-- MICT: If separated from commander, but in the same zone, jump to within 1km of the commander.
         Warp should be better since it's instantaneous and doesn't block other actions. -->
       <do_if value="$target.isoperational and not $MICT_OOZ_SquadAttack? and not $target.isboostactive">
-        <do_if value="this.ship.distanceto.{$target} gt this.ship.size + $target.size + 5km">
+        <do_if value="this.ship.distanceto.{$target} gt $separation*4">
           <do_if value="@$MICT_InFormation">
             <leave_formation object="this.ship"/>
             <remove_value name="$MICT_InFormation"/>

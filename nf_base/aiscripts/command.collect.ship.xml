@@ -37,7 +37,7 @@
         <set_command command="command.support" param="$target" />
       </do_elseif>
       <do_elseif value="$target.exists and $target.iswreck">
-        <set_command command="command.support" />
+        <set_command command="command.move" param="$target" />
       </do_elseif>
 
       <!-- recall drones -->
@@ -60,7 +60,7 @@
         <do_if value="$target.zone.isclass.highway">
           <resume label="start" />
         </do_if>
-        <run_script name="'move.generic'">
+        <run_script name="if not global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad then 'move.generic' else if this.ship.macro.ismacro.{global.$mmcarriers} then 'move.generic.carrier' else 'move.generic'">
           <param name="destination" value="$target"/>
           <param name="forcesteering" value="not $bigship" />
           <param name="endintargetzone" value="true" />
@@ -79,7 +79,8 @@
       <do_elseif value="not $target.exists and not $target.iswreck">
         <return />
       </do_elseif>
-      
+      <set_command_action commandaction="commandaction.flying" />
+     
       <do_if value="$bigship">
         <!-- go close to player or wait-->
         <do_if value="this.ship.distanceto.{$target}" min="1km + this.ship.size">
@@ -105,6 +106,7 @@
       </do_if>
 
       <stop_moving object="this.ship" />
+      <set_command_action commandaction="commandaction.waitingdrones" />
 
       <do_if value="$restore">
         <resume label="restore" />
@@ -267,8 +269,10 @@
 
       <label name="restore" />
       <do_if value="$restore">
-        <signal_objects object="player.computer" param="'Care.DO.restore'" param2="[$target, this.ship, $pickup]" />
-        <signal_objects object="this.ship" param="'hold position'" delay="5ms" />
+        <set_command command="command.scan" />
+        <set_command_action commandaction="commandaction.repairchecking" />
+        <signal_objects object="player.computer" param="'Care.DO.restore'" param2="[$target, this.ship, $pickup]" delay="2s" />
+        <signal_objects object="this.ship" param="'hold position'" delay="500ms" />
       </do_if>
       <!--do_else>
         <signal_objects object="this.ship" param="'stop order'" delay="3s"/>

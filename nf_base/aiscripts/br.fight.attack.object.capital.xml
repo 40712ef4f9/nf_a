@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-<aiscript name="BR.fight.attack.object.capital" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
+<aiscript name="BR.fight.attack.object.capital" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="3">
   <!--
 
   Capital ship (defense officer NPC) vs Object (any class)
@@ -43,9 +43,9 @@
       <actions>
         <!--Get the top-level defensible of the attacker in low attention case-->
         <do_if value="event.name" exact="'event_object_attacked'">
-		  <debug_text text="'event_object_attacked: ' + this.ship.knownname" chance="$debugoutputchance"/>
+          <debug_text text="'event_object_attacked: ' + this.ship.knownname" chance="$debugoutputchance"/>
           <set_value name="$counterstrike" exact="100"/>
-		  <!--uncover if no real enemy-->
+          <!--uncover if no real enemy-->
           <set_value name="$notEnemy" exact="if event.param and event.param.owner.hasrelation.enemy.{this.ship.trueowner} then false else true"/>
           <do_if value="this.ship.owner != this.ship.trueowner and ($notEnemy or this.ship.shieldpercentage lt 20)">
             <set_value name="$counterstrike" exact="0" chance="if event.param and event.param.owner.hasrelation.enemy.{this.ship.trueowner} then 0 else 100"/>
@@ -57,17 +57,17 @@
             <remove_value name="$Entities"/>
           </do_if>
           <remove_value name="$notEnemy"/>
-		  <!--keep calm-->
-		  <do_if value="$target and $target != event.param and event.param.relationto.{this.ship.owner} lt event.param.owner.relationto.{this.ship.owner} and not event.param.trueowner.hasrelation.enemy.{this.ship.trueowner}"
-		  	chance="if this.ship.attention ge attention.visible and event.param and event.param.isclass.[class.ship_l, class.ship_xl, class.station] then 100 else 0">
-          	<set_value name="$negrelation" exact="if event.param.relationto.{this.ship} lt this.owner.relation.neutral.min then event.param.relationto.{this.ship} else null" />
-			<do_if value="$negrelation">
-			  <add_relation_boost object="event.param" otherobject="this" value="this.owner.relation.neutral.mid - $negrelation" decay="1" delay="30min" silent="true" />
-			  <set_value name="$counterstrike" exact="0" />
-			</do_if>
-          	<remove_value name="$negrelation"/>
+          <!--keep calm-->
+          <do_if value="$target and $target != event.param and event.param.relationto.{this.ship.owner} lt event.param.owner.relationto.{this.ship.owner} and not event.param.trueowner.hasrelation.enemy.{this.ship.trueowner}"
+        chance="if this.ship.attention ge attention.visible and event.param and event.param.isclass.[class.ship_l, class.ship_xl, class.station] then 100 else 0">
+            <set_value name="$negrelation" exact="if event.param.relationto.{this.ship} lt this.owner.relation.neutral.min then event.param.relationto.{this.ship} else null" />
+            <do_if value="$negrelation">
+              <add_relation_boost object="event.param" otherobject="this" value="this.owner.relation.neutral.mid - $negrelation" decay="1" delay="30min" silent="true" />
+              <set_value name="$counterstrike" exact="0" />
+            </do_if>
+            <remove_value name="$negrelation"/>
           </do_if>
-		  <!--this is sparta-->
+          <!--this is sparta-->
           <set_value name="$attacker" exact="null"/>
           <do_if value="event.param and typeof event.param == datatype.component" chance="$counterstrike">
             <set_value name="$attacker" exact="if event.param.isclass.defensible then event.param else event.param.defensible"/>
@@ -98,7 +98,7 @@
       <conditions>
         <check_any>
           <check_all>
-            <event_object_changed_owner object="$target" check="false" />
+            <event_object_changed_owner group="$targets" />
             <check_value value="event.object.exists and not event.param.hasrelation.enemy.{this.ship.owner}"/>
           </check_all>
           <check_all>
@@ -191,6 +191,11 @@
     <create_group groupname="$dronetargets" />
     <create_list name="$enemies" />
   </init>
+  <patch sinceversion="3" early="true">
+    <do_if value="$targets?" negate="true">
+      <create_group groupname="$targets" />
+    </do_if>
+  </patch>
   <attention min="visible">
     <actions>
 
@@ -241,8 +246,12 @@
           </do_else>
         </do_if>
 
-        <create_group groupname="$targets" />
-        <create_group groupname="$dronetargets" />
+        <do_if value="$targets?" negate="true">
+          <create_group groupname="$targets" />
+        </do_if>
+        <do_if value="$dronetargets?" negate="true">
+          <create_group groupname="$dronetargets" />
+        </do_if>
       </do_if>
 
       <!-- include attackers -->
@@ -304,24 +313,14 @@
         </do_if>
 
         <do_all counter="$i" exact="$enemies.count">
-          <do_if value="@$enemies.{$i}.boarder and @this.ship.relationto.{$enemies.{$i}.boarder} ge 0 and $enemies.{$i}.hullpercentage le 70">
-            <continue />
-          </do_if>
-
           <do_if value="$enemies.{$i}.isoperational">
-            <!--Checks for target ignore/stop shooting. Added here to ensure also bad DO's responds-->
-            <do_if value="@$enemies.{$i}.boarder and @this.ship.relationto.{$enemies.{$i}.boarder} ge 0 and $enemies.{$i}.hullpercentage le 70" chance="0" comment="seems to be useless now">
-              <debug_text text="player.age + '%1. target is being boarded by frendlies and hull is below 70 percent. Stopping fire. Ship which is boarded: %2, boardee name: %3, relation to boarder: %4'.[this.ship.name, $enemies.{$i}.name, $enemies.{$i}.boarder.name, this.ship.relationto.{$enemies.{$i}.boarder}]" chance="$debugoutputchance" filter="general" />
-              <set_value name="$shootattarget" exact="false"/>
-              <cease_fire object="this.ship" weapontype="combat"/>
+            <do_if value="$enemies.{$i}.isclass.[class.ship, class.station] and $enemies.{$i}.boarder and @this.ship.relationto.{$enemies.{$i}.boarder} ge 0 and $enemies.{$i}.hullpercentage le 70">
+              <continue />
             </do_if>
-            <do_else>
-              <set_value name="$shootattarget" exact="true"/>
-            </do_else>
             <!--Get random bonus to skill calculations-->
             <set_value name="$DOskillcheckbonus" min="0" max="10" />
             <!-- fail detecting enemy if skill level too low-->
-            <do_if value="($DObaseskill + $DOskillcheckbonus) gt 19 and $shootattarget" comment="PRO and 1337 Version">
+            <do_if value="($DObaseskill + $DOskillcheckbonus) gt 19" comment="PRO and 1337 Version">
               <!--Add to drone targetlist if valid target, masstraffic included. Avoids stations and L/XL here -->
               <do_if value="$enemies.{$i}.isclass.[class.ship_xs, class.ship_s, class.ship_m]">
                 <!--Don't let drones wander too far off-->
@@ -361,7 +360,7 @@
                 <do_if value="$result">
                   <set_value name="$droneRange" exact="if this.ship.distanceto.{$enemies.{$i}} le 10km then true else false" />
                   <set_value name="$droneShould" exact="if $enemies.{$i}.primarypurpose == objectpurpose.fight then false else true" />
-                  <find_object_component object="$enemies.{$i}" groupname="$targetComps" surfaceelement="true" multiple="true" integrated="false"/>
+                  <find_object_component object="$enemies.{$i}" groupname="$targetComps" surfaceelement="true" multiple="true" invulnerable="false" functional="true" integrated="false"/>
                   <do_all exact="$targetComps.list.count" counter="$j">
                     <!-- fail detecting component if skill level too low. 30 is 5 star basevalue with 0 random bonus. Getting new random number-->
                     <set_value name="$DOskillcheckbonus" min="0" max="10" />
@@ -375,7 +374,7 @@
                         <add_to_group groupname="$dronetargets" object="$targetComps.list.{$j}" chance="if $result or not $droneShould or not $droneRange or $targetComps.list.{$j}.isclass.turret then 0 else 100"/>
                         <add_to_group groupname="$targets" object="$targetComps.list.{$j}"/>
                         <!--Adding LOS targets as valid for big guns for offensive DO + NPC-->
-                        <do_if value="$doAttackenemies or ($target == $enemies.{$i} and not $enemies.{$i}.boarder)">
+                        <do_if value="$doAttackenemies or ($target == $enemies.{$i} and not $enemies.{$i}.boarder)" chance="if $enemies.{$i}.isclass.[class.ship, class.station] then 100 else 0">
                           <add_to_group groupname="$validbigguntarget" object="$targetComps.list.{$j}"/>
                         </do_if>
                       </do_if>
@@ -388,7 +387,7 @@
                           <add_to_group groupname="$targets" object="$targetComps.list.{$j}" />
                           <add_to_group groupname="$validbigguntarget" object="$targetComps.list.{$j}"/>
                           <add_to_group groupname="$dronetargets" object="$targetComps.list.{$j}" chance="if $result or not $droneShould or not $droneRange then 0 else 100"/>
-                       </do_if>
+                        </do_if>
                       </do_elseif>
                     </do_if>
                   </do_all>
@@ -412,7 +411,7 @@
                 <!-- find and prioritize LOS station weapons -->
                 <!--TODO: LOS is kind of overkill here... consider removing-->
                 <!--<find_object_component object="$enemies.{$i}" groupname="$targetComps" surfaceelement="true" functional="true" checkoperational="true" multiple="true" integrated="false"/>-->
-                <find_object_component object="$enemies.{$i}" groupname="$targetComps" class="[class.turret, class.weapon, class.launcher]" surfaceelement="true" checkoperational="true" multiple="true" integrated="false"/>
+                <find_object_component object="$enemies.{$i}" groupname="$targetComps" class="[class.turret, class.weapon, class.launcher]" surfaceelement="true" multiple="true" checkoperational="true" invulnerable="false" integrated="false"/>
                 <!--<debug_text text="player.age + '%1 station targetting prepare. %2 entries total'.[this.ship.name, $targetComps.list.count]" chance="100" filter="general" />-->
                 <do_if value="$targetComps.list.count and $thiscombinedskill lt 80">
                   <add_to_group groupname="$targets" list="$targetComps.list"/>
@@ -445,7 +444,7 @@
 
                 <set_value name="$flag" exact="if not this.ship.isplayerowned and
                                     (
-                                      (@$enemies.{$i}.boarder and @this.ship.relationto.{$enemies.{$i}.boarder} ge 0) or
+                                      ($enemies.{$i}.boarder and @this.ship.relationto.{$enemies.{$i}.boarder} ge 0) or
                                       $TroopShip.count or
                                       (@$enemies.{$i}.hullpercentage ge 95 and $targetComps.list.count)
                                     ) or
@@ -455,7 +454,7 @@
                 <do_if value="@this.$config_attackenemies == 1 and not $flag">
                   <clear_group group="$targetComps"/>
                   <!--<find_object_component object="$enemies.{$i}" multiple="true" functional="true" groupname="$targetComps">-->
-                  <find_object_component object="$enemies.{$i}" multiple="true" hullinvulnerable="false" indestructible="false" checkoperational="true" groupname="$targetComps">
+                  <find_object_component object="$enemies.{$i}" multiple="true" invulnerable="false" integrated="false" indestructible="false" checkoperational="true" groupname="$targetComps">
                     <match_size min="10m"/>
                   </find_object_component>
                   <do_if value="$targetComps.list.count and $thiscombinedskill lt 80">
@@ -497,8 +496,8 @@
                 <add_to_group groupname="$targets" object="$enemies.{$i}" chance="100" />
                 <add_to_group groupname="$validbigguntarget" object="$enemies.{$i}" chance="88"/>
                 <create_group groupname="$targetComps" />
-                <find_object_component object="$enemies.{$i}" groupname="$targetComps" class="[class.engine, class.launcher]" surfaceelement="true" checkoperational="true" multiple="true" integrated="false" chance="if $thiscombinedskill lt 40 then 50 else 0"/>
-                <find_object_component object="$enemies.{$i}" groupname="$targetComps" class="[class.engine, class.turret, class.jumpdrive, class.weapon, class.launcher]" surfaceelement="true" checkoperational="true" multiple="true" integrated="false" chance="if $enemies.{$i}.boarder and @this.ship.relationto.{$enemies.{$i}.boarder} ge 0 then 80 else if $thiscombinedskill ge 40 then 50 else 0"/>
+                <find_object_component object="$enemies.{$i}" groupname="$targetComps" class="[class.engine, class.launcher]" surfaceelement="true" invulnerable="false" checkoperational="true" multiple="true" integrated="false" chance="if $thiscombinedskill lt 40 then 50 else 0"/>
+                <find_object_component object="$enemies.{$i}" groupname="$targetComps" class="[class.engine, class.turret, class.jumpdrive, class.weapon, class.launcher]" surfaceelement="true" invulnerable="false" checkoperational="true" multiple="true" integrated="false" chance="if $enemies.{$i}.boarder and @this.ship.relationto.{$enemies.{$i}.boarder} ge 0 then 80 else if $thiscombinedskill ge 40 then 50 else 0"/>
                 <add_to_group groupname="$dronetargets" list="$targetComps.list" chance="75"/>
                 <do_if value="$targetComps.list.count and this.ship.distanceto.{$enemies.{$i}} le $FiringRange/2">
                   <add_to_group groupname="$targets" list="$targetComps.list"/>
@@ -515,8 +514,8 @@
                     </match_any>
                   </find_ship>
 
-                  <find_object_component object="$enemies.{$i}" groupname="$targetComps" hullinvulnerable="false" indestructible="false" checkoperational="true" multiple="true" chance="if $TroopShip.count then 0 else 100" />
-                  <find_object_component object="$enemies.{$i}" groupname="$targetComps" class="[class.turret, class.weapon, class.launcher]" surfaceelement="true" checkoperational="true" multiple="true" integrated="false" chance="if $TroopShip.count then 100 else 0"/>
+                  <find_object_component object="$enemies.{$i}" groupname="$targetComps" invulnerable="false" integrated="false" checkoperational="true"  multiple="true" chance="if $TroopShip.count then 0 else 100" />
+                  <find_object_component object="$enemies.{$i}" groupname="$targetComps" class="[class.turret, class.weapon, class.launcher]" surfaceelement="true" invulnerable="false" checkoperational="true" multiple="true" integrated="false" chance="if $TroopShip.count then 100 else 0"/>
                   <do_if value="$targetComps.list.count">
                     <add_to_group groupname="$targets" list="$targetComps.list"/>
                     <add_to_group groupname="$validbigguntarget"  list="$targetComps.list" chance="if $TroopShip.count then 0 else 100"/>
@@ -550,10 +549,7 @@
           <set_value name="$MainTarget" exact="$target" />
 
           <do_if value="$target and $target.isclass.station">
-            <find_object_component object="$target" groupname="$targetComps" multiple="true" hullinvulnerable="false" surfaceelement="false" checkoperational="true" indestructible="false"/>
-            <!--<match_size min="100m"/>
-                <match class="class.shieldgenerator" negate="true" />
-              </find_object_component>-->
+            <find_object_component object="$target" groupname="$targetComps" multiple="true" invulnerable="false" integrated="false" surfaceelement="false" checkoperational="true" indestructible="false"/>
             <do_all exact="$targetComps.list.count" counter="$j">
               <do_if value="@$targetComps.list.{$j}.hullpercentage gt -1 and not @$targetComps.list.{$j}.iswreck">
                 <set_value name="$TMP_dist" exact="this.ship.distanceto.{$targetComps.list.{$j}}" />
@@ -575,10 +571,10 @@
             <do_if value="$MainTarget_TMP?">
               <set_value name="$MainTarget" exact="$MainTarget_TMP" />
             </do_if>
-			<remove_value name="$TMP_dist" />
-			<remove_value name="$MainTarget_TMP_dist" />
+            <remove_value name="$TMP_dist" />
+            <remove_value name="$MainTarget_TMP_dist" />
             <remove_value name="$MainTarget_TMP" />
-			<remove_value name="$targetComps" />
+            <remove_value name="$targetComps" />
             <remove_value name="$result" />
           </do_if>
           <!-- primary_slot-->
@@ -608,7 +604,7 @@
           <do_elseif value="$thiscombinedskill ge 50">
             <set_value name="$tmpDeg" exact="240.0deg"/>
           </do_elseif>
- 
+
           <do_if  value="$MainTarget.isoperational and $flagT and $flagTc">
             <do_if value="$LRShip and this.ship.distanceto.{$MainTarget} le $FiringRange" chance="if $MainTarget.isclass.[class.ship_xs, class.ship_s, class.ship_m] then 0 else 100">
               <shoot_at object="this.ship" target="$MainTarget" slot="tag.secondary_slot" tolerance="$tmpDeg" locktarget="true" weapontype="combat" />
@@ -644,10 +640,10 @@
 
           <!-- v0.19 test to make stations more destructible IZ -->
           <do_if value="@$target and $target.isclass.station and $target.hullpercentage ge 10">
-			<set_value name="$damage" min="2" max="7" chance="if $target.shieldpercentage gt 10 then 0 else 100"/>
-			<set_value name="$damage" min="0" max="3" chance="if $target.shieldpercentage gt 10 then 100 else 0"/>
+            <set_value name="$damage" min="2" max="7" chance="if $target.shieldpercentage gt 10 then 0 else 100"/>
+            <set_value name="$damage" min="0" max="3" chance="if $target.shieldpercentage gt 10 then 100 else 0"/>
             <set_object_hull object="$target" exact="$target.hullpercentage - $damage" chance="75"/>
-			<remove_value name="$damage" />
+            <remove_value name="$damage" />
           </do_if>
 
           <!-- v0.19 test to make stations more destructible IZ-->
@@ -807,8 +803,8 @@
           <match owner="faction.smuggler" negate="true"/>
         </find_gravidar_contact>
         <do_all exact="$Stations.count" counter="$i">
-          <do_if value="not $Capital and (not $attackint? or ($attackint? and $attackint lt player.age))">
-            <find_object_component object="$Stations.{$i}" multiple="true" class="class.destructible" checkoperational="true" surfaceelement="false" integrated="false" groupname="$targetComps">
+          <do_if value="not $Capital and (not $attackint? or ($attackint? and $attackint lt player.age))" chance="0">
+            <find_object_component object="$Stations.{$i}" multiple="true" class="class.destructible" checkoperational="true" invulnerable="false" functional="true" integrated="false" groupname="$targetComps">
               <match_size min="10m"/>
             </find_object_component>
             <do_all exact="$targetComps.list.count" counter="$j">
@@ -853,14 +849,34 @@
       </do_else>
 
       <set_value name="$waittime" exact="player.timewarp.factor*5" />
+
+      <clear_group group="$targets"/>
       <!-- For each enemy, apply strength-->
       <do_while value="$enemies.count" min="1">
         <debug_text text=" ' unknown. ' + this.ship + ' fight. enemies: ' + $enemies " chance="$debugoutputchance" />
 
+        <do_if value="$target.isoperational" negate="true" chance="if @this.$config_attackenemies then 100 else 0">
+          <set_value name="$temp" exact="null" />
+          <do_all exact="$enemies.count" counter="$y" reverse="true">
+            <do_if value="$enemies.{$i}.isclass.defensible and $enemies.{$i}.isoperational" negate="true">
+              <remove_value name="$enemies.{$y}" />
+              <continue />
+            </do_if>
+            <do_if value="$enemies.{$y}.isclass.[class.ship_l, class.ship_xl] and (not $temp or this.ship.distanceto.{$enemies.{$i}} lt this.ship.distanceto.{$temp})" chance="if $temp and $temp.isclass.station then 0 else 100">
+              <set_value name="$temp" exact="$enemies.{$y}"/>
+            </do_if>
+            <do_elseif value="$enemies.{$y}.isclass.station and (not $temp or this.ship.distanceto.{$enemies.{$i}} lt this.ship.distanceto.{$temp}) and this.ship.distanceto.{$enemies.{$i}} lt $FiringRange">
+              <set_value name="$temp" exact="$enemies.{$y}"/>
+              <break />
+            </do_elseif>
+            <do_elseif value="$enemies.{$i}.isclass.[class.ship_s, class.ship_m] and (not $temp or this.ship.distanceto.{$enemies.{$i}} lt this.ship.distanceto.{$temp})" chance="if $temp and $temp.isclass.[class.ship_l, class.ship_xl, class.station] then 0 else 100">
+              <set_value name="$temp" exact="$enemies.{$y}"/>
+            </do_elseif>
+          </do_all>
+          <set_value name="$target" exact="$temp" />
+        </do_if>
+
         <do_all exact="$enemies.count" counter="$i" reverse="true">
-          <do_if value="not $attacks? or $i == 1">
-            <set_value name="$attacks" exact="false" />
-          </do_if>
           <do_if value="not @$MaxEnemies">
             <!-- Search/Attacking waiting time -->
             <set_value name="$waittime" min="player.timewarp.factor" max="[player.timewarp.factor * 4, 60s].min" profile="increasing" />
@@ -871,59 +887,56 @@
             <set_value name="$MaxEnemies" min="1" max="$MaxEnemies" profile="increasing"/>
           </do_if>
 
-          <do_if value="@$enemies.{$i}.isoperational">
-            <do_if value="@$enemies.{$i}.boarder and @this.ship.relationto.{$enemies.{$i}.boarder} ge 0 and $enemies.{$i}.hullpercentage le 70">
+          <do_if value="$enemies.{$i}.isclass.defensible and $enemies.{$i}.isoperational">
+            <do_if value="this.ship.distanceto.{$enemies.{$i}} gt ($FiringRange + $enemies.{$i}.size*0.5f)">
               <continue />
             </do_if>
-            <set_value name="$target" exact="$enemies.{$i}" />
+            <do_if value="$enemies.{$i}.isclass.[class.ship, class.station]">
+              <do_if value="$enemies.{$i}.boarder and @this.ship.relationto.{$enemies.{$i}.boarder} ge 0 and $enemies.{$i}.hullpercentage le 70" >
+                <continue />
+              </do_if>
+              <do_elseif value="$targets.list.indexof.{$enemies.{$i}} == 0">
+                <add_to_group groupname="$targets" object="$enemies.{$i}"/>
+              </do_elseif>
+            </do_if>
             <!-- exclude the player ship in OOS case, this scenario wouldn't make any sense anyway -->
-            <do_if value="$target != player.primaryship and ($target.isclass.defensible or ($target.container? and $target.container.isclass.defensible))">
+            <do_if value="$enemies.{$i} != player.primaryship and ($enemies.{$i}.isclass.defensible or ($enemies.{$i}.container? and $enemies.{$i}.container.isclass.defensible))">
               <!-- Get and apply strengths-->
-              <do_if value="$target.isoperational or ($target.container? and $target.container.isoperational)" chance="[this.combinedskill, 90].max" comment="chance of succeed">
+              <do_if value="true" chance="[this.combinedskill, 90].max" comment="chance of succeed">
                 <!-- do not attack objects that are too far away, gravidar range can be 50km+ !! -->
-                <do_if value="this.ship.distanceto.{$target} lt ($FiringRange + $target.size/2.0)">
-                  <do_if value="@$target.container.exists and $target.container.isclass.station">
-                    <do_if value="$target.hullpercentage">
-                      <set_value name="$damage" min="2" max="7" chance="if $target.shieldpercentage gt 10 then 0 else 100"/>
-                      <set_value name="$damage" min="0" max="3" chance="if $target.shieldpercentage gt 10 then 100 else 0"/>
-                      <set_object_hull object="$target" exact="$target.hullpercentage - $damage" chance="if not @$attacks then 90 else 60"/>
-                      <remove_value name="$damage" />
-                      <do_if value="$target.hullpercentage le 0">
-                        <find_object_component object="$target" groupname="$targetComps" surfaceelement="true" multiple="true" integrated="false"/>
-                        <do_all exact="$targetComps.list.count" counter="$tc">
-                          <destroy_object object="$targetComps.list.{$tc}" explosion="true"/>
-                        </do_all>
-                        <remove_value name="$targetComps" />
-                        <destroy_object object="$target" explosion="true"/>
-                      </do_if>
+                <do_if value="$enemies.{$i}.isclass.defensible and not $enemies.{$i}.container.iswreck and $enemies.{$i}.container.isclass.station">
+                  <do_if value="$enemies.{$i}.hullpercentage">
+                    <set_value name="$damage" min="2" max="7" chance="if $enemies.{$i}.shieldpercentage gt 10 then 0 else 100"/>
+                    <set_value name="$damage" min="0" max="3" chance="if $enemies.{$i}.shieldpercentage gt 10 then 100 else 0"/>
+                    <set_object_hull object="$enemies.{$i}" exact="$enemies.{$i}.hullpercentage - $damage" chance="if $enemies.{$i}.shieldpercentage lt 20 then 90 else 60"/>
+                    <remove_value name="$damage" />
+                    <do_if value="$enemies.{$i}.hullpercentage le 1">
+                      <find_object_component object="$enemies.{$i}" groupname="$targetComps" surfaceelement="true" multiple="true" invulnerable="false" integrated="false"/>
+                      <do_all exact="$targetComps.list.count" counter="$tc">
+                        <destroy_object object="$targetComps.list.{$tc}" explosion="true"/>
+                      </do_all>
+                      <remove_value name="$targetComps" />
+                      <destroy_object object="$enemies.{$i}" explosion="true"/>
                     </do_if>
-
-                    <set_value name="$target" exact="$target.container"/>
                   </do_if>
-                  <do_elseif value="@$target.exists and $target.isclass.ship">
-                    <set_value name="$attacks" exact="true" />
-                  </do_elseif>
-                  <!-- Get the strength in 'result'-->
-				  <set_value name="$usedrones" exact="false"/>
-                  <do_if value="$target.isclass.[class.ship_xs, class.ship_s, class.ship_m]">
-                    <set_value name="$usedrones" exact="true"/>
-                  </do_if>
-                  <do_elseif value="$target.isclass.[class.ship_l, class.ship_xl, class.station]" chance="@$skillpower">
-                    <set_value name="$usedrones" exact="true"/>
-                  </do_elseif>
-                  <get_attackstrength object="this.ship" target="$target" usedrones="$usedrones" result="$result" />
-                  <!-- Apply the strength to target -->
-                  <apply_attackstrength object="$target" attacker="this.ship" strength="$result * ($waittime)f" result="$isdead" />
-                  <debug_text text="'%1 OOS. Apply strength of %2 against %3 is: %4(%5|%6). Is killed: %7'.[player.age,this.ship.knownname,$target.knownname,$result * ($waittime)f,$target.hull,$target.shield,$isdead]" chance="$debugoutputchance" />
-                  <!--Wait so that attack/killed events are processed-->
-                  <wait exact="player.timewarp.factor/30"/>
                 </do_if>
-                <do_else>
-                  <debug_text text="'%1 OOS. Apply out of range of %2 against %3. Distance %4, fire range %5'.[player.age,this.ship.knownname,$target.knownname,this.ship.distanceto.{$target},$FiringRange]" chance="$debugoutputchance" />
-                </do_else>
+                <!-- Get the strength in 'result'-->
+                <set_value name="$usedrones" exact="false"/>
+                <do_if value="$enemies.{$i}.isclass.[class.ship_xs, class.ship_s, class.ship_m]">
+                  <set_value name="$usedrones" exact="true"/>
+                </do_if>
+                <do_elseif value="$enemies.{$i}.isclass.[class.ship_l, class.ship_xl, class.station]" chance="@$skillpower">
+                  <set_value name="$usedrones" exact="true"/>
+                </do_elseif>
+                <get_attackstrength object="this.ship" target="$enemies.{$i}" usedrones="$usedrones" result="$result" />
+                <!-- Apply the strength to target -->
+                <apply_attackstrength object="$enemies.{$i}" attacker="this.ship" strength="$result * ($waittime)f" result="$isdead" />
+                <debug_text text="'%1 OOS. Apply strength of %2 against %3 is: %4(%5|%6). Is killed: %7'.[player.age,this.ship.knownname,$enemies.{$i}.knownname,$result * ($waittime)f,$enemies.{$i}.hull,$enemies.{$i}.shield,$isdead]" chance="$debugoutputchance" />
+                <!--Wait so that attack/killed events are processed-->
+                <wait exact="player.timewarp.factor/30"/>
               </do_if>
               <do_else>
-                <debug_text text="'%1 OOS. Apply attack fail of %2 against %3'.[player.age,this.ship.knownname,$target.knownname]" chance="$debugoutputchance" />
+                <debug_text text="'%1 OOS. Apply attack fail of %2 against %3'.[player.age,this.ship.knownname,$enemies.{$i}.knownname]" chance="$debugoutputchance" />
               </do_else>
             </do_if>
           </do_if>

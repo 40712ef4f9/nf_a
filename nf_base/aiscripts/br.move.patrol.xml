@@ -16,33 +16,12 @@
     <handler ref="TargetInvalidHandler" />
     <handler ref="AttackHandler" />
     <handler ref="ScannedHandler" />
-
-	<handler>
-      <conditions>
-        <event_object_changed_zone object="this.ship" />	
-		<check_value value="this.ship.zone == @$targetzone" />
-		<check_value value="this.ship.owner != faction.xenon" />
-		<check_value value="this.ship.owner != faction.ownerless" />
-		<check_value value="this.ship.isclass.[class.ship_l, class.ship_xl]" />
-		<check_value value="this.ship.primarypurpose == objectpurpose.fight" />
-		<check_value value="this.ship.isjobship" />
-      </conditions>
-      <actions>
-       <!-- <debug_text text="'Interrupt br.move.patrol to call TroopShips if conditions meet'" chance="100" />-->
-		
-		<!--<write_to_logbook category="general" text="'=== CWIR_TS 0 === \n br.move patrol was Interrupt: \n this ship %1 changed zone to %2.\n player.entity was signalled with these parameters: \n p1: %3 \n p2: %4 \n p3: %5.'.[this.ship.name, this.ship.zone.name, 'TroopShips', this.ship.zone.name, this.ship.owner.name]"/>-->
-		
-		<signal_objects object="player.entity" param="'TroopShips'" param2="this.ship.zone" param3="this.ship.owner" delay="10ms" comment="Signal MD cue" />
-        <abort_called_scripts resume="start" />
-      </actions>
-    </handler>
-
   </interrupts>
   <init>
     <set_command command="command.patrol"  />
     <set_command_action commandaction="commandaction.calculating" />
-    <do_if value="@$createsquad and this.ship.subordinates.count == 0">
-      <signal_objects object="player.galaxy" param="'CW_Job_Squad_builder'" param2="this.ship" param3="$createsquad"/>
+    <do_if value="@$createsquad and this.ship.subordinates.count == 0 and global.$factionCEOs.{'$' + this.ship.trueowner.id}?">
+      <signal_objects object="global.$factionCEOs.{'$' + this.ship.trueowner.id}" param="'GIVE.ESCORTS'" param2="this.ship" delay="60s"/>
     </do_if>
     <set_value name="$createsquad" exact="false" />
   </init>
@@ -59,7 +38,6 @@
 	  	<signal_objects object="this.ship.subordinates.{$j}" param="'reboot'" delay="10ms" comment="Wake Follower" />
       </do_all>
       
-      
       <!-- checking if we have a valid patrolobject, and if not (its a space instead) use it as range param if this one is not set, or if set ignore it in any other case where invalid-->
       <do_if value="$patrolobject.exists">
         <do_if value="$patrolobject.isclass.zone or $patrolobject.isclass.sector or $patrolobject.isclass.cluster">
@@ -72,15 +50,17 @@
           <set_value name="$patrolobject" exact="null" />
         </do_elseif>
       </do_if>
-      
-      <!-- we only need to execute this once - its based on the $range param and returns a list of Zones which shall be patrolled -->
+
+
       <label name="range" />
+      <!-- we only need to execute this once - its based on the $range param and returns a list of Zones which shall be patrolled -->
       <do_if value="not $patrolobject.exists">
         <run_script name="'BR.lib.range.decode'" result="$zones" sinceversion="4">
           <param name="range" value="$range"/>
         </run_script>
       </do_if>
-      
+
+
       <label name="start" />
       
       <!-- aggressive stance MAY BE CAUSING ISSUES -->
@@ -112,48 +92,10 @@
         <set_value name="$patrol_duration" min="10min" max="15min" />
         <create_formation formation="formationshape.vshape" object="this.ship" param="this.ship.size * 1.5" />
       </do_else>
-      
-      <!-- decoding the $range String to $space was previously done here - now moved this to BR.lib.range.decode in Line ~36 (may move a bis because things still change) -->
-      
-      <set_value name="$DeVriesCheck" exact="false" />
-      <set_value name="$OmicronCheck" exact="false" />
-      <set_value name="$MaelstromCheck" exact="false" />
-      
-      <find_cluster name="$Albion" macro="macro.cluster_b_macro" />
-      <find_cluster name="$DeVries" macro="macro.cluster_d_macro" />
-      <find_cluster name="$Omicron_Lyrae" macro="macro.cluster_c_macro" />
-      <find_cluster name="$Maelstrom" macro="macro.cluster_a_macro" />
-      
+
+
       <label name="find_destination" />
       
-      <do_if value="not $DeVriesCheck">
-        <do_if value="not $DeVriesGate?">
-          <find_object name="$DeVriesGate" class="class.gate" space="$Albion" destination="$DeVries"/>
-        </do_if>
-        <do_if value="$DeVriesGate.isactive">
-          <remove_value name="$DeVriesGate" />
-          <set_value name="$DeVriesCheck" exact="true" />
-        </do_if>
-      </do_if>
-      <do_if value="not $OmicronCheck">
-        <do_if value="not $OmicronGate?">
-          <find_object name="$OmicronGate" class="class.gate" space="$DeVries" destination="$Omicron_Lyrae"/>
-        </do_if>
-        <do_if value="$OmicronGate.isactive">
-          <remove_value name="$OmicronGate" />
-          <set_value name="$OmicronCheck" exact="true" />
-        </do_if>
-      </do_if>
-      <do_if value="not $MaelstromCheck">
-        <do_if value="not $MaelstromGate?">
-          <find_object name="$MaelstromGate" class="class.gate" space="$Omicron_Lyrae" destination="$Maelstrom"/>
-        </do_if>
-        <do_if value="$MaelstromGate.isactive">
-          <remove_value name="$MaelstromGate" />
-          <set_value name="$MaelstromCheck" exact="true" />
-        </do_if>
-      </do_if>
-
       <do_if value="$patrolobject.exists">
         <set_value name="$targetzone" exact="$patrolobject.zone" />
         
@@ -248,7 +190,6 @@
       <!-- yorrick - was missing in BKs version - here for if $space not valid -->
       <do_if value="$fly_around_zone">
         <!--Fly around the zone-->
-        
         <set_value name="$X" min="-16000m" max="16000m"/>
         <set_value name="$Y" min="-5000m" max="5000m"/>
         <set_value name="$Z" min="-16000m" max="16000m"/>
@@ -270,10 +211,6 @@
       <!-- Yorrick - new check for patrol leader ship class -->
       <do_if value="$capship">
         <do_if value="this.ship.zone" exact="$targetzone" negate="true">
-<!--#pref: 4.0
-          <run_script name="'move.nohighway'">
-            <param name="target" value="$targetzone" />
-          </run_script>-->
           <run_script name="if @global.$WWX_mmcarrier_is_active then 'move.generic.carrier' else 'move.generic'">
             <param name="destination" value="$targetzone" />
           </run_script>
@@ -296,12 +233,6 @@
       
       <!-- yorrick - was missing in BKs version -->
       <label name="patrol" />
-      <!-- look at the escort ships for any destroyed? test idea -->
-      <!--<do_all exact="@this.ship.pilot.$escortgroup.count" counter="$i">
-        <do_if value="@this.ship.pilot.$escortgroup.{$i}.isoperational">
-          <debug_text text="'Escort ship destroyed.'" chance="100" filter="error"/>
-        </do_if>
-      </do_all>-->
       <!-- Safety checking for non-existing zones -->
       <do_if value="not $targetzone.exists or not $startzone.exists" >
         <wait min="1s" max="2s" sinceversion="1" />

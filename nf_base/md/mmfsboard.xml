@@ -46,7 +46,10 @@
 					<check_all>
 						<check_value value="event.object.container.commander" exact="player.primaryship" />
 						<check_value value="event.object.container.commander.boardingnpc" />
-						<check_value value="event.object.container.availableunits.{unitcategory.marine}.count" />
+						<check_any>
+							<check_value value="event.object.container.availableunits.{unitcategory.marine}.count" />
+							<check_value value="event.object.container.macro.ismacro.{global.$mmcarriers} and event.object.container.subordinates.count" />
+						</check_any>
 					</check_all>
 					<check_value value="event.object.container.boardingnpc" />
 				</check_any>
@@ -61,6 +64,18 @@
 							<set_value name="$chance" exact="100" />
 							<set_value name="$ship" exact="event.object.container" />
 							<break />
+						</do_if>
+						<do_if value="event.object.container.subordinates.{$i}.macro.ismacro.{global.$mmcarriers} and event.object.container.subordinates.{$i}.subordinates.count">
+							<do_all exact="event.object.container.subordinates.{$i}.subordinates.count" counter="$j">
+								<do_if value="event.object.container.subordinates.{$i}.subordinates.{$j}.availableunits.{unitcategory.marine}.count and event.object.container.zone == event.object.container.subordinates.{$i}.subordinates.{$j}.zone">
+									<set_value name="$chance" exact="100" />
+									<set_value name="$ship" exact="event.object.container" />
+									<break />
+								</do_if>
+							</do_all>
+							<do_if value="true" chance="$chance">
+								<break />
+							</do_if>
 						</do_if>
 					</do_all>
 				</do_if>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="command.undock" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" priority="2" version="1">
+  <!--
+      if ship is docked at command
+  -->
+  <params>
+    <param name="param" />
+    <param name="param2" default="null"/>
+    <param name="param3" default="null"/>
+    <param name="delay" default="2s"/>
+    <param name="debugchance" default="0"/>
+  </params>
+  <attention min="unknown">
+    <actions>
+
+      <run_script name="'move.undock'" />
+
+      <signal_objects object="this.ship" param="$param" param2="$param2" param3="$param3" delay="$delay"/>
+
+    </actions>
+  </attention>
+</aiscript>

@@ -11,6 +11,7 @@
 			<delay min="150ms" />
 			<actions>
 				<remove_value name="md.$shipparts"/>
+				<remove_value name="global.$BR_range_table"/>
 				<do_if value="md.$NFMMprocessesdSectors?" negate="true">
 					<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
 					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_BASE'"/>
@@ -1037,8 +1038,8 @@
 				</check_any>
 			</conditions>
 			<actions>
-				<add_player_choice text="'%1 %2'.[{1004,15}, macro.struct_bt_alb_outpost_macro.name]" selectable="player.entity.money ge 10000000Cr" tooltip="'%1: %2%3'.[{1001,2964}, [10000000Cr].{1}.formatted.default, {1001,101}]" section="mmdp_platform_do" choiceparam="['place', event.param2.{2}, macro.struct_bt_alb_outpost_macro, player.primaryship.owner, 10000000Cr, [[class.gate,class.highwayexitgate,class.jumpbeacon], 0,-1000m,3000m, 10km]]" chance="(player.primaryship.owner.hasrelation.enemy.{faction.xenon})*100"/>
-				<add_player_choice text="'%1 %2'.[{1004,15}, macro.struct_at_xen_xenon_outpost_macro.name]" selectable="player.entity.money ge 10000000Cr" tooltip="'%1: %2%3'.[{1001,2964}, [10000000Cr].{1}.formatted.default, {1001,101}]" section="mmdp_platform_do" choiceparam="['place', event.param2.{2}, macro.struct_at_xen_xenon_outpost_macro, player.primaryship.owner, 10000000Cr, [[class.gate,class.highwayexitgate,class.jumpbeacon], 0,-1000m,3000m, 10km]]" chance="(not player.primaryship.owner.hasrelation.enemy.{faction.xenon})*100"/>
+				<add_player_choice text="'%1 %2'.[{1004,15}, macro.struct_bt_alb_outpost_macro.name]" selectable="player.entity.money ge 10000000Cr" tooltip="'%1: %2%3'.[{1001,2964}, [10000000Cr].{1}.formatted.default, {1001,101}]" section="mmdp_platform_do" choiceparam="['place', event.param2.{2}, macro.struct_bt_alb_outpost_macro, player.primaryship.owner, 10000000Cr, null]" chance="(player.primaryship.owner.hasrelation.enemy.{faction.xenon})*100"/>
+				<add_player_choice text="'%1 %2'.[{1004,15}, macro.struct_at_xen_xenon_outpost_macro.name]" selectable="player.entity.money ge 10000000Cr" tooltip="'%1: %2%3'.[{1001,2964}, [10000000Cr].{1}.formatted.default, {1001,101}]" section="mmdp_platform_do" choiceparam="['place', event.param2.{2}, macro.struct_at_xen_xenon_outpost_macro, player.primaryship.owner, 10000000Cr, null]" chance="(not player.primaryship.owner.hasrelation.enemy.{faction.xenon})*100"/>
 			</actions>
 		</cue>
 
