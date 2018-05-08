@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-<aiscript name="trade.findfreetraderun.nf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+<aiscript name="trade.findfreetraderun.nf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
   <params>
     <param name="warelist" />
     <param name="range" comment="space to base the search on. $rangeparams use this as the start point"/>
     <param name="sellrange" default="null" comment="list: [$mingates, $maxgates] amount of jumpgates from $range the ship can sell wares (null == only sell in $range)"/>
     <param name="buyrange" default="null" comment="list: [$mingates, $maxgates] amount of jumpgates from $range the ship can buy wares (null == only buy in $range)"/>
     <param name="lasttrade" default="null" comment="list: [$buyoffer, $ware, $tradepartner]"/>
+    <param name="commander" default="null" />
+    <param name="customerfaction" default="this.ship.trueowner" />
     <param name="debugchance" default="0" />
     <param name="debugchance2" default="0" comment="more spammy" />
   </params>
   <init>
     <set_command_action commandaction="commandaction.searchingtrades" />
   </init>
+  <patch sinceversion="2">
+    <set_value name="$commander" exact="null"/>
+    <set_value name="$customerfaction" exact="this.ship.trueowner"/>
+  </patch>
   <attention min="unknown">
     <actions>
 
@@ -123,7 +129,7 @@
           <debug_text text="player.age + ' checking if we can sell cargo to builder ships in ' + $checkrange.knownname" chance="$debugchance" />
           <!-- own CV -->
           <find_buy_offer tradepartner="this.ship" space="$checkrange" result="$buyoffer" wares="$currentcargo">
-            <match_buyer owner="this.ship.trueowner">
+            <match_buyer owner="$customerfaction">
               <match negate="true" class="class.ship_xl" />
             </match_buyer>
           </find_buy_offer>
@@ -141,7 +147,7 @@
           <!-- own trades any -->
           <create_list name="$buyoffers" />
           <find_buy_offer tradepartner="this.ship" space="$checkrange" result="$buyoffers" wares="$currentcargo" multiple="true" chance="100 - (@this.$trade_failedfindruns ge 1)*100">
-            <match_buyer owner="this.ship.trueowner">
+            <match_buyer owner="$customerfaction">
               <match negate="true" class="class.ship_xl" />
             </match_buyer>
             <stocklevel max="0.5f" />
@@ -303,7 +309,7 @@
         <do_if value="@$buildership_check">
           <create_list name="$buildoffers" />
           <find_buy_offer tradepartner="this.ship" space="$checkrange" result="$buildoffers" multiple="true" chance="100 - (@this.$trade_failedfindruns ge 2)*100">
-            <match_buyer owner="this.ship.trueowner">
+            <match_buyer owner="$customerfaction">
               <match class="class.ship_xl" />
             </match_buyer>
           </find_buy_offer>
@@ -348,7 +354,7 @@
             <create_list name="$selloffers" />
             <!-- own -->
             <find_sell_offer tradepartner="this.ship" space="$checkrange" result="$selloffers" wares="$filteredwarelist" multiple="true" chance="100 - (@this.$trade_failedfindruns ge 2)*100">
-              <match_seller owner="this.ship.trueowner" />
+              <match_seller owner="$customerfaction" />
               <totalvolume min="$minvolume" comment="we check minvolume even for the buildership trades to give smaller (faster) ships an advantage" />
             </find_sell_offer>
             <!-- all -->
@@ -363,7 +369,7 @@
             <find_sell_offer tradepartner="this.ship" space="$checkrange" result="$selloffers" wares="$filteredwarelist" multiple="true" chance="100 - (@this.$trade_failedfindruns ge 2)*100">
               <totalvolume min="$minvolume" />
               <relativeprice max="1.1f" comment="filter trades out that are unlikely to yield profitable trade runs by ignoring anything above average price" />
-              <match_seller owner="this.ship.trueowner" />
+              <match_seller owner="$customerfaction" />
             </find_sell_offer>
             <!-- all -->
             <find_sell_offer tradepartner="this.ship" space="$checkrange" result="$selloffers" wares="$filteredwarelist" multiple="true" chance="100 - ($selloffers.count gt 0)*100">
@@ -398,7 +404,7 @@
               <create_list name="$buyoffers" />
               <!-- own -->
               <find_buy_offer tradepartner="this.ship" wares="$soldwares" space="$sellclusters.{$Counter}" result="$buyoffers" multiple="true" chance="100 - (@this.$trade_failedfindruns ge 1)*100">
-                <match_buyer owner="this.ship.trueowner" />
+                <match_buyer owner="$customerfaction" />
                 <totalvolume min="$minvolume" />
               </find_buy_offer>
               <!-- all -->
@@ -431,7 +437,7 @@
             <create_list name="$buyoffers" />
             <!-- own -->
             <find_buy_offer tradepartner="this.ship" wares="$soldwares" space="$range" result="$buyoffers" multiple="true" chance="100 - (@this.$trade_failedfindruns ge 1)*100">
-              <match_buyer owner="this.ship.trueowner" />
+              <match_buyer owner="$customerfaction" />
               <totalvolume min="$minvolume" />
             </find_buy_offer>
             <!-- all -->

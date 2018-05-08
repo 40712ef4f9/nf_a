@@ -32,7 +32,7 @@
 	<attention min="unknown">
 		<actions>
 			<wait exact="$wait" sinceversion="2" />
-			
+
 			<do_if value="$run_script_param == 'stop'">
 				<resume label="finish" />
 			</do_if>
@@ -310,6 +310,9 @@
 				</run_script>
 			</do_elseif>
 			<do_elseif value="$run_script_name" exact="'move.idle'">
+				<do_if value="global.$factionCEOs.{'$' + this.ship.trueowner.id}? and global.$factionCEOs.{'$' + this.ship.trueowner.id}.$isService?" comment="tell you free" chance="0">
+					<!-- TODO:something -->
+				</do_if>
 				<run_script name="'move.idle'" >
 					<param name="TimeOut" value="if this.$params.$TimeOut? then this.$params.$TimeOut else null" />
 					<param name="Offset" value="if this.$params.$Offset? then this.$params.$Offset else this.ship.position" />

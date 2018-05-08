@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="move.plunder.idle" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+  <!--
+  
+  Move attack object capital
+  by Adrian
+  
+  Movement of a capital ship (made by pilot), trying to stay close to the enemy target (3km) and at the same Y axis.
+  If is small target (xs, s, m) wait while is in rage.
+  If is big target, continuosly move to him with an update time (30s or 5min for stations).
+  No fire (see fight.defendcapital)
+  
+  Requires a target object as a parameter.
+  Optional parameter for an escort an object
+  Optional parameter for pursue distance:
+    - if escort: from escort to target
+    - if pursuetargets: from this to target
+  Optional parameter for pursue targets
+  -->
+  <params>
+    <param name="target" comment="The object to fight with" />
+    <param name="squadleader" default="null" />
+    <param name="pursuelimit" default="class.sector" comment="Highest class of space where the pursuit can continue. Null == no limit" />
+    <param name="checkrelation" default="false" comment="Check the maybeattackedby status of the target"/>
+    <param name="basket" comment="List of wares to find"/>
+    <param name="debugoutputchance" default="0" />
+  </params>
+  <interrupts>
+    <handler>
+      <conditions>
+        <check_any>
+          <check_all>
+            <event_object_changed_cluster object="$target" check="false" />
+            <check_value value="$pursuelimit" exact="class.cluster" />
+            <check_value value="this.ship.cluster" exact="$target.cluster" negate="true"/>
+          </check_all>
+          <check_all>
+            <event_object_changed_sector object="$target" check="false" />
+            <check_value value="$pursuelimit" exact="class.sector" />
+            <check_value value="@this.ship.sector" exact="@$target.sector" negate="true"/>
+          </check_all>
+          <check_all>
+            <event_object_changed_zone object="$target" check="false" />
+            <check_value value="$pursuelimit" exact="class.zone" />
+            <check_value value="this.ship.zone" exact="$target.zone" negate="true"/>
+          </check_all>
+        </check_any>
+      </conditions>
+      <actions>
+        <do_if value="$debugoutputchance">
+          <debug_text text="'Abort: pursuelimit %1'.[@$pursuelimit]" />
+          <debug_text text="'this zone %1, his zone %2'.[this.ship.zone.knownname, $target.zone.knownname]" />
+          <debug_text text="'this sector %1, his sector %2'.[this.ship.sector.knownname, $target.sector.knownname]" />
+          <debug_text text="'this cluster %1, his cluster %2'.[this.ship.cluster.knownname, $target.cluster.knownname]" />
+        </do_if>
+        <signal_objects group="this.$squadships" param="'dock at'" param2="this.ship"/>
+        <abort_called_scripts resume="collect"/>
+      </actions>
+    </handler>
+    <handler>
+      <conditions>
+        <event_object_destroyed object="$target"/>
+      </conditions>
+      <actions>
+        <abort_called_scripts resume="continue"/>
+      </actions>
+    </handler>
+    <handler>
+      <conditions>
+        <event_object_destroyed group="this.$squadships"/>
+      </conditions>
+      <actions>
+        <do_all exact="this.$squadships.list.count" counter="$i" reverse="true">
+          <do_if value="this.$squadships.list.{$i}.exists and not this.$squadships.list.{$i}.iswreck" negate="true">
+            <remove_value name="this.$squadships.list.{$i}"/>
+          </do_if>
+          <do_elseif value="this.$squadships.list.{$i}.isoperational and not $squadleader.isoperational">
+            <set_value name="$squadleader" exact="this.$squadships.list.{$i}" />
+          </do_elseif>
+        </do_all>
+        <abort_called_scripts resume="continue"/>
+      </actions>
+    </handler>
+
+    <handler>
+      <conditions>
+        <event_object_signalled object="this.ship" param="'MM Surrendered'" />
+      </conditions>
+      <actions>
+        <signal_objects group="this.$squadships" param="'dock at'" param2="this.ship"/>
+        <abort_called_scripts resume="collect"/>
+      </actions>
+    </handler>
+
+  </interrupts>
+  <attention min="unknown">
+    <actions>
+
+      <set_value name="$capship" exact="this.ship.isclass.[class.ship_l, class.ship_xl]" />
+
+
+      <label name="start" />
+
+      <do_if value="true" chance="$debugoutputchance">
+        <set_value name="$containedwares" exact="[]"/>
+        <do_all exact="$basket.count" counter="$i">
+          <do_if value="$target.cargo.{$basket.{$i}}.exists">
+            <append_to_list name="$containedwares" exact="$basket.{$i}"/>
+          </do_if>
+        </do_all>
+        <debug_text text="this.ship.knownname + ': attacking '+ $target.knownname +'! It contains: ' + $containedwares" chance="$debugoutputchance" />
+        <remove_value name="$containedwares"/>
+      </do_if>
+
+
+      <label name="fight" />
+
+      <do_if value="($target.isoperational or ($target.exists and not $target.iswreck)) and $squadleader.isoperational">
+        <set_command_action commandaction="commandaction.scanningto"  param="$target"/>
+
+        <!--signal_objects group="this.$squadships" param="'attack object squad'" param2="$target" param3="$squadleader"/-->
+        <signal_objects group="this.$squadships" param="'attack object squad'" param2="$target" />
+      </do_if>
+
+
+      <label name="wait" />
+
+      <do_if value="$target.isoperational and this.ship.distanceto.{$target} gt 30km and $target.zone == this.ship.zone">
+        <move_to object="this.ship" destination="$target.zone" usehighways="not $capship" forceposition="false" finishonapproach="true" commandaction="true" >
+          <position value="$target.position" max="1km"/>
+          <interrupt_after_time time="60s"/>
+        </move_to>
+      </do_if>
+      <do_elseif value="$target.isoperational and $target.zone == this.ship.zone">
+        <run_script name="'move.idle'" >
+          <param name="TimeOut" value="if $target.isoperational then 5min else 1min" />
+        </run_script>
+      </do_elseif>
+      <do_else>
+        <wait min="15*player.timewarp.factor" max="20*player.timewarp.factor"/>
+      </do_else>
+
+
+      <label name="continue" />
+      <wait min="1*player.timewarp.factor" max="2*player.timewarp.factor"/>
+
+      <do_if value="$target.isoperational and $squadleader.isoperational and $target.zone != this.ship.zone and not $target.zone.isclass.highway">
+        <run_script name="if not global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad then 'move.generic' else if this.ship.macro.ismacro.{global.$mmcarriers} then 'move.generic.carrier' else 'move.generic'" >
+          <param name="destination" value="$target" />
+          <param name="endintargetzone" value="true" />
+        </run_script>
+        <resume label="fight"/>
+      </do_if>
+
+      <do_if value="$target.isoperational and $squadleader.isoperational">
+        <set_value name="$squadCount" exact="this.$squadships.list.count"/>
+        <do_all exact="$squadCount" counter="$i" reverse="true">
+          <do_if value="this.$squadships.list.{$i}.isoperational" negate="true">
+            <set_value name="$squadCount" operation="subtract"/>
+            <remove_value name="this.$squadships.list.{$i}"/>
+          </do_if>
+          <do_elseif value="this.$squadships.list.{$i}.dockslot != null">
+            <set_value name="$squadCount" operation="subtract"/>
+            <remove_value name="this.$squadships.list.{$i}"/>
+          </do_elseif>
+
+          <do_if value="$squadCount == 0 and this.$squadships.list.count">
+            <resume label="fight"/>
+          </do_if>
+          <do_elseif value="$squadCount" negate="true">
+            <resume label="collect"/>
+          </do_elseif>
+        </do_all>
+        <remove_value name="$squadCount"/>
+        <resume label="wait"/>
+      </do_if>
+      <do_elseif value="$target.exists and not $target.iswreck">
+        <signal_objects object="player.galaxy" param="'MM Surrender'" param2="[$target, this.ship, 1]"/>
+        <signal_objects group="this.$squadships" param="'dock at'" param2="this.ship"/>
+        <wait min="15s" max="20s"/>
+      </do_elseif>
+      <do_elseif value="$squadleader.isoperational" chance="if this.ship.macro.ismacro.{global.$mmcarriers} then 100 else 0">
+        <signal_objects group="this.$squadships" param="'dock at'" param2="this.ship"/>
+      </do_elseif>
+
+      <do_if value="$target.isoperational" chance="0">
+        <!--target got away-->
+        <return>
+          <retval name="squadleader" value="$squadleader" />
+        </return>
+      </do_if>
+
+
+      <label name="collect" />
+
+      <set_command_action commandaction="commandaction.waitingdrones" />
+      <!-- The target is destroyed or disenganged: Find crates that match the basket -->
+      <find_object name="$crates" class="class.collectable" space="this.ship.sector" multiple="true">
+        <match_distance object="this.ship" max="[50km, this.ship.maxradarrange].min"/>
+        <match_any_wares wares="$basket" />
+      </find_object>
+
+      <debug_text text="'Crates to collect %1, basket: %2'.[$crates, $basket]" chance="$debugoutputchance"/>
+
+      <set_value name="$drops" exact="[]"/>
+      <do_all exact="$crates.count" counter="$i">
+        <set_value name="$cratewares" exact="$crates.{$i}.wares.list"/>
+        <debug_text text="'target dropped crate with: ' + $cratewares" chance="$debugoutputchance"/>
+        <do_all exact="$cratewares.count" counter="$o">
+          <do_if value="this.ship.cargo.{$cratewares.{$o}}.free">
+            <do_if value="$basket.indexof.{$cratewares.{$o}}">
+              <debug_text text="$cratewares.{$o} + ' added to final crates'" chance="$debugoutputchance"/>
+              <append_to_list name="$drops" exact="$crates.{$i}"/>
+              <break/>
+            </do_if>
+          </do_if>
+        </do_all>
+      </do_all>
+
+      <!-- Either if it was destroyed or disengaged, there might be some drops, if not end -->
+      <do_if value="$drops.count">
+
+        <do_if value="$drops.{1}.exists and this.ship.distanceto.{$drops.{1}} gt (5km+this.ship.length) and $drops.{1}.zone == this.ship.zone">
+          <move_to object="this.ship" destination="this.ship.zone" usehighways="not $capship" forceposition="false" finishonapproach="true" boost="if this.ship.canboost and this.ship.distanceto.{$drops.{1}} gt (10km+this.ship.length) then true else false" >
+            <position value="$drops.{1}.position" max="this.ship.length"/>
+            <interrupt>
+              <conditions>
+                <event_object_destroyed object="$drops.{1}" />
+              </conditions>
+            </interrupt>
+          </move_to>
+        </do_if>
+        <!-- If is destroyed and capship -->
+        <do_if value="not $target.isoperational and $target.isclass.[class.ship_l, class.ship_xl]">
+          <!--Wait for the explosions to pass-->
+          <wait min="15s" max="20s"/>
+        </do_if>
+        <!-- Collect -->
+        <sort_collectables_by_value name="$sortedlist" collectables="$drops" object="this.ship" />
+        <do_if value="$sortedlist.count">
+          <add_to_group groupname="$sorteddrops" list="$sortedlist"/>
+          <debug_text text="'Target was destroyed. Checking for crates. Basket %1, drops %2'.[$basket, $sorteddrops]" chance="$debugoutputchance"/>
+          <run_script name="'move.collect.ship'">
+            <param name="targetgroup" value="$sorteddrops"/>
+            <param name="debugoutputchance" value="$debugoutputchance"/>
+          </run_script>
+        </do_if>
+        <do_else>
+          <debug_text text="'Target was destroyed. No crates are suitable to be collected by this ship. Basket %1, drops %2'.[$basket, $drops]" chance="$debugoutputchance"/>
+        </do_else>
+      </do_if>
+      <do_else>
+        <debug_text text="'no drops!! target: %1 (%2), distance %3'.[$target.knownname, $target.isoperational, @$target.distanceto.{this.ship}]" chance="$debugoutputchance"/>
+      </do_else>
+
+      <!-- 
+        wait drones can return
+      -->
+      <set_value name="$startWait" exact="player.age"/>
+
+      <label name="collect_wait" />
+
+      <wait min="20*player.timewarp.factor" max="30*player.timewarp.factor"/>
+
+      <do_if value="this.ship.availableunits.{unitcategory.transport}.count" exact="this.ship.units.{unitcategory.transport}.count" negate="true" chance="if player.age lt $startWait+1h then 100 else 0">
+        <resume label="collect_wait"/>
+      </do_if>
+
+      <return>
+        <retval name="squadleader" value="$squadleader" />
+      </return>
+
+    </actions>
+  </attention>
+</aiscript>

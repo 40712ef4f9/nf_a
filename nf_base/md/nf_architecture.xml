@@ -201,7 +201,7 @@
 					<do_elseif value="player.platform and player.platform.container.isclass.ship and md.$NF_ArchiSpMacrosShips.indexof.{player.platform.container.macro}">
 						<add_player_choice position="right" text="{2802,2716}" section="nf_a_cArch_add" selectable="false" />
 					</do_elseif>
-					<do_elseif value="player.platform and player.platform.container.isclass.ship and player.platform.owner.relationto.{player.entity.owner} gt player.platform.owner.relation.member.mid">
+					<do_elseif value="player.platform and player.platform.container.isclass.ship and player.platform.owner.relationto.{player.entity.owner} ge player.platform.owner.relation.member.min">
 						<add_player_choice position="right" text="{2802,2717}" section="nf_a_cArch_add" selectable="(player.platform and player.platform.container.isclass.ship and md.$NF_ArchiSpMacrosShips.indexof.{player.platform.container.macro} == 0)" />
 					</do_elseif>
 					<do_elseif value="player.platform and player.platform.container.isclass.ship and player.platform.owner.relationto.{player.entity.owner} gt player.platform.owner.relation.neutral.min">

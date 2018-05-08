@@ -11,8 +11,8 @@
 					<debug_text text="'ERROR event.param2 missing'" filter="error" chance="0" />
 				</do_if>
 				<do_else>
-					<set_value name="$attacker" exact="event.param2.{1}"/>
-					<set_value name="$target" exact="event.param2.{2}"/>
+					<set_value name="$target" exact="event.param2.{1}"/>
+					<set_value name="$attacker" exact="event.param2.{2}"/>
 					<set_value name="$step" exact="event.param2.{3}"/>
 
 					<do_if value="['reivers','sovereignsyndicate','hereticvanguards','teladigunrunner','teladidrugrunner','atlas'].indexof.{$attacker.owner.id} or player.primaryship == $attacker or player.primaryship.subordinates.indexof.{$attacker}" negate="true">

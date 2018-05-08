@@ -4,4 +4,15 @@
     <set_owner object="$actor" faction="faction.neutral" />
     <signal_cue_instantly cue="md.NF_BASE.NF_kill_NPC" param="$actor" delay="20s"/>
   </add>
+  <replace sel="//cue[@name='NPC_Destroyed']/conditions">
+	  <conditions>
+		<check_any>
+		  <check_all>
+			<event_game_loaded/> 
+			<check_value value="$actor.exists" negate="true"/>
+		  </check_all>
+		  <event_object_destroyed object="$actor" />
+		</check_any>
+	  </conditions>
+  </replace>
 </diff>

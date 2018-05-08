@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<mdscript name="MM_Corps_DEEPWATER" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../libraries/md.xsd">
+	<cues>
+		<cue name="INIT" instantiate="false" namespace="static">
+			<conditions>
+				<check_any>
+					<event_player_created />
+					<event_cue_signalled cue="md.Setup.GameStart" />
+				</check_any>
+			</conditions>
+			<actions>
+				<set_value name="$_faction" exact="faction.deepwater" />
+
+				<create_cue_actor name="global.$DEEPWATER_CEO" cue="INIT">
+					<select race="race.argon"/>
+					<owner exact="$_faction" />
+				</create_cue_actor>
+
+				<set_value name="$_CEO" exact="global.$DEEPWATER_CEO" />
+	
+				<include_actions ref="md.MM_Corps__Data.MMCData_CEO_INI" />
+			</actions>
+			<cues>
+				<cue name="INIT_property">
+					<delay min="20s" max="90s"/>
+					<actions>
+						<!-- create additional startstuff -->
+						<include_actions ref="md.MM_Corps__Data.MMCData_CEO_PROPERTY_INIT" />
+
+						<!-- update everything to CEO -->
+						<set_value name="$do_stations" exact="true" />
+						<set_value name="$do_ships" exact="true" />
+						<set_value name="$CEO" exact="$_CEO" />
+						<set_value name="$faction" exact="$_faction" />
+						<set_value name="$target_space" exact="player.galaxy" />
+						<include_actions ref="md.MM_Corps__Data.MMCData_setaccount_space" />
+						<!-- clear -->
+						<remove_value name="$startzone"/>
+						<remove_value name="$faction"/>
+						<remove_value name="$CEO"/>
+						<remove_value name="$_faction"/>
+						<remove_value name="$_CEO"/>
+						<remove_value name="$zone"/>
+						<remove_value name="$Macro"/>
+					</actions>
+				</cue>
+
+				<cue name="DO_Worker" instantiate="true" checktime="4min" checkinterval="15min">
+					<delay min="120s" max="600s"/>
+					<actions>
+						<!--
+						* define play style domination/cooperative/pirate
+						* command ships
+						* expand territory [timestamp next check] (intelligent behavior, step of aggression - based on strengh?)
+						* config for center and border (or gate/beacon) territory (with/out foreign zones)
+				
+						* relation handling ???
+						-->
+
+						<set_value name="$_CEO" exact="global.$DEEPWATER_CEO" />
+						<!-- load config -->
+						<set_value name="$build" exact="['merc']" comment="['massenergy','energy','food','drug','tech','ship','al','ol','warehouse']"/>
+						<set_value name="$build2" exact="['merc']" comment="['massenergy','energy','food','drug','tech','ship','al','ol','warehouse']"/>
+						<set_value name="$style" exact="['mercenary', 'pirate', 'mercenary']" comment="min 3 entries required"/>
+						
+				<debug_text chance="0" text="'Start'" />
+				<set_value name="$_CEO.$style" exact="if $noBelongings? and ['domination','cooperative','pirate','outofbusiness','mercenary'].indexof.{$noBelongings} then $noBelongings else $style.{1}" comment="'domination','cooperative','pirate'"/>
+				<set_value name="$_faction" exact="$_CEO.trueowner" />
+				<set_value name="$stationToBuild" exact="null"/>
+				<set_value name="$special_musthave_sy" exact="null"/>
+				<set_value name="$buildZone" exact="null"/>
+				<create_list name="$tmp_stations"/>
+				<create_list name="$tmp_jobs"/>
+
+				<do_if value="global.$factionCEOs.{'$' + $_faction.id}?" negate="true">
+					<do_if value="global.$factionCEOs? and typeof global.$factionCEOs == datatype.table" negate="true">
+						<set_value name="global.$factionCEOs" exact="table[]" />
+					</do_if>
+					<set_value name="global.$factionCEOs.{'$' + $_faction.id}" exact="$_CEO" />
+				</do_if>
+<set_value name="$text2" exact="''" />
+<set_value name="$text2" exact="'* Process: [%1] \n'.[$_faction.id]" operation="add" />
+<set_value name="$text3" exact="'** Adv Info \n'" />
+
+
+				<include_actions ref="md.MM_Corps__Data.MMCData_config" />
+
+				<!-- build station
+				<do_if value="not $nextBuildcheck? or ($nextBuildcheck? and $nextBuildcheck lt player.age)" chance="if global.$nfconfig.$doBuildSt and $_CEO.money gt $tmpConfig.$minBuild then 100 else 0">
+
+					<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_build" />
+
+<set_value name="$text2" exact="'\n# Build_Station [%1] #'.[if $stationToBuild? and $stationToBuild then $stationToBuild.id else 'none']" operation="add" />
+					<set_value name="$nextBuildcheck" exact="if $next_Check? and $next_Check.{1} then player.age + $next_Check.{1} else player.age + 120min"/>
+				</do_if> -->
+
+				<!-- buy ships -->
+				<do_if value="not $nextShoppingTrip? or ($nextShoppingTrip? and $nextShoppingTrip lt player.age)" chance="if $_CEO.money gt $tmpConfig.$minBuyShip then 100 else 0">
+
+					<do_if value="$_CEO.money gt $tmpConfig.$minBuyShipTop*10">
+						<find_station name="$ShipYardOfTrust_Multi" space="player.galaxy" functional="true" multiple="true">
+							<match_content class="class.buildmodule" />
+							<match owner="$_faction"/>
+						</find_station>
+						<do_all exact="$ShipYardOfTrust_Multi.count" counter="$y" reverse="true">
+							<do_if value="$ShipYardOfTrust_Multi.{$y} and $ShipYardOfTrust_Multi.{$y}.tradenpc.exists and not $ShipYardOfTrust_Multi.{$y}.tradenpc.$denyBuildRandomNPC? and $ShipYardOfTrust_Multi.{$y}.tradenpc.$orders? and $ShipYardOfTrust_Multi.{$y}.tradenpc.$orders.count lt 5 and $ShipYardOfTrust_Multi.{$y}.units.{unitcategory.welder}.count gt 10" negate="true">
+								<remove_value name="$ShipYardOfTrust_Multi.{$y}"/>
+							</do_if>
+						</do_all>
+					</do_if>
+					<do_else>
+						<create_list name="$ShipYardOfTrust_Multi"/>
+					</do_else>
+					<do_if value="$ShipYardOfTrust_Multi.count">
+						<remove_value name="$requiredUnits"/>
+						<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_buyships" />
+
+						<do_all exact="$ShipYardOfTrust_Multi.count" counter="$sy">
+		
+<set_value name="$text2" exact="' \n# Buy Ship %1 #\n'.[$requiredUnits.count]" operation="add" />
+		
+							<set_value name="$nextShoppingTrip" exact="if $requiredUnits.count gt 3 then player.age + 10min else if $next_Check? and $next_Check.{2} then player.age + $next_Check.{2} else player.age + 45min"/>
+		
+							<do_if value="$requiredUnits.count">
+								<set_value name="$ShipYardOfTrust" exact="$ShipYardOfTrust_Multi.{$sy}"/>
+								<include_actions ref="md.MM_Corps__Data.MMCData_do_orderships" />
+								<remove_value name="$requiredUnits.{1}"/>
+							</do_if>
+							<do_elseif value="not $_CEO.$jobsdisabled? and $requiredUnits.count == 0" chance="(not global.$nfconfig.$plotSafe?) *100">
+								<set_value name="$faction" exact="$_faction" />
+								<include_actions ref="md.MM_Corps__Data.MMCData_disable_jobs" />
+								<set_value name="$_CEO.$jobsdisabled" />
+								<break/>
+							</do_elseif>
+							<do_elseif value="$requiredUnits.count == 0" >
+								<break/>
+							</do_elseif>
+						</do_all>
+					</do_if>
+					<do_else>
+						<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_buyships" />
+	
+<set_value name="$text2" exact="' \n# Buy Ship %1 #\n'.[$requiredUnits.count]" operation="add" />
+	
+						<set_value name="$nextShoppingTrip" exact="if $requiredUnits.count gt 3 then player.age + 10min else if $next_Check? and $next_Check.{2} then player.age + $next_Check.{2} else player.age + 45min"/>
+	
+						<do_if value="$requiredUnits.count">
+							<include_actions ref="md.MM_Corps__Data.MMCData_do_orderships" />
+						</do_if>
+						<do_elseif value="not $_CEO.$jobsdisabled? and $requiredUnits.count == 0" chance="(not global.$nfconfig.$plotSafe?) *100">
+							<set_value name="$faction" exact="$_faction" />
+							<include_actions ref="md.MM_Corps__Data.MMCData_disable_jobs" />
+							<set_value name="$_CEO.$jobsdisabled" />
+						</do_elseif>
+					</do_else>
+					<remove_value name="$ShipYardOfTrust_Multi"/>
+				</do_if>
+
+				<!-- command -->
+				<do_if value="$shipDoBuild?" negate="true">
+					<set_value name="$faction" exact="$_faction" />
+					<include_actions ref="md.MM_Corps__Data.MMCData_find_ships" />
+				</do_if>
+<set_value name="$text2" exact="'* Ships: n:%1 u:%2 b:%3 t:%4 m:%5 p:%6 pl:%7 e:%8 StS:%9 - '.[$shipNothingTodo.count, $shipDoUnknown.count, $shipDoBuild.count, $shipDoTrade.count, $shipDoMine.count, $shipDoPatrol.count, $shipDoPlunder.count, $shipDoEscort.count, $shipDoStationSupport.count]" operation="add" />
+
+				<!-- send scouts -->
+				<do_if value="$_CEO.$style == 'domination' and $tmpConfig.$scouts">
+				
+					<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_scouts" />
+
+				</do_if>
+
+				<do_if value="$shipNothingTodo.count">
+					<set_value name="$faction" exact="$_faction"/>
+					<set_value name="$fallback" exact="true"/>
+					<include_actions ref="md.MM_Corps__Data.MMCData_find_space" />
+				</do_if>
+<set_value name="$text2" exact="' AP n:%1 u:%2 spaces vz:%3 [cz:%6 h:%7] . vS:%4 . vC:%5 \n'.[$shipNothingTodo.count, $shipDoUnknown.count, @$validZones.count, @$validSectors.count, @$validCluster.count, @$validZonesCore.count, @$validZonesHotZone.count]" operation="add" />
+
+				<!-- TODO assign (worker) to stations? [intelligent] -->
+				<!-- TODO use scout-data to attack enemies / control CoreZones -->
+				<!-- against lazy ships 
+				<do_if value="$shipNothingTodo.count" chance="if $_CEO.money lt $tmpConfig.$minBuyShip then 100 else 0">
+<set_value name="$text2" exact="'* Sell %1 ships [%2] - '.[$shipNothingTodo.count, $_CEO.money.formatted.default]" operation="add" />
+					<include_actions ref="md.MM_Corps__Data.MMCData_ship_sell" />
+<set_value name="$text2" exact="'%1 sold? [%2]\n'.[$shipNothingTodo.count, $_CEO.money.formatted.default]" operation="add" />
+				</do_if>-->
+
+				<do_if value="$shipNothingTodo.count">
+					<do_if value="$_CEO.$freeShips?">
+						<set_value name="$_CEO.$freeShips" exact="[]"/>
+					</do_if>
+					<do_all exact="$shipNothingTodo.count" counter="$r" reverse="true">
+						<do_if value="$shipNothingTodo.{$r}.primarypurpose == objectpurpose.build and not $shipNothingTodo.{$r}.pilot.$traderNow?">
+							<continue />
+						</do_if>
+						<do_if value="$_CEO.$freeShips.indexof.{$shipNothingTodo.{$r}} == 0">
+							<append_to_list name="$_CEO.$freeShips" exact="$shipNothingTodo.{$r}" />
+						</do_if>
+					</do_all>
+				</do_if>
+				<!-- TODO tactical stuff -->
+
+				<!-- TODO diplomatic stuff -->
+				<do_if value="not $nextDonationCheck? or ($nextDonationCheck? and $nextDonationCheck lt player.age)" chance="if $_CEO.$style != 'cooperative' then 100 else 0">
+					<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_donation" />
+					<set_value name="$nextDonationCheck" exact="if $next_Check? and $next_Check.{5} then player.age + $next_Check.{5} else player.age + 12h" />
+				</do_if>
+
+				<!-- Smallships for Stations -->
+				<do_if value="not $ships4StationsCheck? or ($ships4StationsCheck? and $ships4StationsCheck lt player.age)" chance="if $_CEO.money gt $tmpConfig.$minBuyShip then 100 else 0">
+					<set_value name="$faction" exact="$_faction"/>
+					<include_actions ref="md.MM_Corps__Data.MMCData_do_station_ships" />
+					<set_value name="$ships4StationsCheck" exact="if $next_Check? and $next_Check.{5} then player.age + $next_Check.{5} else player.age + 12h" />
+				</do_if>
+
+				<do_if value="not $nextRelationCheck? or ($nextRelationCheck? and $nextRelationCheck lt player.age)" chance="0">
+					<!-- TODO print relations -->
+					<set_value name="$nextRelationCheck" exact="if $next_Check? and $next_Check.{5} then player.age + $next_Check.{5} else player.age + 12h" />
+				</do_if>
+
+				<!-- ECONOMY SUPPORT: order ware to build ships if required 
+				<do_if value="not $nextSYcheck? or ($nextSYcheck? and $nextSYcheck lt player.age)" chance="if $tmpConfig? and not $tmpConfig.$cheat? and not $tmpConfig.$cheatNPC? then 100 else 0">
+					<find_station name="$temp_Objects" space="player.galaxy" functional="true" multiple="true">
+						<match_content class="class.buildmodule" />
+						<match owner="$_faction"/>
+					</find_station>
+					<do_if value="$_CEO.$isInvader?">
+						<set_value name="$tmpMax"/>
+					</do_if>
+					<include_actions ref="md.MM_Corps__Data.MMCData_do_cheatressources" />
+					<set_value name="$nextSYcheck" exact="if $next_Check? and @$next_Check.{6} then player.age + $next_Check.{6} else player.age + 3h" />
+				</do_if>-->
+
+				<!-- nothing left? -->
+				<do_if value="$_CEO.money lt 20000000Cr">
+					<!-- not even friends? -->
+					<do_if value="$_CEO.money le 10Cr">
+						<set_value name="$noBelongings" exact="'outofbusiness'"/>
+						<set_value name="$faction" exact="$_faction" />
+						<set_value name="$all" />
+						<include_actions ref="md.MM_Corps__Data.MMCData_disable_jobs" />
+					</do_if>
+					<do_elseif value="not $noBelongings?">
+						<!-- get fresh money -->
+						<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_corp_future" />
+					</do_elseif>
+					<do_else>
+						<set_value name="$noBelongings" exact="$style.{2}"/>
+					</do_else>
+				</do_if>
+				<do_elseif value="$_CEO.money gt 50000000000Cr and ($_CEO.$style != 'domination' or @$noBelongings == 'domination')">
+					<set_value name="$noBelongings" exact="'domination'"/>
+				</do_elseif>
+				<do_else>
+					<remove_value name="$noBelongings"/>
+				</do_else>
+
+<set_value name="$text2" exact="if $text3 then $text3 else ''" operation="add" />
+<debug_text text="'\n#############\n# CEO: %1 Cr [%2] \n'.[$_CEO.money.formatted.default, $_CEO.$style] + $text2 + '\n#\n#############'" filter="scripts_verbose" chance="0" />
+<remove_value name="$text2"/>
+<remove_value name="$text3"/>
+				<!-- predefine special jobs -->
+				<do_if value="$tmp_jobs.count">
+					<set_value name="$_CEO.$JOBS" exact="$tmp_jobs.clone"/>
+				</do_if>
+				<do_if value="$validZones? and $validZones.count">
+					<set_value name="$_CEO.$JOB_SPACES" exact="$validZones.clone"/>
+				</do_if>
+				<!-- Statusupdates -->
+				<do_if value="player.age ge 2h and (not $nextCEOupdate? or ($nextCEOupdate? and $nextCEOupdate lt player.age))">
+					<include_actions ref="md.MM_Corps__Data.MMCData_CEO_status" />
+					<set_value name="$nextCEOupdate" exact="player.age + 6h" />
+				</do_if>
+				<!-- clear -->
+				<remove_value name="$CEO"/>
+				<remove_value name="$_CEO"/>
+				<remove_value name="$build"/>
+				<remove_value name="$build2"/>
+				<remove_value name="$Builders"/>
+				<remove_value name="$BuildLocation"/>
+				<remove_value name="$CVShip"/>
+				<remove_value name="$faction"/>
+				<remove_value name="$_faction"/>
+				<remove_value name="$Object"/>
+				<remove_value name="$plunder"/>
+				<remove_value name="$stationwiki"/>
+				<remove_value name="$stationToBuild"/>
+				<remove_value name="$Ships"/>
+				<remove_value name="$special_musthave"/>
+				<remove_value name="$shipNothingTodo"/>
+				<remove_value name="$shipDoUnknown"/>
+				<remove_value name="$shipDoBuild"/>
+				<remove_value name="$shipDoTrade"/>
+				<remove_value name="$shipDoMine"/>
+				<remove_value name="$shipDoPatrol"/>
+				<remove_value name="$shipDoPlunder"/>
+				<remove_value name="$shipDoEscort"/>
+				<remove_value name="$shipDoStationSupport"/>
+				<remove_value name="$tmpConfig"/>
+				<remove_value name="$tmp_stations"/>
+				<remove_value name="$tmp_jobs"/>
+				<remove_value name="$validCluster"/>
+				<remove_value name="$validSectors"/>
+				<remove_value name="$validZones"/>
+				<remove_value name="$validZonesCore"/>
+				<remove_value name="$validZonesHotZone"/>
+				<remove_value name="$zone"/>
+				<debug_text chance="0" text="'end'" />
+
+						<remove_value name="$_CEO"/>
+						<remove_value name="$build"/>
+						<remove_value name="$style"/>
+						<remove_value name="$next_Check"/>
+					</actions>
+				</cue>
+
+				<cue name="DO_Handler" instantiate="true" namespace="this">
+					<conditions>
+						<check_any>
+							<event_object_signalled object="global.$DEEPWATER_CEO" param="'INIT SHIP'" />
+							<event_object_signalled object="global.$DEEPWATER_CEO" param="'REPLACE CV'" />
+							<event_object_signalled object="global.$DEEPWATER_CEO" param="'GIVE.ESCORTS'" />
+							<event_object_signalled object="global.$DEEPWATER_CEO" param="'ORDER.SHIP'" />
+						</check_any>
+					</conditions>
+					<delay min="20ms" max="350ms"/>
+					<actions>
+						<!--
+						* assign ships to stations and ships for escorts
+						-->
+						<set_value name="$_CEO" exact="global.$DEEPWATER_CEO" />
+						
+						<include_actions ref="md.MM_Corps__Data.MMCData_doHandler_include" />
+						
+						<remove_value name="$_CEO"/>
+					</actions>
+				</cue>
+			</cues>
+		</cue>
+	</cues>
+</mdscript>

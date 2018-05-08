@@ -23,7 +23,7 @@
     <param name="commander" default="this.ship.commander"/>
     <param name="formation" default="formationshape.invpointguard"/>
     <param name="protect_base" default="false"/>
-    <param name="do_escort" default="false"/>
+    <param name="do_escort" default="null"/>
     <param name="escort" default="false"/>
     <param name="debugchance" default="0"/>
   </params>
@@ -179,7 +179,7 @@
             <set_value name="$commander" exact="$base"/>
             <set_value name="$do_escort" exact="null"/>
             <!--remove_object_commander object="this.ship" /-->
-			<run_interrupt_script name="'command.fight.attack'" abortscripts="true" resume="dock">
+            <run_interrupt_script name="'command.fight.attack'" abortscripts="true" resume="dock">
               <param name="target" value="event.param2" />
               <param name="checkrelation" value="false" />
               <param name="speak" value="false" />
@@ -189,7 +189,7 @@
             <set_value name="$commander" exact="event.param3"/>
             <set_value name="$do_escort" exact="true"/>
             <set_object_commander object="this.ship" commander="event.param3" />
-			<abort_called_scripts resume="init"/>
+            <abort_called_scripts resume="init"/>
           </do_else>
         </do_elseif>
         <do_elseif value="event.param == 'attack plus'">
@@ -371,6 +371,13 @@
   </init>
   <attention min="unknown">
     <actions>
+
+      <do_if value="$do_escort == null and this.isplayerowned">
+        <set_value name="$do_escort" exact="false"/>
+      </do_if>
+      <do_elseif value="$do_escort == null and not this.isplayerowned">
+        <set_value name="$do_escort" exact="true"/>
+      </do_elseif>
 
       <leave_formation object="this.ship" />
 

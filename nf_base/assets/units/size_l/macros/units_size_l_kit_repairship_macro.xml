@@ -241,11 +241,13 @@
 			</connection>
 
 			<connection ref="ConnectionFor_props_tradeoffer_buy_energy">
+			  <build mode="optional" sequence="A" stage="1" />
 			  <macro>
 				<component ref="props_tradeoffer_buy_energy" connection="space" />
 			  </macro>
 			</connection>
 			<connection ref="ConnectionFor_props_tradeoffer_sell_energy">
+			  <build mode="optional" sequence="A" stage="1" />
 			  <macro>
 				<component ref="props_tradeoffer_sell_energy" connection="space" />
 			  </macro>

@@ -13,6 +13,14 @@
     <include_actions ref="md.NPC_Shiptrader_Pl.SellShipActions_Jobs" />
   </replace>
 
+  <replace sel="//library[@name='SellShipActions']">
+    <library name="SellShipActions">
+      <actions>
+        <include_actions ref="md.NPC_Shiptrader_Pl.SellShipActions" />
+      </actions>
+    </library>
+  </replace>
+
   <add sel="/mdscript[@name='NPC_Shiptrader']/cues/cue/cues/cue[@name='SectionHandler']/actions/do_elseif/do_if/add_player_choice[@section='cArch_sellshipconfirmed']" type="@selectable">$actor.money gt 50000000Cr and $actor.money gt $soldshipprice</add>
   <add sel="/mdscript[@name='NPC_Shiptrader']/cues/cue/cues/cue[@name='SectionHandler']/actions/do_elseif/do_else/add_player_choice[@section='cArch_sellshipconfirmed']" type="@selectable">$actor.money gt 50000000Cr and $actor.money gt $soldshipprice</add>
 

@@ -36,6 +36,9 @@
 					<do_elseif value="$temp_factionId" list="['hereticvanguards']">
 						<set_value name="$build" exact="['ol']" />
 					</do_elseif>
+					<do_elseif value="$temp_factionId" list="['deepwater']">
+						<set_value name="$build" exact="['merc']" />
+					</do_elseif>
 					<do_elseif value="$temp_factionId" list="['argongovernment','sonraenergy','aquarius','jonferson','frantonpharma','chow']">
 						<set_value name="$build" exact="['ol']" />
 					</do_elseif>
@@ -51,6 +54,9 @@
 					</do_if>
 					<do_elseif value="$temp_factionId" list="['atlas','hereticvanguards','sovereignsyndicate','reivers']">
 						<set_value name="$_CEO.$style" exact="'pirate'" />
+					</do_elseif>
+					<do_elseif value="$temp_factionId" list="['deepwater']">
+						<set_value name="$_CEO.$style" exact="'mercenary'" />
 					</do_elseif>
 					<do_else comment="'fallback'">
 						<set_value name="$_CEO.$style" exact="'cooperative'" />
@@ -97,12 +103,12 @@
 				</do_elseif>
 				<do_elseif value="$_CEO.$style" exact="'mercenary'">
 					<set_value name="$tmpConfig.$stationPatrol" exact="0" />
-					<set_value name="$tmpConfig.$zonePatrol" exact="2" />
+					<set_value name="$tmpConfig.$zonePatrol" exact="0" />
 					<set_value name="$tmpConfig.$sectorPatrol" exact="0" />
 					<set_value name="$tmpConfig.$clusterPatrol" exact="0" />
-					<set_value name="$tmpConfig.$patrolEscorts" exact="4" />
+					<set_value name="$tmpConfig.$patrolEscorts" exact="0" />
 					<set_value name="$tmpConfig.$scouts" exact="0" />
-					<set_value name="$tmpConfig.$fleets" exact="2" />
+					<set_value name="$tmpConfig.$fleets" exact="10" />
 					<set_value name="$tmpConfig.$max_builders" exact="0" />
 					<set_value name="$tmpConfig.$invasionPatrol" exact="0" />
 					<set_value name="$tmpConfig.$plunderPatrol" exact="0" />
@@ -452,6 +458,25 @@
 							<append_to_list name="$temp_ships.$mine_sm" exact="macro.units_size_m_hydrogen_collector_macro"/>
 						</do_else>
 					</do_if>
+					<do_if value="'merc'" list="$build">
+						<append_to_list name="$temp_ships.$fight" exact="macro.units_size_l_kit_repairship_macro"/>
+						<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_repairship_02_macro"/>
+
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_cs_omicron_ship_04_macro"/>
+
+						<append_to_list name="$temp_ships.$build" exact="macro.units_size_xl_builder_ship_ol_macro"/>
+
+						<append_to_list name="$temp_ships.$mine" exact="macro.units_size_xl_cs_omicron_ship_04_mk2_macro"/>
+
+						<append_to_list name="$temp_ships.$fight_sm" exact="macro.units_size_s_ship_ar_military_04_macro"/>
+						<append_to_list name="$temp_ships.$fight_sm" exact="macro.units_size_s_ship_ar_military_05_macro"/>
+						<append_to_list name="$temp_ships.$fight_sm" exact="macro.units_size_s_ship_ar_military_06_macro"/>
+
+						<append_to_list name="$temp_ships.$trade_sm" exact="macro.units_size_m_universal_transport_macro"/>
+
+						<append_to_list name="$temp_ships.$mine_sm" exact="macro.units_size_m_crystal_collector_macro"/>
+						<append_to_list name="$temp_ships.$mine_sm" exact="macro.units_size_m_hydrogen_collector_macro"/>
+					</do_if>
 			
 					<set_value name="$tmpConfig.$ships" exact="$temp_ships.clone" />
 					<remove_value name="$temp_ships"/>
@@ -743,10 +768,27 @@
 		<library name="MMCData_CEO_PROPERTY">
 			<actions>
 				<do_if value="$startzone? and $startzone.exists" negate="true">
-					<find_zone name="$startzone" space="player.galaxy" tempzone="false" mapzone="true" multiple="false" />
+					<find_zone name="$startzone" space="player.galaxy" priorityzone="true" tempzone="false" multiple="false">
+						<match class="class.highway" negate="true" />
+					</find_zone>
 				</do_if>
 				<create_list name="$todo_stations" />
 				<create_list name="$todo_ships" />
+
+				<do_if value="$_faction.id" list="['deepwater']">
+					<find_station name="$temp_station" space="player.galaxy" multiple="false" >
+						<match owner="$_faction"/>
+					</find_station>
+					<do_if value="$temp_station" negate="true">
+						<append_to_list name="$todo_stations" exact="
+							[ $startzone.macro, null, [
+														[macro.struct_bt_alb_warehouse_macro, 'spawn']
+													]
+							]
+						"/> 
+					</do_if>
+					<remove_value name="$temp_station"/>
+				</do_if>
 				<!--
 				*** Stations (create, free/build)
 				<append_to_list name="$todo_stations" exact="
@@ -764,13 +806,13 @@
 
 				-->
 		
-				<do_if value="$_faction.id" list="['familyryak','heartofalbion','canteran']" comment="domination">
+				<do_if value="$_faction.id" list="['familyryak','heartofalbion','canteran','argon_colony', 'deepwater']" comment="domination">
 					<set_value name="$startmoney" exact="5000000000Cr" />
 				</do_if>
 				<do_elseif value="$_faction.id" list="['argongovernment','terracorp','plutarch']" comment="domination++">
 					<set_value name="$startmoney" exact="10000000000Cr" />
 				</do_elseif>
-				<do_elseif value="$_faction.id" list="['terran','atlas','hereticvanguards','albionenergy']" comment="cooperation++">
+				<do_elseif value="$_faction.id" list="['terran','atlas','hereticvanguards','albionenergy','ls_terran']" comment="cooperation++">
 					<set_value name="$startmoney" exact="2000000000Cr" />
 				</do_elseif>
 				<do_elseif value="$_faction.id" list="['wholesomefoods','sonraenergy','aquarius','beryll','nolimits','leddaindustrial','jonferson','frantonpharma','chow']" comment="cooperation">
@@ -779,9 +821,12 @@
 				<do_elseif value="$_faction.id" list="['xenon']">
 					<set_value name="$startmoney" exact="50000000000Cr" />
 				</do_elseif>
-				<do_elseif value="$_faction.id" list="['sovereignsyndicate','reivers']" comment="pirat">
+				<do_elseif value="$_faction.id" list="['sovereignsyndicate','reivers','goner','mlspirate','hayen','ls_dark_space']" comment="pirat">
 					<set_value name="$startmoney" exact="500000000Cr" />
 				</do_elseif>
+				<do_else comment="cooperation">
+					<set_value name="$startmoney" exact="1000000000Cr" />
+				</do_else>
 
 				<do_if value="$todo_ships.count == 0 and $PROPERTY_INIT?">
 					<set_value name="$faction" exact="$_faction" />
@@ -982,6 +1027,9 @@
 		
 				<do_if value="$_faction.id" list="['xenon','khaak']">
 					<set_value name="$_CEO.$isInvader" />
+				</do_if>
+				<do_if value="$_faction.id" list="['deepwater','acmecorp']">
+					<set_value name="$_CEO.$isService" />
 				</do_if>
 
 				<!--
@@ -2294,7 +2342,16 @@
 				<do_if value="$pilot.exists and $ShipYard?">
 					<find_sector name="$sectors" space="$ShipYard.cluster" multiple="true" />
 					<set_value name="$Station" exact="if $overrideStation? then $overrideStation else $ShipYard" />
-					<include_actions ref="md.MM_Corps__Data.MMCData_ship_job" />
+					<do_if value="$_CEO.$isService?">
+						<set_value name="$param" exact="[]"/>
+						<set_value name="$destination" exact="$sectors.random" chance="if $destination? and $destination.exists then 0 else 100"/>
+						<set_value name="$script" exact="'move.idle'"/>
+						<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_tmp" />
+						<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_runscript" />
+					</do_if>
+					<do_else>
+						<include_actions ref="md.MM_Corps__Data.MMCData_ship_job" />
+					</do_else>
 				</do_if>
 				<do_elseif value="not $ShipYard?">
 					<!-- no job -->
@@ -2428,7 +2485,7 @@
 						<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_runscript" />
 					</do_if>
 				</do_if>
-				<do_elseif value="$Object.dps.all gt 20000 and ($Object.cargo.{ware.fusionreactor}.max or $Object.cargo.{ware.water}.max or $Object.cargo.{ware.energycells}.max or $Object.cargo.{ware.ore}.max)" chance="if not $pirat then 0 else if $Object.primarypurpose == objectpurpose.fight then 100 else 70">
+				<do_elseif value="$Object.dps.all gt 200000 and ($Object.cargo.{ware.fusionreactor}.max or $Object.cargo.{ware.water}.max or $Object.cargo.{ware.energycells}.max or $Object.cargo.{ware.ore}.max)" chance="if not $pirat then 0 else if $Object.primarypurpose == objectpurpose.fight then 30 else 15">
 					<create_list name="$warebasket" />
 					<do_if value="$trade_warebasket? and $trade_warebasket.count">
 						<do_all exact="$trade_warebasket.count" counter="$xj">
@@ -3194,6 +3251,11 @@
 					<include_actions ref="md.MM_Corps__Data.MMCData_dohandler_include_escorts" />
 
 				</do_elseif>
+				<do_elseif value="event.param" exact="'ORDER.SHIP'" comment="rent a ship from this CEO">
+
+					<include_actions ref="md.MM_Corps__Data.MMCData_dohandler_include_rentaship" />
+
+				</do_elseif>
 				<do_elseif value="event.param" exact="'REPLACE CV'" chance="0" comment="restart builds doesnt work yet">
 					<do_if value="$_CEO.$openBuilds?" negate="true">
 						<create_list name="$_CEO.$openBuilds" />
@@ -3269,10 +3331,10 @@
 						<create_list name="$ShipYardOfTrust_Multi"/>
 					</do_else>
 					<do_if value="$ShipYardOfTrust_Multi.count">
+						<remove_value name="$requiredUnits"/>
+						<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_buyships" />
+
 						<do_all exact="$ShipYardOfTrust_Multi.count" counter="$sy">
-							<remove_value name="$requiredUnits"/>
-							<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_buyships" />
-		
 <set_value name="$text2" exact="' \n# Buy Ship %1 #\n'.[$requiredUnits.count]" operation="add" />
 		
 							<set_value name="$nextShoppingTrip" exact="if $requiredUnits.count gt 3 then player.age + 10min else if $next_Check? and $next_Check.{2} then player.age + $next_Check.{2} else player.age + 45min"/>
@@ -3280,11 +3342,15 @@
 							<do_if value="$requiredUnits.count">
 								<set_value name="$ShipYardOfTrust" exact="$ShipYardOfTrust_Multi.{$sy}"/>
 								<include_actions ref="md.MM_Corps__Data.MMCData_do_orderships" />
+								<remove_value name="$requiredUnits.{1}"/>
 							</do_if>
 							<do_elseif value="not $_CEO.$jobsdisabled? and $requiredUnits.count == 0" chance="(not global.$nfconfig.$plotSafe?) *100">
 								<set_value name="$faction" exact="$_faction" />
 								<include_actions ref="md.MM_Corps__Data.MMCData_disable_jobs" />
 								<set_value name="$_CEO.$jobsdisabled" />
+								<break/>
+							</do_elseif>
+							<do_elseif value="$requiredUnits.count == 0" >
 								<break/>
 							</do_elseif>
 						</do_all>
@@ -3423,6 +3489,29 @@
 				</do_elseif>
 
 				<!-- TODO tactical stuff -->
+				<do_if value="$_CEO.$style == 'pirate' and $tmpConfig.$plunderPatrol and $validCluster.count and $shipDoPlunder.count lt ($tmpConfig.$plunderPatrol * $validCluster.count) and (not $nextShoppingTrip2? or ($nextShoppingTrip2? and $nextShoppingTrip2 lt player.age))" chance="if $_CEO.money gt $tmpConfig.$minBuildSpecial then 100 else 0">
+					<find_station name="$tmp_stations" space="player.galaxy" functional="true" multiple="true" recursive="true" chance="if not ($tmp_stations? and $tmp_stations.count) then 100 else 0">
+						<match owner="$_faction"/>
+					</find_station>
+					<set_value name="$homebase" exact="null"/>
+					<do_all exact="$tmp_stations.count" counter="$r" reverse="true">
+						<do_if value="$tmp_stations.{$r}.tradewares.list.count + $tmp_stations.{$r}.resources.list.count" negate="true">
+							<continue />
+						</do_if>
+
+						<set_value name="$homebase" exact="$tmp_stations.{$r}"/>
+						<do_if value="$homebase.exists">
+							<break />
+						</do_if>
+					</do_all>
+
+					<do_if value="global.$factionCEOs.{'$' + faction.deepwater.id}? and global.$factionCEOs.{'$' + faction.deepwater.id}.$freeShips? and global.$factionCEOs.{'$' + faction.deepwater.id}.$freeShips.count" chance="if $homebase.exists then 100 else 0">
+						<signal_objects object="global.$factionCEOs.{'$' + faction.deepwater.id}" param="'ORDER.SHIP'" param2="[$_faction, $_CEO, $homebase]"/>
+					</do_if>
+					<remove_value name="$homebase"/>
+					<set_value name="$nextShoppingTrip2" exact="if $next_Check? and $next_Check.{2} then player.age + $next_Check.{2} else player.age + 180min"/>
+				</do_if>
+				
 
 				<!-- TODO diplomatic stuff -->
 				<do_if value="not $nextDonationCheck? or ($nextDonationCheck? and $nextDonationCheck lt player.age)" chance="if $_CEO.$style != 'cooperative' then 100 else 0">
@@ -3646,7 +3735,7 @@
 				<set_value name="$tmp" exact="$tmpConfig.$stationPatrol * $tmp_stations.count" operation="add" chance="0"/>
 				<set_value name="$tmp" exact="$tmpConfig.$stationPatrol * $validZonesCore.count" operation="add" comment="route patrol"/>
 				<set_value name="$tmp" exact="$tmp * $tmpConfig.$patrolEscorts" operation="add"/>
-				<set_value name="$tmp" exact="$tmpConfig.$fleets * $tmpConfig.$patrolEscorts" operation="add" comment="TODO improve fleet"/>
+				<set_value name="$tmp" exact="$tmpConfig.$fleets + ($tmpConfig.$fleets * $tmpConfig.$patrolEscorts)" operation="add" comment="TODO improve fleet"/>
 				<set_value name="$tmp" exact="$tmpConfig.$scouts" operation="add"/>
 
 				<set_value name="$tmpSum" exact="$shipDoPatrol.count + $shipDoPlunder.count + $shipDoEscort.count"/>
@@ -5018,6 +5107,27 @@
 							</do_all>
 						</do_all>
 						<remove_value name="$shiptraders"/>
+						<!-- make whishlist -->
+						<set_value name="$keylist" exact="['build', 'trade', 'mine', 'fight']"/>
+						<create_list name="$todo" />
+						<do_if value="$keylist.indexof.{$firstChoice} and $tmpConfig.$ships.{'$%1'.[$firstChoice]}? and $tmpConfig.$ships.{'$%1'.[$firstChoice]}.count and $todo.indexof.{$firstChoice} == 0">
+							<append_to_list name="$todo" exact="$firstChoice"/>
+						</do_if>
+						<do_if value="$keylist.indexof.{$secondChoice} and $tmpConfig.$ships.{'$%1'.[$secondChoice]}? and $tmpConfig.$ships.{'$%1'.[$secondChoice]}.count and $todo.indexof.{$secondChoice} == 0">
+							<append_to_list name="$todo" exact="$secondChoice"/>
+						</do_if>
+						<do_if value="$keylist.indexof.{$thirdChoice} and $tmpConfig.$ships.{'$%1'.[$thirdChoice]}? and $tmpConfig.$ships.{'$%1'.[$thirdChoice]}.count and $todo.indexof.{$thirdChoice} == 0">
+							<append_to_list name="$todo" exact="$thirdChoice"/>
+						</do_if>
+						<do_all exact="$todo.count" counter="$y">
+							<do_all exact="$tmpConfig.$ships.{'$%1'.[$todo.{$y}]}.count" counter="$x">
+								<do_if value="$wishlist.indexof.{ $tmpConfig.$ships.{'$%1'.[$todo.{$y}]}.{$x} } == 0">
+									<append_to_list name="$wishlist" exact="$tmpConfig.$ships.{'$%1'.[$todo.{$y}]}.{$x}"/>
+								</do_if>
+							</do_all>
+						</do_all>
+						<remove_value name="$keylist"/>
+						<remove_value name="$todo"/>
 					</do_else>
 <set_value name="$text2" exact="' -macros: %1'.[$macroList.count]" operation="add"/>
 
@@ -5029,6 +5139,9 @@
 							<do_if value="$macroList.indexof.{$temp_macro}">
 								<set_value name="$macro" exact="$temp_macro"/>
 							</do_if>
+							<do_elseif value="$_CEO.$isService?">
+								<continue />
+							</do_elseif>
 							<do_else>
 								<set_value name="$macro" exact="$macroList.random"/>
 							</do_else>
@@ -6438,14 +6551,62 @@
 							</do_if>
 
 							<do_if value="$Unitcapacity">
-								<add_units object="$createdShip" macro="macro.units_size_drone_attackdrone_plasma_mk2_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7" chance="40"/>
-								<add_units object="$createdShip" macro="macro.units_size_drone_attackdrone_plasma_mk1_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7"/>
-								<add_units object="$createdShip" macro="macro.units_size_drone_attackdrone_impulse_mk2_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7" chance="40"/>
-								<add_units object="$createdShip" macro="macro.units_size_drone_attackdrone_impulse_mk1_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7"/>
-								<add_units object="$createdShip" macro="macro.units_size_drone_missiledrone_dumbfire_mk2_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7" chance="40"/>
-								<add_units object="$createdShip" macro="macro.units_size_drone_missiledrone_dumbfire_mk1_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7"/>
-								<add_units object="$createdShip" macro="macro.units_size_xs_welder_drone_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7"/>
-								<add_units object="$createdShip" macro="macro.units_size_xs_transp_empty_macro" exact="[5 ,[$createdShip.units.maxcount, 1000].min -$createdShip.units.count].min"/>
+								<do_if value="$createdShip.cargo.{ware.ore}.max and $createdShip.cargo.{ware.plasma}.max and $createdShip.primarypurpose == objectpurpose.mine">
+									<add_units object="$createdShip" macro="macro.units_size_drone_attackdrone_plasma_mk2_macro" min="$Unitcapacity/6/2" max="$Unitcapacity/6"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_rubble_collector_mk2_macro" min="3" max="$Unitcapacity/6" chance="50"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_rubble_collector_mk1_macro" min="3" max="$Unitcapacity/6"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_liquid_collector_mk2_macro" min="3" max="$Unitcapacity/6" chance="50"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_liquid_collector_mk1_macro" min="3" max="$Unitcapacity/6"/>
+									<add_units object="$createdShip" macro="macro.units_size_xs_transp_empty_macro" min="1" max="$Unitcapacity/6/2"/>
+									<add_units object="$createdShip" macro="macro.units_size_xs_welder_drone_macro" min="1" max="$Unitcapacity/6/2"/>
+								</do_if>
+								<do_elseif value="$createdShip.cargo.{ware.ore}.max and $createdShip.primarypurpose == objectpurpose.mine">
+									<add_units object="$createdShip" macro="macro.units_size_drone_attackdrone_plasma_mk2_macro" min="$Unitcapacity/4/2" max="$Unitcapacity/4"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_rubble_collector_mk2_macro" min="3" max="$Unitcapacity/4" chance="50"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_rubble_collector_mk1_macro" min="3" max="$Unitcapacity/4"/>
+									<add_units object="$createdShip" macro="macro.units_size_xs_transp_empty_macro" min="1" max="$Unitcapacity/4/2"/>
+									<add_units object="$createdShip" macro="macro.units_size_xs_welder_drone_macro" min="1" max="$Unitcapacity/4/2"/>
+								</do_elseif>
+								<do_elseif value="$createdShip.cargo.{ware.plasma}.max and $createdShip.primarypurpose == objectpurpose.mine">
+									<add_units object="$createdShip" macro="macro.units_size_drone_attackdrone_plasma_mk2_macro" min="$Unitcapacity/4/2" max="$Unitcapacity/4"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_liquid_collector_mk2_macro" min="3" max="$Unitcapacity/4" chance="50"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_liquid_collector_mk1_macro" min="3" max="$Unitcapacity/4"/>
+									<add_units object="$createdShip" macro="macro.units_size_xs_transp_empty_macro" min="1" max="$Unitcapacity/4/2"/>
+									<add_units object="$createdShip" macro="macro.units_size_xs_welder_drone_macro" min="1" max="$Unitcapacity/4/2"/>
+								</do_elseif>
+								<do_elseif value="$createdShip.primarypurpose == objectpurpose.build">
+									<add_units object="$createdShip" macro="macro.units_size_drone_attackdrone_plasma_mk2_macro" min="$Unitcapacity/4/2" max="$Unitcapacity/4"/>
+									<add_units object="$createdShip" macro="macro.units_size_xs_welder_drone_macro" min="$Unitcapacity/4" max="$Unitcapacity/4"/>
+									<add_units object="$createdShip" macro="macro.units_size_xs_transp_empty_macro" min="$Unitcapacity/4/3" max="$Unitcapacity/4/2"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_missiledrone_dumbfire_mk2_macro" min="$Unitcapacity/4/3" max="$Unitcapacity/4/2"/>
+								</do_elseif>
+								<!--do_elseif value="$createdShip.cargo.{ware.fusionreactor}.max or $createdShip.cargo.{ware.water}.max or $createdShip.cargo.{ware.energycells}.max or $createdShip.cargo.{ware.ore}.max" chance="if $faction == faction.deepwater then 100 else 0">								
+			
+									<add_units object="$createdShip" macro="macro.units_size_drone_attackdrone_plasma_mk1_macro" min="5" max="$Unitcapacity/2/3"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_attackdrone_impulse_mk1_macro" min="5" max="$Unitcapacity/2/3"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_missiledrone_dumbfire_mk2_macro" min="5" max="$Unitcapacity/2/3"/>
+									<add_units object="$createdShip" macro="macro.units_size_xs_welder_drone_macro" min="3" max="$Unitcapacity/2/2"/>
+									<add_units object="$createdShip" macro="macro.units_size_xs_transp_empty_macro" min="5" max="$Unitcapacity/2/2"/>
+								</do_elseif-->
+								<do_elseif value="$createdShip.cargo.{ware.fusionreactor}.max or $createdShip.cargo.{ware.water}.max or $createdShip.cargo.{ware.energycells}.max or $createdShip.cargo.{ware.ore}.max">								
+			
+									<add_units object="$createdShip" macro="macro.units_size_drone_attackdrone_plasma_mk1_macro" min="5" max="$Unitcapacity/2/3"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_attackdrone_impulse_mk1_macro" min="5" max="$Unitcapacity/2/3"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_missiledrone_dumbfire_mk2_macro" min="5" max="$Unitcapacity/2/3"/>
+									<add_units object="$createdShip" macro="macro.units_size_xs_welder_drone_macro" min="3" max="$Unitcapacity/2/2"/>
+									<add_units object="$createdShip" macro="macro.units_size_xs_transp_empty_macro" exact="[50 ,[$createdShip.units.maxcount, 1000].min -$createdShip.units.count].min"/>
+								</do_elseif>
+								<do_elseif value="$createdShip.primarypurpose == objectpurpose.fight or (not $createdShip.cargo.{ware.water}.max and not $createdShip.cargo.{ware.energycells}.max and not $createdShip.cargo.{ware.fusionreactor}.max and not $createdShip.cargo.{ware.ore}.max)">
+									<add_units object="$createdShip" macro="macro.units_size_drone_attackdrone_plasma_mk2_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7" chance="40"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_attackdrone_plasma_mk1_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_attackdrone_impulse_mk2_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7" chance="40"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_attackdrone_impulse_mk1_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_missiledrone_dumbfire_mk2_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7" chance="40"/>
+									<add_units object="$createdShip" macro="macro.units_size_drone_missiledrone_dumbfire_mk1_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7"/>		
+			
+									<add_units object="$createdShip" macro="macro.units_size_xs_welder_drone_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7"/>
+									<add_units object="$createdShip" macro="macro.units_size_xs_transp_empty_macro" exact="[5 ,[$createdShip.units.maxcount, 1000].min -$createdShip.units.count].min"/>
+								</do_elseif>
 							</do_if>
 							<remove_value name="$Unitcapacity" />
 						</do_else>
@@ -6576,7 +6737,7 @@
 				<remove_value name="$temp_stations"/>
 
 				<do_if value="$Stations.count and $ShipYards.count == 0">
-					<find_station name="$ShipYards" space="player.galaxy" functional="true" multiple="true">
+					<find_station name="$ShipYards" space="player.galaxy" functional="true" multiple="true" productsize="ship">
 						<match_content class="class.production" />
 						<match_relation faction="$faction"  relation="neutral" comparison="ge"/>
 					</find_station>
@@ -6995,6 +7156,216 @@
 				
 				<remove_value name="$Object"/>
 				<remove_value name="$raceTag"/>
+			</actions>
+		</library>
+
+		<!-- 
+		<set_value name="$_CEO" exact="null"/>
+		+ event.param2
+		<include_actions ref="md.MM_Corps__Data.MMCData_dohandler_include_rentaship" />
+		-->
+		<library name="MMCData_dohandler_include_rentaship">
+			<actions>
+
+				<include_actions ref="md.MM_Corps__Data.MMCData_config" />
+
+				<do_if value="event.param2? and typeof event.param2 == datatype.list and typeof event.param2.{1} == datatype.faction and global.$factionCEOs.{'$' + event.param2.{1}.id}? and $_CEO.$freeShips? and $_CEO.$freeShips.count">
+					<set_value name="$_faction_Cust" exact="event.param2.{1}" />
+					<set_value name="$_CEO_Cust" exact="global.$factionCEOs.{'$' + $_faction.id}" />
+					<set_value name="$_Station_Cust" exact="if event.param2.{3}? then event.param2.{3} else null" />
+
+					<do_if value="$_Station_Cust and $_Station_Cust.isoperational" negate="true"> 
+						<find_station name="$_Station_Cust" space="player.galaxy" functional="true" multiple="false">
+							<match_content class="class.buildmodule" />
+							<match owner="$_faction_Cust"/>
+						</find_station>
+
+						<do_if value="$_Station_Cust" negate="true">
+							<find_station name="$_Station_Cust" space="player.galaxy" functional="true" multiple="false">
+								<match owner="$_faction_Cust"/>
+							</find_station>
+							<do_if value="$_Station_Cust.tradewares.list.count + $_Station_Cust.resources.list.count" negate="true">
+								<set_value name="$_Station_Cust" exact="null" />
+							</do_if>
+						</do_if>
+					</do_if>
+
+					<set_value name="$targetZone" exact="null" />
+
+					<do_if value="$_Station_Cust.isoperational">
+						<find_object space="$_Station_Cust.cluster" name="$targetObjects" class="[class.gate, class.highwayentrygate, class.jumpbeacon, class.highwayexitgate]" multiple="true" />
+						<do_if value="$targetObjects.count">
+							<set_value name="$tmpObject" exact="$targetObjects.random" />
+							<set_value name="$targetZone" exact="$tmpObject.zone" />
+							<remove_value name="$tmpObject"/>
+						</do_if>
+						<do_else>
+							<find_zone name="$targetzone" space="$_Station_Cust.cluster" priorityzone="true" tempzone="false">
+								<match class="class.highway" negate="true" />
+							</find_zone>
+						</do_else>
+						<remove_value name="$targetObjects"/>
+						<!--
+						<set_value name="$faction" exact="$_CEO.owner" />
+						<set_value name="$ref" exact="$tmpConfig.$ships.$temp_ships.$fight"/>
+						<set_value name="$spawnZone" exact="$targetZone" />
+						<set_value name="$clearAll" />
+						<include_actions ref="md.MM_Corps__Data.MMCData_ship_spawner" />
+	
+						<set_value name="$temp_base" exact="$createdShip" />
+						<remove_value name="$createdShip"/>
+						-->
+						<set_value name="$temp_base" exact="$_CEO.$freeShips.random" />
+	
+						<do_if value="$temp_base.cluster" exact="$targetzone.cluster" negate="true">
+							<set_value name="$temp_sector" exact="100" />
+							<do_all exact="$_CEO.$freeShips.count" counter="$i">
+								<do_if value="$_CEO.$freeShips.{$i}.zone == $targetzone">
+									<set_value name="$temp_base" exact="$_CEO.$freeShips.{$i}" />
+									<break />
+								</do_if>
+								<do_elseif value="$_CEO.$freeShips.{$i}.sector == $targetzone.sector">
+									<set_value name="$temp_base" exact="$_CEO.$freeShips.{$i}" />
+									<set_value name="$temp_sector" exact="0" />
+								</do_elseif>
+								<do_elseif value="$_CEO.$freeShips.{$i}.cluster == $targetzone.cluster" chance="$temp_sector">
+									<set_value name="$temp_base" exact="$_CEO.$freeShips.{$i}" />
+								</do_elseif>
+							</do_all>
+							<remove_value name="$temp_sector"/>
+						</do_if>
+						
+						<do_if value="$temp_base.isoperational">
+							<remove_value name="$_CEO.$freeShips.{$_CEO.$freeShips.indexof.{$temp_base}}"/>
+	
+							<find_station name="$ShipYards" space="player.galaxy" functional="true" multiple="true" productsize="ship">
+								<match_relation faction="$_CEO.owner" comparison="not" relation="enemy" />
+							</find_station>
+							<do_all exact="$ShipYards.count" counter="$x" reverse="true">
+								<do_if value="$ShipYards.{$x}.exists and $ShipYards.{$x}.isoperational and $ShipYards.{$x}.canproduceships" negate="true">
+									<remove_value name="$ShipYards.{$x}"/>
+								</do_if>
+							</do_all>
+		
+							<set_value name="$temp_leader" exact="null" />
+							<set_value name="$Squads" min="15" max="30" />
+							<set_value name="$Cost" exact="0Cr" />
+							<set_value name="$Cost" exact="$temp_base.macro.ware.minprice*0.5f" operation="add" />
+		
+							<do_all exact="$Squads" > 
+		
+								<set_value name="$faction" exact="$_faction_Cust" />
+								<set_value name="$ref" exact="[macro.units_size_s_torpedo_bomber_macro, macro.units_size_s_ship_pirate_03_macro, macro.units_size_s_ship_pirate_02_macro].random"/>
+								<include_actions ref="md.MM_Corps__Data.MMCData_dohandler_include_rentaship_buy_squads" />
+								<set_value name="$spawnZone" exact="$targetZone" />
+								<set_value name="$clearAll" />
+								<include_actions ref="md.MM_Corps__Data.MMCData_ship_spawner" />
+		
+								<set_value name="$temp_leader2" exact="$createdShip" />
+								<do_if value="$temp_leader" negate="true">
+									<set_object_commander object="$createdShip" commander="$temp_base" />
+									<set_value name="$temp_leader" exact="$createdShip" />
+								</do_if>
+								<do_else>
+									<set_object_commander object="$createdShip" commander="$temp_leader" />
+									<set_value name="$param" exact="[['base', $temp_base], ['commander', $temp_leader], ['do_escort', true]]"/>
+									<set_value name="$script" exact="'carrier.default'"/>
+									<set_value name="$Object" exact="$createdShip"/>
+									<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_runscript" />
+								</do_else>
+								<remove_value name="$createdShip"/>
+		
+								<do_all exact="2" chance="if $temp_leader == $temp_leader2 then 0 else 100"> 
+			
+									<set_value name="$faction" exact="$_faction_Cust" />
+									<set_value name="$ref" exact="[macro.units_size_s_ship_pirate_01_macro, macro.units_size_s_ship_pirate_03_macro, macro.units_size_s_ship_pirate_02_macro].random"/>
+									<include_actions ref="md.MM_Corps__Data.MMCData_dohandler_include_rentaship_buy_squads" />
+									<set_value name="$spawnZone" exact="$targetZone" />
+									<set_value name="$clearAll" />
+									<include_actions ref="md.MM_Corps__Data.MMCData_ship_spawner" />
+			
+									<set_object_commander object="$createdShip" commander="$temp_leader2" />
+									<set_value name="$param" exact="[['base', $temp_base], ['commander', $temp_leader2], ['do_escort', true]]"/>
+									<set_value name="$script" exact="'carrier.default'"/>
+									<set_value name="$Object" exact="$createdShip"/>
+									<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_runscript" />
+		
+									<remove_value name="$createdShip"/>
+								</do_all>
+							</do_all>
+		
+							<set_value name="$param" exact="[['base', $temp_base], ['do_escort', true]]"/>
+							<set_value name="$script" exact="'carrier.default'"/>
+							<set_value name="$Object" exact="$temp_leader"/>
+							<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_runscript" />
+		
+							<set_value name="$currentbasket" exact="[]"/>
+							<do_all exact="warebasket.all.list.count" counter="$i">
+								<do_if value="$_Station_Cust.cargo.{warebasket.all.list.{$i}}.target">
+									<append_to_list name="$currentbasket" exact="warebasket.all.list.{$i}"/>
+								</do_if>
+							</do_all>
+							<set_value name="$param" exact="[['range', 'sector'], ['squadleader', $temp_leader], ['customerbase', $_Station_Cust], ['basebasket', $currentbasket], ['jobmainzone', $targetZone]]"/>
+							<set_value name="$script" exact="'move.plunder.taxi'"/>
+							<set_value name="$Object" exact="$temp_base"/>
+							<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_runscript" />
+		
+							<transfer_money from="$_CEO_Cust" to="$_CEO" amount="$Cost"/>
+						</do_if>
+					</do_if>
+					
+					<remove_value name="$currentbasket"/>
+					<remove_value name="$_faction_Cust"/>
+					<remove_value name="$_CEO_Cust"/>
+					<remove_value name="$_Station_Cust"/>
+					<remove_value name="$temp_leader2"/>
+					<remove_value name="$temp_leader"/>
+					<remove_value name="$temp_base"/>
+					<remove_value name="$Squads"/>
+					<remove_value name="$Cost"/>
+					<remove_value name="$ShipYards"/>
+				</do_if>
+			</actions>
+		</library>
+
+		<!--
+		<set_value name="$ref" exact="macro.macro" />
+		<set_value name="$faction" exact="faction.player" />
+		<set_value name="$ShipYards" exact="[]" />
+		<set_value name="$_CEO" exact="$_CEO" />
+		<set_value name="$Cost" exact="0Cr" />
+		<include_actions ref="md.MM_Corps__Data.MMCData_dohandler_include_rentaship_buy_squads" />
+		-->
+		<library name="MMCData_dohandler_include_rentaship_buy_squads">
+			<actions>
+				<set_value name="$temp_shipyard" exact="$ShipYards.random" />
+
+				<do_if value="$temp_shipyard.exists and $ref.ware and $ref.ware.maxprice">
+
+					<set_value name="$costShip" exact="$ref.ware.maxprice"/>
+
+					<do_if value="$temp_shipyard.cargo.{$ref.ware}.count">
+						<remove_cargo object="$temp_shipyard" ware="$ref.ware" exact="1" />
+
+						<do_if value="$temp_shipyard.owner == $faction">
+							<set_value name="$costShip" exact="0Cr"/>
+						</do_if>
+						<do_else>
+							<set_value name="$Cost" exact="$costShip" operation="add" />
+						</do_else>
+					</do_if>
+					<do_else>
+						<do_if value="stat.nf_ships_spawned?">
+							<set_value name="stat.nf_ships_spawned" operation="add" />
+						</do_if>
+					</do_else>
+
+					<do_if value="$costShip and $temp_shipyard.owner != $_CEO.owner">
+						<transfer_money from="$_CEO" to="$temp_shipyard.tradenpc" amount="$costShip"/>
+					</do_if>
+				</do_if>
+				<remove_value name="$temp_shipyard"/>
+				<remove_value name="$costShip"/>
 			</actions>
 		</library>
 	</cues>

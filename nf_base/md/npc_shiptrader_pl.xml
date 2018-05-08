@@ -446,8 +446,8 @@
 
             <do_elseif value="event.param == 'cArch_buildclone'">
               <do_if value="event.param2.{3}? and typeof event.param2.{3} == datatype.macro or event.param2.{3}.exists">
-               <!--
-				<set_value name="$cost" exact="0Cr" />
+                <!--
+        <set_value name="$cost" exact="0Cr" />
                 <set_value name="$selectedMacro" exact="event.param2.{3}.macro" />
 
                 <create_build_plan macro="$selectedMacro" buildplan="$Buildplan">
@@ -512,18 +512,18 @@
                 <remove_value name="$cost"/>
                 -->
                 <set_value name="$cloneMacro" exact="if typeof event.param2.{3} == datatype.macro then event.param2.{3} else event.param2.{3}.macro" />
-				<set_value name="$tooltipText" exact="''" />
-				<set_value name="$tooltipText" exact="{2802,2730}" operation="add" chance="if $BuildModule.buildmacros.{1}.class == event.param2.{3}.class then 0 else 100"/>
-				<set_value name="$tooltipText" exact="{2802,2731}" operation="add" chance="if not $ship? and @$BuildModule.freedockslot and not @$actor.$shiptrader_isbusy then 0 else 100"/>
-				
+                <set_value name="$tooltipText" exact="''" />
+                <set_value name="$tooltipText" exact="{2802,2730}" operation="add" chance="if $BuildModule.buildmacros.{1}.class == event.param2.{3}.class then 0 else 100"/>
+                <set_value name="$tooltipText" exact="{2802,2731}" operation="add" chance="if not $ship? and @$BuildModule.freedockslot and not @$actor.$shiptrader_isbusy then 0 else 100"/>
+
                 <add_player_choice text="{2802,2724}.[$cloneMacro.name]" selectable="not $ship? and @$BuildModule.freedockslot and not @$actor.$shiptrader_isbusy and $BuildModule.buildmacros.{1}.class == event.param2.{3}.class" comment="build a vessel" section="cArch_selectUpgradesMenu" choiceparam="[ 0, 0, $actor, $BuildModule, null, $cloneMacro.id, '', 0, 1, $WareList ]" tooltip="$tooltipText" />
-				<remove_value name="$tooltipText"/>
+                <remove_value name="$tooltipText"/>
 
                 <include_actions ref="md.NPC_Shiptrader_Pl.QueueListTooltipText" />
 
                 <add_player_choice text="{2802,2725}.[$cloneMacro.name]" selectable="@$cloneMacro.ware.maxprice*2 lt player.money and (not $actor.container.tradenpc.$orders? or $actor.container.tradenpc.$orders.count lt 6)" comment="order a vessel" section="cArch_buildclone_order" choiceparam="$cloneMacro" tooltip="$tooltipText" />
-				<remove_value name="$tooltipText"/>
-				<remove_value name="$cloneMacro"/>
+                <remove_value name="$tooltipText"/>
+                <remove_value name="$cloneMacro"/>
               </do_if>
 
               <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
@@ -553,7 +553,7 @@
               <add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
             </do_elseif>
 
-           <do_elseif value="event.param == 'cArch_buildclone_do'">
+            <do_elseif value="event.param == 'cArch_buildclone_do'">
               <do_if value="event.param2.{3}.isclass.[class.ship_xl, class.ship_l] and $BuildModule.buildmacros.{1}.class == event.param2.{3}.class">
                 <set_value name="$selectedMacro" exact="event.param2.{3}.macro" />
                 <create_list name="$droneplan" />
@@ -893,7 +893,7 @@
             </do_if>
             <do_else value="$ship.hullpercentage == 100">
               <patch_macro object="$ship" />
-			  <restore_object object="$ship" hull="100" recursive="true" />
+              <restore_object object="$ship" hull="100" recursive="true" />
             </do_else>
             <remove_value name="$ship.pilot.$shiptrader_docking" />
             <do_if value="$ship.isplayerowned">
@@ -1035,34 +1035,34 @@
           </actions>
         </library>
 
-         <library name="QueueListTooltipText">
+        <library name="QueueListTooltipText">
           <actions>
-			<set_value name="$QueueCount" exact="5" />
-			<do_if value="$actor.container.tradenpc.$orders?">
-			  <set_value name="$Queue" exact="$actor.container.tradenpc.$orders.clone" />
-			  <set_value name="$tooltipText" exact="{2802,2735}.[$Queue.count]" />
-			  <do_all exact="$Queue.count" counter="$Count">
-				<set_value name="$tooltipText" exact="if $Queue.{$Count}.{2} == faction.player then {2802,2736}.[$Queue.{$Count}.{1}.name] else {2802,2737}.[$Queue.{$Count}.{1}.name]" operation="add" />
-				<set_value name="$QueueCount" operation="subtract"/>
-			  </do_all>
-			  <do_all exact="$QueueCount" chance="($QueueCount gt 0)*100">
-				<set_value name="$tooltipText" exact="{2802,2738}" operation="add" />
-			  </do_all>
-			  <remove_value name="$Queue"/>
-			</do_if>
-			<do_else>
-			  <set_value name="$tooltipText" exact="{2802,2739}" />
-			  <do_all exact="$QueueCount" chance="($QueueCount gt 0)*100">
-				<set_value name="$tooltipText" exact="{2802,2738}" operation="add" />
-			  </do_all>
-			</do_else>
-			<remove_value name="$QueueCount"/>
+            <set_value name="$QueueCount" exact="5" />
+            <do_if value="$actor.container.tradenpc.$orders?">
+              <set_value name="$Queue" exact="$actor.container.tradenpc.$orders.clone" />
+              <set_value name="$tooltipText" exact="{2802,2735}.[$Queue.count]" />
+              <do_all exact="$Queue.count" counter="$Count">
+                <set_value name="$tooltipText" exact="if $Queue.{$Count}.{2} == faction.player then {2802,2736}.[$Queue.{$Count}.{1}.name] else {2802,2737}.[$Queue.{$Count}.{1}.name]" operation="add" />
+                <set_value name="$QueueCount" operation="subtract"/>
+              </do_all>
+              <do_all exact="$QueueCount" chance="($QueueCount gt 0)*100">
+                <set_value name="$tooltipText" exact="{2802,2738}" operation="add" />
+              </do_all>
+              <remove_value name="$Queue"/>
+            </do_if>
+            <do_else>
+              <set_value name="$tooltipText" exact="{2802,2739}" />
+              <do_all exact="$QueueCount" chance="($QueueCount gt 0)*100">
+                <set_value name="$tooltipText" exact="{2802,2738}" operation="add" />
+              </do_all>
+            </do_else>
+            <remove_value name="$QueueCount"/>
           </actions>
         </library>
 
-       <!--
-      <set_value name="$transfer_data" exact="[$from, $to, $amount, $reward]" />    
-    -->
+        <!--
+        <set_value name="$transfer_data" exact="[$from, $to, $amount, $reward]" />    
+        -->
         <library name="TransferMoney">
           <actions>
             <do_if value="$transfer_data.{1} == $actor and $actor.container.tradenpc.exists">
@@ -1178,7 +1178,17 @@
         <library name="SellShipActions_Jobs">
           <actions>
             <do_if value="global.$factionCEOs? and (($newfaction? and global.$factionCEOs.{'$' + $newfaction.id}?) or (not $newfaction? and global.$factionCEOs.{'$' + $actor.owner.id}?))" negate="true">
-              <do_if value="( ($soldship2.cargo.{ware.ore}.max and $soldship2.availableunits.{unitcategory.orecollector}.count) or ($soldship2.cargo.{ware.plasma}.max and $soldship2.availableunits.{unitcategory.gascollector}.count) ) and $soldship2.cargo.{ware.fuelcells}.max">
+              <do_if value="$soldship2.commander and $soldship2.commander.exists and $soldship2.commander.isoperational">
+                <do_if value="$soldship2.isclass.[class.ship_s, class.ship_m] and ($soldship2.commander.macro.ismacro.{global.$mmcarriers} or ($soldship2.commander.commander.exists and $soldship2.commander.isclass.[class.ship_s, class.ship_m] and $soldship2.commander.commander.macro.ismacro.{global.$mmcarriers}))">
+                  <start_script object="$soldship2.pilot" name="'carrier.default'">
+                    <param name="do_escort" value="true"/>
+                  </start_script>
+                </do_if>
+                <do_else>
+                  <start_script object="$soldship2.pilot" name="if global.$nfconfig.$Check? then 'BR.move.escort' else 'move.escort'" />
+                </do_else>
+              </do_if>
+              <do_elseif value="( ($soldship2.cargo.{ware.ore}.max and $soldship2.availableunits.{unitcategory.orecollector}.count) or ($soldship2.cargo.{ware.plasma}.max and $soldship2.availableunits.{unitcategory.gascollector}.count) ) and $soldship2.cargo.{ware.fuelcells}.max">
                 <find_sector groupname="$sectors" space="$soldship2.cluster" multiple="true" />
                 <create_list name="$basketoverride" />
                 <do_if value="$soldship2.cargo.{ware.ore}.max and $soldship2.availableunits.{unitcategory.orecollector}.count">
@@ -1202,7 +1212,7 @@
                 </start_script>
                 <remove_value name="$basketoverride"/>
                 <remove_value name="$sectors"/>
-              </do_if>
+              </do_elseif>
               <do_elseif value="$soldship2.cargo.{ware.fuelcells}.max and ($soldship2.cargo.{ware.fusionreactor}.max or $soldship2.cargo.{ware.water}.max or $soldship2.cargo.{ware.energycells}.max or $soldship2.cargo.{ware.ore}.max)" chance="25">
                 <start_script object="$soldship2.pilot" name="'trade.shipyard.shipjobs'">
                   <param name="run_script_name" value="'trade.ship.ranged'"/> 
@@ -1237,29 +1247,75 @@
               </do_else>
             </do_if>
             <do_else>
-              <set_value name="$script_run" exact="'move.shipjobs'" />
-              <start_script object="$soldship2.pilot" name="$script_run">
-                <param name="run_script_name" value="'move.idle'"/>
-                <param name="run_script_param" value="[['TimeOut', 20min]]"/>
-              </start_script>
-              <remove_value name="$script_run"/>
+              <do_if value="$soldship2.commander and $soldship2.commander.exists and $soldship2.commander.isoperational">
+                <do_if value="$soldship2.isclass.[class.ship_s, class.ship_m] and ($soldship2.commander.macro.ismacro.{global.$mmcarriers} or ($soldship2.commander.commander.exists and $soldship2.commander.isclass.[class.ship_s, class.ship_m] and $soldship2.commander.commander.macro.ismacro.{global.$mmcarriers}))">
+                  <set_value name="$script_run" exact="'move.shipjobs'" />
+                  <start_script object="$soldship2.pilot" name="$script_run">
+                    <param name="run_script_name" value="'carrier.default'"/>
+                    <param name="run_script_param" value="[['do_escort', true]]"/>
+                  </start_script>
+                </do_if>
+                <do_else>
+                  <set_value name="$script_run" exact="'move.shipjobs'" />
+                  <start_script object="$soldship2.pilot" name="$script_run">
+                    <param name="run_script_name" value="if global.$nfconfig.$Check? then 'BR.move.escort' else 'move.escort'"/>
+                  </start_script>
+                </do_else>
+                <remove_value name="$script_run"/>
+              </do_if>
+              <do_else>
+                <set_value name="$script_run" exact="'move.shipjobs'" />
+                <start_script object="$soldship2.pilot" name="$script_run">
+                  <param name="run_script_name" value="'move.idle'"/>
+                  <param name="run_script_param" value="[['TimeOut', 20min]]"/>
+                </start_script>
+                <remove_value name="$script_run"/>
+              </do_else>
             </do_else>
           </actions>
         </library>
 
         <library name="SellShipActions">
           <actions>
-            <remove_object_commander object="$soldship2" />
-            <do_if value="$soldship2.subordinates.count">
-              <do_all exact="$soldship2.subordinates.count" counter="$s" reverse="true">
-                <do_if value="$soldship2.subordinates.{$s}.isclass.[class.ship_s, class.ship_m, class.ship_l, class.ship_xl]">
-                  <remove_object_commander object="$soldship2.subordinates.{$s}" />
-                  <start_script object="$soldship2.subordinates.{$s}.pilot" name="'player.default'" />
+            <do_if value="$soldship2.subordinates.count and $soldship? and typeof $soldship == datatype.list">
+              <set_value name="$tmpList" exact="$soldship2.subordinates.clone" />
+              <do_all exact="$tmpList.count" counter="$s">
+                <do_if value="$tmpList.{$s}.isclass.[class.ship_s, class.ship_m, class.ship_l, class.ship_xl] and $soldship.indexof.{$tmpList.{$s}} == 0">
+                  <remove_object_commander object="$tmpList.{$s}" />
+                  <do_if value="$tmpList.{$s}.pilot.exists and $tmpList.{$s}.isplayerowned">
+                    <start_script object="$tmpList.{$s}.pilot" name="'player.default'" />
+                  </do_if>
+                </do_if>
+                <do_elseif value="$tmpList.{$s}.isclass.[class.ship_s, class.ship_m, class.ship_l, class.ship_xl] and $soldship.indexof.{$tmpList.{$s}}">
+                  <!-- will be done later -->
+                </do_elseif>
+              </do_all>
+              <remove_value name="$tmpList"/>
+            </do_if>
+            <do_elseif value="$soldship2.subordinates.count and not $soldship? or typeof $soldship != datatype.list">
+              <set_value name="$tmpList" exact="$soldship2.subordinates.clone" />
+              <do_all exact="$tmpList.count" counter="$s">
+                <do_if value="$tmpList.{$s}.isclass.[class.ship_s, class.ship_m, class.ship_l, class.ship_xl]">
+                  <remove_object_commander object="$tmpList.{$s}" />
+                  <do_if value="$tmpList.{$s}.pilot.exists and $tmpList.{$s}.isplayerowned">
+                    <start_script object="$tmpList.{$s}.pilot" name="'player.default'" />
+                  </do_if>
                 </do_if>
               </do_all>
+              <remove_value name="$tmpList"/>
+            </do_elseif>
+
+            <do_if value="$soldship? and typeof $soldship == datatype.list and $soldship2.commander and $soldship.indexof.{$soldship2.commander}">
+              <!-- fine, don't touch -->
             </do_if>
+            <do_else>
+              <remove_object_commander object="$soldship2" />
+            </do_else>
 
             <do_if value="$newfaction?" negate="true">
+              <do_if value="$actor.isplayerowned and $soldship2.commander and $soldship2.commander.trueowner != $soldship2.owner">
+                <set_value name="$newfaction" exact="$soldship2.commander.trueowner" />
+              </do_if>
               <do_if value="$actor.isplayerowned">
                 <set_value name="$newfaction" exact="[faction.albionenergy, faction.beryll, faction.heartofalbion, faction.leddaindustrial, faction.nolimits, faction.plutarch, faction.wholesomefoods, faction.aquarius, faction.argongovernment, faction.familyryak, faction.chow, faction.frantonpharma, faction.jonferson, faction.canteran].random" />
               </do_if>
@@ -1279,7 +1335,7 @@
             <do_if value="$soldship2.pilot">
               <remove_actor_account actor="$soldship2.pilot" transfer="true" />
               <set_owner object="$soldship2.pilot" faction="$newfaction" />
-              <include_actions ref="md.NPC_Shiptrader_Pl.SellShipActions_Jobs" />
+              <!--include_actions ref="md.NPC_Shiptrader_Pl.SellShipActions_Jobs" /-->
             </do_if>
             <do_else>
               <!-- no pilot, create one -->
@@ -1306,7 +1362,7 @@
               <do_if value="$pilot?">
                 <assign_pilot object="$soldship2" actor="$pilot" />
                 <do_if value="$pilot.container">
-                  <include_actions ref="SellShipActions_Jobs" />
+                  <!--include_actions ref="md.NPC_Shiptrader_Pl.SellShipActions_Jobs" /-->
                 </do_if>
 
                 <remove_cue_actor actor="$pilot" cue="this" />
@@ -1404,8 +1460,11 @@
               </do_elseif>
             </do_if>
 
-            <do_if value="global.$factionCEOs? and global.$factionCEOs.{'$' + $newfaction.id}?">
-              <share_actor_account actor="$soldship2.pilot" otherobject="global.$factionCEOs.{'$' + $newfaction.id}"/>
+            <do_if value="$soldship2.pilot.exists">
+              <do_if value="global.$factionCEOs? and global.$factionCEOs.{'$' + $newfaction.id}?">
+                <share_actor_account actor="$soldship2.pilot" otherobject="global.$factionCEOs.{'$' + $newfaction.id}"/>
+              </do_if>
+              <include_actions ref="md.NPC_Shiptrader_Pl.SellShipActions_Jobs" />
             </do_if>
             <remove_value name="$newfaction" />
           </actions>

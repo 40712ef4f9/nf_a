@@ -8,4 +8,16 @@
   <replace sel="//add_player_choice[@choiceparam=&quot;[0, 0, 'zone', player.primaryship.zone, null, null, 'selectplayerobject', ['cEngineer_worksomewhere_objectselected', null, null, true, false, true, false, true]]&quot;]/@choiceparam">[0, 0, 'zone', player.primaryship.zone, null, null, 'selectplayerobject', ['cEngineer_worksomewhere_objectselected', null, null, true, false, false, false, true]]</replace>
   <replace sel="(//start_script[@name=&quot;'engineer.ai'&quot;]/@name)[2]">if global.$nfconfig.$Check? then 'engineer.ai.plus2' else 'engineer.ai'</replace>
   <replace sel="(//start_script[@name=&quot;'engineer.ai'&quot;]/@name)[1]">if global.$nfconfig.$Check? then 'engineer.ai.plus2' else 'engineer.ai'</replace>
+
+  <replace sel="//cue[@name='NPC_Destroyed']/conditions">
+	  <conditions>
+		<check_any>
+		  <check_all>
+			<event_game_loaded/> 
+			<check_value value="$actor.exists" negate="true"/>
+		  </check_all>
+		  <event_object_destroyed object="$actor" />
+		</check_any>
+	  </conditions>
+  </replace>
 </diff>

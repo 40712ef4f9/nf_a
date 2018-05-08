@@ -84,7 +84,7 @@ you can configure jumpbehavior of ships in the mod-setting, there are the levels
 * Building own Shipyard and Unique Stations
 	A CV can build also not predefined Stations, here you must first get the Station blueprint!
 ** get blueprint: You need a Architect (and in case a Engineer) at the Skunk, then you have a Conversation option (with the Architect) if you are docked at a Station (the Blueprint you want)
-	-- at relation Member (>25) you get it for free
+	-- at relation mid Member (≥28) you get it for free
 	-- at relation Friend, you need to pay a fee
 	-- at relation neutral, you can steal the blueprint: but here you need a good skilled Architect and Engineer to have only a small chance, if your heist will discovered the station come hostile for up to 24h
 ** preset blueprint at a CV: 

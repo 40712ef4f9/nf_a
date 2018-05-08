@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <diff>
+	<add sel="/aiscript/interrupts">
+		<handler ref="discoverall" />
+	</add>
 	<add sel="//handler/conditions/check_any/event_object_signalled[@param=&quot;'withdraw battle'&quot;]" pos="after" >
           <event_object_signalled object="this.ship" param="'collect ship'" />
           <event_object_signalled object="this.ship" param="'collect ship restore'" />
