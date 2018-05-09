@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	
+	<add sel="//connection[@ref='ConnectionFor_struct_econ_prod_shipm_macro']">
+		<build mode="optional" group="production" sequence="A" stage="2" tags="primary " />
+	</add>	
+	<add sel="//connection[@ref='ConnectionFor_struct_econ_prod_ships_macro']">
+        <build mode="optional" group="production" sequence="A" stage="2" />
+	</add>	
+	<add sel="//connection[@ref='ConnectionFor_struct_econ_prod_ships_macro1']">
+        <build mode="optional" group="production" sequence="A" stage="2" />
+	</add>	
+	<add sel="//connection[@ref='ConnectionFor_props_adsigns_bt_ship_m_macro']">
+        <build mode="optional" group="production" sequence="A" stage="2" />
+	</add>	
+	<add sel="//connection[@ref='ConnectionFor_props_adsigns_bt_ship_m_macro1']">
+        <build mode="optional" group="production" sequence="A" stage="2" />
+	</add>	
+	<add sel="//connection[@ref='ConnectionFor_props_surf_playerdock_ships_macro']">
+        <build mode="optional" group="production" sequence="A" stage="2" />
+	</add>	
+</diff>
+
+
