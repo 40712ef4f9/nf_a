@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-<aiscript name="trade.findtraderun.nf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
+<aiscript name="trade.findtraderun.nf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="3">
   <params>
     <param name="warelist" />
     <param name="range" />
@@ -18,6 +18,9 @@
     <set_value name="$commander" exact="this.ship.commander"/>
     <set_value name="$customerfaction" exact="this.ship.trueowner"/>
   </patch>
+  <patch sinceversion="3">
+    <set_value name="$capship" exact="this.ship.isclass.[class.ship_l, class.ship_xl]"/>
+  </patch>
   <attention min="unknown">
     <actions>
 
@@ -26,6 +29,7 @@
 
       <set_value name="$buyoffer" exact="null" />
       <set_value name="$selloffer" exact="null" />
+      <set_value name="$capship" exact="this.ship.isclass.[class.ship_l, class.ship_xl]"/>
 
       <do_if value="$commander.exists and $commander.isoperational" negate="true">
         <resume label="finish" />
@@ -45,13 +49,17 @@
       </do_if>
       <do_elseif value="$findrun gt 5">
         <set_value name="$findrun" exact="6" />
+        <do_if value="$gohome? and not $capship and ($commander.zone != this.ship.zone or this.ship.dockslot == null)">
+          <signal_objects object="this.ship" param="'DO.go.athome'" delay="10ms"/>
+        </do_if>
+        <set_value name="$gohome" />
       </do_elseif>
       <do_else>
         <set_value name="$findrun" operation="add" />
       </do_else>
 
       <do_if value="this.$trade_range? and $commander.exists">
-        <do_if value="this.ship.isclass.[class.ship_l, class.ship_xl]">
+        <do_if value="$capship">
           <do_if value="this.$trade_range == 1">
             <set_value name="$range" exact="$commander.zone" />
           </do_if>
@@ -68,11 +76,16 @@
           </do_elseif>
         </do_else>
       </do_if>
-      <do_elseif value="this.ship.isclass.[class.ship_s, class.ship_m] and $commander.exists">
+      <do_elseif value="not $capship and $commander.exists">
         <do_if value="not $range.isclass.[class.sector, class.zone]">
+          <set_value name="$Ltd"/>
           <set_value name="$range" exact="$commander.sector" />
         </do_if>
       </do_elseif>
+
+      <do_if value="$findrun gt 3 and $Ltd? and not $capship and this.combinedskill gt 70 and $range.isclass.sector" chance="if this.isplayerowned then 0 else 100">
+        <set_value name="$range" exact="$commander.cluster" />
+      </do_if>
 
       <do_if value="$range.isclass.zone">
         <set_value name="$rangemulti" exact="1" />
@@ -679,118 +692,129 @@
       </find_buy_offer>
 
       <do_if value="$buyoffers.count gt 0">
-        <do_if value="true">
-          <create_list name="$trade_zones"/>
-          <!-- share all wares from the own Tradestation-Network -->
-          <do_if value="(@this.$trade_global == 1 or this.ship.isclass.[class.ship_l, class.ship_xl]) and $commander.exists and $commander.macro.ismacro.{global.$tradestationnetwork}" chance="if global.$tradestationnetwork? then 100 else 0">
-            <do_if value="$commander.tradenpc.$trade_zones? and player.age lt $commander.tradenpc.$trade_zones_next">
-              <!-- use cache -->
-              <set_value name="$trade_zones" exact="$commander.tradenpc.$trade_zones.clone" />
-            </do_if>
-            <do_else>
-              <create_group groupname="$Trade_stations" />
-              <create_list name="$trade_zones_unsorted"/>
-              <!-- find stations and get zones -->
-              <do_all exact="global.$tradestationnetwork.count" counter="$m" reverse="true">
-                <find_station name="$tempstation" macro="global.$tradestationnetwork.{$m}" space="player.galaxy" owner="$customerfaction" multiple="true" />
-                <do_if value="$tempstation">
-                  <add_to_group groupname="$Trade_stations" list="$tempstation" />
-                </do_if>
-                <remove_value name="$tempstation"/>
-              </do_all>
-              <do_all exact="$Trade_stations.count" counter="$z">
-                <do_if value="$trade_zones_unsorted.indexof.{$Trade_stations.{$z}.zone}" negate="true">
-                  <append_to_list name="$trade_zones_unsorted" exact="$Trade_stations.{$z}.zone" chance="if $Trade_stations.{$z}.zone == $commander.zone then 0 else 100"/>
-                </do_if>
-              </do_all>
-              <remove_value name="$Trade_stations"/>
-              <!-- consider gatedistance -->
-              <do_if value="$commander.tradenpc.$trade_zones_range? and $commander.tradenpc.$trade_zones_range ge 0">
-                <do_all exact="$trade_zones_unsorted.count" counter="$z" reverse="true">
-                  <do_if value="$commander.gatedistance.{$trade_zones_unsorted.{$z}} gt $commander.tradenpc.$trade_zones_range">
-                    <remove_value name="$trade_zones_unsorted.{$z}"/>
-                  </do_if>
-                </do_all>
-              </do_if>
-              <!-- sort gatedistance -->
-              <set_value name="$run" exact="0" />
-              <set_value name="$distance_max" exact="0" />
-              <do_while value="$trade_zones_unsorted.count gt 0">
-                <do_all exact="$trade_zones_unsorted.count" counter="$z" reverse="true">
-                  <do_if value="$trade_zones_unsorted.{$z}.isclass.zone and $trade_zones_unsorted.{$z}.exists" negate="true">
-                    <remove_value name="$trade_zones_unsorted.{$z}"/>
-                    <continue />
-                  </do_if>
-                  <set_value name="$distance" exact="$commander.gatedistance.{$trade_zones_unsorted.{$z}}" />
-                  <set_value name="$distance_max" exact="$distance" chance="if $distance_max lt $distance then 100 else 0" />
-                  <do_if value="$distance == $run">
-                    <append_to_list name="$trade_zones" exact="$trade_zones_unsorted.{$z}"/>
-                    <remove_value name="$trade_zones_unsorted.{$z}"/>
-                  </do_if>
-                </do_all>
-                <remove_value name="$distance"/>
-                <set_value name="$run" operation="add"/>
-                <break chance="if $run gt $distance_max then 100 else 0"/>
-              </do_while>
-              <remove_value name="$run"/>
-              <remove_value name="$distance_max"/>
-              <remove_value name="$trade_zones_unsorted"/>
-              <!-- cache zones -->
-              <do_if value="$commander.tradenpc?">
-                <set_value name="$commander.tradenpc.$trade_zones" exact="$trade_zones.clone" />
-                <set_value name="$commander.tradenpc.$trade_zones_next" exact="player.age + 2h" />
-              </do_if>
-            </do_else>
-            <!-- remove blacklisted zones -->
-            <do_if value="$commander.tradenpc.$trade_zones_blacklist?">
-              <do_all exact="$commander.tradenpc.$trade_zones_blacklist.count" counter="$z">
-                <do_if value="$trade_zones.indexof.{$commander.tradenpc.$trade_zones_blacklist.{$z}}">
-                  <remove_value name="$trade_zones.{$trade_zones.indexof.{$commander.tradenpc.$trade_zones_blacklist.{$z}}}"/>
-                </do_if>
-              </do_all>
-            </do_if>
-            <do_if value="this.ship.isclass.[class.ship_s, class.ship_m]">
-              <do_if value="not this.$trade_zones_blacklist?">
-                <create_list name="this.$trade_zones_blacklist"/>
-              </do_if>
-              <do_all exact="$trade_zones.count" counter="$z">
-                <do_if value="$commander.gatedistance.{$trade_zones.{$z}} gt 1 and this.$trade_zones_blacklist.indexof.{$trade_zones.{$z}} == 0">
-                  <append_to_list name="this.$trade_zones_blacklist" exact="$trade_zones.{$z}" />
-                </do_if>
-              </do_all>
-            </do_if>
-            <do_if value="this.$trade_zones_blacklist?">
-              <do_all exact="this.$trade_zones_blacklist.count" counter="$z" reverse="true">
-                <do_if value="$trade_zones.indexof.{this.$trade_zones_blacklist.{$z}}">
-                  <remove_value name="$trade_zones.{$trade_zones.indexof.{this.$trade_zones_blacklist.{$z}}}"/>
-                </do_if>
-                <do_elseif value="this.ship.isclass.[class.ship_s, class.ship_m]">
-                  <remove_value name="this.$trade_zones_blacklist.{$z}"/>
-                </do_elseif>
-              </do_all>
+        <!-- tradenetwork -->
+        <create_list name="$trade_zones"/>
+        <!-- share all wares from the own Tradestation-Network -->
+        <do_if value="(@this.$trade_global == 1 or $capship) and $commander.exists and $commander.macro.ismacro.{global.$tradestationnetwork}" chance="if global.$tradestationnetwork? then 100 else 0">
+          <!-- setup npc stations -->
+          <do_if value="$commander.isplayerowned" negate="true">
+            <do_if value="$commander.tradenpc.$trade_zones_range?" negate="true">
+              <set_value name="$commander.tradenpc.$trade_zones_range" exact="1" />
             </do_if>
           </do_if>
-          <do_elseif value="this.ship.isclass.[class.ship_s, class.ship_m] and this.$trade_zones_blacklist?">
-            <remove_value name="this.$trade_zones_blacklist"/>
-          </do_elseif>
-
-          <do_if value="not $trade_zones? and not $tradeClusters? and not $range.isclass.zone and $commander.sector == this.ship.sector">
-            <find_object space="this.ship.sector" name="$th_objects" class="[class.gate]" multiple="true" chance="if $th_objects? then 0 else 100"/>
-            <create_list name="$trade_zones"/>
-            <append_to_list name="$trade_zones" exact="$trade_zones.{$z}" />
-            <do_all exact="$th_objects.count" counter="$ojk" chance="$th_objects? *100">
-              <append_to_list name="$trade_zones" exact="$th_objects.{$ojk}.destination.sector" />
-              <do_if value="$th_objects.{$ojk}.isclass.gate and $th_objects.{$ojk}.isactive and $th_objects.{$ojk}.destination">
-                <do_if value="this.ship.isclass.[class.ship_s, class.ship_m]">
-                  <append_to_list name="$trade_zones" exact="$th_objects.{$ojk}.destination" chance="if this.$trade_zones_blacklist? and this.$trade_zones_blacklist.indexof.{$th_objects.{$ojk}.destination} then 0 else 100" />
+          <!-- load config -->
+          <do_if value="$commander.tradenpc.$trade_zones? and player.age lt $commander.tradenpc.$trade_zones_next">
+            <!-- use cache -->
+            <set_value name="$trade_zones" exact="$commander.tradenpc.$trade_zones.clone" />
+          </do_if>
+          <do_else>
+            <!-- find stations and get zones -->
+            <create_group groupname="$Trade_stations" />
+            <create_list name="$trade_zones_unsorted"/>
+            <set_value name="$tmpMaxRange" exact="if $commander.tradenpc.$trade_zones_range? then $commander.tradenpc.$trade_zones_range else 99" />
+            <do_all exact="global.$tradestationnetwork.count" counter="$m" reverse="true">
+              <find_station name="$tempstation" macro="global.$tradestationnetwork.{$m}" space="player.galaxy" owner="$customerfaction" multiple="true">
+                <match_gate_distance object="$commander" min="0" max="$tmpMaxRange"/>
+              </find_station>
+              <do_if value="$tempstation">
+                <add_to_group groupname="$Trade_stations" list="$tempstation" />
+              </do_if>
+              <remove_value name="$tempstation"/>
+            </do_all>
+            <do_all exact="$Trade_stations.list.count" counter="$z">
+              <do_if value="$trade_zones_unsorted.indexof.{$Trade_stations.list.{$z}.zone}" negate="true">
+                <append_to_list name="$trade_zones_unsorted" exact="$Trade_stations.list.{$z}.zone" chance="if $Trade_stations.list.{$z}.zone == $commander.zone then 0 else 100"/>
+              </do_if>
+            </do_all>
+            <remove_value name="$Trade_stations"/>
+            <remove_value name="$tmpMaxRange"/>
+            <!-- consider gatedistance
+      <do_if value="$commander.tradenpc.$trade_zones_range? and $commander.tradenpc.$trade_zones_range ge 0">
+        <do_all exact="$trade_zones_unsorted.count" counter="$z" reverse="true">
+        <do_if value="$commander.gatedistance.{$trade_zones_unsorted.{$z}} gt $commander.tradenpc.$trade_zones_range">
+          <remove_value name="$trade_zones_unsorted.{$z}"/>
+        </do_if>
+        </do_all>
+      </do_if> -->
+            <!-- sort gatedistance -->
+            <set_value name="$run" exact="0" />
+            <set_value name="$distance_max" exact="0" />
+            <do_while value="$trade_zones_unsorted.count gt 0">
+              <do_all exact="$trade_zones_unsorted.count" counter="$z" reverse="true">
+                <do_if value="$trade_zones_unsorted.{$z}.isclass.zone and $trade_zones_unsorted.{$z}.exists" negate="true">
+                  <remove_value name="$trade_zones_unsorted.{$z}"/>
+                  <continue />
                 </do_if>
-                <do_else>
-                  <append_to_list name="$trade_zones" exact="$th_objects.{$ojk}.destination.sector" chance="if this.$trade_zones_blacklist? and this.$trade_zones_blacklist.indexof.{$th_objects.{$ojk}.destination} then 0 else 100" />
-                </do_else>
+                <set_value name="$distance" exact="$commander.gatedistance.{$trade_zones_unsorted.{$z}}" />
+                <set_value name="$distance_max" exact="$distance" chance="if $distance_max lt $distance then 100 else 0" />
+                <do_if value="$distance == $run">
+                  <append_to_list name="$trade_zones" exact="$trade_zones_unsorted.{$z}"/>
+                  <remove_value name="$trade_zones_unsorted.{$z}"/>
+                </do_if>
+              </do_all>
+              <remove_value name="$distance"/>
+              <set_value name="$run" operation="add"/>
+              <break chance="if $run gt $distance_max then 100 else 0"/>
+            </do_while>
+            <remove_value name="$run"/>
+            <remove_value name="$distance_max"/>
+            <remove_value name="$trade_zones_unsorted"/>
+            <!-- cache zones -->
+            <do_if value="$commander.tradenpc?">
+              <set_value name="$commander.tradenpc.$trade_zones" exact="$trade_zones.clone" />
+              <set_value name="$commander.tradenpc.$trade_zones_next" exact="player.age + 2h" />
+            </do_if>
+          </do_else>
+          <!-- remove blacklisted zones -->
+          <do_if value="$commander.tradenpc.$trade_zones_blacklist?">
+            <do_all exact="$commander.tradenpc.$trade_zones_blacklist.count" counter="$z">
+              <do_if value="$trade_zones.indexof.{$commander.tradenpc.$trade_zones_blacklist.{$z}}">
+                <remove_value name="$trade_zones.{$trade_zones.indexof.{$commander.tradenpc.$trade_zones_blacklist.{$z}}}"/>
               </do_if>
             </do_all>
           </do_if>
+          <do_if value="not $capship">
+            <do_if value="not this.$trade_zones_blacklist?">
+              <create_list name="this.$trade_zones_blacklist"/>
+            </do_if>
+            <do_all exact="$trade_zones.count" counter="$z">
+              <do_if value="$commander.gatedistance.{$trade_zones.{$z}} gt 1 and this.$trade_zones_blacklist.indexof.{$trade_zones.{$z}} == 0">
+                <append_to_list name="this.$trade_zones_blacklist" exact="$trade_zones.{$z}" />
+              </do_if>
+            </do_all>
+          </do_if>
+          <do_if value="this.$trade_zones_blacklist?">
+            <do_all exact="this.$trade_zones_blacklist.count" counter="$z" reverse="true">
+              <do_if value="$trade_zones.indexof.{this.$trade_zones_blacklist.{$z}}">
+                <remove_value name="$trade_zones.{$trade_zones.indexof.{this.$trade_zones_blacklist.{$z}}}"/>
+              </do_if>
+              <do_elseif value="not $capship">
+                <remove_value name="this.$trade_zones_blacklist.{$z}"/>
+              </do_elseif>
+            </do_all>
+          </do_if>
         </do_if>
+        <do_elseif value="not $capship and this.$trade_zones_blacklist?">
+          <remove_value name="this.$trade_zones_blacklist"/>
+        </do_elseif>
+
+        <do_if value="not $trade_zones? and not $tradeClusters? and not $range.isclass.zone and $commander.sector == this.ship.sector" chance="if this.combinedskill gt 50 then this.combinedskill else 0">
+          <find_object space="this.ship.sector" name="$th_objects" class="[class.gate]" multiple="true" chance="if $th_objects? then 0 else 100"/>
+          <create_list name="$trade_zones"/>
+          <append_to_list name="$trade_zones" exact="$trade_zones.{$z}" />
+          <do_all exact="$th_objects.count" counter="$ojk" chance="$th_objects? *100">
+            <append_to_list name="$trade_zones" exact="$th_objects.{$ojk}.destination.sector" />
+            <do_if value="$th_objects.{$ojk}.isclass.gate and $th_objects.{$ojk}.isactive and $th_objects.{$ojk}.destination">
+              <do_if value="not $capship">
+                <append_to_list name="$trade_zones" exact="$th_objects.{$ojk}.destination" chance="if this.$trade_zones_blacklist? and this.$trade_zones_blacklist.indexof.{$th_objects.{$ojk}.destination} then 0 else 100" />
+              </do_if>
+              <do_else>
+                <append_to_list name="$trade_zones" exact="$th_objects.{$ojk}.destination.sector" chance="if this.$trade_zones_blacklist? and this.$trade_zones_blacklist.indexof.{$th_objects.{$ojk}.destination} then 0 else 100" />
+              </do_else>
+            </do_if>
+          </do_all>
+        </do_if>
+        <!-- / tradenetwork -->
         <!-- find a sell offer that matches one of our buy offers -->
         <!-- build table with priorities, making primary resources more "urgent" than secondaries or ammo offers -->
         <set_value name="$offertable" exact="table[]" />
@@ -924,7 +948,7 @@
       <remove_value name="$trade_zones"/>
       <set_value name="$idletime" min="[30s, 30s*@$findrun*@$rangemulti].max" max="[90s, 50s*@$findrun*@$rangemulti].max"/>
       <set_value name="$idletime" exact="player.timewarp.factor*10" operation="add" chance="player.timewarp.active*100"/>
-      <do_if value="this.ship.isclass.[class.ship_s, class.ship_m] and @this.ship.dockslot and not @this.ship.dockslot.component.external">
+      <do_if value="not $capship and @this.ship.dockslot and not @this.ship.dockslot.component.external">
         <wait exact="$idletime" />
       </do_if>
       <do_else>

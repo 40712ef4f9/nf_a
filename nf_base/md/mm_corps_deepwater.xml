@@ -112,37 +112,36 @@
 						<create_list name="$ShipYardOfTrust_Multi"/>
 					</do_else>
 					<do_if value="$ShipYardOfTrust_Multi.count">
-						<remove_value name="$requiredUnits"/>
 						<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_buyships" />
+						<set_value name="$requiredUnits_count" exact="$requiredUnits.count"/>
 
 						<do_all exact="$ShipYardOfTrust_Multi.count" counter="$sy">
-		
-<set_value name="$text2" exact="' \n# Buy Ship %1 #\n'.[$requiredUnits.count]" operation="add" />
-		
-							<set_value name="$nextShoppingTrip" exact="if $requiredUnits.count gt 3 then player.age + 10min else if $next_Check? and $next_Check.{2} then player.age + $next_Check.{2} else player.age + 45min"/>
-		
-							<do_if value="$requiredUnits.count">
+<set_value name="$text2" exact="' \n# Buy Ship %1 #\n'.[$requiredUnits_count]" operation="add" />
+							<do_if value="$requiredUnits_count">
 								<set_value name="$ShipYardOfTrust" exact="$ShipYardOfTrust_Multi.{$sy}"/>
 								<include_actions ref="md.MM_Corps__Data.MMCData_do_orderships" />
-								<remove_value name="$requiredUnits.{1}"/>
+								<set_value name="$requiredUnits_count" operation="subtract"/>
 							</do_if>
-							<do_elseif value="not $_CEO.$jobsdisabled? and $requiredUnits.count == 0" chance="(not global.$nfconfig.$plotSafe?) *100">
+							<do_elseif value="not $_CEO.$jobsdisabled? and $requiredUnits_count == 0" chance="(not global.$nfconfig.$plotSafe?) *100">
 								<set_value name="$faction" exact="$_faction" />
 								<include_actions ref="md.MM_Corps__Data.MMCData_disable_jobs" />
 								<set_value name="$_CEO.$jobsdisabled" />
 								<break/>
 							</do_elseif>
-							<do_elseif value="$requiredUnits.count == 0" >
+							<do_elseif value="$requiredUnits_count == 0" >
 								<break/>
 							</do_elseif>
 						</do_all>
+
+						<set_value name="$nextShoppingTrip" exact="if $requiredUnits_count gt 3 then player.age + 10min else if $next_Check? and $next_Check.{2} then player.age + $next_Check.{2} else player.age + 45min"/>
+						<remove_value name="$requiredUnits_count"/>
 					</do_if>
 					<do_else>
 						<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_buyships" />
 	
 <set_value name="$text2" exact="' \n# Buy Ship %1 #\n'.[$requiredUnits.count]" operation="add" />
 	
-						<set_value name="$nextShoppingTrip" exact="if $requiredUnits.count gt 3 then player.age + 10min else if $next_Check? and $next_Check.{2} then player.age + $next_Check.{2} else player.age + 45min"/>
+						<set_value name="$nextShoppingTrip" exact="if $requiredUnits.count gt 1 then player.age + 10min else if $next_Check? and $next_Check.{2} then player.age + $next_Check.{2} else player.age + 45min"/>
 	
 						<do_if value="$requiredUnits.count">
 							<include_actions ref="md.MM_Corps__Data.MMCData_do_orderships" />
@@ -162,6 +161,10 @@
 					<include_actions ref="md.MM_Corps__Data.MMCData_find_ships" />
 				</do_if>
 <set_value name="$text2" exact="'* Ships: n:%1 u:%2 b:%3 t:%4 m:%5 p:%6 pl:%7 e:%8 StS:%9 - '.[$shipNothingTodo.count, $shipDoUnknown.count, $shipDoBuild.count, $shipDoTrade.count, $shipDoMine.count, $shipDoPatrol.count, $shipDoPlunder.count, $shipDoEscort.count, $shipDoStationSupport.count]" operation="add" />
+
+				<do_if value="$shipNothingTodo.count + $shipDoUnknown.count + $shipDoBuild.count + $shipDoTrade.count + $shipDoMine.count + $shipDoPatrol.count + $shipDoPlunder.count + $shipDoEscort.count" negate="true">
+					<remove_value name="$nextShoppingTrip"/>
+				</do_if>
 
 				<!-- send scouts -->
 				<do_if value="$_CEO.$style == 'domination' and $tmpConfig.$scouts">

@@ -127,5 +127,28 @@
 				</do_if>
 			</actions>
 		</cue>
+
+		<cue name="NFHMA_unCover_scanned" instantiate="true">
+			<conditions>
+				<event_scan_finished scanner="player.primaryship" />
+				<check_value value="event.param.isclass.ship" />
+				<check_value value="event.param.coverowner and event.param.trueowner.hasrelation.enemy.{player.primaryship.owner}" />
+			</conditions>
+			<actions>
+				<get_control_entities groupname="$Entities" object="event.param"/>
+				<do_all exact="$Entities.count" counter="$j" > 
+					<set_cover_owner object="$Entities.{$j}"/>
+				</do_all> 
+				<set_cover_owner object="event.param"/>
+				<remove_value name="$Entities"/>
+				<do_if value="player.primaryship.zone.policefaction and player.primaryship.zone.policefaction != player.primaryship.owner and not player.primaryship.owner.hasrelation.enemy.{player.primaryship.zone.policefaction}">
+					<set_value name="$policelicence" exact="player.primaryship.zone.policefaction.licence.police" />
+					<do_if value="$policelicence.exists and player.primaryship.owner.haslicence.{$policelicence}">
+						<add_faction_relation faction="player.primaryship.owner" otherfaction="player.primaryship.zone.policefaction" value="0.0001LF" />
+					</do_if>
+					<remove_value name="$policelicence"/>
+				</do_if>
+			</actions>
+		</cue>
 	</cues>
 </mdscript>

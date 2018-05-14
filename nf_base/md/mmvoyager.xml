@@ -52,14 +52,14 @@
 			</actions>
 		</cue>
 
-		<cue name="MMVoy_dosomething" instantiate="true" namespace="this" checktime="player.age + 300s" checkinterval="1800s" version="1">
+		<cue name="MMVoy_dosomething" instantiate="true" checktime="7min" checkinterval="60min" version="1">
 			<conditions>
 				<cue_is_complete cue="md.Setup.Start"/>
 				<check_value value="global.$nfconfig.$Check? and global.$nfconfig.$Check == 1" />
 				<check_value value="md.$scoutmatches?" />
 				<check_value value="false" comment="deprecated"/>
 			</conditions>
-			<delay min="44s" max="588s"/>
+			<delay min="41s" max="58s"/>
 			<actions>
 				<do_if value="md.$scoutmatches? and md.$scoutmatches.keys.list.count">
 

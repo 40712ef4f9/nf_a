@@ -49,22 +49,22 @@
       <do_if value="$currentcargo.count gt 0 and this.ship.cargo.capacity gt 0 and (this.ship.cargo.free / this.ship.cargo.capacity) lt 0.20f">
         <debug_text text="player.age + ' look for buy offers'" chance="$debugchance" />
         <!-- own CV -->
-		<find_buy_offer tradepartner="this.ship" wares="$currentcargo" space="$range" result="$buyoffers">
-		  <match_buyer owner="this.ship.trueowner">
-			<match class="class.ship_xl" />
-		  </match_buyer>
-		</find_buy_offer>
+        <find_buy_offer tradepartner="this.ship" wares="$currentcargo" space="$range" result="$buyoffers">
+          <match_buyer owner="this.ship.trueowner">
+            <match class="class.ship_xl" />
+          </match_buyer>
+        </find_buy_offer>
         <!-- any CV -->
-		<find_buy_offer tradepartner="this.ship" wares="$currentcargo" space="$range" result="$buyoffers" chance="100 - $buyoffer.available*100">
-		  <match_buyer>
-			<match class="class.ship_xl" />
-		  </match_buyer>
-		</find_buy_offer>
+        <find_buy_offer tradepartner="this.ship" wares="$currentcargo" space="$range" result="$buyoffers" chance="100 - $buyoffer.available*100">
+          <match_buyer>
+            <match class="class.ship_xl" />
+          </match_buyer>
+        </find_buy_offer>
         <!-- own trades any -->
         <find_buy_offer tradepartner="this.ship" wares="$currentcargo" result="$buyoffer" space="$range" chance="100 - $buyoffer.available*100">
-		  <match_buyer owner="this.ship.trueowner">
-			<match negate="true" class="class.ship_xl" />
-		  </match_buyer>
+          <match_buyer owner="this.ship.trueowner">
+            <match negate="true" class="class.ship_xl" />
+          </match_buyer>
           <stocklevel max="0.5f" />
         </find_buy_offer>
         <!-- default -->
@@ -80,7 +80,7 @@
         <debug_text text="player.age + ' look for sell offers'" chance="$debugchance" />
         <!-- own trades -->
         <find_sell_offer tradepartner="this.ship" wares="$warelist" result="$selloffers" multiple="true" space="$range">
-		  <match_seller owner="this.ship.trueowner" />
+          <match_seller owner="this.ship.trueowner" />
           <stocklevel min="0.5f" />
         </find_sell_offer>
         <!-- default -->
@@ -110,7 +110,7 @@
                 <append_to_list name="$productionoffers" exact="$currentoffer" />
               </do_else>
             </do_if>
-            <wait min="1s" max="7s"/>
+            <wait min="player.timewarp.factor*1" max="player.timewarp.factor*7"/>
           </do_all>
           <debug_text text="player.age + ': found %1 tradewareoffers and %2 productionoffers'.[$tradewareoffers.count, $productionoffers.count]" chance="$debugchance" />
           <do_if value="$tradewareoffers.count gt 0">

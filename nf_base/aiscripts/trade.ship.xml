@@ -1,186 +1,207 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <diff>
-	<add sel="/aiscript/interrupts">
-		<handler ref="discoverall" />
-	</add>
-	<add sel="//actions/label[@name='find trade run']" pos="after">
-	  <!-- Cover [deprecated]
+  <add sel="/aiscript/interrupts">
+    <handler ref="discoverall" />
+  </add>
+  <add sel="//actions/label[@name='find trade run']" pos="after">
+    <!-- Cover [deprecated]
       <do_if value="this.ship.owner" exact="this.ship.trueowner" chance="if global.$mmpiratesy_pfactions.indexof.{this.ship.trueowner} then 84 else 0">
-		<get_control_entities groupname="$Entities" object="this.ship"/>
-		<set_value name="$faction" exact="faction.acmecorp"/>
-		<do_if value="this.ship.zone.owner? and this.ship.zone.owner != this.ship.trueowner" chance="0">
-			<set_value name="$faction" exact="this.ship.zone.owner"/>
-		</do_if>
-		<do_all exact="$Entities.count" counter="$j" > 
-			<set_cover_owner object="$Entities.{$j}" faction="$faction"/>
-		</do_all> 
-		<set_cover_owner object="this.ship" faction="$faction"/>
-		<remove_value name="$Entities"/>
-		<remove_value name="$faction"/>
+    <get_control_entities groupname="$Entities" object="this.ship"/>
+    <set_value name="$faction" exact="faction.acmecorp"/>
+    <do_if value="this.ship.zone.owner? and this.ship.zone.owner != this.ship.trueowner" chance="0">
+      <set_value name="$faction" exact="this.ship.zone.owner"/>
+    </do_if>
+    <do_all exact="$Entities.count" counter="$j" > 
+      <set_cover_owner object="$Entities.{$j}" faction="$faction"/>
+    </do_all> 
+    <set_cover_owner object="this.ship" faction="$faction"/>
+    <do_if value="this.ship.defencenpc">
+      <do_if value="this.ship.defencenpc.$config_attackenemies?">
+        <remove_value name="this.ship.defencenpc.$config_attackenemies" />
+        <signal_objects object="this.ship.defencenpc" param="'update config'"  />
+      </do_if>
+      <do_else>
+        <signal_objects object="this.ship.defencenpc" param="'stop attack'"  />
+      </do_else>
+    </do_if>
+    <remove_value name="$Entities"/>
+    <remove_value name="$faction"/>
       </do_if>
       <do_elseif value="this.ship.owner" exact="this.ship.trueowner" negate="true" chance="if [faction.smuggler, faction.neutral].indexof.{this.ship.owner} then 100 else 16">
-		<get_control_entities groupname="$Entities" object="this.ship"/>
-		<do_all exact="$Entities.count" counter="$j" > 
-			<set_cover_owner object="$Entities.{$j}"/>
-		</do_all> 
-		<set_cover_owner object="this.ship"/>
-		<remove_value name="$Entities"/>
+    <get_control_entities groupname="$Entities" object="this.ship"/>
+    <do_all exact="$Entities.count" counter="$j" > 
+      <set_cover_owner object="$Entities.{$j}"/>
+    </do_all> 
+    <set_cover_owner object="this.ship"/>
+    <remove_value name="$Entities"/>
       </do_elseif>
-	  -->
-      <do_if value="this.ship.owner" exact="this.ship.trueowner" negate="true" >
-		<get_control_entities groupname="$Entities" object="this.ship"/>
-		<do_all exact="$Entities.count" counter="$j" > 
-			<set_cover_owner object="$Entities.{$j}"/>
-		</do_all> 
-		<set_cover_owner object="this.ship"/>
-		<remove_value name="$Entities"/>
-      </do_if>
-	</add>
-	<add sel="//actions/do_if[@value='this.ship.jobexpired']" pos="prepend">
-	  <!-- unCover -->
-      <do_if value="this.ship.owner" exact="this.ship.trueowner" negate="true">
-		<get_control_entities groupname="$Entities" object="this.ship"/>
-		<do_all exact="$Entities.count" counter="$j" > 
-			<set_cover_owner object="$Entities.{$j}"/>
-		</do_all> 
-		<set_cover_owner object="this.ship"/>
-		<remove_value name="$Entities"/>
-      </do_if>
-	</add>
-	<add sel="//interrupts">
-		<handler>
-			<conditions>
-				<event_object_hull_damaged object="this.ship"/>
-				<check_value value="not $nextDo? or $nextDo lt player.age" />
-				<check_value value="this.ship.hullpercentage lt 50" />
-				<check_value value="this.ship.owner != this.ship.trueowner" />
-			</conditions>
-			<actions>
-				<get_control_entities groupname="$Entities" object="this.ship"/>
-				<do_all exact="$Entities.count" counter="$j" > 
-					<set_cover_owner object="$Entities.{$j}"/>
-				</do_all> 
-				<set_cover_owner object="this.ship"/>
-				<remove_value name="$Entities"/>
-				<set_value name="$nextDo" exact="player.age+20s" />
-				<do_if value="this.ship.defencenpc.exists and event.object? and event.object.isclass.ship and event.object.owner != this.ship.trueowner"> 
-					<signal_objects object="this.ship.defencenpc" param="'attack'" param2="event.object" param3="[true, true]" delay="1ms"/>
-				</do_if>
-			</actions>
-		</handler>
-		<!--handler>
-			<conditions>
-				<event_object_changed_zone object="this.ship" />
-				<check_value value="not this.ship.zone.isclass.highway and this.ship.zone.ismapzone" />
-				<check_value value="this.ship.coverowner" />
-			</conditions>
-			<actions>
-				<do_if value="this.ship.zone.owner and this.ship.zone.owner.hasrelation.enemy.{this.ship.trueowner}">
-					<find_station name="$stations" space="this.ship.zone" multiple="true">
-						<match owner="faction.enemy" negate="true"/>		
-						<match owner="faction.criminal" negate="true"/>		
-						<match owner="faction.smuggler" negate="true"/>		
-						<match owner="faction.neutral" negate="true"/>		
-						<match owner="faction.ownerless" negate="true"/>		
-						<match owner="faction.friend" negate="true"/>
-						<match owner="this.ship.trueowner" negate="true"/>
-					</find_station>
-					<do_all exact="$stations.count" counter="$Counter">
-						<set_value name="$negrelation" exact="if $stations.{$Counter}.relationto.{this.ship} lt $stations.{$Counter}.owner.relation.neutral.min then $stations.{$Counter}.relationto.{this.ship} else null" />
-						<do_if value="$negrelation">
-						  <add_relation_boost object="$stations.{$Counter}" otherobject="this.ship" value="this.owner.relation.neutral.mid - $negrelation" decay="1" delay="30min" silent="true" />
-						</do_if>
-						<remove_value name="$negrelation"/>
-					</do_all>
-					<remove_value name="$stations"/>
-				</do_if>
-			</actions>
-		</handler-->
-		<handler>
-		  <conditions>
-			<event_object_signalled object="this.ship" param="'DO.Refuel.athome'"/>
-			<check_value value="this.ship.isclass.[class.ship_xl, class.ship_l]"/>
-			<check_value value="not this.ship.isplayerowned or this.$config_autorefuel? and this.$config_autorefuel"/>
-			<check_value value="this.ship.cargo.{ware.fuelcells}.count lt this.ship.cargo.{ware.fuelcells}.max*0.8f"/>
-			<check_value value="this.ship.commander.exists and this.ship.commander.products.list.indexof.{ware.fuelcells}"/>
-		  </conditions>
-		  <actions>
-			<run_interrupt_script name="'lib.refuel.athome'" abortscripts="true" resume="find trade run" />
-		  </actions>
-		</handler>
-	</add>
+    -->
+    <do_if value="this.ship.owner" exact="this.ship.trueowner" negate="true" >
+      <get_control_entities groupname="$Entities" object="this.ship"/>
+      <do_all exact="$Entities.count" counter="$j" > 
+        <set_cover_owner object="$Entities.{$j}"/>
+      </do_all> 
+      <set_cover_owner object="this.ship"/>
+      <remove_value name="$Entities"/>
+    </do_if>
+  </add>
+  <add sel="//actions/do_if[@value='this.ship.jobexpired']" pos="prepend">
+    <!-- unCover -->
+    <do_if value="this.ship.owner" exact="this.ship.trueowner" negate="true">
+      <get_control_entities groupname="$Entities" object="this.ship"/>
+      <do_all exact="$Entities.count" counter="$j" > 
+        <set_cover_owner object="$Entities.{$j}"/>
+      </do_all> 
+      <set_cover_owner object="this.ship"/>
+      <remove_value name="$Entities"/>
+    </do_if>
+  </add>
+  <add sel="//interrupts">
+    <handler>
+      <conditions>
+        <event_object_hull_damaged object="this.ship"/>
+        <check_value value="not $nextDo? or $nextDo lt player.age" />
+        <check_value value="this.ship.hullpercentage lt 50" />
+        <check_value value="this.ship.owner != this.ship.trueowner" />
+      </conditions>
+      <actions>
+        <get_control_entities groupname="$Entities" object="this.ship"/>
+        <do_all exact="$Entities.count" counter="$j" > 
+          <set_cover_owner object="$Entities.{$j}"/>
+        </do_all> 
+        <set_cover_owner object="this.ship"/>
+        <remove_value name="$Entities"/>
+        <set_value name="$nextDo" exact="player.age+20s" />
+        <do_if value="this.ship.defencenpc.exists and event.object? and event.object.isclass.ship and event.object.owner != this.ship.trueowner"> 
+          <signal_objects object="this.ship.defencenpc" param="'attack'" param2="event.object" param3="[true, true]" delay="1ms"/>
+        </do_if>
+      </actions>
+    </handler>
+    <!--handler>
+      <conditions>
+        <event_object_changed_zone object="this.ship" />
+        <check_value value="not this.ship.zone.isclass.highway and this.ship.zone.ismapzone" />
+        <check_value value="this.ship.coverowner" />
+      </conditions>
+      <actions>
+        <do_if value="this.ship.zone.owner and this.ship.zone.owner.hasrelation.enemy.{this.ship.trueowner}">
+          <find_station name="$stations" space="this.ship.zone" multiple="true">
+            <match owner="faction.enemy" negate="true"/>    
+            <match owner="faction.criminal" negate="true"/>    
+            <match owner="faction.smuggler" negate="true"/>    
+            <match owner="faction.neutral" negate="true"/>    
+            <match owner="faction.ownerless" negate="true"/>    
+            <match owner="faction.friend" negate="true"/>
+            <match owner="this.ship.trueowner" negate="true"/>
+          </find_station>
+          <do_all exact="$stations.count" counter="$Counter">
+            <set_value name="$negrelation" exact="if $stations.{$Counter}.relationto.{this.ship} lt $stations.{$Counter}.owner.relation.neutral.min then $stations.{$Counter}.relationto.{this.ship} else null" />
+            <do_if value="$negrelation">
+              <add_relation_boost object="$stations.{$Counter}" otherobject="this.ship" value="this.owner.relation.neutral.mid - $negrelation" decay="1" delay="30min" silent="true" />
+            </do_if>
+            <remove_value name="$negrelation"/>
+          </do_all>
+          <remove_value name="$stations"/>
+        </do_if>
+      </actions>
+    </handler-->
+    <handler>
+      <conditions>
+        <event_object_signalled object="this.ship" param="'DO.Refuel.athome'"/>
+        <check_value value="this.ship.isclass.[class.ship_xl, class.ship_l]"/>
+        <check_value value="not this.ship.isplayerowned or this.$config_autorefuel? and this.$config_autorefuel"/>
+        <check_value value="this.ship.cargo.{ware.fuelcells}.count lt this.ship.cargo.{ware.fuelcells}.max*0.8f"/>
+        <check_value value="this.ship.commander.exists and this.ship.commander.products.list.indexof.{ware.fuelcells}"/>
+      </conditions>
+      <actions>
+        <run_interrupt_script name="'lib.refuel.athome'" abortscripts="true" resume="find trade run" />
+      </actions>
+    </handler>
+    <handler>
+      <conditions>
+        <event_object_signalled object="this.ship" param="'DO.go.athome'"/>
+        <check_value value="this.ship.commander.exists"/>
+      </conditions>
+      <actions>
+        <debug_text text="'%1 %2[%3] go.home'.[this.ship.knownname, this.typename, this.combinedskill]" filter="scripts_verbose" chance="100" />
+        <run_interrupt_script name="'move.dockat'" abortscripts="true" resume="find trade run" >
+          <param name="destination" value="this.ship.commander" />
+        </run_interrupt_script>
+      </actions>
+    </handler>
+  </add>
   <add sel="/aiscript/attention[@min='unknown']/actions/do_if[@value='this.ship.jobexpired']" pos="after">
-      <do_if value="true">
-		<do_if value="this.ship.pilot.$end_of_work? and this.ship.pilot.$end_of_work lt player.age">
-		  <debug_text text="'%1 doing job %2 has expired, die!'.[this.ship.knownname, this.ship.job]" chance="$debugchance" />
-		  <write_to_logbook category="general" text="'EOL: %1 [%2 / %3]'.[this.ship.knownname, @this.ship.pilot.$end_of_work, player.age]" chance="100"/>
-		  <set_value name="$bigship" exact="this.ship.isclass.ship_l or this.ship.isclass.ship_xl" />
-		  <run_script name="'move.die'">
-			<param name="byjump" value="$bigship" />
-			<param name="byhighway" value="not $bigship" />
-			<param name="bydock" value="not $bigship" />
-			<param name="byidle" value="true" />
-		  </run_script>
-		</do_if>
-
-		<do_if value="$traderunscript" exact="'trade.findtraderun'">
-		  <set_value name="$traderunscript" exact="'trade.findtraderun.nf'" />
-		</do_if>
-  
-		<do_if value="$tmpIdle?" negate="true">
-		  <set_value name="$findrun" exact="if this.$trade_failedfindruns? and this.$trade_failedfindruns gt 7 then 8 else if not this.$trade_failedfindruns? or this.$trade_failedfindruns lt 1 then 1 else this.$trade_failedfindruns"/>
-		  <do_if value="$range.isclass.zone">
-			<set_value name="$rangemulti" exact="1" />
-		  </do_if>
-		  <do_elseif value="$range.isclass.sector">
-			<set_value name="$rangemulti" exact="2" />
-		  </do_elseif>
-		  <do_elseif value="$range.isclass.cluster">
-			<set_value name="$rangemulti" exact="3" />
-		  </do_elseif>
-		  <do_else>
-			<set_value name="$rangemulti" exact="5" />
-		  </do_else>
-		  <set_value name="$tmpIdle" min="[30s, 10s*$findrun*$rangemulti].max" max="[90s, 20s*$findrun*$rangemulti, [player.timewarp.factor*70, 480s].min].max"/>
-		  <remove_value name="$rangemulti" />
-		  <remove_value name="$findrun" />
-		</do_if>
-		
-		<wait exact="$tmpIdle"/>
-		<remove_value name="$tmpIdle" />
+    <do_if value="true">
+      <do_if value="this.ship.pilot.$end_of_work? and this.ship.pilot.$end_of_work lt player.age">
+        <debug_text text="'%1 doing job %2 has expired, die!'.[this.ship.knownname, this.ship.job]" chance="$debugchance" />
+        <write_to_logbook category="general" text="'EOL: %1 [%2 / %3]'.[this.ship.knownname, @this.ship.pilot.$end_of_work, player.age]" chance="100"/>
+        <set_value name="$bigship" exact="this.ship.isclass.ship_l or this.ship.isclass.ship_xl" />
+        <run_script name="'move.die'">
+          <param name="byjump" value="$bigship" />
+          <param name="byhighway" value="not $bigship" />
+          <param name="bydock" value="not $bigship" />
+          <param name="byidle" value="true" />
+        </run_script>
       </do_if>
+
+      <do_if value="$traderunscript" exact="'trade.findtraderun'">
+        <set_value name="$traderunscript" exact="'trade.findtraderun.nf'" />
+      </do_if>
+
+      <do_if value="$tmpIdle?" negate="true">
+        <set_value name="$findrun" exact="if this.$trade_failedfindruns? and this.$trade_failedfindruns gt 7 then 8 else if not this.$trade_failedfindruns? or this.$trade_failedfindruns lt 1 then 1 else this.$trade_failedfindruns"/>
+        <do_if value="$range.isclass.zone">
+          <set_value name="$rangemulti" exact="1" />
+        </do_if>
+        <do_elseif value="$range.isclass.sector">
+          <set_value name="$rangemulti" exact="2" />
+        </do_elseif>
+        <do_elseif value="$range.isclass.cluster">
+          <set_value name="$rangemulti" exact="3" />
+        </do_elseif>
+        <do_else>
+          <set_value name="$rangemulti" exact="5" />
+        </do_else>
+        <set_value name="$tmpIdle" min="[30s, 10s*$findrun*$rangemulti].max" max="[90s, 20s*$findrun*$rangemulti, [player.timewarp.factor*70, 480s].min].max"/>
+        <remove_value name="$rangemulti" />
+        <remove_value name="$findrun" />
+      </do_if>
+
+      <wait exact="$tmpIdle"/>
+      <remove_value name="$tmpIdle" />
+    </do_if>
   </add>
   <replace sel="//set_value[@exact=&quot;'trade.findsimpletraderun'&quot;]/@exact">'trade.findsimpletraderun.nf'</replace>
   <replace sel="//set_value[@exact=&quot;'trade.findfreetraderun'&quot;]/@exact">'trade.findfreetraderun.nf'</replace>
   <replace sel="//set_value[@exact=&quot;'trade.findtraderun'&quot;]/@exact">'trade.findtraderun.nf'</replace>
   <add sel="//label[@name='find trade run']" pos="after">
-	  <do_if value="this.$doRefuelnext?">
-		  <signal_objects object="this.ship" param="'DO.Refuel.athome'" delay="1s"/>
-		  <remove_value name="this.$doRefuelnext" />
-	  </do_if>
-	  <do_if value="@this.ship.commander">
-		  <do_if value="this.ship.commander.exists and this.ship.commander.isoperational and this.ship.commander.trueowner != faction.ownerless" negate="true">
-			<do_if value="this.$whatido?" negate="true" chance="if this.ship.isplayerowned then 0 else 100">
-			  <set_value name="this.ship.pilot.$end_of_work" exact="player.age" />
-			</do_if>
-			<do_else>
-			  <remove_object_commander object="this.ship" />
-			  <resume label="start"/>
-			</do_else>
-		  </do_if>
-	  </do_if>
+    <do_if value="this.$doRefuelnext?">
+      <signal_objects object="this.ship" param="'DO.Refuel.athome'" delay="1s"/>
+      <remove_value name="this.$doRefuelnext" />
+    </do_if>
+    <do_if value="@this.ship.commander">
+      <do_if value="this.ship.commander.exists and this.ship.commander.isoperational and this.ship.commander.trueowner != faction.ownerless" negate="true">
+        <do_if value="this.$whatido?" negate="true" chance="if this.ship.isplayerowned then 0 else 100">
+          <set_value name="this.ship.pilot.$end_of_work" exact="player.age" />
+        </do_if>
+        <do_else>
+          <remove_object_commander object="this.ship" />
+          <resume label="start"/>
+        </do_else>
+      </do_if>
+    </do_if>
   </add>
   <add sel="//aiscript" >
     <on_abort>
-	  <remove_value name="this.$doRefuelnext" />
-	  <remove_value name="this.$homespace" />
-	  <remove_value name="this.$traderange_clusters"/>
-	  <remove_value name="this.$traderange_sellclusters"/>
-	  <remove_value name="this.$traderange_buyclusters"/>
-	  <remove_value name="this.$tgr_min_sell"/>
-	  <remove_value name="this.$tgr_max_sell"/>
-	  <remove_value name="this.$tgr_min_buy"/>
-	  <remove_value name="this.$tgr_max_buy"/>
+      <remove_value name="this.$doRefuelnext" />
+      <remove_value name="this.$homespace" />
+      <remove_value name="this.$traderange_clusters"/>
+      <remove_value name="this.$traderange_sellclusters"/>
+      <remove_value name="this.$traderange_buyclusters"/>
+      <remove_value name="this.$tgr_min_sell"/>
+      <remove_value name="this.$tgr_max_sell"/>
+      <remove_value name="this.$tgr_min_buy"/>
+      <remove_value name="this.$tgr_max_buy"/>
     </on_abort>
   </add>
 </diff>

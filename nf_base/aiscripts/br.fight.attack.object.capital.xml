@@ -289,7 +289,7 @@
       <do_if value="$enemies.count" min="1">
         <!--Adding/resetting extra needed variables for target priority and rangechecks-->
         <set_value name="$prioTarget" exact="null"/>
-        <set_value name="$closestTarget" exact="null"/>
+        <!--set_value name="$closestTarget" exact="null"/-->
         <create_group groupname="$targetsInSight"/>
         <create_group groupname="$validbigguntarget"/>
 
@@ -333,22 +333,20 @@
                 <set_value name="$result" exact="true"/>
                 <check_line_of_sight name="$result" object="this.ship" target="$enemies.{$i}" chance="if $thiscombinedskill ge 75 then 100 else 0"/>
                 <!--find closest target with LOS. set as prioritized in case $i is closest or first one-->
-                <do_if value="$closestTarget != null and $result">
-                  <do_if value="this.ship.distanceto.{$enemies.{$i}} lt this.ship.distanceto.{$closestTarget}">
-                    <set_value name="$closestTarget" exact="$enemies.{$i}"/>
-                    <set_value name="$prioTarget" exact="$closestTarget"/>
-                    <add_to_group groupname="$targets" object="$enemies.{$i}" />
-                  </do_if>
-                </do_if>
-                <do_elseif value="$closestTarget == null and $result">
-                  <!--for first target-->
-                  <set_value name="$closestTarget" exact="$enemies.{$i}"/>
-                  <set_value name="$prioTarget" exact="$closestTarget"/>
+                <do_if value="$result">
                   <add_to_group groupname="$targets" object="$enemies.{$i}" />
-                </do_elseif>
-                <!--adding skunk as valid target for IHC/torpedoes for NPC's if they have LOS-->
-                <do_if value="$enemies.{$i} == @player.primaryship and $result">
-                  <do_if value="$result">
+                  <!--do_if value="$closestTarget != null and $enemies.{$i}.isclass.defensible">
+                    <do_if value="this.ship.distanceto.{$enemies.{$i}} lt this.ship.distanceto.{$closestTarget}">
+                      <set_value name="$closestTarget" exact="$enemies.{$i}"/>
+                      <add_to_group groupname="$targets" object="$enemies.{$i}" />
+                    </do_if>
+                 </do_if>
+                 <do_elseif value="$closestTarget == null and $enemies.{$i}.isclass.defensible">
+                    <set_value name="$closestTarget" exact="$enemies.{$i}"/>
+                    <add_to_group groupname="$targets" object="$enemies.{$i}" />
+                 </do_elseif-->
+                  <!--adding skunk as valid target for IHC/torpedoes for NPC's if they have LOS-->
+                  <do_if value="$enemies.{$i} == @player.primaryship">
                     <add_to_group groupname="$validbigguntarget" object="$enemies.{$i}"/>
                     <!--<debug_text text="player.age + '%1 DO added skunk as target for bigguns'.[this.ship.name]" chance="100" filter="general" />-->
                   </do_if>
@@ -362,6 +360,9 @@
                   <set_value name="$droneShould" exact="if $enemies.{$i}.primarypurpose == objectpurpose.fight then false else true" />
                   <find_object_component object="$enemies.{$i}" groupname="$targetComps" surfaceelement="true" multiple="true" invulnerable="false" functional="true" integrated="false"/>
                   <do_all exact="$targetComps.list.count" counter="$j">
+                    <do_if value="$targetComps.list.{$j}? and not $targetComps.list.{$j}.iswreck">
+                      <continue />
+                    </do_if>
                     <!-- fail detecting component if skill level too low. 30 is 5 star basevalue with 0 random bonus. Getting new random number-->
                     <set_value name="$DOskillcheckbonus" min="0" max="10" />
                     <do_if value="($DObaseskill + $DOskillcheckbonus) gt 29">
@@ -418,6 +419,9 @@
                 </do_if>
                 <do_else>
                   <do_all exact="$targetComps.list.count" counter="$j">
+                    <do_if value="$targetComps.list.{$j}? and not $targetComps.list.{$j}.iswreck">
+                      <continue />
+                    </do_if>
                     <add_to_group groupname="$targets" object="$targetComps.list.{$j}"/>
                     <add_to_group groupname="$validbigguntarget" object="$targetComps.list.{$j}" chance="0"/>
                     <set_value name="$result" exact="false"/>
@@ -463,14 +467,15 @@
                   </do_if>
                   <do_else>
                     <do_all exact="$targetComps.list.count" counter="$j">
-                      <do_if value="@$targetComps.list.{$j}.hullpercentage gt -1 and not @$targetComps.list.{$j}.iswreck">
-                        <!--subcomps found, add each to pri list IHC/torpedoes + general targets list-->
-                        <add_to_group groupname="$targets" object="$targetComps.list.{$j}"/>
-                        <add_to_group groupname="$validbigguntarget" object="$targetComps.list.{$j}"/>
-                        <set_value name="$result" exact="false"/>
-                        <check_line_of_sight name="$result" object="this.ship" target="$targetComps.list.{$j}" chance="if $thiscombinedskill ge 80 then 100 else 0"/>
-                        <add_to_group groupname="$targetsInSight" object="$targetComps.list.{$j}" chance="if $result then 100 else 0"/>
+                      <do_if value="$targetComps.list.{$j}? and not $targetComps.list.{$j}.iswreck">
+                        <continue />
                       </do_if>
+                      <!--subcomps found, add each to pri list IHC/torpedoes + general targets list-->
+                      <add_to_group groupname="$targets" object="$targetComps.list.{$j}"/>
+                      <add_to_group groupname="$validbigguntarget" object="$targetComps.list.{$j}"/>
+                      <set_value name="$result" exact="false"/>
+                      <check_line_of_sight name="$result" object="this.ship" target="$targetComps.list.{$j}" chance="if $thiscombinedskill ge 80 then 100 else 0"/>
+                      <add_to_group groupname="$targetsInSight" object="$targetComps.list.{$j}" chance="if $result then 100 else 0"/>
                       <wait exact="player.timewarp.factor/100" sinceversion="2" chance="player.timewarp.active*100" />
                     </do_all>
                   </do_else>
@@ -534,6 +539,7 @@
           <wait exact="player.timewarp.factor/3" sinceversion="2" />
         </do_all>
         <remove_value name="$TroopShip" />
+        <remove_value name="$closestTarget" />
 
         <!-- Turret/weapon target and fire logic-->
         <do_if value="$targets.count">
@@ -551,7 +557,7 @@
           <do_if value="$target and $target.isclass.station">
             <find_object_component object="$target" groupname="$targetComps" multiple="true" invulnerable="false" integrated="false" surfaceelement="false" checkoperational="true" indestructible="false"/>
             <do_all exact="$targetComps.list.count" counter="$j">
-              <do_if value="@$targetComps.list.{$j}.hullpercentage gt -1 and not @$targetComps.list.{$j}.iswreck">
+              <do_if value="$targetComps.list.{$j}? and $targetComps.list.{$j}.hullpercentage gt -1 and not $targetComps.list.{$j}.iswreck">
                 <set_value name="$TMP_dist" exact="this.ship.distanceto.{$targetComps.list.{$j}}" />
                 <check_line_of_sight name="$result" object="this.ship" target="$targetComps.list.{$j}"/>
                 <do_if value="$result and $TMP_dist le $FiringRange">

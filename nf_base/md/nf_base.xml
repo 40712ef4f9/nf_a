@@ -138,6 +138,7 @@
 							$cheatMaxSkill = 0,
 							$HyperDrive = 1,
 							$buildOwnerNotice = 0,
+							$cheatRestoreSkunk = 1,
 							$payOnUrSy = 1
 						]
 					"/>
@@ -677,6 +678,7 @@
 				<do_elseif value="event.param" exact="'nfconf_do_player_cheat'">
 					<add_player_choice section="nfconf_do_player_cheat" text="{40002,342}.[if global.$nfconfig.$ignoreFuel then $on else $off]"	position="top_left"		choiceparam="['ignoreFuel', 'do']" tooltip="{40002,343}"/>
 					<add_player_choice section="nfconf_do_player_cheat" text="{40002,344}.[if global.$nfconfig.$cheatMaxSkill then $on else $off]"	position="top_right"	choiceparam="['cheatMaxSkill', 'do']" />
+					<add_player_choice section="nfconf_do_player_cheat" text="{40002,345}.[if global.$nfconfig.$cheatRestoreSkunk then $on else $off]"	position="left"	choiceparam="['cheatRestoreSkunk', 'do']" tooltip="{40002,346}" />
 				</do_elseif>
 				<do_elseif value="event.param" exact="'nfconf_do_detail'" chance="(event.param2? and typeof event.param2 == datatype.list and (typeof event.param2.{1}).isstring)*100">
 					<create_list name="$add" />
@@ -1047,6 +1049,7 @@
 		<cue name="NF_LostTradeUpdates" instantiate="true">
 			<conditions>
 				<event_player_relation_changed/>
+				<check_value value="event.object == null and event.param != null" />
 				<check_value value="event.param2 le faction.player.relation.neutral.min" />
 			</conditions>
 			<actions>
@@ -1282,6 +1285,30 @@
 				<remove_value name="$temp_ships" />
 				<remove_value name="$temp_toDestroy" />
 				<remove_value name="$temp_important" />
+			</actions>
+		</cue>
+
+		<cue name="NF_Autorepair_SkunkAndDrones" instantiate="true" >
+			<conditions>
+				<event_object_docked object="player.primaryship" />
+				<check_value value="event.param.isplayerowned" />
+				<check_value value="global.$nfconfig? and @global.$nfconfig.$cheatRestoreSkunk" />
+				<check_any>
+					<check_value value="event.param.engineer.exists" />
+					<check_value value="player.primaryship.engineer.exists" />
+				</check_any>
+				<check_value value="player.primaryship.drones.count" />
+			</conditions>
+			<delay min="10s" max="15s"/>
+			<actions>
+				<do_if value="player.primaryship.hullpercentage lt 100">
+					<restore_object object="player.primaryship" hull="100" recursive="true" />
+				</do_if>
+				<do_all exact="player.primaryship.drones.count" counter="$i">
+					<do_if value="player.primaryship.drones.{$i}.hullpercentage lt 100">
+						<restore_object object="player.primaryship.drones.{$i}" hull="100" recursive="true" />
+					</do_if>
+				</do_all>
 			</actions>
 		</cue>
 

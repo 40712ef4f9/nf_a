@@ -8,8 +8,9 @@
       <handler name="DestroyStation">
         <conditions>
           <event_object_attacked_object object="this.defensible"/>
-          <check_value value="event.param.isclass.{class.station}" />
           <check_value value="event.param.exists" />
+          <check_value value="event.param.isclass.{class.station}" />
+          <check_value value="not global.$nextDScheck? or (global.$nextDScheck? and global.$nextDScheck lt player.age)" />
           <check_value value="[faction.enemy, faction.criminal, faction.smuggler, faction.neutral, faction.friend, faction.ownerless].indexof.{event.param.owner}" negate="true"/>
           <check_any>
             <check_value value="global.$nfStationdestructionHulls.{'$%1'.[event.param.macro.id]}?" negate="true"/>
@@ -17,6 +18,7 @@
           </check_any>
         </conditions>
         <actions>
+          <set_value name="global.$nextDScheck" exact="player.age + player.timewarp.factor*5"/>
           <signal_objects object="player.galaxy" param="'StationDamaged'" param2="event.param" />
         </actions>
       </handler>

@@ -9,6 +9,15 @@
 				</do_all> 
 				<set_cover_owner object="this.ship" faction="$zone.owner"/>
 			</do_if>
+			<do_if value="this.ship.defencenpc">
+				<do_if value="this.ship.defencenpc.$config_attackenemies?">
+					<remove_value name="this.ship.defencenpc.$config_attackenemies" />
+					<signal_objects object="this.ship.defencenpc" param="'update config'"  />
+				</do_if>
+				<do_else>
+					<signal_objects object="this.ship.defencenpc" param="'stop attack'"  />
+				</do_else>
+			</do_if>
 			<remove_value name="$Entities"/>
 		</do_if>
 	</add>

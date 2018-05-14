@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="//cue[@name='TempRelationDropped']/conditions">
+          <check_value value="player.entity.owner == faction.player" />
+	</add>
+	<add sel="//cue[@name='BaseRelationChanged']/conditions">
+          <check_value value="player.entity.owner == faction.player" />
+	</add>
+</diff>

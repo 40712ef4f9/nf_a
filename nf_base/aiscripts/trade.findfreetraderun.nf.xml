@@ -290,7 +290,7 @@
 
       <label name="find sell offers" />
 
-      <wait min="5s" max="15s" sinceversion="1" />
+      <wait min="player.timewarp.factor*5" max="player.timewarp.factor*15" sinceversion="1" />
 
       <!-- if checkrange was a tempzone and no longer exists, better start clean -->
       <do_if value="not $checkrange.exists">
@@ -571,7 +571,7 @@
                 <break />
               </do_else>
             </do_if>
-            <wait min="500ms" max="3s" sinceversion="1" />
+            <wait min="player.timewarp.factor*1" max="player.timewarp.factor*3" sinceversion="1" />
             <!-- if we saved in this part, clean up i and the previously tried entries -->
             <do_if value="$i?">
               <do_all exact="$i" counter="$j" reverse="true">
