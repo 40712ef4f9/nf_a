@@ -4,4 +4,8 @@
 		<handler ref="DestroyStation" />
 	</add>
 	<replace sel="/aiscript/attention/actions/do_while/do_elseif/run_script/@name">'BR.fight.attack.object.capital'</replace>
+
+	<add sel="//do_while" >
+		<wait min="10s" max="20s" />
+	</add>
 </diff>

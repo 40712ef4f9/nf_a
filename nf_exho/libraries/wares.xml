@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<remove sel="//ware[@id='shp_l_dv_new_defence_01_exho']" silent="1"/>
+	<add sel="/wares">
+		<ware id="shp_l_dv_new_defence_01_exho" name="{20101,13301} {84600,420}" description="{84600,421}" transport="ship" size="ship" volume="1" tags="ship">
+			<price min="8069780" average="10759706" max="13449633" />
+			<production time="310" amount="1" method="default" name="{20206,101}">
+				<primary>
+					<ware ware="bioopticwiring" amount="176" />
+					<ware ware="energycells" amount="620" />
+					<ware ware="foodrations" amount="360" />
+					<ware ware="fusionreactor" amount="26" />
+					<ware ware="holtzmanfieldgenerator" amount="38" />
+					<ware ware="microchips" amount="166" />
+					<ware ware="plasmaflowregulator" amount="32" />
+					<ware ware="reinforcedmetalplating" amount="90" />
+					<ware ware="scanningarray" amount="92" />
+				</primary>
+			</production>
+			<production time="310" amount="1" method="omicron" name="{20206,301}">
+				<primary>
+					<ware ware="bioelectricneurongel" amount="158" />
+					<ware ware="bofu" amount="180" />
+					<ware ware="emspectrometer" amount="90" />
+					<ware ware="energycells" amount="620" />
+					<ware ware="fusionreactor" amount="26" />
+					<ware ware="holtzmanfieldgenerator" amount="38" />
+					<ware ware="plasmaflowregulator" amount="32" />
+					<ware ware="plasmapumps" amount="168" />
+					<ware ware="reinforcedmetalplating" amount="90" />
+				</primary>
+			</production>
+			<production time="310" amount="1" method="fieldsofop" name="{20206,601}">
+				<primary>
+					<ware ware="bioopticwiring" amount="154" />
+					<ware ware="energycells" amount="1506" />
+					<ware ware="foodrations" amount="482" />
+					<ware ware="fusionreactor" amount="42" />
+					<ware ware="holtzmanfieldgenerator" amount="28" />
+					<ware ware="microchips" amount="182" />
+					<ware ware="plasmaflowregulator" amount="42" />
+					<ware ware="scanningarray" amount="56" />
+					<ware ware="teladianium" amount="434" />
+				</primary>
+			</production>
+			<component ref="units_size_l_dv_kit_new_defence_01_exho_macro" amount="1" />
+			<icon video="units_size_l_dv_kit_new_defence_01_exho_macro" />
+		</ware>
+	</add>
+</diff>

@@ -674,7 +674,7 @@
 								<set_value name="$ZO_temp_special" exact="$StationsSD.{$x}" />
 								<break />
 							</do_if>
-							<do_elseif value="$StationsSD.{$x}.macro.id" list="['khaak_weaponplatform_macro', 'xenon_weaponplatform_macro']">
+							<do_elseif value="$StationsSD.{$x}.macro.id" list="['khaak_weaponplatform_macro', 'xenon_weaponplatform_macro', 'canteran_weaponplatform_macro']">
 								<set_value name="$ZO_temp_special" exact="$StationsSD.{$x}" />
 								<break />
 							</do_elseif>

@@ -4380,6 +4380,44 @@
 			<component ref="props_wps_cw_weaponplatform_01_macro" amount="1" />
 		</ware>
 	</add>	
+	<add sel="/wares">   
+		<ware id="stp_pro_ships" name="stp_pro_ships" transport="container" size="part" volume="1" tags="part">
+			<price min="1" average="1" max="1" />
+			<production time="94" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="bioopticwiring" amount="2758" />
+					<ware ware="energycells" amount="2062" />
+					<ware ware="fusionreactor" amount="564" />
+					<ware ware="reinforcedmetalplating" amount="2644" />
+				</primary>
+			</production>
+			<component ref="struct_econ_prod_ships_macro" amount="1" />
+		</ware>
+		<ware id="stp_pro_ships_dv" name="stp_pro_ships_dv" transport="container" size="part" volume="1" tags="part">
+			<price min="1" average="1" max="1" />
+			<production time="94" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="bioopticwiring" amount="2758" />
+					<ware ware="energycells" amount="2062" />
+					<ware ware="fusionreactor" amount="564" />
+					<ware ware="reinforcedmetalplating" amount="2644" />
+				</primary>
+			</production>
+			<component ref="struct_econ_prod_ships_dv_macro" amount="1" />
+		</ware>
+		<ware id="stp_pro_shipm_dv" name="stp_pro_shipm_dv" transport="container" size="part" volume="1" tags="part">
+			<price min="1" average="1" max="1" />
+			<production time="94" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="bioopticwiring" amount="2758" />
+					<ware ware="energycells" amount="2062" />
+					<ware ware="fusionreactor" amount="564" />
+					<ware ware="reinforcedmetalplating" amount="2644" />
+				</primary>
+			</production>
+			<component ref="struct_econ_prod_shipm_dv_macro" amount="1" />
+		</ware>
+	</add>	
 
 	<add sel="//wares/ware[@id='shieldgenerator']/production[@method='default']" pos="after" >
 		<production time="30" amount="1" method="xenon" name="{20206,701}">

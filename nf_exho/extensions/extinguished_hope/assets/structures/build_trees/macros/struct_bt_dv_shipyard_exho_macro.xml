@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<replace sel="//connection[@ref='ConnectionFor_struct_econ_science_weaponplatform_macro2']/build/@stage">4</replace>
+
+	<add sel="//connection[@ref='ConnectionFor_struct_econ_prod_ships_dv_macro']">
+        <build mode="optional" group="production" sequence="A" stage="2" tags="primary " />
+	</add>
+	<add sel="//connection[@ref='ConnectionFor_props_surf_playerdock_ships_dv_macro']">
+        <build mode="optional" group="production" sequence="A" stage="2" />
+	</add>
+
+	<replace sel="//connection[@ref='ConnectionFor_struct_econ_prod_shipm_dv_macro']/build/@stage">3</replace>
+	<replace sel="//connection[@ref='ConnectionFor_props_surf_playerdock_ships_dv_macro1']/build/@stage">3</replace>
+	
+	<add sel="//connection[@ref='ConnectionFor_struct_econ_prod_stor_container_macro3']/build" type="@tags">primary </add>
+
+	<replace sel="//connection[@ref='ConnectionFor_struct_econ_cw_ar_water_l_connector4']/build/@group">storage</replace>
+	<replace sel="//connection[@ref='ConnectionFor_struct_econ_cw_ar_water_l_connector5']/build/@group">storage</replace>
+	<replace sel="//connection[@ref='ConnectionFor_struct_econ_cw_ar_water_l_connector6']/build/@group">storage</replace>
+	<replace sel="//connection[@ref='ConnectionFor_struct_econ_cw_ar_water_l_connector7']/build/@group">storage</replace>
+	<replace sel="//connection[@ref='ConnectionFor_struct_econ_mining_ar_generic_bridge_a_macro']/build/@group">storage</replace>
+	<replace sel="//connection[@ref='ConnectionFor_struct_econ_mining_ar_generic_bridge_a_macro3']/build/@group">storage</replace>
+	<replace sel="//connection[@ref='ConnectionFor_struct_econ_mining_ar_old_bridge_b2']/build/@group">storage</replace>
+	<replace sel="//connection[@ref='ConnectionFor_struct_econ_mining_ar_old_bridge_b3']/build/@group">storage</replace>
+	<replace sel="//connection[@ref='ConnectionFor_struct_econ_prod_stor_container_macro3']/build/@group">storage</replace>
+</diff>
+
+

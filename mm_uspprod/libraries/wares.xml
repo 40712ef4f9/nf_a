@@ -2055,6 +2055,25 @@
 		</production>
 	</add>
 	<!-- // LostSectors -->
+	<!-- Extinguished Hope -->
+	<add silent="1" sel="//wares/ware[@id='shp_l_dv_new_defence_01_exho']/production[@method='default']" pos="after" >
+		<production time="310" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="22" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_xl_cargo_hauler_2_exho']/production[@method='default']" pos="after" >
+		<production time="338" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="28" />
+			</primary>
+		</production>
+	</add>
+	<!-- // Extinguished Hope -->
+
+
+
 	<add sel="//wares/ware[@id='drp_assault']/production[@method='default']" pos="after" >
 		<production time="1500" amount="10" method="universalparts" name="Uniparts">
 			<primary>
