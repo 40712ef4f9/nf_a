@@ -3342,6 +3342,11 @@
 
 						<do_all exact="$ShipYardOfTrust_Multi.count" counter="$sy">
 <set_value name="$text2" exact="' \n# Buy Ship %1 #\n'.[$requiredUnits_count]" operation="add" />
+							<do_if value="$requiredUnits_count and $requiredUnits.count lt 1">
+								<remove_value name="$requiredUnits"/>
+								<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_buyships" />
+							</do_if>
+
 							<do_if value="$requiredUnits_count">
 								<set_value name="$ShipYardOfTrust" exact="$ShipYardOfTrust_Multi.{$sy}"/>
 								<include_actions ref="md.MM_Corps__Data.MMCData_do_orderships" />
@@ -5051,7 +5056,7 @@
 						</do_all>
 					</do_if>
 					<!-- choices by chance of match -->
-					<set_value name="$firstChoice" exact="$requiredUnits.random"/>
+					<set_value name="$firstChoice" exact="if $requiredUnits.count then $requiredUnits.random else null"/>
 					<do_all exact="$requiredUnits.count" counter="$x" reverse="true">
 						<do_if value="$requiredUnits.{$x} == $firstChoice">
 							<remove_value name="$requiredUnits.{$x}"/>

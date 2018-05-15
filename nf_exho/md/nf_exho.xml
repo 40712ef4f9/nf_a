@@ -5,10 +5,11 @@
 			<conditions>
 				<check_any>
 					<event_cue_signalled cue="md.Setup.GameStart"/>
-					<event_game_loaded />
+					<event_game_loaded/>
+					<event_player_created />
 				</check_any>
 			</conditions>
-			<delay min="190ms" />
+			<delay min="660ms" />
 			<actions>
 				<do_if value="md.$NFMMprocessesdSectors? and player.age lt 3min and md.$NFMMprocessesdSectors.indexof.{'NF_ExHo'} == 0">
 					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_ExHo'"/>
@@ -17,6 +18,39 @@
 					<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
 					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_ExHo'"/>
 				</do_elseif>
+
+				<find_station name="$Stations" space="md.$exho_Cluster" functional="true" multiple="true">
+					<match owner="faction.ownerless" negate="true"/>
+					<match owner="faction.civilian" negate="true"/>
+					<match macro="macro.canteran_weaponplatform_macro"/>
+				</find_station>
+				<do_all exact="$Stations.count" counter="$i">
+					<do_if value="$Stations.{$i}.defencenpc.exists" negate="true">
+						<!-- add defense officer -->		
+						<set_value name="$temp_object" exact="$Stations.{$i}" />
+						<set_value name="$temp_faction" exact="$temp_object.trueowner" />
+						<set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$temp_faction.id} then race.{$temp_faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.defencecontrol, null, null]" />
+						<set_value name="$temp_entitytype" exact="entitytype.defencecontrol" />
+						<set_value name="$temp_Skill" exact="false" />
+						<set_value name="$temp_assign" exact="'defence'"/>
+						<set_value name="$temp_script" exact="'default'"/>
+						<include_actions ref="md.NF_BASE.NF_create_actor" />
+						<set_value name="$newActor.$config_attackenemies" exact="true" />
+						<remove_value name="$newActor"/>
+					</do_if>
+					<do_if value="$Stations.{$i}.engineer.exists" negate="true">
+						<!-- add engineer -->
+						<set_value name="$temp_object" exact="$Stations.{$i}" />
+						<set_value name="$temp_faction" exact="$temp_object.trueowner" />
+						<set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$temp_faction.id} then race.{$temp_faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.engineer, null, null]" />
+						<set_value name="$temp_entitytype" exact="entitytype.engineer" />
+						<set_value name="$temp_Skill" exact="false" />
+						<set_value name="$temp_assign" exact="'engineer'"/>
+						<set_value name="$temp_script" exact="'default'"/>
+						<include_actions ref="md.NF_BASE.NF_create_actor" />
+						<remove_value name="$newActor"/>
+					</do_if>
+				</do_all>
 
 			</actions>
 		</cue>

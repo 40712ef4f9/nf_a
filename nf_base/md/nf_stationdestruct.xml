@@ -724,7 +724,9 @@
 				<do_if value="$Outlaw_Factions?" negate="true"> 
 					<set_value name="$Outlaw_Factions" exact="if md.$nfFactions_outlaw? then md.$nfFactions_outlaw.clone else ['xenon', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'atlas', 'khaak', 'hayen', 'mlspirate']" />
 				</do_if>
-				<find_sector name="$tempSector" space="player.galaxy" multiple="true"/>
+				<do_if value="$tempSector? and $tempSector.count and $tempSector.{1}.isclass.sector" negate="true">
+					<find_sector name="$tempSector" space="player.galaxy" multiple="true"/>
+				</do_if>
 				<do_all exact="$tempSector.count" counter="$run">
 
 					<find_zone name="$tmpSpace" space="$tempSector.{$run}" multiple="true" tempzone="false"/>

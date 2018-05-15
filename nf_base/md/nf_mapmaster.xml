@@ -65,6 +65,9 @@
 				<do_if value="md.$NFMMprocessesdSectors?" negate="true">
 					<create_list name="md.$NFMMprocessesdSectors" />
 				</do_if>
+				<do_else>
+					<create_list name="$tempSector" />
+				</do_else>
 				<set_value name="$tempMMPS" exact="md.$NFMMprocessesdSectors.clone"/>
 				
 				<do_all exact="$foobar.count" counter="$Counter">
@@ -161,6 +164,9 @@
 						</do_elseif>
 						<do_elseif value="md.$NFMMprocessesdSectors.indexof.{$tempSpace.sector}" negate="true">
 							<append_to_list name="md.$NFMMprocessesdSectors" exact="$tempSpace.sector"/>
+							<do_if value="$tempSector?">
+								<append_to_list name="$tempSector" exact="$tempSpace.sector"/>
+							</do_if>
 						</do_elseif>
 
 						<set_value name="$temp_zone" exact="$tempSpace"/>
@@ -207,7 +213,17 @@
 				<!--
 					adjust ownership
 				-->
-				<find_zone groupname="$tempZones" space="player.galaxy" multiple="true" tempzone="false"/>
+				<do_if value="$tempSector? and $tempSector.count and $tempSector.{1}.isclass.sector">
+					<create_group groupname="$tempZones" />
+					<do_all exact="$tempSector.count" counter="$Counter">
+						<find_zone name="$tempZones2" space="$tempSector.{$Counter}" multiple="true" mapzone="true" tempzone="false"/>
+						<add_to_group groupname="$tempZones" list="$tempZones2"/>
+						<remove_value name="$tempZones2"/>
+					</do_all>
+				</do_if>
+				<do_else>
+					<find_zone groupname="$tempZones" space="player.galaxy" multiple="true" mapzone="true" tempzone="false"/>
+				</do_else>
 				<create_group groupname="$tmpSpace" />
 				<set_value name="$Main_Factions" exact="if md.$nfFactions_Main? then md.$nfFactions_Main.clone else ['player', 'heartofalbion', 'plutarch', 'canteran', 'terracorp', 'atlas', 'argongovernment', 'xenon', 'familyryak', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'argon_colony', 'hayen', 'mlspirate', 'teladi', 'ls_terran', 'ls_dark_space']" />
 				<set_value name="$problematics" exact="['asteroid_turret_m_01_macro']" />

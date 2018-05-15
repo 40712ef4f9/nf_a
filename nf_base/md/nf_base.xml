@@ -1078,7 +1078,10 @@
 
 		<cue name="NF_RemoveJOBS" instantiate="true" >
 			<conditions>
-				<event_game_loaded />
+				<check_any>
+					<event_game_loaded/>
+					<event_player_created />
+				</check_any>
 				<check_value value="global.$nfconfig? and not global.$nfconfig.$plotSafe?" />
 			</conditions>
 			<delay min="48s" max="60s"/>
@@ -1488,7 +1491,7 @@
 							<start_script object="$tempActor" name="'player.default'" chance="$temp_object.isplayerowned*100"/>
 						</do_if>
 						<do_elseif value="$temp_assign" exact="'defence'">
-							<start_script object="$tempActor" name="if $temp_object.isclass.ship then 'fight.defend.capital' else if $temp_faction == faction.player then 'fight.station.player' else 'fight.attack.object'"/>
+							<start_script object="$tempActor" name="if $temp_object.isclass.ship then 'fight.defend.capital' else if $temp_faction == faction.player then 'fight.station.player' else 'fight.attack.object.station'"/>
 						</do_elseif>
 						<do_elseif value="$temp_assign" exact="'engineer'">
 							<!--start_script object="$tempActor" name="'engineer.ai'"/-->
