@@ -87,6 +87,7 @@
 					<event_conversation_returned_to_section section="default" />
 				</check_any>
 				<check_value value="not event.object.customhandler" />
+				<check_value value="event.object.container.isclass.ship" />
 			</conditions>
 			<actions>
 				<do_if value="event.object.ship.macro.ismacro.unit_size_xs_probe_macro" >

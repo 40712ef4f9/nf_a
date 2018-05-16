@@ -308,163 +308,175 @@
 				<event_object_signalled object="player.copilot" param="'PopulateStation'" />
 			</conditions>
 			<actions>						
-				<set_value name="$createdStation" exact="event.param2" />
-				<do_if value="@$createdStation.exists">
-					<set_value name="$faction" exact="$createdStation.owner" />
+				<set_value name="$target" exact="event.param2" />
+				<do_if value="@$target.exists">
+					<set_value name="$faction" exact="$target.owner" />
 					<!-- add drones -->
-					<set_value name="$Unitcapacity" exact="$createdStation.units.maxcount" />
-					<find_object_component name="$buildmodule" class="class.buildmodule" object="$createdStation"/>
-					<find_dock_location container="$createdStation" name="$ShiptraderDocks" dockpopulationtype="dockpopulationtype.ships" multiple="true" />
+					<set_value name="$Unitcapacity" exact="$target.units.maxcount" />
+					<find_object_component name="$buildmodule" class="class.buildmodule" object="$target"/>
+					<find_dock_location container="$target" name="$ShiptraderDocks" dockpopulationtype="dockpopulationtype.ships" multiple="true" />
 
 					<do_if value="$buildmodule and $faction == faction.player">
-						<add_units object="$createdStation" category="unitcategory.welder" mk="1" exact="0.3*$Unitcapacity" />  
-						<add_units object="$createdStation" category="unitcategory.transport" mk="1" exact="0.2*$Unitcapacity" />  
-						<add_units object="$createdStation" category="unitcategory.defence" mk="4" exact="0.25*$Unitcapacity" />  
-						<add_units object="$createdStation" category="unitcategory.defence" mk="6" exact="0.25*$Unitcapacity" />  
+						<add_units object="$target" category="unitcategory.welder" mk="1" exact="0.3*$Unitcapacity" />  
+						<add_units object="$target" category="unitcategory.transport" mk="1" exact="0.2*$Unitcapacity" />  
+						<add_units object="$target" category="unitcategory.defence" mk="4" exact="0.25*$Unitcapacity" />  
+						<add_units object="$target" category="unitcategory.defence" mk="6" exact="0.25*$Unitcapacity" />  
 					</do_if>
 					<do_elseif value="$faction" exact="faction.player">
-						<add_units object="$createdStation" category="unitcategory.transport" mk="1" exact="0.5*$Unitcapacity" />  
-						<add_units object="$createdStation" category="unitcategory.defence" mk="4" exact="0.25*$Unitcapacity" />  
-						<add_units object="$createdStation" category="unitcategory.defence" mk="6" exact="0.25*$Unitcapacity" chance="if md.$stationengineerai? then 100 else 0" />  
-						<add_units object="$createdStation" category="unitcategory.defence" mk="6" exact="0.20*$Unitcapacity" chance="if md.$stationengineerai? then 0 else 100" />  
-						<add_units object="$createdStation" category="unitcategory.welder" mk="1" exact="0.05*$Unitcapacity" chance="if md.$stationengineerai? then 0 else 100" />  
+						<add_units object="$target" category="unitcategory.transport" mk="1" exact="0.5*$Unitcapacity" />  
+						<add_units object="$target" category="unitcategory.defence" mk="4" exact="0.25*$Unitcapacity" />  
+						<add_units object="$target" category="unitcategory.defence" mk="6" exact="0.25*$Unitcapacity" chance="if md.$stationengineerai? then 100 else 0" />  
+						<add_units object="$target" category="unitcategory.defence" mk="6" exact="0.20*$Unitcapacity" chance="if md.$stationengineerai? then 0 else 100" />  
+						<add_units object="$target" category="unitcategory.welder" mk="1" exact="0.05*$Unitcapacity" chance="if md.$stationengineerai? then 0 else 100" />  
 					</do_elseif>
 
 					<!-- add missiles for v launcher -->
-					<evaluate_ammo_storage object="$createdStation" type="missile" macros="$macrolist" amounts="$amountlist" />
+					<evaluate_ammo_storage object="$target" type="missile" macros="$macrolist" amounts="$amountlist" />
 					<do_all exact="$macrolist.count" counter="$i">
-						<add_ammo object="$createdStation" macro="$macrolist.{$i}" amount="$amountlist.{$i}" /> 
+						<add_ammo object="$target" macro="$macrolist.{$i}" amount="$amountlist.{$i}" /> 
 					</do_all> 
 
 					<!-- npc/[ player ] difference crew -->			
 					<do_if value="$faction" exact="faction.player">
 						<!-- add NPCs -->		 
-						<find_dock_location name="$Stationdock" container="$createdStation" size="tag.dock_p"  multiple="false" dockpopulationtype="dockpopulationtype.administrative"/>
-						<do_if value="not $Stationdock">
-							<find_dock_location name="$Stationdock" container="$createdStation" size="tag.dock_p"/>
-						</do_if>
+						<include_actions ref="md.MM_defenceplatform.MM_defenceplatform_PLactors" />
+						<remove_value name="$defaultproducts"/>
 
-						<!-- add engineer -->
-						<create_platform_actor name="$engineer" dockingbay="$Stationdock.component" type="entitytype.engineer">
-							<select race="if ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random" tags="tag.engineer"/>
-							<owner exact="$faction"/>
-							<skills>
-								<skill type="combat" exact="5"/>
-								<skill type="engineering" exact="5"/>
-								<skill type="leadership" exact="5"/>
-								<skill type="management" exact="5"/>
-								<skill type="morale" exact="5"/>
-								<skill type="navigation" exact="5"/>
-								<skill type="science" exact="5"/>
-							</skills>
-						</create_platform_actor>
-						<assign_engineer actor="$engineer" object="$createdStation"/>
-						<!-- npc difference -->			
-						<start_script object="$engineer" name="if global.$nfconfig.$Check? then 'engineer.ai.plus2' else 'engineer.ai'"/>
-
-						<!-- add manager -->			
-						<create_platform_actor name="$manager" dockingbay="$Stationdock.component" type="entitytype.manager"> 
-							<select race="if ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random" tags="tag.manager"/>
-							<owner exact="$faction"/>
-							<skills>
-								<skill type="combat" exact="5"/>
-								<skill type="engineering" exact="5"/>
-								<skill type="leadership" exact="5"/>
-								<skill type="management" exact="5"/>
-								<skill type="morale" exact="5"/>
-								<skill type="navigation" exact="5"/>
-								<skill type="science" exact="5"/>
-							</skills>
-						</create_platform_actor>
-						<assign_trade_manager actor="$manager" object="$createdStation"/>
-						<set_actor_account actor="$manager" />
-
-						<do_if value="$createdStation.canbuildships">
-							<start_script object="$manager" name="'trade.shipyard'"/>
-						</do_if>
-						<do_elseif value="$createdStation.canproduceships">
-							<start_script object="$manager" name="'trade.shipyard.small'"/>
-						</do_elseif>
-						<do_elseif value="$createdStation.isplayerowned">
-							<start_script object="$manager" name="'trade.station.player'"/>
-						</do_elseif>
-						<do_else>
-							<start_script object="$manager" name="'trade.station'"/>
-						</do_else>	
-
-						<!-- add defense officer -->			
-						<create_platform_actor name="$defencenpc" dockingbay="$Stationdock.component" type="entitytype.defencecontrol"> 
-							<select race="if ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random" tags="tag.defencecontrol"/>
-							<owner exact="$faction"/>
-							<skills>
-								<skill type="combat" exact="5"/>
-								<skill type="engineering" exact="5"/>
-								<skill type="leadership" exact="5"/>
-								<skill type="management" exact="5"/>
-								<skill type="morale" exact="5"/>
-								<skill type="navigation" exact="5"/>
-								<skill type="science" exact="5"/>
-							</skills>
-						</create_platform_actor>
-						<assign_defence_manager actor="$defencenpc" object="$createdStation"/>
-						<start_script object="$defencenpc" name="if $faction == faction.player then 'fight.station.player' else 'fight.attack.object'" />
-						<set_value name="$defencenpc.$config_attackenemies" exact="true" />
-
-						<!-- add Shiptrader -->
-						<do_if value="$ShiptraderDocks.count">
-							<do_all exact="$ShiptraderDocks.count" counter="$j" >
-								<set_value name="$DockHasShipTrader" exact="false" />
-								<do_all exact="$ShiptraderDocks.{$j}.actors.count" counter="$k" >
-									<do_if value="$ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.shiptrader or $ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.smallshiptrader">
-										<set_remote_commable actor="$ShiptraderDocks.{$j}.actors.{$k}" remote="true" />
-										<set_value name="$DockHasShipTrader" exact="true" />
-									</do_if>
-								</do_all>
-								<do_if value="$DockHasShipTrader" negate="true">
-									<!-- shiptrader / smallshiptrader -->
-									<find_object_component name="$buildmodule" object="$createdStation" class="class.buildmodule" checkoperational="false">
-									  <match_buildsource sequence="$ShiptraderDocks.{$j}.component.sequence" stage="$ShiptraderDocks.{$j}.component.stage" />
-									</find_object_component>
-									<do_if value="$buildmodule">
-										<create_platform_actor name="$Shiptrader" dockingbay="$ShiptraderDocks.{$j}.component" type="entitytype.shiptrader">
-											<select race="race.argon" tags="tag.shiptrader"/>
-											<owner exact="$faction"/>
-										</create_platform_actor>
-									</do_if>
-									<do_else>
-										<create_platform_actor name="$Shiptrader" dockingbay="$ShiptraderDocks.{$j}.component" type="entitytype.smallshiptrader">
-											<select race="race.argon" tags="tag.smallshiptrader"/>
-											<owner exact="$faction"/>
-										</create_platform_actor>
-									</do_else>
-									<set_remote_commable actor="$Shiptrader" remote="true" />
-									<share_actor_account actor="$Shiptrader" otherobject="$manager" chance="if $faction == faction.player then 100 else 0" /> <!-- Share account of Manager -->
-									<set_comm_handler actor="$Shiptrader" customhandler="true" />
-									<remove_value name="$Shiptrader"/>		  
-								</do_if>
-								<remove_value name="$buildmodule"/>		  
-								<remove_value name="$DockHasShipTrader"/>		  
-							</do_all>
-						</do_if>
-						<remove_value name="$defencenpc"/>
 						<remove_value name="$Stationdock"/>
-						<remove_value name="$manager"/>
-						<remove_value name="$engineer"/>
 						<remove_value name="$macrolist"/>
 						<remove_value name="$amountlist"/>
 						<remove_value name="$Unitcapacity"/>
-						<remove_value name="$buildmodule"/>
-						<remove_value name="$ShiptraderDocks"/>		  
 					</do_if>
 					<!-- [ npc ]/player difference crew -->			
 					<do_else>
-						<signal_objects object="player.galaxy" param="'init station'" param2="$createdStation"/>
+						<signal_objects object="player.galaxy" param="'init station'" param2="$target"/>
 					</do_else>
-					<remove_value name="$createdStation"/>
+					<remove_value name="$target"/>
 					<remove_value name="$faction"/>
 				</do_if>
 				<signal_objects object="player.galaxy" param="'check for new owner'" param2="event.param2.zone"/>
 			</actions>
 		</cue>
+
+		<!--
+		<set_value name="$target" exact="$Object" />
+		<set_value name="$faction" exact="faction.player" comment="optional" />
+		<include_actions ref="md.MM_defenceplatform.MM_defenceplatform_PLactors" />
+		<remove_value name="$defaultproducts"/>
+		<remove_value name="$faction"/>
+		-->
+		<library name="MM_defenceplatform_PLactors">
+			<actions>
+				<find_dock_location name="$Stationdock" container="$target" size="tag.dock_p"  multiple="false" dockpopulationtype="dockpopulationtype.administrative"/>
+				<do_if value="not $Stationdock">
+					<find_dock_location name="$Stationdock" container="$target" size="tag.dock_p"/>
+				</do_if>
+				<do_if value="$faction?" negate="true">
+					<set_value name="$faction" exact="$target.trueowner" />
+				</do_if>
+
+				<!-- add engineer -->
+				<set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.engineer, null, null]" />
+				<set_value name="$temp_object" exact="$target" />
+				<set_value name="$temp_dock" exact="$Stationdock" />
+				<set_value name="$temp_entitytype" exact="entitytype.engineer" />
+				<set_value name="$temp_Skill" exact="true" />
+				<set_value name="$temp_assign" exact="'engineer'"/>
+				<set_value name="$temp_script" exact="'default'"/>
+				<include_actions ref="md.NF_BASE.NF_create_actor" />
+				<set_value name="$engineer" exact="$newActor" />
+				<remove_value name="$newActor"/>
+
+				<do_if value="$Stationdock or $target.resources.list.count or $target.products.list.count or $target.tradewares.list.count">
+					<!-- add manager -->		
+					<set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.manager, null, null]" />
+					<set_value name="$temp_object" exact="$target" />
+					<set_value name="$temp_dock" exact="$Stationdock" />
+					<set_value name="$temp_entitytype" exact="entitytype.manager" />
+					<set_value name="$temp_Skill" exact="true" />
+					<set_value name="$temp_assign" exact="'manager'"/>
+					<set_value name="$temp_script" exact="'default'"/>
+					<include_actions ref="md.NF_BASE.NF_create_actor" />
+					<set_value name="$manager" exact="$newActor" />
+					<remove_value name="$newActor"/>
+				</do_if>
+
+				<!-- add defense officer -->		
+				<set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.defencecontrol, null, null]" />
+				<set_value name="$temp_object" exact="$target" />
+				<set_value name="$temp_dock" exact="$Stationdock" />
+				<set_value name="$temp_entitytype" exact="entitytype.defencecontrol" />
+				<set_value name="$temp_Skill" exact="true" />
+				<set_value name="$temp_assign" exact="'defence'"/>
+				<set_value name="$temp_script" exact="'default'"/>
+				<include_actions ref="md.NF_BASE.NF_create_actor" />
+				<set_value name="$newActor.$config_attackenemies" exact="true" />
+				<set_value name="$defencenpc" exact="$newActor" />
+				<remove_value name="$newActor"/>
+
+				<!-- add specialists -->
+				<do_if value="$specialists?" negate="true">
+					<get_production_specialist_types name="$specialists" object="$target" />
+				</do_if>
+				<do_all exact="$specialists.count" counter="$l">
+					<set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.{$specialists.{$l}}, null, null]" />
+					<set_value name="$temp_object" exact="$target" />
+					<set_value name="$temp_dock" exact="$Stationdock" />
+					<set_value name="$temp_entitytype" exact="$specialists.{$l}" />
+					<set_value name="$temp_Skill" exact="true" />
+					<set_value name="$temp_assign" exact="'control'"/>
+					<include_actions ref="md.NF_BASE.NF_create_actor" />
+					<remove_value name="$newActor"/>
+				</do_all>
+
+				<find_dock_location container="$target" name="$ShiptraderDocks" dockpopulationtype="dockpopulationtype.ships" multiple="true" />
+				<do_if value="$ShiptraderDocks.count">
+					<do_all exact="$ShiptraderDocks.count" counter="$j" >
+						<set_value name="$DockHasShipTrader" exact="false" />
+						<do_all exact="$ShiptraderDocks.{$j}.actors.count" counter="$k" >
+							<do_if value="$ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.shiptrader or $ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.smallshiptrader">
+								<set_remote_commable actor="$ShiptraderDocks.{$j}.actors.{$k}" remote="true" />
+								<set_value name="$DockHasShipTrader" exact="true" />
+							</do_if>
+						</do_all>
+						<do_if value="$DockHasShipTrader" negate="true">
+							<!-- shiptrader / smallshiptrader -->
+							<find_object_component name="$buildmodule" object="$target" class="class.buildmodule" checkoperational="false">
+								<match_buildsource sequence="$ShiptraderDocks.{$j}.component.sequence" stage="$ShiptraderDocks.{$j}.component.stage" />
+							</find_object_component>
+							<do_if value="$buildmodule">
+								<create_platform_actor name="$Shiptrader" dockingbay="$ShiptraderDocks.{$j}.component" type="entitytype.shiptrader">
+									<select race="race.argon" tags="tag.shiptrader"/>
+									<owner exact="$faction"/>
+								</create_platform_actor>
+							</do_if>
+							<do_else>
+								<create_platform_actor name="$Shiptrader" dockingbay="$ShiptraderDocks.{$j}.component" type="entitytype.smallshiptrader">
+									<select race="race.argon" tags="tag.smallshiptrader"/>
+									<owner exact="$faction"/>
+								</create_platform_actor>
+							</do_else>
+							<set_remote_commable actor="$Shiptrader" remote="true" />
+							<do_if value="$manager?">
+								<share_actor_account actor="$Shiptrader" otherobject="$manager" /> <!-- Share account of Manager chance="if $faction == faction.player then 100 else 0" -->
+							</do_if>
+							<set_comm_handler actor="$Shiptrader" customhandler="true" />
+							<remove_value name="$Shiptrader"/>		  
+						</do_if>
+						<remove_value name="$buildmodule"/>		  
+						<remove_value name="$DockHasShipTrader"/>		  
+					</do_all>
+				</do_if>
+				<remove_value name="$specialists"/>
+				<remove_value name="$specialist"/>
+				<remove_value name="$defencenpc"/>
+				<remove_value name="$manager"/>
+				<remove_value name="$engineer"/>
+				<remove_value name="$buildmodule"/>
+				<remove_value name="$ShiptraderDocks"/>		  
+				<remove_value name="$Stationdock"/>
+			</actions>
+		</library>
+
 	</cues>
 </mdscript>

@@ -1482,9 +1482,12 @@
 						<assign_control_entity actor="$tempActor" object="$temp_object" />
 					</do_elseif>
 
-					<do_if value="global.$factionCEOs.{'$' + $temp_faction.id}? and ['manager','architect','pilot'].indexof.{$temp_assign} ">
-						<share_actor_account actor="$tempActor" otherobject="global.$factionCEOs.{'$' + $temp_faction.id}"/>
+					<do_if value="$temp_faction == faction.player and ['manager','architect','pilot'].indexof.{$temp_assign} ">
+						<set_actor_account actor="$tempActor" />
 					</do_if>
+					<do_elseif value="global.$factionCEOs.{'$' + $temp_faction.id}? and ['manager','architect','pilot'].indexof.{$temp_assign} ">
+						<share_actor_account actor="$tempActor" otherobject="global.$factionCEOs.{'$' + $temp_faction.id}"/>
+					</do_elseif>
 
 					<do_if value="$temp_script? and $temp_script == 'default'">
 						<do_if value="$temp_assign" exact="'pilot'">
@@ -1492,6 +1495,9 @@
 						</do_if>
 						<do_elseif value="$temp_assign" exact="'defence'">
 							<start_script object="$tempActor" name="if $temp_object.isclass.ship then 'fight.defend.capital' else if $temp_faction == faction.player then 'fight.station.player' else 'fight.attack.object.station'"/>
+							<do_if value="$temp_object.macro.id" list="['struct_bt_alb_outpost_macro', 'struct_at_xen_xenon_outpost_macro', 'struct_econ_weapon_ar_defence_macro', 'struct_econ_weapon_ar_defence_2_macro', 'struct_econ_weapon_ar_defence_pl_macro', 'struct_bt_ls_defence_macro', 'khaak_weaponplatform_macro', 'xenon_weaponplatform_macro', 'canteran_weaponplatform_macro']">
+								<set_value name="$tempActor.$config_attackenemies" exact="true" />
+							</do_if>
 						</do_elseif>
 						<do_elseif value="$temp_assign" exact="'engineer'">
 							<!--start_script object="$tempActor" name="'engineer.ai'"/-->
