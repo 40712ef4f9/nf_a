@@ -278,6 +278,142 @@
 				<remove_value name="$Ship" />
 			</actions>
 		</cue>
+
+		<cue name="MM_Care_EngineerControl" instantiate="true">
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="default" />
+					<event_conversation_returned_to_section section="default" />
+					<event_conversation_next_section sectionprefix="mmcareEC_do"/>
+				</check_any>
+				<check_value value="event.object.type" exact="entitytype.engineer" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_value value="event.object.trueowner" exact="faction.player" />
+			</conditions>
+			<actions>
+				<set_value name="$theShip" exact="event.object.container"/>
+				<set_value name="$menue"/>
+				<do_if value="event.param" exact="'mmcareEC_do_work'">
+					<set_value name="$listComp" exact="event.param2"/>
+					<do_if value="event.object.$work? and event.object.$work.$object == $listComp" negate="true">
+						<signal_objects object="$theShip" param="'engineer.support.this'" param2="$listComp" />
+					</do_if>
+					<remove_value name="$menue" />
+				</do_if>
+				<do_elseif value="event.param" exact="'mmcareEC_do_element'">
+					<signal_objects object="$theShip" param="'engineer.repair.this'" param2="event.param2" delay="2s"/>
+					<remove_value name="$menue" />
+				</do_elseif>
+
+				<do_if value="$listComp?">
+					<set_value name="$classes" exact="[class.jumpdrive, class.engine, class.dronelaunchpad, class.radar]"/>
+					<do_if value="event.object.$work?">
+						<do_all exact="$classes.count" counter="$y">
+							<find_object_component name="$PossibleElements" object="$listComp" class="$classes.{$y}" checkoperational="false" multiple="true">
+							  <match_any>
+								<match restorable="true" comment="wrecked"/>
+								<match repairable="true" invulnerable="false">
+								  <match_hull min="75" negate="true" />
+								</match>
+							  </match_any>
+							</find_object_component>
+
+							<find_object_component name="$working" object="$listComp" class="$classes.{$y}" checkoperational="true" min="1">
+							  <match_any>
+								<match repairable="false" invulnerable="false">
+								  <match_hull min="26" />
+								</match>
+								<match repairable="true" invulnerable="false">
+								  <match_hull min="26" />
+								</match>
+							  </match_any>
+							</find_object_component>
+
+							<set_value name="$tmpE" exact="null"/>
+							<set_value name="$tmpWreckChance" exact="if $working then 100 else 0"/>
+							<do_all exact="$PossibleElements.count" counter="$i">
+								<do_if value="$tmpE == null">
+									<set_value name="$tmpE" exact="$PossibleElements.{$i}"/>
+								</do_if>
+								<do_elseif value="$PossibleElements.{$i}.iswreck" chance="$tmpWreckChance">
+									<set_value name="$tmpE" exact="$PossibleElements.{$i}"/>
+								</do_elseif>
+								<do_elseif value="$PossibleElements.{$i}.hullpercentage lt $tmpE.hullpercentage" chance="$tmpWreckChance">
+									<set_value name="$tmpE" exact="$PossibleElements.{$i}"/>
+								</do_elseif>
+								<do_elseif value="$PossibleElements.{$i}.hullpercentage gt $tmpE.hullpercentage">
+									<set_value name="$tmpE" exact="$PossibleElements.{$i}"/>
+								</do_elseif>
+								<do_if value="$tmpE and $tmpE.iswreck" chance="$tmpWreckChance">
+									<break />
+								</do_if>
+							</do_all>
+							
+							<add_player_choice	text="'Do %1'.[$classes.{$y}]" position="$y" tooltip="if $tmpE and event.object.$work.$element.exists and event.object.$work.$element.iswreck and event.object.$work.$elementTime? and event.object.$work.$elementTime gt player.age then 'time to restore %1 Min'.[if (event.object.$work.$elementTime - player.age)i gt 1 then ((event.object.$work.$elementTime - player.age) / 60s)i] else ''" selectable="$tmpE and event.object.$work.$element != $tmpE" section="mmcareEC_do_element" choiceparam="$tmpE" immediate="$tmpE and $tmpE.iswreck and not $working"/>
+						</do_all>
+					</do_if>
+					<do_else>
+						<do_all exact="$classes.count" counter="$y">
+							<find_object_component name="$PossibleElements" object="$listComp" class="$classes.{$y}" checkoperational="false" multiple="true">
+							  <match_any>
+								<match restorable="true" comment="wrecked"/>
+								<match repairable="true" invulnerable="false">
+								  <match_hull min="75" negate="true" />
+								</match>
+							  </match_any>
+							</find_object_component>
+
+							<find_object_component name="$working" object="$listComp" class="$classes.{$y}" checkoperational="true" min="1">
+							  <match_any>
+								<match repairable="false" invulnerable="false">
+								  <match_hull min="26" />
+								</match>
+								<match repairable="true" invulnerable="false">
+								  <match_hull min="26" />
+								</match>
+							  </match_any>
+							</find_object_component>
+
+							<set_value name="$tmpE" exact="null"/>
+							<set_value name="$tmpWreckChance" exact="if $working then 100 else 0"/>
+							<do_all exact="$PossibleElements.count" counter="$i">
+								<do_if value="$tmpE == null">
+									<set_value name="$tmpE" exact="$PossibleElements.{$i}"/>
+								</do_if>
+								<do_elseif value="$PossibleElements.{$i}.iswreck" chance="$tmpWreckChance">
+									<set_value name="$tmpE" exact="$PossibleElements.{$i}"/>
+								</do_elseif>
+								<do_elseif value="$PossibleElements.{$i}.hullpercentage lt $tmpE.hullpercentage" chance="$tmpWreckChance">
+									<set_value name="$tmpE" exact="$PossibleElements.{$i}"/>
+								</do_elseif>
+								<do_elseif value="$PossibleElements.{$i}.hullpercentage gt $tmpE.hullpercentage">
+									<set_value name="$tmpE" exact="$PossibleElements.{$i}"/>
+								</do_elseif>
+								<do_if value="$tmpE and $tmpE.iswreck" chance="$tmpWreckChance">
+									<break />
+								</do_if>
+							</do_all>
+							
+							<add_player_choice	text="'Do %1'.[$classes.{$y}]" position="$y" selectable="$tmpE" section="mmcareEC_do_element" choiceparam="$tmpE" immediate="$tmpE and $tmpE.iswreck and not $working"/>
+						</do_all>
+					</do_else>
+					<remove_value name="$tmpWreckChance" />
+					<remove_value name="$PossibleElements" />
+					<remove_value name="$working" />
+					<remove_value name="$tmpE" />
+					<remove_value name="$classes" />
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+				</do_if>
+
+				<do_if value="$menue?" chance="if event.object.$hacked? and event.object.$hacked gt player.age then 0 else 100">
+					<!-- select Object -->
+					<add_player_choice_sub text="'Repair selection'" position="4" selectable="not event.object.$work? or event.object.$work.$object == $theShip" section="mmcareEC_do_work" choiceparam="$theShip" />
+				</do_if>
+				<remove_value name="$menue" />
+				<remove_value name="$Ship" />
+				<remove_value name="$listComp" />
+			</actions>
+		</cue>
 		<!--
 		<set_value name="$oldShip" exact="event.param2.{1}"/>
 		<set_value name="$theShip" exact="event.param2.{2}"/>

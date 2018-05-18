@@ -99,7 +99,7 @@
 							<remove_value name="$specialisttype" />
 							<remove_value name="$ControlEntities" />
 							<remove_value name="$Stationdock" />
-							
+
 							<!-- relation -->
 							<create_list name="$friends"/>
 							<find_station name="$tmp" space="$target.zone" functional="true" multiple="true" >
@@ -125,7 +125,7 @@
 									</do_if>
 								</do_all>
 								<remove_value name="$tmp"/>
-				
+
 								<do_all exact="$attackers.count" counter="$Counter1">
 									<find_zone name="$attackers_zone" space="player.galaxy" owner="$attackers.{$Counter1}" tempzone="false" mapzone="true" multiple="true" />
 									<find_station name="$tmp" space="player.galaxy" owner="$attackers.{$Counter1}" functional="true" multiple="true" />
@@ -135,7 +135,7 @@
 										</do_if>
 									</do_all>
 									<remove_value name="$tmp"/>
-									
+
 									<do_all exact="$friends.count" counter="$Counter2">
 										<set_value name="$massiveRelation" exact="false" />
 										<do_if value="$attackers.{$Counter1}.hasrelation.enemy.{$friends.{$Counter2}}" negate="true">
@@ -154,7 +154,7 @@
 											</do_all>
 											<remove_value name="$tmp"/>
 										</do_if>
-			
+
 										<do_if value="$friends.indexof.{$attackers.{$Counter1}}" exact="0">
 											<do_if value="$attackers.{$Counter1}.relationto.{$friends.{$Counter2}} ge $attackers.{$Counter1}.relation.member.mid">
 												<!-- -->
@@ -190,7 +190,7 @@
 							<set_owner object="$target" faction="faction.ownerless" />
 
 							<signal_objects object="player.galaxy" param="'check for new owner'" param2="$target.zone"/>
-							
+
 							<do_if value="global.$nfStationdestructionHulls.{'$%1'.[$target.macro.id]} gt 10 and ($target.hullpercentage)i-2 lt global.$nfStationdestructionHulls.{'$%1'.[$target.macro.id]}" comment="update hull-list">
 								<signal_objects object="player.galaxy" param="'Do.check.StMinHull.part2'" param2="[$target, false]"/>
 							</do_if>
@@ -296,11 +296,11 @@
 
 									<do_if value="$init">
 										<restore_object object="$watchedObjects.{$i}.{1}" hull="33" recursive="true" />
-										
+
 										<do_if value="$watchedObjects.{$i}.{1}.isplayerowned" negate="true">
 											<signal_objects object="player.galaxy" param="'reinit station'" param2="$watchedObjects.{$i}.{1}" delay="4s"/>
 										</do_if>
-										
+
 										<do_if value="$watchedObjects_helper.indexof.{$watchedObjects.{$i}.{1}}">
 											<remove_value name="$watchedObjects_helper.{$watchedObjects_helper.indexof.{$watchedObjects.{$i}.{1}}}" />
 										</do_if>
@@ -532,7 +532,7 @@
 								<match owner="faction.ownerless" negate="true"/>
 								<match owner="faction.civilian" negate="true"/>
 							</find_station>
-			
+
 							<do_all exact="$StationsSD.count" counter="$x">
 								<do_if value="$StationsSD.{$x}.hullpercentage lt 10 or $Main_Factions.indexof.{$StationsSD.{$x}.owner.id} == 0 or $StationsSD.{$x}.owner.hasrelation.enemy.{$ZO_temp}" >
 									<continue />
@@ -546,7 +546,7 @@
 								</do_else>
 							</do_all>
 						</do_all>
-						
+
 						<do_if value="$ZO_temp_i.keys.list.count">
 							<set_value name="$keys" exact="$ZO_temp_i.keys.list" />
 							<set_value name="$tmp" exact="null"/>
@@ -738,7 +738,7 @@
 						<do_if value="not $tempTodo.{$Counter}.owner or $tempTodo.{$Counter}.istemporaryzone or $tempTodo.{$Counter}.isclass.highway or not $tempTodo.{$Counter}.ismapzone">
 							<continue />
 						</do_if>
-						
+
 						<do_if value="$ZO_temp_i.{'$%1'.[$tempTodo.{$Counter}.owner.id]}?">
 							<set_value name="$ZO_temp_i.{'$%1'.[$tempTodo.{$Counter}.owner.id]}.{1}" operation="add" />
 						</do_if>
@@ -766,7 +766,7 @@
 						<remove_value name="$keys"/>
 						<remove_value name="$ZO_temp_i"/>
 						<remove_value name="$tmp_count"/>
-						
+
 						<do_if value="$tmp.id" list="$Outlaw_Factions" chance="($tmp? and $tmp) * 100" comment="no pirate sectors, depends problems with masstraffic + -stations">
 							<set_value name="$tmp" exact="null"/>
 						</do_if>
@@ -829,18 +829,18 @@
 														]" />
 						<do_all exact="$drones.count" counter="$i">
 							<do_all exact="$drones.{$i}.{1}.maxmk" counter="$j"> 
-							   <do_if value="$target.units.{$drones.{$i}.{1}}.mk.{$j}.count - $target.availableunits.{$drones.{$i}.{1}}.mk.{$j}.count" min="1">
+								<do_if value="$target.units.{$drones.{$i}.{1}}.mk.{$j}.count - $target.availableunits.{$drones.{$i}.{1}}.mk.{$j}.count" min="1">
 									<do_all exact="$target.units.{$drones.{$i}.{1}}.mk.{$j}.count - $target.availableunits.{$drones.{$i}.{1}}.mk.{$j}.count" reverse="true">
 										<return_units object="$target" macro="$target.units.{$drones.{$i}.{1}}.mk.{$j}.list.{1}" exact="1"/>
 									</do_all>
-							   </do_if>
+								</do_if>
 							</do_all>
 						</do_all>
 						<do_all exact="$drones.count" counter="$i">
 							<do_all exact="$drones.{$i}.{1}.maxmk" counter="$j">
-							   <do_if value="$target.units.{$drones.{$i}.{1}}.mk.{$j}.count">
+								<do_if value="$target.units.{$drones.{$i}.{1}}.mk.{$j}.count">
 									<remove_units object="$target" macro="$target.units.{$drones.{$i}.{1}}.mk.{$j}.list.{1}" exact="$target.units.{$drones.{$i}.{1}}.mk.{$j}.count" /> 
-							   </do_if>
+								</do_if>
 							</do_all>
 						</do_all>
 						<remove_value name="$drones"/>
@@ -851,13 +851,13 @@
 						<find_object_component name="$buildmodule" class="class.buildmodule" object="$target"/>
 						<find_dock_location container="$target" name="$ShiptraderDocks" dockpopulationtype="dockpopulationtype.ships" multiple="true" />
 
- 						<do_if value="$buildmodule">
+						<do_if value="$buildmodule">
 							<add_units object="$target" category="unitcategory.welder" mk="1" exact="0.25f*$Unitcapacity" /> 
 							<add_units object="$target" category="unitcategory.transport" mk="1" exact="0.25f*$Unitcapacity" /> 
 							<add_units object="$target" category="unitcategory.defence" mk="4" exact="0.25f*$Unitcapacity" /> 
 							<add_units object="$target" category="unitcategory.defence" mk="6" exact="0.25f*$Unitcapacity" /> 
 						</do_if>
- 						<do_else>
+						<do_else>
 							<add_units object="$target" category="unitcategory.welder" mk="1" exact="0.05f*$Unitcapacity" /> 
 							<add_units object="$target" category="unitcategory.transport" mk="1" exact="0.5f*$Unitcapacity" />  
 							<add_units object="$target" category="unitcategory.defence" mk="4" exact="0.25f*$Unitcapacity" />  
@@ -925,13 +925,13 @@
 				<set_value name="$faction" exact="$todo.{3}.zone.policefaction" />
 				<do_if value="$faction">
 					<do_if value="not $todo.{3}.sector.representative.{$faction}.{entitytype.lawenforcement}">
-					  <create_representative_actor sector="$todo.{3}.sector" faction="$faction" type="entitytype.lawenforcement" name="$actor" />
-					  <do_if value="$actor">
-						  <debug_text chance="0" text="'ReCreated representative of \'%1\' in sector \'%2\': %3 (%4)'.[$faction.knownname, $todo.{3}.sector.knownname, $actor.knownname, $actor]" filter="scripts_verbose" />
-					  </do_if>
-					  <do_else>
-						  <debug_text chance="0" text="'Failed to create representative of \'%1\' in sector \'%2\' (for police faction in zone \'%3\')'.[$faction.knownname, $sectors.{$i}.knownname, $zones.{$j}.knownname]" filter="general" />
-					  </do_else>
+						<create_representative_actor sector="$todo.{3}.sector" faction="$faction" type="entitytype.lawenforcement" name="$actor" />
+						<do_if value="$actor">
+							<debug_text chance="0" text="'ReCreated representative of \'%1\' in sector \'%2\': %3 (%4)'.[$faction.knownname, $todo.{3}.sector.knownname, $actor.knownname, $actor]" filter="scripts_verbose" />
+						</do_if>
+						<do_else>
+							<debug_text chance="0" text="'Failed to create representative of \'%1\' in sector \'%2\' (for police faction in zone \'%3\')'.[$faction.knownname, $sectors.{$i}.knownname, $zones.{$j}.knownname]" filter="general" />
+						</do_else>
 					</do_if>
 					<remove_value name="$actor" />
 				</do_if>
@@ -1037,9 +1037,9 @@
 					<do_if value="$newHomeBase">
 						<!-- send diplomatic ship -->
 						<create_ship name="$Diplomat_Ship" zone="$target.zone" macro="units_size_m_diplomatic_tp_macro" capturable="false">
-						  <owner exact="$VIP.owner" overridenpc="true"/>
-						  <pilot ref="trader_albion_random"/>
-						  <safepos object="$target"/>
+							<owner exact="$VIP.owner" overridenpc="true"/>
+							<pilot ref="trader_albion_random"/>
+							<safepos object="$target"/>
 						</create_ship>
 						<set_object_min_hull object="$Diplomat_Ship" exact="100"/>
 						<find_dock_location name="$Diplomat_Ship_Dock" container="$Diplomat_Ship" freemissionactorslot="true" multiple="false" />
@@ -1078,9 +1078,9 @@
 						</do_if>
 					</do_all>
 					<remove_value name="$zones"/>
-					
+
 					<create_station name="$Object" macro="$todo" zone="$BuildZone" owner="faction.ownerless" >
-	
+
 						<safepos y="25km" radius="10km"/>
 						<!-- just use the max possible for any station: -->
 						<buildsequence sequence="'a'" stage="1"/>
@@ -1187,14 +1187,14 @@
 					<set_object_hull object="$Object" exact="1"/>
 					<find_object_component object="$Object" groupname="$targetComps" multiple="true" surfaceelement="true" integrated="false"/>
 					<do_all exact="$targetComps.list.count" counter="$tc"> 
-					  <destroy_object object="$targetComps.list.{$tc}" explosion="true"/>
+						<destroy_object object="$targetComps.list.{$tc}" explosion="true"/>
 					</do_all>
 					<remove_value name="$targetComps" /> 
 					<find_object_component object="$Object" groupname="$targetComps" multiple="true" surfaceelement="false" integrated="false" class="class.destructible" checkoperational="false"> 
-					  <match_size min="10m"/> 
+						<match_size min="10m"/> 
 					</find_object_component> 
 					<do_all exact="$targetComps.list.count" counter="$tc"> 
-					  <destroy_object object="$targetComps.list.{$tc}" explosion="true"/>
+						<destroy_object object="$targetComps.list.{$tc}" explosion="true"/>
 					</do_all>
 					<remove_value name="$targetComps" /> 
 
@@ -1229,21 +1229,21 @@
 						<set_value name="$Object" exact="event.param2"/>
 						<set_value name="$kill" exact="true"/>
 					</do_else>
-					
+
 					<do_if value="$Object and $Object.isclass.station"> 
 						<set_value name="$tmpHull" exact="($Object.hullpercentage)i"/>
 						<set_value name="$tmpHull" operation="add" chance="if $tmpHull lt 98 then 100 else 0"/>
 						<set_value name="$tmpHull" operation="add" chance="if $tmpHull lt 98 then 100 else 0"/>
-	
+
 						<do_if value="global.$nfStationdestructionHulls? and not global.$nfStationdestructionHulls.{'$%1'.[$Object.macro.id]}?">
 							<set_value name="global.$nfStationdestructionHulls.{'$%1'.[$Object.macro.id]}" exact="[$tmpHull, 10].max"/>
 						</do_if>
 						<do_elseif value="global.$nfStationdestructionHulls? and global.$nfStationdestructionHulls.{'$%1'.[$Object.macro.id]} gt $tmpHull">
 							<set_value name="global.$nfStationdestructionHulls.{'$%1'.[$Object.macro.id]}" exact="[$tmpHull, 10].max"/>
 						</do_elseif>
-	
+
 						<debug_text text="'$%1 = %2,'.[$Object.macro.id, [$tmpHull, 10].max]" filter="scripts_verbose"  chance="0" />
-	
+
 						<destroy_object explosion="false" object="$Object" chance="if $kill then 100 else 0" />
 					</do_if>
 					<do_else>

@@ -313,21 +313,21 @@
 					<set_value name="$faction" exact="$target.owner" />
 					<!-- add drones -->
 					<set_value name="$Unitcapacity" exact="$target.units.maxcount" />
-					<find_object_component name="$buildmodule" class="class.buildmodule" object="$target"/>
-					<find_dock_location container="$target" name="$ShiptraderDocks" dockpopulationtype="dockpopulationtype.ships" multiple="true" />
+					<!--find_object_component name="$buildmodule" class="class.buildmodule" object="$target"/-->
 
-					<do_if value="$buildmodule and $faction == faction.player">
-						<add_units object="$target" category="unitcategory.welder" mk="1" exact="0.3*$Unitcapacity" />  
-						<add_units object="$target" category="unitcategory.transport" mk="1" exact="0.2*$Unitcapacity" />  
+					<do_if value="$target.canbuildships and $faction == faction.player">
+						<add_units object="$target" category="unitcategory.welder" mk="1" exact="[0.3*$Unitcapacity, 75].min" />  
+						<add_units object="$target" category="unitcategory.transport" mk="1" exact="[0.2*$Unitcapacity, 100].min" />  
 						<add_units object="$target" category="unitcategory.defence" mk="4" exact="0.25*$Unitcapacity" />  
 						<add_units object="$target" category="unitcategory.defence" mk="6" exact="0.25*$Unitcapacity" />  
+						<add_units object="$target" category="unitcategory.defence" mk="2" exact="$target.units.maxcount-$target.units.count" />  
 					</do_if>
 					<do_elseif value="$faction" exact="faction.player">
-						<add_units object="$target" category="unitcategory.transport" mk="1" exact="0.5*$Unitcapacity" />  
+						<add_units object="$target" category="unitcategory.transport" mk="1" exact="[0.5*$Unitcapacity, 150].min" />  
 						<add_units object="$target" category="unitcategory.defence" mk="4" exact="0.25*$Unitcapacity" />  
-						<add_units object="$target" category="unitcategory.defence" mk="6" exact="0.25*$Unitcapacity" chance="if md.$stationengineerai? then 100 else 0" />  
-						<add_units object="$target" category="unitcategory.defence" mk="6" exact="0.20*$Unitcapacity" chance="if md.$stationengineerai? then 0 else 100" />  
-						<add_units object="$target" category="unitcategory.welder" mk="1" exact="0.05*$Unitcapacity" chance="if md.$stationengineerai? then 0 else 100" />  
+						<add_units object="$target" category="unitcategory.defence" mk="6" exact="0.20*$Unitcapacity" />  
+						<add_units object="$target" category="unitcategory.welder" mk="1" exact="0.05*$Unitcapacity" />  
+						<add_units object="$target" category="unitcategory.defence" mk="2" exact="$target.units.maxcount-$target.units.count" />  
 					</do_elseif>
 
 					<!-- add missiles for v launcher -->
@@ -341,11 +341,6 @@
 						<!-- add NPCs -->		 
 						<include_actions ref="md.MM_defenceplatform.MM_defenceplatform_PLactors" />
 						<remove_value name="$defaultproducts"/>
-
-						<remove_value name="$Stationdock"/>
-						<remove_value name="$macrolist"/>
-						<remove_value name="$amountlist"/>
-						<remove_value name="$Unitcapacity"/>
 					</do_if>
 					<!-- [ npc ]/player difference crew -->			
 					<do_else>
@@ -353,6 +348,10 @@
 					</do_else>
 					<remove_value name="$target"/>
 					<remove_value name="$faction"/>
+					<remove_value name="$macrolist"/>
+					<remove_value name="$amountlist"/>
+					<remove_value name="$Unitcapacity"/>
+					<remove_value name="$buildmodule"/>
 				</do_if>
 				<signal_objects object="player.galaxy" param="'check for new owner'" param2="event.param2.zone"/>
 			</actions>
@@ -407,7 +406,7 @@
 				<set_value name="$temp_dock" exact="$Stationdock" />
 				<set_value name="$temp_entitytype" exact="entitytype.defencecontrol" />
 				<set_value name="$temp_Skill" exact="true" />
-				<set_value name="$temp_assign" exact="'defence'"/>
+				<set_value name="$temp_assign" exact="'defencecontrol'"/>
 				<set_value name="$temp_script" exact="'default'"/>
 				<include_actions ref="md.NF_BASE.NF_create_actor" />
 				<set_value name="$newActor.$config_attackenemies" exact="true" />
@@ -429,29 +428,52 @@
 					<remove_value name="$newActor"/>
 				</do_all>
 
-				<find_dock_location container="$target" name="$ShiptraderDocks" dockpopulationtype="dockpopulationtype.ships" multiple="true" />
-				<do_if value="$ShiptraderDocks.count">
-					<do_all exact="$ShiptraderDocks.count" counter="$j" >
+				<do_if value="$target.canproduceships or $target.canbuildships">
+					<include_actions ref="md.MM_defenceplatform.MM_defenceplatform_ShipTraders" />
+				</do_if>
+				<remove_value name="$specialists"/>
+				<remove_value name="$specialist"/>
+				<remove_value name="$defencenpc"/>
+				<remove_value name="$manager"/>
+				<remove_value name="$engineer"/>
+				<remove_value name="$buildmodule"/>
+				<remove_value name="$Stationdock"/>
+			</actions>
+		</library>
+		<!--
+		<set_value name="$target" exact="$Object" />
+		<set_value name="$faction" exact="faction.player" comment="optional" />
+		<include_actions ref="md.MM_defenceplatform.MM_defenceplatform_ShipTraders" />
+		<remove_value name="$faction"/>
+		-->
+		<library name="MM_defenceplatform_ShipTraders">
+			<actions>
+				<do_if value="$faction?" negate="true">
+					<set_value name="$faction" exact="$target.trueowner" />
+				</do_if>
+				<find_dock_location container="$target" name="$tmpShiptraderDocks" dockpopulationtype="dockpopulationtype.ships" multiple="true" />
+				<do_if value="$tmpShiptraderDocks.count">
+					<do_all exact="$tmpShiptraderDocks.count" counter="$j" >
 						<set_value name="$DockHasShipTrader" exact="false" />
-						<do_all exact="$ShiptraderDocks.{$j}.actors.count" counter="$k" >
-							<do_if value="$ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.shiptrader or $ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.smallshiptrader">
-								<set_remote_commable actor="$ShiptraderDocks.{$j}.actors.{$k}" remote="true" />
+						<do_all exact="$tmpShiptraderDocks.{$j}.actors.count" counter="$k" >
+							<do_if value="$tmpShiptraderDocks.{$j}.actors.{$k}.type == entitytype.shiptrader or $tmpShiptraderDocks.{$j}.actors.{$k}.type == entitytype.smallshiptrader">
+								<set_remote_commable actor="$tmpShiptraderDocks.{$j}.actors.{$k}" remote="true" />
 								<set_value name="$DockHasShipTrader" exact="true" />
 							</do_if>
 						</do_all>
 						<do_if value="$DockHasShipTrader" negate="true">
 							<!-- shiptrader / smallshiptrader -->
 							<find_object_component name="$buildmodule" object="$target" class="class.buildmodule" checkoperational="false">
-								<match_buildsource sequence="$ShiptraderDocks.{$j}.component.sequence" stage="$ShiptraderDocks.{$j}.component.stage" />
+								<match_buildsource sequence="$tmpShiptraderDocks.{$j}.component.sequence" stage="$tmpShiptraderDocks.{$j}.component.stage" />
 							</find_object_component>
 							<do_if value="$buildmodule">
-								<create_platform_actor name="$Shiptrader" dockingbay="$ShiptraderDocks.{$j}.component" type="entitytype.shiptrader">
+								<create_platform_actor name="$Shiptrader" dockingbay="$tmpShiptraderDocks.{$j}.component" type="entitytype.shiptrader">
 									<select race="race.argon" tags="tag.shiptrader"/>
 									<owner exact="$faction"/>
 								</create_platform_actor>
 							</do_if>
 							<do_else>
-								<create_platform_actor name="$Shiptrader" dockingbay="$ShiptraderDocks.{$j}.component" type="entitytype.smallshiptrader">
+								<create_platform_actor name="$Shiptrader" dockingbay="$tmpShiptraderDocks.{$j}.component" type="entitytype.smallshiptrader">
 									<select race="race.argon" tags="tag.smallshiptrader"/>
 									<owner exact="$faction"/>
 								</create_platform_actor>
@@ -467,14 +489,7 @@
 						<remove_value name="$DockHasShipTrader"/>		  
 					</do_all>
 				</do_if>
-				<remove_value name="$specialists"/>
-				<remove_value name="$specialist"/>
-				<remove_value name="$defencenpc"/>
-				<remove_value name="$manager"/>
-				<remove_value name="$engineer"/>
-				<remove_value name="$buildmodule"/>
-				<remove_value name="$ShiptraderDocks"/>		  
-				<remove_value name="$Stationdock"/>
+				<remove_value name="$tmpShiptraderDocks"/>		  
 			</actions>
 		</library>
 

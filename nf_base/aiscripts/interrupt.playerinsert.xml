@@ -8,6 +8,7 @@
       <handler name="PlayerInput">
         <conditions>
           <event_object_signalled object="this.ship"/>
+          <check_value value="this.$carrier?" negate="true" />
           <check_value value="this.ship.isplayerowned" />
 		  <check_value value="event.param" list="[
 		  		'dock at',

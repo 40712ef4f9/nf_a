@@ -14,18 +14,26 @@
         <abort_called_scripts resume="end"/>
       </actions>
     </handler>
+    <handler comment="repair object">
+      <conditions>
+        <event_object_signalled object="this.object" param="'engineer.repair.this'" />
+        <check_value value="event.param2? and event.param2.exists and event.param2.container == $Defensible"/>
+      </conditions>
+      <actions>
+        <set_value name="$CurrentElement" exact="event.param2" />
+        <set_command_action commandaction="commandaction.repairingto" param="$CurrentElement" />
+        <do_if value="$CurrentElement? and $RestoreTime? and $CurrentElement != event.param2">
+          <set_value name="$RestoreTime" exact="0"/>
+        </do_if>
+        <abort_called_scripts resume="checkelement"/>
+      </actions>
+    </handler>
   </interrupts>
   <init>
     <set_value name="$repairfrequency" exact="20s" />
     <set_value name="$nextelementcheck" exact="0" />
     <set_value name="$baserepairrate" exact="50" />
     <set_value name="$CurrentElement" exact="null"/>
-    <do_if value="$Defensible != this.defensible">
-      <set_command command="command.support" param="$Defensible" />
-    </do_if>
-    <do_else>
-      <set_command command="command.repair" />
-    </do_else>
   </init>
   <attention min="unknown">
     <actions>
@@ -205,6 +213,7 @@
         <resume label="end" />
       </do_elseif>
 
+      <label name="checkelement" />
       <do_if value="$CurrentElement.exists">
         <do_if value="$CurrentElement.iswreck">
           <!--Do not fix wrecked components where the parent is also a wreck-->
@@ -253,6 +262,12 @@
 
 
       <label name="startrepair" />
+      <do_if value="this.$work?" negate="true">
+        <set_value name="this.$work" exact="table[$object = $Defensible, $element = $CurrentElement]" />
+        <do_if value="$RestoreTime?">
+          <set_value name="this.$work.$elementTime" exact="$RestoreTime" />
+        </do_if>
+      </do_if>
       <!-- send out the repair drones -->
       <do_if value="not @$networkid" chance="0">
         <do_if value="not $MassTrafficTargets?">
@@ -403,6 +418,12 @@
           </do_if>
         </do_else>
         <signal_objects object="player.galaxy" param="'learned.something'" param2="[this, ware.inv_virtualseminarengineering, 'repair']" />
+        <do_if value="this.$work?">
+          <set_value name="this.$work.$element" exact="$CurrentElement" />
+          <do_if value="$RestoreTime?">
+            <set_value name="this.$work.$elementTime" exact="$RestoreTime" />
+          </do_if>
+        </do_if>
       </do_if>
 
       <resume label="checkforrepair" />
@@ -413,10 +434,12 @@
       <set_value name="$Defensible" exact="this.defensible"/>
       <end_repair_mass_traffic object="this.defensible" />
       <set_command command="command.repair" />
+      <remove_value name="this.$work" /> 
 
     </actions>
   </attention>
   <on_abort>
     <end_repair_mass_traffic object="this.defensible" />
+    <remove_value name="this.$work" /> 
   </on_abort>
 </aiscript>

@@ -553,28 +553,25 @@
 
 						<do_if value="$Commandship">
 							<do_if value="$Commandship.boardingnpc" negate="true">
-								<find_dock_location name="$NPCDock" container="$Commandship" size="tag.dock_p"/>
-								<create_cue_actor name="$Marine" cue="this">
-									<select group="albion.marine"/>
-									<owner exact="$Commandship.trueowner"/>
-								</create_cue_actor>
-								<set_skill entity="$Marine" type="combat" min="3" max="5"/>
-								<set_skill entity="$Marine" type="engineering" exact="5"/>
-								<set_skill entity="$Marine" type="leadership" exact="5"/>
-								<set_skill entity="$Marine" type="management" exact="5"/>
-								<set_skill entity="$Marine" type="morale" min="3" max="5"/>
-								<set_skill entity="$Marine" type="navigation" min="3" max="5"/>
-								<set_skill entity="$Marine" type="science" min="3" max="5"/>
-								<set_entity_type entity="$Marine" type="entitytype.marine"/>
-								<do_if value="$NPCDock">
-									<add_actor_to_platform actor="$Marine" dockingbay="$NPCDock.component"/>
-								</do_if>
-								<do_else>
-									<add_actor_to_room actor="$Marine" object="$Commandship" />
-								</do_else>
-								<assign_boarding_commander actor="$Marine" object="$Commandship"/>
-								<remove_cue_actor actor="$Marine" cue="this"/>
-								<remove_value name="$NPCDock"/>
+								<find_dock_location name="$temp_dock" container="$Commandship" size="tag.dock_p"/>
+								<set_value name="$temp_select" exact="[albion.marine, if ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.marine, null, null]" />
+								<set_value name="$temp_object" exact="$Commandship" />
+								<set_value name="$temp_faction" exact="$temp_object.trueowner" />
+								<set_value name="$temp_entitytype" exact="entitytype.manager" />
+								<set_value name="$temp_Skill" exact="
+									[	
+										[skilltype.boarding,	'random', 3, 5],
+										[skilltype.leadership,	'exact'],
+										[skilltype.navigation,	'random', 3, 5],
+										[skilltype.combat,		'random', 3, 5],
+										[skilltype.engineering,	'exact'],
+										[skilltype.management,	'exact'],
+										[skilltype.morale,		'random', 3, 5],
+										[skilltype.science,		'random', 3, 5]
+									]" />
+								<set_value name="$temp_assign" exact="'marine'"/>
+								<include_actions ref="md.NF_BASE.NF_create_actor" />
+								<remove_value name="$newActor"/>
 							</do_if>
 
 							<do_if value="$Commandship == $Ship">

@@ -988,6 +988,7 @@
 									<set_value name="$temp_entitytype" exact="entitytype.architect" />
 									<set_value name="$temp_assign" exact="'architect'"/>
 									<include_actions ref="md.NF_BASE.NF_create_actor" />
+									<set_value name="$shiparch" exact="$newActor" />
 
 									<do_if value="$CEO and $shiparch.owner == $CEO.owner" chance="0">
 										<share_actor_account actor="$shiparch" otherobject="$CEO"/>
@@ -1198,190 +1199,113 @@
 				
 					<do_if value="$finalStationOwner == faction.player and (@$addCrew or @$actor.$jobDetails.$addCrew)">
 						<!-- do complete station for player -->
-						<set_value name="$createdStation" exact="$CVShip.buildanchor" />
+						<set_value name="$target" exact="$CVShip.buildanchor" />
+						<set_value name="$faction" exact="$finalStationOwner" />
 						<!-- add drones -->
-						<set_value name="$Unitcapacity" exact="$createdStation.units.maxcount" />
-						<find_object_component name="$buildmodule" class="class.buildmodule" object="$createdStation"/>
-						<find_dock_location container="$createdStation" name="$ShiptraderDocks" dockpopulationtype="dockpopulationtype.ships" multiple="true" />
-
-						<do_if value="$buildmodule and $finalStationOwner == faction.player">
-							<add_units object="$createdStation" category="unitcategory.welder" mk="1" exact="0.25*$Unitcapacity" />  
-							<add_units object="$createdStation" category="unitcategory.transport" mk="1" exact="0.25*$Unitcapacity" />  
-							<add_units object="$createdStation" category="unitcategory.defence" mk="4" exact="0.25*$Unitcapacity" />  
-							<add_units object="$createdStation" category="unitcategory.defence" mk="6" exact="0.25*$Unitcapacity" />  
+						<set_value name="$Unitcapacity" exact="$target.units.maxcount" />
+						<!--find_object_component name="$buildmodule" class="class.buildmodule" object="$target"/-->
+	
+						<do_if value="$target.canbuildships and $faction == faction.player">
+							<add_units object="$target" category="unitcategory.welder" mk="1" exact="[0.3*$Unitcapacity, 75].min" />  
+							<add_units object="$target" category="unitcategory.transport" mk="1" exact="[0.2*$Unitcapacity, 100].min" />  
+							<add_units object="$target" category="unitcategory.defence" mk="4" exact="0.25*$Unitcapacity" />  
+							<add_units object="$target" category="unitcategory.defence" mk="6" exact="0.25*$Unitcapacity" />  
+							<add_units object="$target" category="unitcategory.defence" mk="2" exact="$target.units.maxcount-$target.units.count" />  
 						</do_if>
-						<do_elseif value="$finalStationOwner" exact="faction.player">
-							<add_units object="$createdStation" category="unitcategory.transport" mk="1" exact="0.5*$Unitcapacity" />  
-							<add_units object="$createdStation" category="unitcategory.defence" mk="4" exact="0.25*$Unitcapacity" />  
-							<add_units object="$createdStation" category="unitcategory.defence" mk="6" exact="0.20*$Unitcapacity" />  
-							<add_units object="$createdStation" category="unitcategory.welder" mk="1" exact="0.05*$Unitcapacity" />  
+						<do_elseif value="$faction" exact="faction.player">
+							<add_units object="$target" category="unitcategory.transport" mk="1" exact="[0.5*$Unitcapacity, 150].min" />  
+							<add_units object="$target" category="unitcategory.defence" mk="4" exact="0.25*$Unitcapacity" />  
+							<add_units object="$target" category="unitcategory.defence" mk="6" exact="0.20*$Unitcapacity" />  
+							<add_units object="$target" category="unitcategory.welder" mk="1" exact="0.05*$Unitcapacity" />  
+							<add_units object="$target" category="unitcategory.defence" mk="2" exact="$target.units.maxcount-$target.units.count" />  
 						</do_elseif>
-
+	
 						<!-- add missiles for v launcher -->
-						<evaluate_ammo_storage object="$createdStation" type="missile" macros="$macrolist" amounts="$amountlist" />
+						<evaluate_ammo_storage object="$target" type="missile" macros="$macrolist" amounts="$amountlist" />
 						<do_all exact="$macrolist.count" counter="$i">
-							<add_ammo object="$createdStation" macro="$macrolist.{$i}" amount="$amountlist.{$i}" /> 
+							<add_ammo object="$target" macro="$macrolist.{$i}" amount="$amountlist.{$i}" /> 
 						</do_all> 
 
 						<!-- add NPCs -->		 
-						<find_dock_location name="$Stationdock" container="$createdStation" size="tag.dock_p"  multiple="false" dockpopulationtype="dockpopulationtype.administrative"/>
-						<do_if value="not $Stationdock">
-							<find_dock_location name="$Stationdock" container="$createdStation" size="tag.dock_p"/>
-						</do_if>
+						<include_actions ref="md.MM_defenceplatform.MM_defenceplatform_PLactors" />
+						<remove_value name="$defaultproducts"/>
 
-						<!-- add engineer -->
-						<set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$finalStationOwner.id} then race.{$finalStationOwner.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.engineer, null, null]" />
-						<set_value name="$temp_object" exact="$createdStation" />
-						<set_value name="$temp_dock" exact="$Stationdock" />
-						<set_value name="$temp_entitytype" exact="entitytype.engineer" />
-						<set_value name="$temp_Skill" exact="'max'" />
-						<set_value name="$temp_assign" exact="'engineer'"/>
-						<set_value name="$temp_script" exact="'default'"/>
-						<include_actions ref="md.NF_BASE.NF_create_actor" />
-						<set_value name="$engineer" exact="$newActor" />
-						<remove_value name="$newActor"/>
-
-						<!-- add manager -->		
-						<set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$finalStationOwner.id} then race.{$finalStationOwner.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.manager, null, null]" />
-						<set_value name="$temp_object" exact="$createdStation" />
-						<set_value name="$temp_dock" exact="$Stationdock" />
-						<set_value name="$temp_entitytype" exact="entitytype.manager" />
-						<set_value name="$temp_Skill" exact="'max'" />
-						<set_value name="$temp_assign" exact="'manager'"/>
-						<set_value name="$temp_script" exact="'default'"/>
-						<include_actions ref="md.NF_BASE.NF_create_actor" />
-						<set_value name="$manager" exact="$newActor" />
-						<remove_value name="$newActor"/>
-
-						<!-- add defense officer -->		
-						<set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$finalStationOwner.id} then race.{$finalStationOwner.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.defencecontrol, null, null]" />
-						<set_value name="$temp_object" exact="$createdStation" />
-						<set_value name="$temp_dock" exact="$Stationdock" />
-						<set_value name="$temp_entitytype" exact="entitytype.defencecontrol" />
-						<set_value name="$temp_Skill" exact="'max'" />
-						<set_value name="$temp_assign" exact="'defence'"/>
-						<set_value name="$temp_script" exact="'default'"/>
-						<include_actions ref="md.NF_BASE.NF_create_actor" />
-						<set_value name="$newActor.$config_attackenemies" exact="true" />
-						<set_value name="$defencenpc" exact="$newActor" />
-						<remove_value name="$newActor"/>
-
-						<!-- add Shiptrader -->
-						<do_if value="$ShiptraderDocks.count">
-							<do_all exact="$ShiptraderDocks.count" counter="$j" >
-								<set_value name="$DockHasShipTrader" exact="false" />
-								<do_all exact="$ShiptraderDocks.{$j}.actors.count" counter="$k" >
-									<do_if value="$ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.shiptrader or $ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.smallshiptrader">
-										<set_remote_commable actor="$ShiptraderDocks.{$j}.actors.{$k}" remote="true" />
-										<set_value name="$DockHasShipTrader" exact="true" />
-									</do_if>
-								</do_all>
-								<do_if value="$DockHasShipTrader" negate="true">
-									<!-- shiptrader / smallshiptrader -->
-									<find_object_component name="$buildmodule" object="$createdStation" class="class.buildmodule" checkoperational="false">
-									  <match_buildsource sequence="$ShiptraderDocks.{$j}.component.sequence" stage="$ShiptraderDocks.{$j}.component.stage" />
-									</find_object_component>
-									<do_if value="$buildmodule">
-										<create_platform_actor name="$Shiptrader" dockingbay="$ShiptraderDocks.{$j}.component" type="entitytype.shiptrader">
-											<select race="race.argon" tags="tag.shiptrader"/>
-											<owner exact="$finalStationOwner"/>
-										</create_platform_actor>
-									</do_if>
-									<do_else>
-										<create_platform_actor name="$Shiptrader" dockingbay="$ShiptraderDocks.{$j}.component" type="entitytype.smallshiptrader">
-											<select race="race.argon" tags="tag.smallshiptrader"/>
-											<owner exact="$finalStationOwner"/>
-										</create_platform_actor>
-									</do_else>
-									<set_remote_commable actor="$Shiptrader" remote="true" />
-									<share_actor_account actor="$Shiptrader" otherobject="$manager" chance="if $finalStationOwner == faction.player then 100 else 0" /> <!-- Share account of Manager -->
-									<set_comm_handler actor="$Shiptrader" customhandler="true" />
-									<remove_value name="$Shiptrader"/>
-								</do_if>
-								<remove_value name="$buildmodule"/>
-								<remove_value name="$DockHasShipTrader"/>
-							</do_all>
-						</do_if>
 						<create_ai_unit object="$CVShip.buildanchor" />
 					
-						<add_default_production_wares object="$createdStation" lowerlimit="20" upperlimit="50"/>
+						<add_default_production_wares object="$target" lowerlimit="20" upperlimit="50"/>
 
 						<!-- 2nd payment -->
-						<do_if value="$createdStation.value - $stationcosts">
-							<do_if value="$createdStation.value - $stationcosts le player.entity.money">
-								<transfer_money from="player.entity" to="$CVShip.pilot" amount="$createdStation.value - $stationcosts" />
-								<write_to_logbook category="missions" text="{40002,160}.[$createdStation.name, $createdStation.zone.name, ($createdStation.value - $stationcosts).formatted.default]"/>
+						<do_if value="$target.value - $stationcosts">
+							<do_if value="$target.value - $stationcosts le player.entity.money">
+								<transfer_money from="player.entity" to="$CVShip.pilot" amount="$target.value - $stationcosts" />
+								<write_to_logbook category="missions" text="{40002,160}.[$target.name, $target.zone.name, ($target.value - $stationcosts).formatted.default]"/>
 								<remove_value name="$stationcosts"/>
 							</do_if>
 							<do_else>
 								<set_value name="$expensiveCargo" exact="[ware.drp_assault, ware.drp_cargolifter, ware.drp_construction, ware.drp_interceptor_mk1, ware.drp_interceptor_mk2, ware.drp_intrepid_mk1, ware.drp_intrepid_mk2, ware.drp_overrun_mk1, ware.drp_overrun_mk2, ware.drp_scoopcollector_mk1, ware.drp_scoopcollector_mk2, ware.drp_surfaceminer_mk1, ware.drp_surfaceminer_mk2, ware.dumbfiremissile, ware.dumbfireturret]" />
 								<do_all exact="$expensiveCargo.count" counter="$i">
-								   <do_if value="$createdStation.cargo.{$expensiveCargo.{$i}}.count">
-										<remove_cargo object="$createdStation" ware="$expensiveCargo.{$i}" exact="$createdStation.cargo.{$expensiveCargo.{$i}}.count" />
+								   <do_if value="$target.cargo.{$expensiveCargo.{$i}}.count">
+										<remove_cargo object="$target" ware="$expensiveCargo.{$i}" exact="$target.cargo.{$expensiveCargo.{$i}}.count" />
 								   </do_if>
 								</do_all>
 								<remove_value name="$expensiveCargo"/>
 								<!-- next try and lowering costs -->
-								<do_if value="$createdStation.value - $stationcosts le player.entity.money">
-									<transfer_money from="player.entity" to="$CVShip.pilot" amount="$createdStation.value - $stationcosts" result="$result" />
-									<write_to_logbook category="missions" text="{40002,160}.[$createdStation.name, $createdStation.zone.name, $result.formatted.default]"/>
+								<do_if value="$target.value - $stationcosts le player.entity.money">
+									<transfer_money from="player.entity" to="$CVShip.pilot" amount="$target.value - $stationcosts" result="$result" />
+									<write_to_logbook category="missions" text="{40002,160}.[$target.name, $target.zone.name, $result.formatted.default]"/>
 									<remove_value name="$stationcosts"/>
 								</do_if>
 								<do_else>
 									<do_all exact="unitcategory.defence.maxmk" counter="$j">
 									   <do_if value="$theShip.units.{unitcategory.defence}.mk.{$j}.count">
-											<remove_units object="$createdStation" macro="$createdStation.units.{unitcategory.defence}.mk.{$j}.list.{1}" exact="$createdStation.units.{unitcategory.defence}.mk.{$j}.count" /> 
+											<remove_units object="$target" macro="$target.units.{unitcategory.defence}.mk.{$j}.list.{1}" exact="$target.units.{unitcategory.defence}.mk.{$j}.count" /> 
 									   </do_if>
 									</do_all>
 									<!-- next try and lowering costs -->
-									<do_if value="$createdStation.value - $stationcosts le player.entity.money">
-										<transfer_money from="player.entity" to="$CVShip.pilot" amount="$createdStation.value - $stationcosts" result="$result" />
-										<write_to_logbook category="missions" text="{40002,160}.[$createdStation.name, $createdStation.zone.name, $result.formatted.default]"/>
+									<do_if value="$target.value - $stationcosts le player.entity.money">
+										<transfer_money from="player.entity" to="$CVShip.pilot" amount="$target.value - $stationcosts" result="$result" />
+										<write_to_logbook category="missions" text="{40002,160}.[$target.name, $target.zone.name, $result.formatted.default]"/>
 										<remove_value name="$stationcosts"/>
 									</do_if>
 									<do_else>
-										<do_all exact="$createdStation.cargo.list.count" counter="$i">
-											<remove_cargo object="$createdStation" ware="$createdStation.cargo.list.{$i}" exact="$createdStation.cargo.{$createdStation.cargo.list.{$i}}.count" />
+										<do_all exact="$target.cargo.list.count" counter="$i">
+											<remove_cargo object="$target" ware="$target.cargo.list.{$i}" exact="$target.cargo.{$target.cargo.list.{$i}}.count" />
 										</do_all>
 										<!-- last try and grab whats possible -->
-										<do_if value="$createdStation.value - $stationcosts le player.entity.money">
-											<transfer_money from="player.entity" to="$CVShip.pilot" amount="$createdStation.value - $stationcosts" result="$result" />
-											<write_to_logbook category="missions" text="{40002,160}.[$createdStation.name, $createdStation.zone.name, $result.formatted.default]"/>
+										<do_if value="$target.value - $stationcosts le player.entity.money">
+											<transfer_money from="player.entity" to="$CVShip.pilot" amount="$target.value - $stationcosts" result="$result" />
+											<write_to_logbook category="missions" text="{40002,160}.[$target.name, $target.zone.name, $result.formatted.default]"/>
 											<remove_value name="$stationcosts"/>
 										</do_if>
 										<do_else>
-											<find_object_component name="$buildmodule" class="class.buildmodule" object="$createdStation"/>
+											<find_object_component name="$buildmodule" class="class.buildmodule" object="$target"/>
 											<do_all exact="unitcategory.welder.maxmk" counter="$j">
 											   <do_if value="$theShip.units.{unitcategory.welder}.mk.{$j}.count">
 													<do_if value="$buildmodule">
-														<remove_units object="$createdStation" macro="$createdStation.units.{unitcategory.welder}.mk.{$j}.list.{1}" exact="$createdStation.units.{unitcategory.welder}.mk.{$j}.count/2" /> 
+														<remove_units object="$target" macro="$target.units.{unitcategory.welder}.mk.{$j}.list.{1}" exact="$target.units.{unitcategory.welder}.mk.{$j}.count/2" /> 
 													</do_if>
 													<do_else>
-														<remove_units object="$createdStation" macro="$createdStation.units.{unitcategory.welder}.mk.{$j}.list.{1}" exact="$createdStation.units.{unitcategory.welder}.mk.{$j}.count" /> 
+														<remove_units object="$target" macro="$target.units.{unitcategory.welder}.mk.{$j}.list.{1}" exact="$target.units.{unitcategory.welder}.mk.{$j}.count" /> 
 													</do_else>
 											   </do_if>
 											</do_all>
 											<do_if value="$engineer">
 												<destroy_object object="$engineer" explosion="false" />
 											</do_if>
-											<transfer_money from="player.entity" to="$CVShip.pilot" amount="$createdStation.value - $stationcosts" result="$result" />
-											<write_to_logbook category="missions" text="{40002,160}.[$createdStation.name, $createdStation.zone.name, $result.formatted.default]"/>
+											<transfer_money from="player.entity" to="$CVShip.pilot" amount="$target.value - $stationcosts" result="$result" />
+											<write_to_logbook category="missions" text="{40002,160}.[$target.name, $target.zone.name, $result.formatted.default]"/>
 										</do_else>
 									</do_else>
 								</do_else>
 							</do_else>
 						</do_if>
 						<remove_value name="$result"/>
-				
-						<remove_value name="$defencenpc"/>
-						<remove_value name="$Stationdock"/>
-						<remove_value name="$manager"/>
-						<remove_value name="$engineer"/>
+						<remove_value name="$target"/>
+						<remove_value name="$faction"/>
 						<remove_value name="$macrolist"/>
 						<remove_value name="$amountlist"/>
 						<remove_value name="$Unitcapacity"/>
 						<remove_value name="$buildmodule"/>
-						<remove_value name="$ShiptraderDocks"/>
 					</do_if>
 					<do_elseif value="$finalStationOwner != faction.player">
 						<signal_objects object="player.galaxy" param="'init station'" param2="$CVShip.buildanchor"/>

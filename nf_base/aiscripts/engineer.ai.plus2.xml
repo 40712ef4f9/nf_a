@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<aiscript name="engineer.ai.plus2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" >
+<aiscript name="engineer.ai.plus2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
   <params>
     <param name="debugoutputchance" default="0"/>
     <param name="debugoutputchance2" default="0"/>
@@ -49,6 +49,10 @@
 
 
       <label name="loop" />
+
+      <do_if value="player.age le @this.$hacked">
+        <wait exact="@this.$hacked - player.age" sinceversion="2" />
+      </do_if>
 
       <do_if value="this.$Defensible? and this.$Defensible.exists and this.$Defensible.isclass.[class.ship, class.station] and this.defensible.hullpercentage ge $hulldamagelimit">
         <do_if value="(this.$Defensible.zone != this.defensible.zone and this.defensible.distanceto.{this.$Defensible} gt this.defensible.maxradarrange*0.6f) or this.defensible.distanceto.{this.$Defensible} gt this.defensible.maxradarrange">
@@ -207,6 +211,12 @@
       <do_if value="$Defensible? and $Defensible.exists and $Defensible.isclass.[class.ship, class.station]" negate="true">
         <set_value name="$Defensible" exact="this.defensible" />
       </do_if>
+      <do_if value="$Defensible != this.defensible">
+        <set_command command="command.support" param="$Defensible" />
+      </do_if>
+      <do_else>
+        <set_command command="command.repair" />
+      </do_else>
 
       <run_script name="'engineer.ai.plus2.process'">
         <param name="Defensible" value="$Defensible" />

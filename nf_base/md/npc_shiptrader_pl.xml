@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <mdscript name="NPC_Shiptrader_Pl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
-
   <cues>
     <cue name="DockingShip_Cleanup" instantiate="true" namespace="this">
       <conditions>
@@ -782,97 +781,65 @@
               <set_value name="$customer_faction" exact="$ship.owner" />
               <find_dock_location name="$target_dock"  container="$ship" size="tag.dock_p" />
               <do_if value="$ship.isclass.[class.ship_xl, class.ship_l]">
-                <create_platform_actor name="$pilomander" dockingbay="$target_dock.component" group="argon.commander" type="entitytype.commander">
-                  <owner exact="$customer_faction"/>
-                </create_platform_actor>
-
-                <set_value name="$tempActor" exact="$pilomander" />
+                <set_value name="$temp_select" exact="[argon.commander, if ['xenon','khaak'].indexof.{$customer_faction.id} then race.{$customer_faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.commander, null, null]" />
+                <set_value name="$temp_object" exact="$ship" />
+                <set_value name="$temp_dock" exact="$target_dock" />
+                <set_value name="$temp_entitytype" exact="entitytype.commander" />
                 <set_value name="$temp_Skill" exact="if $actor.container.owner == $customer_faction then 'max' else if $customer_faction.relationto.{$actor.container.owner} gt $actor.container.owner.relation.friend.mid then true else false" />
-                <include_actions ref="md.NF_BASE.NF_skill_actor" />
-                <remove_value name="$tempActor"/>
-                <remove_value name="$temp_Skill"/>
+                <set_value name="$temp_assign" exact="'pilot'"/>
+                <include_actions ref="md.NF_BASE.NF_create_actor" />
+                <set_value name="$pilomander" exact="$newActor" />
+                <remove_value name="$newActor"/>
               </do_if>
               <do_else>
-                <create_platform_actor name="$pilomander" dockingbay="$target_dock.component" group="argon.commander" type="entitytype.pilot">
-                  <owner exact="$customer_faction"/>
-                </create_platform_actor>
-
-                <set_value name="$tempActor" exact="$pilomander" />
+                <set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$customer_faction.id} then race.{$customer_faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.pilot, null, null]" />
+                <set_value name="$temp_object" exact="$ship" />
+                <set_value name="$temp_dock" exact="$target_dock" />
+                <set_value name="$temp_entitytype" exact="entitytype.pilot" />
                 <set_value name="$temp_Skill" exact="if $actor.container.owner == $customer_faction then 'max' else if $customer_faction.relationto.{$actor.container.owner} gt $actor.container.owner.relation.friend.mid then true else false" />
-                <include_actions ref="md.NF_BASE.NF_skill_actor" />
-                <remove_value name="$tempActor"/>
-                <remove_value name="$temp_Skill"/>
+                <set_value name="$temp_assign" exact="'pilot'"/>
+                <include_actions ref="md.NF_BASE.NF_create_actor" />
+                <set_value name="$pilomander" exact="$newActor" />
+                <remove_value name="$newActor"/>
               </do_else>
-              <assign_control_entity object="$ship" actor="$pilomander"/>
+              <!-- Crew -->
               <do_if value="$ship.isclass.[class.ship_xl, class.ship_l]">
                 <!-- Engineer -->
-                <create_platform_actor name="$shipeng" dockingbay="$target_dock.component" group="devries.engineer" type="entitytype.engineer">
-                  <owner exact="$customer_faction"/>
-                </create_platform_actor>
-
-                <set_value name="$tempActor" exact="$shipeng" />
+                <set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$customer_faction.id} then race.{$customer_faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.engineer, null, null]" />
+                <set_value name="$temp_object" exact="$ship" />
+                <set_value name="$temp_dock" exact="$target_dock" />
+                <set_value name="$temp_entitytype" exact="entitytype.engineer" />
                 <set_value name="$temp_Skill" exact="if $actor.container.owner == $customer_faction then 'max' else if $customer_faction.relationto.{$actor.container.owner} gt $actor.container.owner.relation.friend.mid then true else false" />
-                <include_actions ref="md.NF_BASE.NF_skill_actor" />
-                <remove_value name="$tempActor"/>
-                <remove_value name="$temp_Skill"/>
-
-                <assign_engineer object="$ship" actor="$shipeng" />
-                <start_script object="$shipeng" name="if global.$nfconfig.$Check? then 'engineer.ai.plus2' else 'engineer.ai'"/>
+                <set_value name="$temp_assign" exact="'engineer'"/>
+                <set_value name="$temp_script" exact="'default'"/>
+                <include_actions ref="md.NF_BASE.NF_create_actor" />
+                <remove_value name="$newActor"/>
                 <!-- Defense argon.defence -->
-                <create_platform_actor name="$shipdefence" dockingbay="$target_dock.component" group="split.generic" type="entitytype.defencecontrol"> 
-                  <owner exact="$customer_faction"/>
-                </create_platform_actor>
-
-                <set_value name="$tempActor" exact="$shipdefence" />
+                <set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$customer_faction.id} then race.{$customer_faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.defencecontrol, null, null]" />
+                <set_value name="$temp_object" exact="$ship" />
+                <set_value name="$temp_dock" exact="$target_dock" />
+                <set_value name="$temp_entitytype" exact="entitytype.defencecontrol" />
                 <set_value name="$temp_Skill" exact="if $actor.container.owner == $customer_faction then 'max' else if $customer_faction.relationto.{$actor.container.owner} gt $actor.container.owner.relation.friend.mid then true else false" />
-                <include_actions ref="md.NF_BASE.NF_skill_actor" />
-                <remove_value name="$tempActor"/>
-                <remove_value name="$temp_Skill"/>
-
-                <assign_defence_manager object="$ship" actor="$shipdefence" />
-                <start_script object="$shipdefence" name="'fight.defend.capital'"/>
+                <set_value name="$temp_assign" exact="'defencecontrol'"/>
+                <set_value name="$temp_script" exact="'default'"/>
+                <include_actions ref="md.NF_BASE.NF_create_actor" />
+                <remove_value name="$newActor"/>
               </do_if>
               <!-- Platform Architect -->
               <check_object result="$isbuildership" object="$ship">
                 <match_content class="class.buildmodule" min="1"/>
               </check_object>
               <do_if value="$isbuildership">
-                <do_if value="$customer_faction == faction.player">
-                  <create_platform_actor name="$shiparch" dockingbay="$target_dock.component" group="argon.architect" type="entitytype.architect">
-                    <owner exact="$customer_faction"/>
-                  </create_platform_actor>
-
-                  <set_value name="$tempActor" exact="$shiparch" />
-                  <set_value name="$temp_Skill" exact="if $actor.container.owner == $customer_faction then 'max' else if $customer_faction.relationto.{$actor.container.owner} gt $actor.container.owner.relation.friend.mid then true else false" />
-                  <include_actions ref="md.NF_BASE.NF_skill_actor" />
-                  <remove_value name="$tempActor"/>
-                  <remove_value name="$temp_Skill"/>
-
-                  <assign_architect actor="$shiparch" object="$ship"/>
-                  <remove_value name="$shiparch"/>
-                </do_if>
-                <do_else>
-                  <create_cue_actor name="$shiparch" cue="this">
-                    <select group="argon.architect"/>
-                    <owner exact="$customer_faction"/>
-                  </create_cue_actor>
-
-                  <set_value name="$tempActor" exact="$shiparch" />
-                  <set_value name="$temp_Skill" exact="if $actor.container.owner == $customer_faction then 'max' else if $customer_faction.relationto.{$actor.container.owner} gt $actor.container.owner.relation.friend.mid then true else false" />
-                  <include_actions ref="md.NF_BASE.NF_skill_actor" />
-                  <remove_value name="$tempActor"/>
-                  <remove_value name="$temp_Skill"/>
-
-                  <set_entity_type entity="$shiparch" type="entitytype.architect"/>
-                  <add_actor_to_platform actor="$shiparch" dockingbay="$target_dock.component"/>
-                  <assign_architect actor="$shiparch" object="$ship"/>
-                  <remove_cue_actor actor="$shiparch" cue="this"/>
-                </do_else>
+                <set_value name="$temp_select" exact="[null, race.argon, tag.architect, null, null]" />
+                <set_value name="$temp_object" exact="$ship" />
+                <set_value name="$temp_dock" exact="$target_dock" />
+                <set_value name="$temp_entitytype" exact="entitytype.architect" />
+                <set_value name="$temp_Skill" exact="if $actor.container.owner == $customer_faction then 'max' else if $customer_faction.relationto.{$actor.container.owner} gt $actor.container.owner.relation.friend.mid then true else false" />
+                <set_value name="$temp_assign" exact="'architect'"/>
+                <include_actions ref="md.NF_BASE.NF_create_actor" />
+                <remove_value name="$newActor"/>
               </do_if>
               <remove_value name="$customer_faction"/>
-              <remove_value name="$pilomander"/>
-              <remove_value name="$shipeng"/>
-              <remove_value name="$shipdefence"/>
               <remove_value name="$isbuildership"/>
               <remove_value name="$target_dock"/>
               <create_ai_unit object="$ship" />

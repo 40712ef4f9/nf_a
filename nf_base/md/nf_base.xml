@@ -1398,12 +1398,53 @@
 				<do_if value="$temp_faction?" negate="true">
 					<set_value name="$temp_faction" exact="$temp_object.trueowner" />
 				</do_if>
+				<do_if value="$temp_assign? and $temp_assign == 'defence'">
+					<set_value name="$temp_assign" exact="'defencecontrol'" />
+				</do_if>
 				<do_if value="$temp_assign? and $temp_assign and not ($temp_script? and $temp_script)">
 					<set_value name="$temp_script" exact="'default'" />
 				</do_if>
+				<do_if value="$temp_select? and $temp_entitytype? and $temp_entitytype and not @$temp_select.{3}">
+					<set_value name="$temp_script" exact="'default'" />
+				</do_if>
 
-				<do_if value="$temp_dock? and $temp_dock and ['pilot', 'defence', 'engineer', 'manager'].indexof.{$temp_assign} and @$temp_select.{2} and [race.argon, race.split, race.terran, race.teladi].indexof.{$temp_select.{2}}" chance="0">
-					<!-- -->
+				<do_if value="$temp_dock? and $temp_dock and (['marine','pilot','manager','defencecontrol','engineer'].indexof.{$temp_assign} or ($temp_faction == faction.player and $temp_assign == 'architect')) and @$temp_select.{2} and [race.argon, race.split, race.terran, race.teladi].indexof.{$temp_select.{2}} and @$temp_entitytype" >
+					<do_if value="@$temp_select.{1} and @$temp_select.{3} and @$temp_entitytype">
+						<include_actions ref="md.NF_BASE.NF_create_actor_race"/>
+						<create_platform_actor  name="$tempActor" dockingbay="$temp_dock.component" type="$temp_entitytype" 
+								tags="if $temp_select.{3}? and $temp_select.{3} then $temp_select.{3} else tag.{$temp_entitytype.id}" 
+								group="if $temp_select.{1}? and $temp_select.{1} then $temp_select.{1} else albion.{$temp_entitytype.id}" >
+							<select race="$temp_select.{2}" />
+							<owner exact="$temp_faction" />
+						</create_platform_actor>
+					</do_if>
+					<do_elseif value="@$temp_select.{4}">
+						<create_platform_actor  name="$tempActor" dockingbay="$temp_dock.component" type="$temp_entitytype">
+							<select ref="$temp_select.{4}"/>
+							<owner exact="$temp_faction" />
+						</create_platform_actor>
+					</do_elseif>
+					<do_elseif value="@$temp_select.{3}">
+						<include_actions ref="md.NF_BASE.NF_create_actor_race"/>
+						<create_platform_actor  name="$tempActor" dockingbay="$temp_dock.component" type="$temp_entitytype" tags="if $temp_select.{3}? and $temp_select.{3} then $temp_select.{3} else tag.{$temp_entitytype.id}" >
+							<select race="$temp_select.{2}" />
+							<owner exact="$temp_faction" />
+						</create_platform_actor>
+					</do_elseif>
+					<do_elseif value="$temp_assign == 'marine'">
+						<include_actions ref="md.NF_BASE.NF_create_actor_race"/>
+						<create_platform_actor  name="$tempActor" dockingbay="$temp_dock.component" type="$temp_entitytype" tags="tag.marine" group="albion.marine" >
+							<select race="$temp_select.{2}" />
+							<owner exact="$temp_faction" />
+						</create_platform_actor>
+					</do_elseif>
+					<do_else>
+						<include_actions ref="md.NF_BASE.NF_create_actor_race"/>
+						<create_platform_actor  name="$tempActor" dockingbay="$temp_dock.component" type="$temp_entitytype" tags="tag.{$temp_entitytype.id}" group="albion.{$temp_entitytype.id}" >
+							<select race="$temp_select.{2}" />
+							<owner exact="$temp_faction" />
+						</create_platform_actor>
+					</do_else>
 					<set_value name="$temp_setCueChance" exact="0" />
 				</do_if>
 				<do_else>
@@ -1460,12 +1501,15 @@
 			
 					<do_if value="$temp_assign" exact="'pilot'">
 						<assign_pilot actor="$tempActor" object="$temp_object" />
+						<signal_cue_instantly cue="md.NPC_Staff.OnPlatformPopulation_Staff" param="[$tempActor, 0]" chance="if $temp_faction == faction.player then 100 else 0"/>
 					</do_if>
-					<do_elseif value="$temp_assign" exact="'defence'">
+					<do_elseif value="$temp_assign" exact="'defencecontrol'">
 						<assign_defence_manager actor="$tempActor" object="$temp_object" />
+						<signal_cue_instantly cue="md.NPC_Staff.OnPlatformPopulation_Staff" param="[$tempActor, 0]" chance="if $temp_faction == faction.player then 100 else 0"/>
 					</do_elseif>
 					<do_elseif value="$temp_assign" exact="'engineer'">
 						<assign_engineer actor="$tempActor" object="$temp_object" />
+						<signal_cue_instantly cue="md.NPC_Engineer.CustomEngineer" param="[$tempActor, 0]" chance="if $temp_faction == faction.player then 100 else 0"/>
 					</do_elseif>
 					<do_elseif value="$temp_assign" exact="'architect'">
 						<assign_architect actor="$tempActor" object="$temp_object" />
@@ -1477,9 +1521,11 @@
 					</do_elseif>
 					<do_elseif value="$temp_assign" exact="'manager'">
 						<assign_trade_manager actor="$tempActor" object="$temp_object" />
+						<signal_cue_instantly cue="md.NPC_Staff.OnPlatformPopulation_Staff" param="[$tempActor, 0]" chance="if $temp_faction == faction.player then 100 else 0"/>
 					</do_elseif>
 					<do_elseif value="$temp_assign" exact="'control'">
 						<assign_control_entity actor="$tempActor" object="$temp_object" />
+						<signal_cue_instantly cue="md.NPC_Specialist.OnPlatformPopulation_Specialist" param="$tempActor" chance="if $tempActor.isspecialist and $temp_faction == faction.player then 100 else 0"/>
 					</do_elseif>
 
 					<do_if value="$temp_faction == faction.player and ['manager','architect','pilot'].indexof.{$temp_assign} ">
@@ -1493,7 +1539,7 @@
 						<do_if value="$temp_assign" exact="'pilot'">
 							<start_script object="$tempActor" name="'player.default'" chance="$temp_object.isplayerowned*100"/>
 						</do_if>
-						<do_elseif value="$temp_assign" exact="'defence'">
+						<do_elseif value="$temp_assign" exact="'defencecontrol'">
 							<start_script object="$tempActor" name="if $temp_object.isclass.ship then 'fight.defend.capital' else if $temp_faction == faction.player then 'fight.station.player' else 'fight.attack.object.station'"/>
 							<do_if value="$temp_object.macro.id" list="['struct_bt_alb_outpost_macro', 'struct_at_xen_xenon_outpost_macro', 'struct_econ_weapon_ar_defence_macro', 'struct_econ_weapon_ar_defence_2_macro', 'struct_econ_weapon_ar_defence_pl_macro', 'struct_bt_ls_defence_macro', 'khaak_weaponplatform_macro', 'xenon_weaponplatform_macro', 'canteran_weaponplatform_macro']">
 								<set_value name="$tempActor.$config_attackenemies" exact="true" />
@@ -1559,6 +1605,7 @@
 				<do_elseif value="$temp_Skill? and $temp_Skill == 'max'">
 					<set_value name="$temp_Skill" exact="
 						[	
+							[skilltype.boarding,	'exact'],
 							[skilltype.leadership,	'exact'],
 							[skilltype.navigation,	'exact'],
 							[skilltype.combat,		'exact'],
@@ -1571,6 +1618,7 @@
 				<do_elseif value="$temp_Skill? and $temp_Skill">
 					<set_value name="$temp_Skill" exact="
 						[	
+							[skilltype.boarding,	'random', 3, 5],
 							[skilltype.leadership,	'random', 3, 5],
 							[skilltype.navigation,	'random', 3, 5],
 							[skilltype.combat,		'random', 3, 5],
@@ -1587,6 +1635,7 @@
 				<do_else>
 					<set_value name="$temp_Skill" exact="
 						[	
+							[skilltype.boarding,	'random', 1, 3],
 							[skilltype.leadership,	'random', 1, 3],
 							[skilltype.navigation,	'random', 1, 3],
 							[skilltype.combat,		'random', 1, 3],
