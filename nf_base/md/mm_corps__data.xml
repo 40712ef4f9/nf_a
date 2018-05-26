@@ -3501,7 +3501,7 @@
 				</do_elseif>
 
 				<!-- TODO tactical stuff -->
-				<do_if value="$_CEO.$style == 'pirate' and $tmpConfig.$plunderPatrol and $validCluster.count and $shipDoPlunder.count lt ($tmpConfig.$plunderPatrol * $validCluster.count) and (not $nextShoppingTrip2? or ($nextShoppingTrip2? and $nextShoppingTrip2 lt player.age))" chance="if $_CEO.money gt $tmpConfig.$minBuildSpecial then 100 else 0">
+				<do_if value="$_CEO.$style == 'pirate' and $tmpConfig.$plunderPatrol and $validCluster? and $shipDoPlunder? and $validCluster.count and $shipDoPlunder.count lt ($tmpConfig.$plunderPatrol * $validCluster.count) and (not $nextShoppingTrip2? or ($nextShoppingTrip2? and $nextShoppingTrip2 lt player.age))" chance="if $_CEO.money gt $tmpConfig.$minBuildSpecial then 100 else 0">
 					<find_station name="$tmp_stations" space="player.galaxy" functional="true" multiple="true" recursive="true" chance="if not ($tmp_stations? and $tmp_stations.count) then 100 else 0">
 						<match owner="$_faction"/>
 					</find_station>

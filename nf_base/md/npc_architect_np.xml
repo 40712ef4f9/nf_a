@@ -76,7 +76,10 @@
           <conditions>
             <check_any>
               <check_all>
-                <event_game_loaded/> 
+				<check_any>
+				  <event_game_loaded/>
+				  <event_player_created />
+				</check_any>
                 <check_any>
                   <check_value value="$actor.exists" negate="true"/>
                   <check_value value="$actor.exists and $actor.isplayerowned and not ($BuildModule? and $BuildModule.exists and $BuildModule.isbuilding)"/>
@@ -1022,7 +1025,10 @@
               <conditions>
                 <check_any>
                   <check_all>
-                    <event_game_loaded/> 
+                    <check_any>
+                      <event_game_loaded/>
+                      <event_player_created />
+                    </check_any>
                     <check_value value="$station.exists and $actorContainer.exists" negate="true"/>
                   </check_all>
                   <event_object_destroyed object="$station" />

@@ -75,7 +75,7 @@
 							</do_all>
 							<remove_value name="$dock"/>
 						</do_all>
-						<add_player_choice text="{2802,8200}" position="top_left" section="mmca_salvage_restore" choiceparam="[null, null, event.param2, true, 'engineer.ai.plus2']" comment="Dock Ships" selectable="$docks.count" />
+						<add_player_choice text="{2802,8200}" position="top_left" section="mmca_salvage_restore" choiceparam="[null, null, event.param2, true, 'engineer.ai.plus2']" comment="Dock Ships" />
 						<add_player_choice text="{2802,8202}" position="left" section="mmca_salvage_restore" choiceparam="[null, null, event.param2, false, 'engineer.ai.plus2']" comment="Dock Ships" selectable="$docks.count" />
 						<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
 
@@ -190,6 +190,7 @@
 			  <check_any>
 				  <event_cue_signalled cue="md.Setup.GameStart"/>
 				  <event_game_loaded/>
+				  <event_player_created />
 			  </check_any>
 			</conditions>
 			<delay max="6s"/>
@@ -230,6 +231,7 @@
 			  <check_any>
 				  <event_cue_signalled cue="md.Setup.GameStart"/>
 				  <event_game_loaded/>
+				  <event_player_created />
 			  </check_any>
 			</conditions>
 			<delay max="500ms"/>
@@ -431,6 +433,7 @@
 				<set_value name="$breakupChance" exact="20" operation="add" chance="if $Macro.class == class.ship_xl then 100 else 0"/>
 				<set_value name="$breakupChance" exact="$theShip.pilot.combinedskill" operation="subtract" chance="if $theShip.pilot and $theShip.pilot.exists then 100 else 0"/>
 				<set_value name="$breakupChance" exact="$theShip.engineer.combinedskill" operation="subtract" chance="if $theShip.engineer and $theShip.engineer.exists then 100 else 0"/>
+				<set_value name="$breakupChance" exact="$theShip.architect.combinedskill" operation="subtract" chance="if $theShip.architect and $theShip.architect.exists then 100 else 0"/>
 				
 				<do_if value="$oldShip.exists" negate="true">
 					<show_help position="8" log="true" force="true" duration="5s" custom="'ERROR: Wrack not exists anymore in %1'.[$Zone.knownname]" />

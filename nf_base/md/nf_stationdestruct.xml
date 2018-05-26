@@ -203,7 +203,10 @@
 
 				<cue name="StationDestruct_worker" instantiate="true">
 					<conditions>
-						<event_game_loaded/>
+						<check_any>
+						  <event_game_loaded/>
+						  <event_player_created />
+						</check_any>
 					</conditions>
 					<actions>
 						<do_if value="$watchedObjects? and $watchedObjects.count">

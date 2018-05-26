@@ -420,6 +420,7 @@
 			  <check_any>
 				  <event_cue_signalled cue="md.Setup.GameStart"/>
 				  <event_game_loaded/>
+				  <event_player_created />
 			  </check_any>
 			</conditions>
 			<delay max="6s"/>
@@ -554,10 +555,10 @@
 						<do_if value="$Commandship">
 							<do_if value="$Commandship.boardingnpc" negate="true">
 								<find_dock_location name="$temp_dock" container="$Commandship" size="tag.dock_p"/>
-								<set_value name="$temp_select" exact="[albion.marine, if ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.marine, null, null]" />
 								<set_value name="$temp_object" exact="$Commandship" />
 								<set_value name="$temp_faction" exact="$temp_object.trueowner" />
-								<set_value name="$temp_entitytype" exact="entitytype.manager" />
+								<set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$temp_faction.id} then race.{$temp_faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.marine, null, null]" />
+								<set_value name="$temp_entitytype" exact="entitytype.marine" />
 								<set_value name="$temp_Skill" exact="
 									[	
 										[skilltype.boarding,	'random', 3, 5],
@@ -574,31 +575,33 @@
 								<remove_value name="$newActor"/>
 							</do_if>
 
-							<do_if value="$Commandship == $Ship">
-								<trigger_boarding boarder="$Commandship.boardingnpc" target="event.param.{2}" faction="$Commandship.trueowner" chance="$doprocess"/>
-							</do_if>
-							<do_else>
-								<do_if value="$Commandship.pilot.$whatido?">
-									<set_value name="$runscript" exact="'move.shipjobs'" />
-									<start_script object="$Commandship.pilot" name="$runscript" chance="$doprocess">
-										<param name="run_script_name" value="'boarding.ship'"/>
-										<param name="run_script_param" value="[['target', event.param.{2}], ['returntocommander', $Ship], ['canhacktarget', true]]"/>
-									</start_script>
-									<remove_value name="$runscript"/>
+							<do_if value="$Commandship.boardingnpc">
+								<do_if value="$Commandship == $Ship">
+									<trigger_boarding boarder="$Commandship.boardingnpc" target="event.param.{2}" faction="$Commandship.trueowner" chance="$doprocess"/>
 								</do_if>
 								<do_else>
-									<start_script name="'boarding.ship'" object="$Commandship.pilot" chance="$doprocess">
-										<param name="target" value="event.param.{2}" />
-										<param name="faction" value="$Ship.trueowner" />
-										<param name="marineone" value="$Commandship.boardingnpc" />
-										<param name="returntocommander" value="$Ship" />
-										<param name="canhacktarget" value="true" />
-									</start_script>
+									<do_if value="$Commandship.pilot.$whatido?">
+										<set_value name="$runscript" exact="'move.shipjobs'" />
+										<start_script object="$Commandship.pilot" name="$runscript" chance="$doprocess">
+											<param name="run_script_name" value="'boarding.ship'"/>
+											<param name="run_script_param" value="[['target', event.param.{2}], ['returntocommander', $Ship], ['canhacktarget', true]]"/>
+										</start_script>
+										<remove_value name="$runscript"/>
+									</do_if>
+									<do_else>
+										<start_script name="'boarding.ship'" object="$Commandship.pilot" chance="$doprocess">
+											<param name="target" value="event.param.{2}" />
+											<param name="faction" value="$Ship.trueowner" />
+											<param name="marineone" value="$Commandship.boardingnpc" />
+											<param name="returntocommander" value="$Ship" />
+											<param name="canhacktarget" value="true" />
+										</start_script>
+									</do_else>
 								</do_else>
-							</do_else>
+							</do_if>
+							<set_value name="$Ship.pilot.$processboarding" exact="player.age + 60min" />
 						</do_if>
 
-						<set_value name="$Ship.pilot.$processboarding" exact="player.age + 60min" />
 						<remove_value name="$Commandship"/>
 						<remove_value name="$Ship"/>
 						<remove_value name="$equiped"/>

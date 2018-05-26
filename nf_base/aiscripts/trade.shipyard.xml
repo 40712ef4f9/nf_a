@@ -10,14 +10,14 @@
   </add>
   <add sel="//add_default_production_wares" type="@chance" >if this.station.isplayerowned then 0 else 100</add>
   <replace sel="//do_if[@value='not this.station.products.{ware.fuelcells}.exists']/add_cargo"><add_cargo ware="ware.fuelcells" min="[12000, this.station.cargo.{ware.fuelcells}.free/3].min" max="[18000, this.station.cargo.{ware.fuelcells}.free/2].min" object="this.station" chance="if this.station.cargo.{ware.fuelcells}.free then 100 else 0"/></replace>
-  <add sel="/aiscript/interrupts/handler/actions/do_all/do_if/do_if/do_if[@value='this.station.cluster.macro.ismacro.cluster_b_macro']" type="@chance" >if this.station.isplayerowned then 0 else 100</add>
-  <add sel="/aiscript/interrupts/handler/actions/do_all/do_if/do_if/do_elseif[@value='this.station.cluster.macro.ismacro.cluster_d_macro']" type="@chance" >if this.station.isplayerowned then 0 else 100</add>
+  <add sel="/aiscript/interrupts/handler/actions/do_all/do_if/do_if/do_if[@value='this.station.cluster.macro.ismacro.cluster_b_macro']" type="@chance" >if this.station.isplayerowned then 0 else 0</add>
+  <add sel="/aiscript/interrupts/handler/actions/do_all/do_if/do_if/do_elseif[@value='this.station.cluster.macro.ismacro.cluster_d_macro']" type="@chance" >if this.station.isplayerowned then 0 else 0</add>
   <add sel="/aiscript/interrupts/handler/actions/do_all/do_if/do_if/do_if[@value='this.station.cluster.macro.ismacro.cluster_b_macro']" pos="after" >
-    <do_elseif value="this.station.cargo.free gt this.station.cargo.capacity/2" chance="if this.station.isplayerowned then 100 else 0">
+    <do_elseif value="this.station.cargo.free gt this.station.cargo.capacity/2" chance="if this.station.isplayerowned then 100 else 100">
       <set_value name="this.$stop_trading" min="60min" max="120min" operation="add" />
       <debug_text text="'longer break: %1 [%2] %3'.[this.station.cargo.free, this.station.cargo.capacity/2, this.station.knownname]" filter="error" chance="$debugchance" />
     </do_elseif>
-    <do_elseif value="this.station.cargo.free lt this.station.cargo.capacity/5" chance="if this.station.isplayerowned then 100 else 0">
+    <do_elseif value="this.station.cargo.free lt this.station.cargo.capacity/5" chance="if this.station.isplayerowned then 100 else 100">
       <set_value name="this.$stop_trading" min="3min" max="6min" operation="add" />
       <debug_text text="'rise production: %1 [%2] %3'.[this.station.cargo.free, this.station.cargo.capacity/5, this.station.knownname]" filter="error" chance="$debugchance" />
     </do_elseif>

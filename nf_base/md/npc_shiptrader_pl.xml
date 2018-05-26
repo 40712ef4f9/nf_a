@@ -781,7 +781,7 @@
               <set_value name="$customer_faction" exact="$ship.owner" />
               <find_dock_location name="$target_dock"  container="$ship" size="tag.dock_p" />
               <do_if value="$ship.isclass.[class.ship_xl, class.ship_l]">
-                <set_value name="$temp_select" exact="[albion.commander, if ['xenon','khaak'].indexof.{$customer_faction.id} then race.{$customer_faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.commander, null, null]" />
+                <set_value name="$temp_select" exact="[null, if ['xenon','khaak'].indexof.{$customer_faction.id} then race.{$customer_faction.id} else [race.argon, race.split, race.terran, race.teladi].random, tag.commander, null, null]" />
                 <set_value name="$temp_object" exact="$ship" />
                 <set_value name="$temp_dock" exact="$target_dock" />
                 <set_value name="$temp_entitytype" exact="entitytype.commander" />
@@ -1259,7 +1259,7 @@
               </do_all>
               <remove_value name="$tmpList"/>
             </do_if>
-            <do_elseif value="$soldship2.subordinates.count and not $soldship? or typeof $soldship != datatype.list">
+            <do_elseif value="$soldship2.subordinates.count and not $soldship? or ($soldship? and typeof $soldship != datatype.list)">
               <set_value name="$tmpList" exact="$soldship2.subordinates.clone" />
               <do_all exact="$tmpList.count" counter="$s">
                 <do_if value="$tmpList.{$s}.isclass.[class.ship_s, class.ship_m, class.ship_l, class.ship_xl]">
@@ -1423,7 +1423,7 @@
                 <remove_value name="$newActor"/>
               </do_if>
               <do_elseif value="global.$factionCEOs? and global.$factionCEOs.{'$' + $newfaction.id}?">
-                <share_actor_account actor="$soldship2.architect" otherobject="global.$factionCEOs.{'$' + $temp_faction.id}"/>
+                <share_actor_account actor="$soldship2.architect" otherobject="global.$factionCEOs.{'$' + $newfaction.id}"/>
               </do_elseif>
             </do_if>
 

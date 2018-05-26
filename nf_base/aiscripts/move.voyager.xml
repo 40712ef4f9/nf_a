@@ -27,20 +27,7 @@
 				<set_value name="$hint" exact="false"/>
 				<do_if value="this.ship.zone.owner and this.ship.zone.owner.hasrelation.enemy.{this.ship.owner}" chance="$cover">
 					<do_if value="this.ship.owner != this.ship.trueowner and not this.ship.zone.owner.hasrelation.enemy.{this.ship.trueowner}">
-						<get_control_entities groupname="$Entities" object="this.ship"/>
-						<do_all exact="$Entities.count" counter="$i" > 
-							<set_cover_owner object="$Entities.{$i}"/>
-						</do_all> 
-						<set_cover_owner object="this.ship"/>
-						<remove_value name="$Entities"/>
-						<do_all exact="this.ship.subordinates.count" counter="$i">
-							<get_control_entities groupname="$Entities" object="this.ship.subordinates.{$i}"/>
-							<do_all exact="$Entities.count" counter="$j" > 
-								<set_cover_owner object="$Entities.{$j}"/>
-							</do_all> 
-							<set_cover_owner object="this.ship.subordinates.{$i}"/>
-							<remove_value name="$Entities"/>
-						</do_all>
+						<signal_objects object="this.ship" param="'do.uncover'" delay="1s"/>
 					</do_if>
 					<do_else>
 						<get_control_entities groupname="$Entities" object="this.ship"/>
@@ -55,8 +42,26 @@
 								<set_cover_owner object="$Entities.{$h}" faction="if this.ship.zone.owner == faction.player then faction.civilian else this.ship.zone.owner"/>
 							</do_all> 
 							<set_cover_owner object="this.ship.subordinates.{$g}" faction="if this.ship.zone.owner == faction.player then faction.civilian else this.ship.zone.owner"/>
+							<do_if value="this.ship.subordinates.{$g}.defencenpc">
+								<do_if value="this.ship.subordinates.{$g}.defencenpc.$config_attackenemies?">
+									<remove_value name="this.ship.subordinates.{$g}.defencenpc.$config_attackenemies" />
+									<signal_objects object="this.ship.subordinates.{$g}.defencenpc" param="'update config'"  />
+								</do_if>
+								<do_else>
+									<signal_objects object="this.ship.subordinates.{$g}.defencenpc" param="'stop attack'"  />
+								</do_else>
+							</do_if>
 							<remove_value name="$Entities"/>
 						</do_all>
+						<do_if value="this.ship.defencenpc">
+							<do_if value="this.ship.defencenpc.$config_attackenemies?">
+								<remove_value name="this.ship.defencenpc.$config_attackenemies" />
+								<signal_objects object="this.ship.defencenpc" param="'update config'"  />
+							</do_if>
+							<do_else>
+								<signal_objects object="this.ship.defencenpc" param="'stop attack'"  />
+							</do_else>
+						</do_if>
 					</do_else>
 				</do_if>
 				<find_station space="this.ship.zone" known="false" name="$th_stations" multiple="true" chance="if $ignoreknown then 100 else 0" />
@@ -167,6 +172,27 @@
 		</handler>
 		<handler>
 			<conditions>
+				<event_object_signalled object="this.ship" param="'do.uncover'" />
+			</conditions>
+			<actions>
+				<get_control_entities groupname="$Entities" object="this.ship"/>
+				<do_all exact="$Entities.count" counter="$i" > 
+					<set_cover_owner object="$Entities.{$i}"/>
+				</do_all> 
+				<set_cover_owner object="this.ship"/>
+				<remove_value name="$Entities"/>
+				<do_all exact="this.ship.subordinates.count" counter="$i">
+					<get_control_entities groupname="$Entities" object="this.ship.subordinates.{$i}"/>
+					<do_all exact="$Entities.count" counter="$j" > 
+						<set_cover_owner object="$Entities.{$j}"/>
+					</do_all> 
+					<set_cover_owner object="this.ship.subordinates.{$i}"/>
+					<remove_value name="$Entities"/>
+				</do_all>
+			</actions>
+		</handler>
+		<handler>
+			<conditions>
 				<event_object_signalled object="this.ship" param="'withdraw battle'" />
 				<check_value value="this.ship.isboostactive" negate="true"/>
 			</conditions>
@@ -237,17 +263,11 @@
 							<do_if value="$temp" negate="true">
 								<continue />
 							</do_if>
-							<do_else>
-								<set_value name="$workspace.{$w}" exact="$temp"/>
-							</do_else>
 						</do_if>
-						<do_else>
-							<set_value name="$workspace.{$w}" exact="$temp"/>
-						</do_else>
 					</do_if>
-					<do_else>
+					<do_if value="$temp">
 						<set_value name="$workspace.{$w}" exact="$temp"/>
-					</do_else>
+					</do_if>
 					<remove_value name="$temp"/>
 				</do_if>
 				<!-- collect zones -->
@@ -256,8 +276,8 @@
 
 				<do_if value="$workspace.{$w}.isclass.[class.sector, class.cluster, class.galaxy]">
 
-					<find_zone space="$workspace.{$w}" groupname="$tmp_zones" multiple="true" tempzone="false" priorityzone="true" chance="if $ignoreknown then 100 else 0" known="false" />
-					<find_zone space="$workspace.{$w}" groupname="$tmp_zones" multiple="true" tempzone="false" priorityzone="true" chance="if $ignoreknown then 0 else 100" />
+					<find_zone space="$workspace.{$w}" name="$tmp_zones" multiple="true" tempzone="false" priorityzone="true" chance="if $ignoreknown then 100 else 0" known="false" />
+					<find_zone space="$workspace.{$w}" name="$tmp_zones" multiple="true" tempzone="false" priorityzone="true" chance="if $ignoreknown then 0 else 100" />
 
 					<do_all exact="$tmp_zones.count" counter="$i">
 						<do_if value="not $zones.indexof.{$tmp_zones.{$i}}" chance="if $ignoreownedzones and $tmp_zones.{$i}.owner == this.ship.trueowner then 0 else 100">
@@ -301,7 +321,7 @@
 			</do_if>
 
 			<set_value name="$targetzone" exact="null"/>
-			<do_if value="$zones.indexof.{this.ship.zone}">
+			<do_if value="$zones.indexof.{this.ship.zone} and ($zones.count gt 1 and $returnzone != this.ship.zone)">
 				<set_value name="$targetzone" exact="this.ship.zone"/>
 			</do_if>
 			<do_elseif value="this.ship.zone.adjacentzones.indexof.{$zones.{1}}" negate="true">
@@ -568,21 +588,8 @@
 
 			<set_command_action commandaction="commandaction.calculating" />
 			<!-- uncover -->
-			<do_if value="this.ship.owner != this.ship.trueowner">
-				<get_control_entities groupname="$Entities" object="this.ship"/>
-				<do_all exact="$Entities.count" counter="$i" > 
-					<set_cover_owner object="$Entities.{$i}"/>
-				</do_all> 
-				<set_cover_owner object="this.ship"/>
-				<remove_value name="$Entities"/>
-				<do_all exact="this.ship.subordinates.count" counter="$i">
-					<get_control_entities groupname="$Entities" object="this.ship.subordinates.{$i}"/>
-					<do_all exact="$Entities.count" counter="$j" > 
-						<set_cover_owner object="$Entities.{$j}"/>
-					</do_all> 
-					<set_cover_owner object="this.ship.subordinates.{$i}"/>
-					<remove_value name="$Entities"/>
-				</do_all>
+			<do_if value="this.ship.owner != this.ship.trueowner" chance="if $continue then 23 else 100">
+				<signal_objects object="this.ship" param="'do.uncover'" />
 			</do_if>
 			<!-- process data -->
 			<do_if value="$found_stations?">
@@ -628,6 +635,14 @@
 				</do_if>
 				<resume label="start"/>
 			</do_if>
+			<do_elseif value="this.$carrier?">
+				<resume label="fin"/>
+			</do_elseif>
+			<do_elseif value="this.$whatido? and this.$params?">
+				<set_value name="this.$params" exact="table[]"/>
+				<set_value name="this.$whatido" exact="'move.idle'"/>
+				<signal_objects object="this.ship" param="'CM REBOOT'" param2="null" delay="1s"/>
+			</do_elseif>
 
 			<set_command_action commandaction="commandaction.standingby" />
 			<wait min="120s" max="240s" />
@@ -636,6 +651,10 @@
 
 			<label name="fin" />
 
+			<do_if value="this.ship.owner != this.ship.trueowner">
+				<signal_objects object="this.ship" param="'do.uncover'" />
+				<wait min="2s" max="6s" />
+			</do_if>
 		</actions>
 	</attention>
 	<on_abort>

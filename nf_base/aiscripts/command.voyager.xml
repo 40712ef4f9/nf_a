@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="command.voyager" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" priority="2" >
+  <!--
+  Wrapper script for move.voyager
+  by Adrian
+  -->
+  <params>
+    <param name="workspace" default="null" />
+    <param name="returnzone" default="this.ship.zone" />
+    <param name="continue" default="true" />
+    <param name="debugchance" default="0"/>
+  </params>
+  <attention min="unknown">
+    <actions>
+
+      <run_script name="'move.voyager'" >
+        <param name="workspace" value="$workspace" />
+        <param name="returnzone" value="$returnzone" />
+        <param name="continue" value="$continue" />
+      </run_script>
+
+    </actions>
+  </attention>
+</aiscript>

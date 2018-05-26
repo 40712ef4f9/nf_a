@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <diff>
+  <replace sel="//cue[@name='OnPlatformPopulation_Marine']/conditions">
+      <conditions>
+        <check_any>
+          <event_platform_actor_created type="entitytype.marine" />
+          <event_cue_signalled comment="event.param = $actor"/>
+        </check_any>
+      </conditions>
+  </replace>
   <add sel="//cue[@name='OnFired']/actions/do_if/start_actor_transport" pos="before">
     <set_owner object="$actor" faction="faction.neutral" />
     <signal_cue_instantly cue="md.NF_BASE.NF_kill_NPC" param="$actor" delay="20s"/>

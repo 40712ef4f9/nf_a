@@ -220,15 +220,15 @@
         <!-- Scoutjob in zone. -->
         <do_elseif value="event.param == 'scout zone'">
           <debug_text text="'Received order to scout zone ' + event.param2.knownname" />
-          <set_command command="command.movetozone" param="event.param2"/>
+          <!--set_command command="command.movetozone" param="event.param2"/>
           <run_interrupt_script name="if not global.$mmcarrierconfig.$mm_carriers_ad_glob or @this.ship.pilot.$mm_carriers_ad then 'move.generic' else if this.ship.macro.ismacro.{global.$mmcarriers} then 'move.generic.carrier' else 'move.generic'" abortscripts="true" resume="voy">
             <param name="destination" value="event.param2" />
             <param name="endintargetzone" value="true" />
+          </run_interrupt_script-->
+          <run_interrupt_script name="'command.voyager'" abortscripts="true" resume="dock">
+            <param name="workspace" value="[event.param2]" />
+            <param name="continue" value="false" />
           </run_interrupt_script>
-          <!--run_interrupt_script name="'move.voyager'" abortscripts="true" resume="init">
-      <param name="workspace" value="[event.param2]" />
-      <param name="returnzone" value="false" />
-      </run_interrupt_script-->
         </do_elseif>
         <!-- Advance Options -->
         <!-- Hold Position order hold position-->
@@ -483,12 +483,14 @@
         <param name="range" value="'zone'" />
         <param name="engageenemies" value="false" />
       </run_script>
+      <resume label="loop" />
 
       <label name="voy" />
       <run_script name="'move.voyager'" sinceversion="2">
         <param name="workspace" value="[this.zone]" />
         <param name="returnzone" value="false" />
       </run_script>
+      <resume label="loop" />
 
       <label name="wait" />
       <set_command_action commandaction="commandaction.standingby" />
@@ -498,8 +500,11 @@
       <label name="dock" />
       <set_command_action commandaction="commandaction.standingby" />
       <wait min="5s" max="10s" />
-      <signal_objects object="this.ship" param="'dock at'" param2="$base" delay="100ms"/>
-      <wait />
+      <do_if value="$base.isoperational">
+        <signal_objects object="this.ship" param="'dock at'" param2="$base" delay="100ms"/>
+      </do_if>
+      <wait exact="0s" chance="0"/>
+      <resume label="wait" />
 
       <label name="end" />
       <debug_text text="' End script'" chance="$debugchance" />

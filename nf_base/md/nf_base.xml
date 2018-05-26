@@ -1509,7 +1509,7 @@
 					</do_elseif>
 					<do_elseif value="$temp_assign" exact="'engineer'">
 						<assign_engineer actor="$tempActor" object="$temp_object" />
-						<signal_cue_instantly cue="md.NPC_Engineer.CustomEngineer" param="[$tempActor, 0]" chance="if $temp_faction == faction.player then $temp_setCueChance else 0"/>
+						<signal_cue_instantly cue="md.NPC_Engineer.OnPlatformPopulation_Engineer" param="[$tempActor, 10000Cr]" chance="if $temp_faction == faction.player then $temp_setCueChance else 0"/>
 					</do_elseif>
 					<do_elseif value="$temp_assign" exact="'architect'">
 						<assign_architect actor="$tempActor" object="$temp_object" />
@@ -1518,6 +1518,8 @@
 					</do_elseif>
 					<do_elseif value="$temp_assign" exact="'marine'">
 						<assign_boarding_commander actor="$tempActor" object="$temp_object" />
+						<!--signal_cue_instantly cue="md.NPC_Marine.OnPlatformPopulation_Marine" param="$tempActor" chance="if $temp_faction == faction.player then $temp_setCueChance else 0"/-->
+						<signal_cue_instantly cue="md.NPC_Marine.CustomMarine" param="[$tempActor, 0]" chance="if $temp_faction == faction.player then $temp_setCueChance else 0"/>
 					</do_elseif>
 					<do_elseif value="$temp_assign" exact="'manager'">
 						<assign_trade_manager actor="$tempActor" object="$temp_object" />

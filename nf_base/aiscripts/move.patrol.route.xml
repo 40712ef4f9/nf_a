@@ -16,8 +16,8 @@
 					<check_all>
 						<check_value value="this.ship.trueowner and event.param2.owner"/>
 						<check_any>
-							<check_value value="this.ship.trueowner.hasrelation.friend.{event.param2.owner}" chance="[20, this.combinedskill].max / 4" />
-							<check_value value="this.ship.trueowner.hasrelation.member.{event.param2.owner}" chance="[40, this.combinedskill].max / 2" />
+							<check_value value="this.ship.trueowner.hasrelation.friend.{event.param2.owner}" chance="if not this.ship.trueowner.isprotective then 5 else [20, this.combinedskill].max / 4" />
+							<check_value value="this.ship.trueowner.hasrelation.member.{event.param2.owner}" chance="if not this.ship.trueowner.isprotective then 20 else [40, this.combinedskill].max / 2" />
 						</check_any>
 					</check_all>
 				</check_any>
