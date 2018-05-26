@@ -123,6 +123,7 @@
               -->
               <set_value name="$BuildModule" exact="$actor.buildmodule" />
               <do_if value="not $ship? and @$BuildModule.freedockslot">
+                <show_help position="8" log="false" force="true" duration="15s" custom="'You are under Cover. Ship will build for %1'.[player.entity.owner]" chance="if player.primaryship.coverowner then 100 else 0" />
                 <add_player_choice_sub text="{1002,8001}" position="top_left" section="cArch_buildermacros" choiceparam="[0, 0, $actor, $BuildModule, 1, $WareList]" comment="Select ship for building"/>
                 <add_player_choice_sub text="{1002,8005}" position="left" section="cArch_modifyship" comment="Modify a ship"/>
                 <add_player_choice_sub text="{1002,8006}" position="bottom_left" section="cArch_sellship" choiceparam="[0, 0, 'player', 'sellship', ['cArch_sellshipselected', $BuildModule]]" comment="Sell a ship"/>

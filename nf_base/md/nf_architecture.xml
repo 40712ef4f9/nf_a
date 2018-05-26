@@ -108,7 +108,7 @@
 									<add_player_choice		text="'%1'.[$target.name]"	position="$i" immediate="$target.architect.$specialMacroOrder?" tooltip="if $target.architect.$specialMacroOrder? then '%1\n%2'.[$target.architect.$specialMacroOrder.id, $target.architect.$specialMacroOrder.name] else ''" section="nf_a_cArch_set" choiceparam="$target" />
 								</do_elseif>
 								<do_elseif value="$todo_options_start le $todo_options_max">
-									<do_if value="$todo_options.{$todo_options_start} and typeof $todo_options.{$todo_options_start} == datatype.macro" negate="true">
+									<do_if value="$todo_options.{$todo_options_start} and typeof $todo_options.{$todo_options_start} == datatype.macro">
 										<set_value name="$todo_options_start"  operation="add" exact="1" />
 										<continue />
 									</do_if>

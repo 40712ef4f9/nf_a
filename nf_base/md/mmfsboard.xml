@@ -14,11 +14,14 @@
 				<check_value value="event.object.iscontrolentity" />
 			</conditions>
 			<actions>
-				<add_player_choice_sub text="{2802,1001}" section="mmsp_transfer" selectable="event.object.container.subordinates.count" comment="INIT" />
+				<add_player_choice_sub text="{2802,1001}" section="mmsp_transfer" selectable="event.object.container.subordinates.count" comment="INIT" chance="if event.object.container.isclass.ship and event.object.container.boardingnpc == event.object and event.object.container.boardee then 0 else 100" />
 				<do_if value="@player.platform.container.isplayerowned and @player.platform.container.isclass.ship">
-					<do_if value="not @player.platform.container.boardingnpc">
-						<add_player_choice text="{1002,3006}" section="cMarine_fsb_workhere" position="top_right" comment="Work here"/>
+					<do_if value="event.object.container.isclass.ship and event.object.container.boardingnpc == event.object and event.object.container.boardee">
+						<!-- -->
 					</do_if>
+					<do_elseif value="not @player.platform.container.boardingnpc">
+						<add_player_choice text="{1002,3006}" section="cMarine_fsb_workhere" position="top_right" comment="Work here"/>
+					</do_elseif>
 					<do_else>
 						<add_player_choice text="{1002,3008}" section="cMarine_fsb_worksomewhere" position="top_right" choiceparam="[0, 0, 'zone', player.primaryship.zone, null, null, 'selectplayerobject', ['cMarine_fsb_worksomewhere_objectselected', null, null, true, false, true, false, true]]" comment="Work somewhere else"/>
 						<!--add_player_choice text="{1002,3006}" section="cMarine_fsb_hasengineerplatform" position="top_right" comment="Work here"/-->
