@@ -18,4 +18,5 @@
 		</check_any>
 	  </conditions>
   </replace>
+  <replace sel="//cue[@name='OnPlatformPopulation_Specialist']/actions/do_if/do_if[@value='not event.param2.isspecialist']/@value">not @event.param2.isspecialist</replace>
 </diff>
