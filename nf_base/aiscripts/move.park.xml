@@ -1,27 +1,46 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <!-- Conquer_mod v020 -->
 <diff> 
-	<add sel="//run_script[@name=&quot;'move.undock'&quot;]" pos="before" >
+	<!--add sel="//run_script[@name=&quot;'move.undock'&quot;]" pos="before" -->
+	<add sel="/aiscript/attention/actions/label[@name='start']" pos="before">
 		<do_if value="not (this.ship.parkedat or this.ship.dockslot) and this.$last_park? and this.$last_park ge player.age">
-			<wait min="10s" max="20s" />
 			<set_value name="$loopend_message" exact="1"/>
-			<set_value name="this.$last_park" exact="player.age + 2s" />
+			<set_value name="this.$last_park" exact="player.age + 5s" />
 			<do_if value="this.ship.isjobship">
-				<debug_text text="'loop - goodby'" filter="error" chance="100" />
 				<destroy_object object="this.ship" explosion="false"/>
 			</do_if>
+			<do_elseif value="this.$whatido? and ['trade.ship', 'trade.ship.ranged'].indexof.{this.$whatido}">
+				<signal_objects object="this.ship" param="'CM REBOOT'" param2="null" />
+			</do_elseif>
+			<do_elseif value="this.$whatido?">
+				<set_value name="this.$params" exact="table[]"/>
+				<set_value name="this.$whatido" exact="'move.idle'"/>
+				<signal_objects object="this.ship" param="'CM REBOOT'" param2="null" />
+			</do_elseif>
+			<do_elseif value="this.ship.isplayerowned and not this.$playerHold?">
+				<set_value name="this.$playerHold"/>
+				<signal_objects object="this.ship" param="'hold position'"/>
+			</do_elseif>
+			<do_else>
+				<destroy_object object="this.ship" explosion="false"/>
+			</do_else>
+			<wait min="1s" max="2s" />
 		</do_if>
 		<do_elseif value="not (this.ship.parkedat or this.ship.dockslot) and this.$last_park? and this.$last_park lt player.age">
 			<remove_value name="this.$last_park" />
 		</do_elseif>
 		<do_else>
-			<set_value name="this.$last_park" exact="player.age + 2s" />
+			<set_value name="this.$last_park" exact="player.age + 5s" />
 		</do_else>
 	</add>
 	<add sel="//attention/actions/set_value[@name='$myindex']" pos="before" >
-		<debug_text text="'Fin movedock'" filter="error" chance="if $loopend_message? then 100 else 0" />
 		<remove_value name="this.$last_park" />
 		<remove_value name="$loopend_message" />
+	</add>
+	<add sel="//aiscript" >
+		<on_abort>
+		  <remove_value name="this.$playerHold" />
+		</on_abort>
 	</add>
 
 

@@ -190,7 +190,7 @@
 				</do_if>-->
 
 				<do_if value="$shipNothingTodo.count">
-					<do_if value="$_CEO.$freeShips?">
+					<do_if value="$_CEO.$freeShips?" negate="true">
 						<set_value name="$_CEO.$freeShips" exact="[]"/>
 					</do_if>
 					<do_all exact="$shipNothingTodo.count" counter="$r" reverse="true">

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel='/components/component/connections'>
+			<connection name="ConnectionFor_props_tradeoffer_buy_gases" group="stationGroup" tags="tradeofferdock">
+				<offset>
+					<position x="-1700" y="-1000" z="1200"/>
+					<rotation yaw="-45" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_tradeoffer_sell_energy" group="stationGroup" tags="tradeofferdock">
+				<offset>
+					<position x="2730" y="-1200" z="1750"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_surf_playerdock_admin_macro" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="2013.695" y="1543.9453" z="61.13551"/>
+					<quaternion qx="2.895225E-07" qy="-8.715549E-02" qz="-5.039885E-07" qw="-0.9961947"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro1" group="stationGroup" tags="dronelaunchpad">
+				<offset>
+					<position x="2653.807" y="922.7193" z="883.9966"/>
+					<rotation yaw="-60" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_dock_m01" tags="dock_m ">
+				<offset>
+					<position x="2420" y="1365" z="1400"/>
+				</offset>
+			</connection>
+	</add>
+</diff>
