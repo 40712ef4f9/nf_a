@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <diff>
-	<replace sel="//connection[@ref='ConnectionFor_struct_econ_science_weaponplatform_macro2']/build/@stage">4</replace>
+	<!--replace sel="//connection[@ref='ConnectionFor_struct_econ_science_weaponplatform_macro2']/build/@stage">4</replace-->
 
 	<add sel="//connection[@ref='ConnectionFor_struct_econ_prod_ships_dv_macro']">
-        <build mode="optional" group="production" sequence="A" stage="2" tags="primary " />
+        <build mode="optional" group="production" sequence="A" stage="4" tags="primary " />
 	</add>
 	<add sel="//connection[@ref='ConnectionFor_props_surf_playerdock_ships_dv_macro']">
-        <build mode="optional" group="production" sequence="A" stage="2" />
+        <build mode="optional" group="production" sequence="A" stage="4" />
 	</add>
 
 	<replace sel="//connection[@ref='ConnectionFor_struct_econ_prod_shipm_dv_macro']/build/@stage">3</replace>

@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<components>
+	<component name="xenon_asteroid_02_base_02_part" class="destructible">
+		<source geometry="extensions\ego_dlc_2\assets\structures\landmarks\\xenon_asteroid_01_base_01_data"/>
+		<layers>
+			<layer>
+				<waypoints/>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="connection_controlroom01" tags="room  defence">
+				<offset/>
+			</connection>
+			<connection name="connection_radar01" tags="radar ">
+				<offset>
+					<position x="0" y="214.5449" z="0"/>
+				</offset>
+			</connection>
+			<connection name="connection_production" tags="production ">
+				<offset>
+					<position x="-89.96698" y="0" z="-0.5437012"/>
+				</offset>
+			</connection>
+			<connection name="connection_storage" tags="storage  ">
+				<offset>
+					<position x="-166.9441" y="0" z="-0.5437012"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_xenon_asteroid_01_part_01_macro" group="stationGroup" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="ConnectionFor_xenon_asteroid_01_macro" group="stationGroup" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="ConnectionFor_xenon_asteroid_01_part_02_macro" group="stationGroup" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="ConnectionFor_xenon_asteroid_01_part_03_macro" group="stationGroup" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="ConnectionFor_xenon_asteroid_01_part_04_macro" group="stationGroup" tags="destructible">
+				<offset/>
+			</connection>
+			<connection name="ConnectionFor_xenon_asteroid_philae_01_macro" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="-1266.875" y="-328.74" z="333.4597"/>
+					<quaternion qx="-0" qy="-0" qz="-0.5187733" qw="-0.8549118"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_wps_xen_weaponplatform_01_macro" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="-1559.466" y="-1133.888" z="2870.631"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_wps_xen_weaponplatform_01_macro1" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="2282.612" y="1906.802" z="-2688.905"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro" group="stationGroup" tags="dronelaunchpad">
+				<offset>
+					<position x="-117.709" y="-106.2662" z="1013.374"/>
+					<quaternion qx="-0" qy="-0.8660254" qz="-0" qw="-0.5"/>
+				</offset>
+			</connection>
+			<connection name="connection_storage2" tags="storage  ">
+				<offset>
+					<position x="10" y="0" z="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_tradeoffer_buy_minerals" group="stationGroup" tags="tradeofferdock">
+				<offset>
+					<position x="1800" y="900" z="700"/>
+					<rotation yaw="90" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_tradeoffer_sell_shiptech" group="stationGroup" tags="tradeofferdock">
+				<offset>
+					<position x="-200" y="-200" z="-1000"/>
+					<rotation yaw="-160" pitch="0" roll="0"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_surf_playerdock_admin_macro" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="-400" y="745" z="400"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_wps_xen_weaponplatform_01_macro2" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="1759.466" y="-733.888" z="1970.631"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_wps_xen_weaponplatform_01_macro3" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="-2682.612" y="1106.802" z="-2288.905"/>
+				</offset>
+			</connection>
+		</connections>
+	</component>
+</components>

@@ -64,6 +64,25 @@
 									<destroy_object object="$ControlEntities.{$Counter}"/>
 								</do_all>
 							</do_if>
+							<do_if value="$target.tradenpc and $target.subordinates.{entitytype.manager}.count">
+								<do_all exact="$target.subordinates.{entitytype.manager}.count" counter="$Counter" reverse="true">
+									<remove_object_commander object="$target.subordinates.{entitytype.manager}.{$Counter}" />
+									<do_if value="$target.subordinates.{entitytype.manager}.{$Counter}.pilot.exists" negate="true">
+										<continue />
+									</do_if>
+									<do_if value="$target.subordinates.{entitytype.manager}.{$Counter}.pilot.$whatido?">
+										<start_script object="$target.subordinates.{entitytype.manager}.{$Counter}.pilot" name="'move.shipjobs'">
+											<param name="run_script_name" value="'move.idle'"/>
+											<param name="run_script_param" value="[['TimeOut', 60min]]"/>
+										</start_script>
+									</do_if>
+									<do_else>
+										<start_script object="$target.subordinates.{entitytype.manager}.{$Counter}.pilot" name="'move.idle'">
+											<param name="TimeOut" value="60min"/>
+										</start_script>
+									</do_else>
+								</do_all>
+							</do_if>
 							<get_control_entities object="$target" groupname="$ControlEntities"/>
 							<do_all exact="$ControlEntities.count" counter="$Counter" reverse="true">
 								<remove_actor_account actor="$ControlEntities.{$Counter}" transfer="true" chance="if $ControlEntities.{$Counter}.hasownaccount then 100 else 0"/>

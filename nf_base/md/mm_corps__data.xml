@@ -4986,7 +4986,7 @@
 				<set_value name="$ShipYardOfTrust" exact="null" chance="(not $ShipYardOfTrust_Multi? or not ($ShipYardOfTrust? and $ShipYardOfTrust))*100"/>
 				<set_value name="$SY_Matches_max" exact="0"/>
 
-				<do_all exact="$validCluster.count" counter="$x" chance="if $ShipYardOfTrust then 0 else 100">
+				<do_all exact="$validCluster.count" counter="$x" chance="if $ShipYardOfTrust or $_CEO.$style == 'mercenary' then 0 else 100">
 					<find_station name="$ShipYardOfTrust2" space="$validCluster.{$x}" functional="true" multiple="true">
 						<match_content class="class.buildmodule" />
 						<match owner="$_faction"/>
@@ -5100,7 +5100,7 @@
 							</do_if>
 						</do_if>
 						<set_value name="$keylist" exact="if $keylist.count then $keylist.random else 'nothing'"/>
-						<do_if value="typeof $fourthChoice != datatype.macro and $tmpConfig.$ships.{'$%1'.[$keylist]}? and $tmpConfig.$ships.{'$%1'.[$keylist]}.count">
+						<do_if value="typeof $fourthChoice != datatype.macro and $tmpConfig.$ships.{'$%1'.[$keylist]}? and $tmpConfig.$ships.{'$%1'.[$keylist]}.count" chance="if $_CEO.$style == 'mercenary' then 0 else 100">
 							<set_value name="$fourthChoice" exact="$tmpConfig.$ships.{'$%1'.[$keylist]}.random"/>
 						</do_if>
 						<remove_value name="$keylist"/>
@@ -5227,7 +5227,7 @@
 						<do_elseif value="typeof $thirdChoice != datatype.macro and $primarypurpose == $thirdChoice">
 							<set_value name="$thirdChoice" exact="$macro"/>
 						</do_elseif>
-						<do_elseif value="typeof $fourthChoice != datatype.macro">
+						<do_elseif value="typeof $fourthChoice != datatype.macro" chance="if $_CEO.$style == 'mercenary' then 0 else 100">
 							<set_value name="$fourthChoice" exact="$macro"/>
 						</do_elseif>
 						<remove_value name="$macroList.{$macroList.indexof.{$macro}}"/>
@@ -6749,6 +6749,10 @@
 					<do_elseif value="$temp_stations.{$x}.tradenpc and $temp_stations.{$x}.subordinates.{$temp_entitytype}.count gt $temp_entitytypeSubordinates">
 						<append_to_list name="$StationsY" exact="$temp_stations.{$x}"/>
 					</do_elseif>
+					<do_elseif value="$temp_stations.{$x}.tradenpc" chance="20" comment="check">
+						<append_to_list name="$StationsY" exact="$temp_stations.{$x}"/>
+						<append_to_list name="$Stations" exact="$temp_stations.{$x}"/>
+					</do_elseif>
 				</do_all>
 				<remove_value name="$temp_stations"/>
 <set_value name="$text2" exact="' [ +%1 -%2 ]'.[$Stations.count, $StationsY.count]" operation="add" />
@@ -6933,6 +6937,7 @@
 							<do_all exact="$tmp_leave.count" counter="$r">
 <set_value name="$temp_remove" operation="add"/>
 								<set_value name="$capship" exact="$tmp_leave.{$r}.isclass.[class.ship_l, class.ship_xl]" />
+								<remove_object_commander object="$tmp_leave.{$r}" />
 								<start_script object="$tmp_leave.{$r}.pilot" name="'move.die'">
 									<param name="byjump" value="$capship" />
 									<param name="byhighway" value="not $capship" />
@@ -6947,6 +6952,7 @@
 <set_value name="$temp_remove" operation="add"/>
 									<set_value name="$ship" exact="$tmp_leave_maybe.random" />
 									<set_value name="$capship" exact="$ship.isclass.[class.ship_l, class.ship_xl]" />
+									<remove_object_commander object="$ship" />
 									<start_script object="$ship.pilot" name="'move.die'">
 										<param name="byjump" value="$capship" />
 										<param name="byhighway" value="not $capship" />
@@ -7088,6 +7094,13 @@
 		
 									<!-- process order -->
 									<set_value name="$temp_Station" exact="$Stations.{$x}" />
+
+									<do_if value="$liquid? and $tmpCollector.count == 0">
+										<append_to_list name="$tmpCollector" exact="macro.units_size_m_hydrogen_collector_macro" />
+									</do_if>
+									<do_if value="$bulk? and $tmpMiner.count == 0">
+										<append_to_list name="$tmpMiner" exact="macro.units_size_m_crystal_collector_macro" />
+									</do_if>
 
 									<do_if value="$liquid? and $tmpCollector.count" chance="if $temp_requiredShips gt 0 and $temp_Collector then 100 else 0">
 										<do_if value="$temp_requiredShips le 2">
@@ -7238,7 +7251,7 @@
 								<do_if value="$temp_requiredShips le 0">
 									<break />
 								</do_if>
-								<set_value name="$ref" exact="if $tmpTrade.count then $tmpTrade.random else $tmpConfig.$ships.$trade_sm.random" />
+								<set_value name="$ref" exact="if $tmpTrade.count then $tmpTrade.random else macro.units_size_m_universal_transport_macro" />
 								<!--do_if value="$tmpTrade.count gt 1 and $tmpTrade.indexof.{$ref}">
 									<remove_value name="$tmpTrade.{$tmpTrade.indexof.{$ref}}"/>
 								</do_if-->
@@ -7251,6 +7264,10 @@
 							<remove_value name="$temp_Station"/>
 							<remove_value name="$temp_StationRS"/>
 						</do_if>
+						<remove_value name="$energy"/>
+						<remove_value name="$container"/>
+						<remove_value name="$liquid"/>
+						<remove_value name="$bulk"/>
 						<remove_value name="$tmpTrade"/>
 					</do_all>
 					<remove_value name="$tmpCollector"/>

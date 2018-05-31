@@ -20,7 +20,9 @@
 							]
 						"/>
 					<do_all exact="$todo.count" counter="$j" >
-						<append_to_list name="md.$todo_stations_moddlc" exact="$todo.{$j}"/>
+						<do_if value="md.$todo_stations_moddlc.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="md.$todo_stations_moddlc" exact="$todo.{$j}"/>
+						</do_if>
 					</do_all> 
 					<remove_value name="$todo"/>
 				</do_if>

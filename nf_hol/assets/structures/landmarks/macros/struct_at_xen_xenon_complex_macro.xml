@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Simon (192.168.3.109) at 28.10.2014_15-08-45-->
+<macros>
+  <macro name="struct_at_xen_xenon_complex_macro" class="station">
+    <component ref="struct_at_xen_xenon_complex" />
+    <properties>
+      <identification name="{2802,2021}" description="{20102,9102}" unique="0" />
+    </properties>
+    <connections>
+      <connection ref="ConnectionFor_struct_at_xen_radar_macro">
+        <macro ref="struct_at_xen_radar_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_radar_macro1">
+        <macro ref="struct_at_xen_radar_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_radar_macro2">
+        <macro ref="struct_at_xen_radar_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_shell_macro">
+        <macro ref="struct_at_xen_eshell_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_shell_macro1">
+        <macro ref="struct_at_xen_eshell_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_shell_macro2">
+        <macro ref="struct_at_xen_oshell_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_a_macro">
+        <macro ref="struct_at_xen_tower_a_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_a_macro1">
+        <macro ref="struct_at_xen_tower_a_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_a_macro2">
+        <macro ref="struct_at_xen_tower_a_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_a_macro3">
+        <macro ref="struct_at_xen_tower_a_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_a_macro4">
+        <macro ref="struct_at_xen_tower_a_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_a_macro5">
+        <macro ref="struct_at_xen_tower_a_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_b_macro">
+        <macro ref="struct_at_xen_tower_b_macro" connection="space">
+          <connections>
+            <connection ref="connection_cargobay01">
+              <macro ref="storage_station_ef_01_macro" connection="ShipConnection" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_b_macro1">
+        <macro ref="struct_at_xen_tower_b_macro" connection="space">
+          <connections>
+            <connection ref="connection_cargobay01">
+              <macro ref="storage_station_ble_01_macro" connection="ShipConnection" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_b_macro2">
+        <macro ref="struct_at_xen_tower_b_macro" connection="space">
+          <connections>
+            <connection ref="connection_cargobay01">
+              <macro ref="storage_station_container_01s_macro" connection="ShipConnection" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_b_macro3">
+        <macro ref="struct_at_xen_tower_b_macro" connection="space">
+          <connections>
+            <connection ref="connection_cargobay01">
+              <macro ref="storage_station_container_01s_macro" connection="ShipConnection" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_c_macro">
+        <macro ref="struct_at_xen_tower_c_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_c_macro1">
+        <macro ref="struct_at_xen_tower_c_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_c_macro2">
+        <macro ref="struct_at_xen_tower_c_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_e_macro">
+        <macro ref="struct_at_xen_tower_e_macro" connection="space">
+          <connections>
+            <connection ref="connection_cargobay01">
+              <macro ref="storage_station_ef_01_macro" connection="ShipConnection" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_e_macro1">
+        <macro ref="struct_at_xen_tower_e_macro" connection="space">
+          <connections>
+            <connection ref="connection_cargobay01">
+              <macro ref="storage_station_ble_01_macro" connection="ShipConnection" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_e_macro2">
+        <macro ref="struct_at_xen_tower_e_macro" connection="space">
+          <connections>
+            <connection ref="connection_cargobay01">
+              <macro ref="storage_station_container_01s_macro" connection="ShipConnection" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_struct_at_xen_tower_e_macro3">
+        <macro ref="struct_at_xen_tower_e_macro" connection="space">
+          <connections>
+            <connection ref="connection_cargobay01">
+              <macro ref="storage_station_container_01s_macro" connection="ShipConnection" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="connection_controlroom01">
+        <macro ref="control_room_macro" connection="Connection01" />
+      </connection>
+      <connection ref="ConnectionFor_props_surf_playerdock_admin_macro">
+        <macro ref="props_surf_playerdock_admin_macro" connection="space" />
+      </connection>
+
+      <!--connection ref="ConnectionFor_landmarks_hq_superdock_sidepart_macro">
+        <macro ref="landmarks_cw_superdock_sidepart_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_landmarks_hq_superdock_sidepart_macro1">
+        <macro ref="landmarks_cw_superdock_sidepart_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_landmarks_hq_superdock_sidepart_macro2">
+        <macro ref="landmarks_cw_superdock_sidepart_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_landmarks_hq_superdock_sidepart_macro3">
+        <macro ref="landmarks_cw_superdock_sidepart_macro" connection="space" />
+      </connection-->
+      <!--connection ref="ConnectionFor_landmarks_hq_superdock_sidepart_macro4">
+        <macro ref="landmarks_cw_superdock_sidepart_macro" connection="space" />
+      </connection-->
+
+      <connection ref="connection_dock_m01">
+        <macro ref="props_surf_cw_docks_size_s_m_int_inv_macro" connection="Connection01" />
+      </connection>
+      <!--connection ref="connection_dock_xl01">
+        <macro ref="props_surf_cw_docks_size_l_xl_int_inv_macro" connection="connection_component01" />
+      </connection>
+      <connection ref="connection_dock_m02">
+        <macro ref="props_surf_cw_docks_size_s_m_int_inv_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m03">
+        <macro ref="props_surf_cw_docks_size_s_m_int_inv_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m04">
+        <macro ref="props_surf_cw_docks_size_s_m_int_inv_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m05">
+        <macro ref="props_surf_cw_docks_size_s_m_int_inv_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m06">
+        <macro ref="props_surf_cw_docks_size_s_m_int_inv_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m07">
+        <macro ref="props_surf_cw_docks_size_s_m_int_inv_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m08">
+        <macro ref="props_surf_cw_docks_size_s_m_int_inv_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m09">
+        <macro ref="props_surf_cw_docks_size_s_m_int_inv_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_dock_m10">
+        <macro ref="props_surf_cw_docks_size_s_m_int_inv_macro" connection="Connection01" />
+      </connection-->
+
+      <!--connection ref="ConnectionFor_props_wps_cw_weaponplatform_01_macro">
+        <macro ref="props_wps_cw_weaponplatform_01_macro" connection="position"/>
+      </connection>
+      <connection ref="ConnectionFor_props_wps_cw_weaponplatform_01_macro1">
+        <macro ref="props_wps_cw_weaponplatform_01_macro" connection="position"/>
+      </connection>
+      <connection ref="ConnectionFor_props_wps_cw_weaponplatform_01_macro2">
+        <macro ref="props_wps_cw_weaponplatform_01_macro" connection="position"/>
+      </connection>
+      <connection ref="ConnectionFor_props_wps_cw_weaponplatform_01_macro3">
+        <macro ref="props_wps_cw_weaponplatform_01_macro" connection="position"/>
+      </connection>
+
+      <connection ref="ConnectionFor_props_wps_cw_weaponplatform_01_macro4">
+        <build mode="optional" group="defense" sequence="A" stage="1" />
+        <macro ref="props_wps_cw_weaponplatform_01_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_props_wps_cw_weaponplatform_01_macro5">
+        <build mode="optional" group="defense" sequence="A" stage="1" />
+        <macro ref="props_wps_cw_weaponplatform_01_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_props_wps_cw_weaponplatform_01_macro6">
+        <build mode="optional" group="defense" sequence="A" stage="1" tags="primary" />
+        <macro ref="props_wps_cw_weaponplatform_01_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_props_wps_cw_weaponplatform_01_macro7">
+        <build mode="optional" group="defense" sequence="A" stage="1" />
+        <macro ref="props_wps_cw_weaponplatform_01_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_props_wps_cw_weaponplatform_01_macro8">
+        <build mode="optional" group="defense" sequence="A" stage="1" />
+        <macro ref="props_wps_cw_weaponplatform_01_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_props_wps_cw_weaponplatform_01_macro9">
+        <build mode="optional" group="defense" sequence="A" stage="1" />
+        <macro ref="props_wps_cw_weaponplatform_01_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_props_wps_cw_weaponplatform_01_macro10">
+        <build mode="optional" group="defense" sequence="A" stage="1" />
+        <macro ref="props_wps_cw_weaponplatform_01_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_props_wps_cw_weaponplatform_01_macro11">
+        <build mode="optional" group="defense" sequence="A" stage="1" />
+        <macro ref="props_wps_cw_weaponplatform_01_macro" connection="space" />
+      </connection-->
+
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro1">
+        <macro ref="struct_econ_ref_ar_pmc_dronedock_macro" connection="space" />
+      </connection>
+
+      <connection ref="ConnectionFor_props_tradeoffer_buy_minerals">
+        <macro>
+          <component ref="props_tradeoffer_buy_minerals" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_props_tradeoffer_sell_shiptech">
+        <macro>
+          <component ref="props_tradeoffer_sell_shiptech" connection="space" />
+        </macro>
+      </connection>
+
+      <connection ref="ConnectionFor_xenon_asteroid_02_base_02_part_macro">
+        <build mode="optional" group="production" sequence="A" stage="1" tags="primary" />
+        <macro ref="xenon_asteroid_02_base_02_part_macro" connection="space" />
+      </connection>
+
+      <connection ref="ConnectionFor_xenon_asteroid_02_base_02_part_macro1">
+        <build mode="optional" group="production" sequence="B" stage="1" tags="primary" />
+        <macro ref="xenon_asteroid_02_base_02_part_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_02_base_02_part_macro2">
+        <build mode="optional" group="production" sequence="B" stage="1" />
+        <macro ref="xenon_asteroid_02_base_02_part_macro" connection="space" />
+      </connection>
+
+      <connection ref="ConnectionFor_xenon_asteroid_02_base_02_part_macro3">
+        <build mode="optional" group="production" sequence="B" stage="2" tags="primary" />
+        <macro ref="xenon_asteroid_02_base_02_part_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_02_base_02_part_macro4">
+        <build mode="optional" group="production" sequence="B" stage="2" />
+        <macro ref="xenon_asteroid_02_base_02_part_macro" connection="space">
+          <connections>
+            <connection ref="connection_production">
+              <macro ref="struct_econ_prod_minerals_xe_b_macro" connection="ContainerConnection" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_02_base_02_part_macro5">
+        <build mode="optional" group="production" sequence="B" stage="2" />
+        <macro ref="xenon_asteroid_02_base_02_part_macro" connection="space" />
+      </connection>
+
+      <connection ref="ConnectionFor_xenon_asteroid_02_base_02_part_macro6">
+        <build mode="optional" group="production" sequence="B" stage="3" tags="primary" />
+        <macro ref="xenon_asteroid_02_base_02_part_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_02_base_02_part_macro7">
+        <build mode="optional" group="production" sequence="B" stage="3" />
+        <macro ref="xenon_asteroid_02_base_02_part_macro" connection="space">
+          <connections>
+            <connection ref="connection_production">
+              <macro ref="struct_econ_prod_minerals_xe_b_macro" connection="ContainerConnection" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_02_base_02_part_macro8">
+        <build mode="optional" group="production" sequence="B" stage="3" />
+        <macro ref="xenon_asteroid_02_base_02_part_macro" connection="space" />
+      </connection>
+
+      <connection ref="ConnectionFor_xenon_asteroid_02_base_02_part_macro9">
+        <build mode="optional" group="production" sequence="B" stage="4" tags="primary" />
+        <macro ref="xenon_asteroid_02_base_02_part_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_02_base_02_part_macro10">
+        <build mode="optional" group="production" sequence="B" stage="4" />
+        <macro ref="xenon_asteroid_02_base_02_part_macro" connection="space">
+          <connections>
+            <connection ref="connection_production">
+              <macro ref="struct_econ_prod_minerals_xe_b_macro" connection="ContainerConnection" />
+            </connection>
+          </connections>
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_02_base_02_part_macro11">
+        <build mode="optional" group="production" sequence="B" stage="4" />
+        <macro ref="xenon_asteroid_02_base_02_part_macro" connection="space" />
+      </connection>
+ 
+    </connections>
+  </macro>
+</macros>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Exported by: Mike (192.168.3.147) at 19.10.2015_09-58-55-->
+<macros>
+  <macro name="xenon_asteroid_02_base_02_part_macro" class="destructible">
+    <component ref="xenon_asteroid_02_base_02_part" />
+    <properties>
+      <identification name="{20102,7901}" description="{20102,7902}" unique="0" />
+    </properties>
+    <connections>
+      <!--connection ref="ConnectionFor_props_wps_xen_weaponplatform_01_macro">
+        <macro ref="props_wps_xen_weaponplatform_01_macro" connection="space" />
+      </connection-->
+      <connection ref="ConnectionFor_props_wps_xen_weaponplatform_01_macro1">
+        <macro ref="props_wps_xen_weaponplatform_01_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro">
+        <macro ref="struct_econ_ref_ar_pmc_dronedock_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_01_macro">
+        <macro ref="xenon_asteroid_01_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_01_part_01_macro">
+        <macro ref="xenon_asteroid_01_part_01_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_01_part_02_macro">
+        <macro ref="xenon_asteroid_01_part_02_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_01_part_03_macro">
+        <macro ref="xenon_asteroid_01_part_03_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_01_part_04_macro">
+        <macro ref="xenon_asteroid_01_part_04_macro" connection="space" />
+      </connection>
+      <connection ref="ConnectionFor_xenon_asteroid_philae_01_macro">
+        <macro ref="xenon_asteroid_philae_01_macro" connection="space" />
+      </connection>
+      <connection ref="connection_controlroom01">
+        <macro ref="control_room_macro" connection="Connection01" />
+      </connection>
+      <connection ref="connection_production">
+        <macro ref="struct_econ_prod_minerals_xe_macro" connection="ContainerConnection" />
+      </connection>
+      <connection ref="connection_storage">
+        <macro ref="storage_station_ble_01_macro" connection="ShipConnection" />
+      </connection>
+      <connection ref="connection_storage2">
+        <macro ref="storage_station_container_01s_macro" connection="ShipConnection" />
+      </connection>
+      <connection ref="ConnectionFor_props_tradeoffer_buy_minerals">
+        <macro>
+          <component ref="props_tradeoffer_buy_minerals" connection="space" />
+        </macro>
+      </connection>
+      <connection ref="ConnectionFor_props_tradeoffer_sell_shiptech">
+        <macro>
+          <component ref="props_tradeoffer_sell_shiptech" connection="space" />
+        </macro>
+      </connection>
+      <!--connection ref="ConnectionFor_props_surf_playerdock_admin_macro">
+        <macro ref="props_surf_playerdock_admin_macro" connection="space" />
+      </connection-->
+      <connection ref="ConnectionFor_props_wps_xen_weaponplatform_01_macro2">
+        <macro ref="props_wps_xen_weaponplatform_01_macro" connection="space" />
+      </connection>
+      <!--connection ref="ConnectionFor_props_wps_xen_weaponplatform_01_macro3">
+        <macro ref="props_wps_xen_weaponplatform_01_macro" connection="space" />
+      </connection-->
+    </connections>
+  </macro>
+</macros>

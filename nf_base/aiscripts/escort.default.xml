@@ -14,9 +14,9 @@
         <check_any>
           <event_object_signalled object="this.ship" param="'switch.mode'" />
           <event_object_signalled object="this.ship" param="'switch.gohome'" />
-          <event_object_destroyed object="$commander" />
+          <event_object_destroyed object="$commander" check="false"/>
           <check_all>
-            <event_object_docked object="$commander"/>
+            <event_object_docked object="$commander" check="false"/>
             <check_value value="$gohome?" />
           </check_all>
         </check_any>
@@ -43,7 +43,7 @@
           <set_value name="this.$escort" exact="'dock'"/>
         </do_else>
         <!-- recall drones -->
-        <run_interrupt_script name="'lib.recall.drones'" abortscripts="true"  resume="loop"/>
+        <abort_called_scripts resume="loop"/>
       </actions>
     </handler>
   </interrupts>
@@ -95,8 +95,8 @@
       <do_elseif value="$commander.exists and this.$escort == 'patrol'">
         <run_script name="'move.patrol'">
           <param name="patrolobject" value="$commander" />
-          <param name="range_min" value="1km" />
-          <param name="range_max" value="5km" />
+          <param name="range_min" value="if $commander.isclass.[class.ship_l, class.ship_xl] then 3km else 1km" />
+          <param name="range_max" value="if $commander.isclass.[class.ship_l, class.ship_xl] then 10km else 5km" />
           <param name="allowstations" value="false" />
         </run_script>
       </do_elseif>
@@ -111,6 +111,12 @@
       <do_elseif value="not $commander.exists and $base and $base.exists and $base.isclass.station">
         <run_script name="'move.patrol'">
           <param name="patrolobject" value="$base" />
+          <param name="allowstations" value="false" />
+        </run_script>
+      </do_elseif>
+
+      <do_elseif value="not $commander.exists and not $base.exists">
+        <run_script name="'move.patrol'">
           <param name="allowstations" value="false" />
         </run_script>
       </do_elseif>

@@ -338,7 +338,7 @@
           <event_object_signalled object="this.ship" param="'switch.mode'" />
           <event_object_signalled object="this.ship" param="'switch.gohome'" />
           <check_all>
-            <event_object_docked object="$commander" />
+            <event_object_docked object="$commander" check="false"/>
             <check_value value="$gohome?" />
           </check_all>
         </check_any>

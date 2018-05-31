@@ -6,6 +6,7 @@
 				<check_any>
 					<event_cue_signalled cue="md.Setup.GameStart"/>
 					<event_game_loaded />
+					<event_player_created />
 				</check_any>
 			</conditions>
 			<delay min="300ms" />
@@ -58,7 +59,9 @@
 							]
 						"/>
 					<do_all exact="$todo.count" counter="$j" >
-						<append_to_list name="md.$todo_ships_small_others_trade" exact="$todo.{$j}"/>
+						<do_if value="md.$todo_ships_small_others_trade.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="md.$todo_ships_small_others_trade" exact="$todo.{$j}"/>
+						</do_if>
 					</do_all> 
 					<remove_value name="$todo"/>
 				</do_if>
@@ -68,11 +71,14 @@
 								macro.xenon_asteroid_shipyard_macro,
 								macro.struct_at_xen_xenon_portal_macro,
 								macro.struct_at_xen_xenon_outpost_macro,
+								macro.struct_at_xen_xenon_complex_macro,
 								macro.xenon_asteroid_01_base_01b_macro
 							]
 						"/>
 					<do_all exact="$todo.count" counter="$j" >
-						<append_to_list name="md.$todo_stations_moddlc" exact="$todo.{$j}"/>
+						<do_if value="md.$todo_stations_moddlc.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="md.$todo_stations_moddlc" exact="$todo.{$j}"/>
+						</do_if>
 					</do_all> 
 					<remove_value name="$todo"/>
 				</do_if>
