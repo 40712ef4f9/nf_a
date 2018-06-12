@@ -1794,6 +1794,10 @@
 		<library name="MMCData_create_station">
 			<actions>
 				<do_if value="$faction and typeof $faction == datatype.faction">
+					<do_if value="$BuildLocation and typeof $BuildLocation == datatype.componentmacroslot and $BuildLocation.child">
+						<debug_text text="'ERROR MMCData_create_station: f:%1  Z:%2  M:%3 BL:%4 %5 =%6'.[@$faction.id, @$BuildZone.macro.id, @$Macro.id, @$BuildLocation, @$BuildLocation.offset, @$BuildLocation.child]" filter="error" chance="100" />
+						<set_value name="$BuildLocation" exact="'random'"/>
+					</do_if>
 					<do_if value="$BuildLocation" exact="'random'">
 						<set_value name="$temp_zone" exact="$BuildZone"/>
 						<include_actions ref="md.MM_Corps__Data.MMCData_do_validfreebuildspots" />

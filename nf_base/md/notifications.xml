@@ -21,6 +21,9 @@
 		<do_elseif value="event.param3 gt faction.player.relation.neutral.min and event.param2 gt faction.player.relation.neutral.min and event.param2 le faction.player.relation.neutral.max">
 			<set_value name="$showchance" exact="0" />
 		</do_elseif>
+		<do_elseif value="event.param3 gt faction.player.relation.enemy.min and event.param2 gt faction.player.relation.enemy.min and event.param2 le faction.player.relation.kill.max">
+			<set_value name="$showchance" exact="0" />
+		</do_elseif>
 		<do_else>
 			<set_value name="$showchance" exact="100" />
 		</do_else>

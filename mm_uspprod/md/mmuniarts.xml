@@ -4,13 +4,9 @@
 	<cues>
 		<cue name="MMUniparts_ini" instantiate="true">
 			<conditions>
-				<check_any>
-					<event_cue_signalled cue="md.Setup.GameStart"/>
-					<event_game_loaded />
-					<event_player_created />
-				</check_any>
+				<event_cue_signalled cue="md.NF_BASE.Patch_GLWorker"/>
 			</conditions>
-			<delay min="300ms" />
+			<delay min="300ms" max="500ms"/>
 			<actions>
 				<!--
 					Cheatpage
@@ -18,29 +14,32 @@
 					Stations
 				-->
 				<do_if value="md.$todo_stations_moddlc?">
-						<set_value name="$todo" exact="
-							[
-								macro.xenon_asteroid_01_base_01_macro,
-								macro.struct_bt_alb_shippart_production_macro,
-								macro.struct_bt_te_shippartproduction_macro,
-								macro.struct_bt_ol_shippartproduction_macro
-							]
-						"/>
+					<set_value name="$todo" exact="
+						[
+							macro.xenon_asteroid_01_base_01_macro,
+							macro.struct_bt_alb_shippart_production_macro,
+							macro.struct_bt_te_shippartproduction_macro,
+							macro.struct_bt_ol_shippartproduction_macro
+						]
+					"/>
 					<do_all exact="$todo.count" counter="$j" >
-						<append_to_list name="md.$todo_stations_moddlc" exact="$todo.{$j}"/>
+						<do_if value="md.$todo_stations_moddlc.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="md.$todo_stations_moddlc" exact="$todo.{$j}"/>
+						</do_if>
 					</do_all> 
-					<debug_text text="'ADD Station to the Cheatpackage'" filter="error" chance="0" />
 					<remove_value name="$todo"/>
 				</do_if>
 				<do_if value="md.$todo_warelist?">
-						<set_value name="$todo" exact="
-							[
-								ware.shippart,
-								ware.shippartcomp
-							]
-						"/>
+					<set_value name="$todo" exact="
+						[
+							ware.shippart,
+							ware.shippartcomp
+						]
+					"/>
 					<do_all exact="$todo.count" counter="$j" >
-						<append_to_list name="md.$todo_warelist" exact="$todo.{$j}"/>
+						<do_if value="md.$todo_warelist.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="md.$todo_warelist" exact="$todo.{$j}"/>
+						</do_if>
 					</do_all> 
 					<remove_value name="$todo"/>
 				</do_if>

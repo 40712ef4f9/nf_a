@@ -2,6 +2,20 @@
 <mdscript name="NF_MapMaster" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="E:\Rebirth\current\libraries\md.xsd">
 	<cues>
 
+		<cue name="NFMM_DoRun" instantiate="true" >
+			<conditions>
+				<event_cue_signalled/>
+				<check_value value="not md.$NFMM_Run or md.$NFMM_Run lt player.age" />
+			</conditions>
+			<actions>
+				<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
+
+				<do_if value="event.param and (typeof event.param).isstring and md.$NFMMprocessesdSectors.indexof.{event.param} == 0">
+					<append_to_list name="md.$NFMMprocessesdSectors" exact="event.param"/>
+				</do_if>
+			</actions>
+		</cue>
+
 		<!--
 		<include_actions ref="md.NF_MapMaster.NFMM_Relations" />
 		-->
@@ -30,6 +44,7 @@
 		-->
 		<library name="NFMM_Worker">
 			<actions>
+				<set_value name="md.$NFMM_Run" exact="player.age + 2s"/>
 				<do_if value="global.$nfconfig?" negate="true">
 					<set_value name="global.$nfconfig" exact="table[
 						$Check = 1,
@@ -44,17 +59,22 @@
 						$AdvJump = 0,
 						$autoRefuel = 1,
 						$ignoreFuel = 0,
-						$HyperDrive = 1
+						$cheatMaxSkill = 0,
+						$HyperDrive = 1,
+						$buildOwnerNotice = 0,
+						$cheatRestoreSkunk = 1,
+						$payOnUrSy = 1
 					]" comment="end $nfconfig"/>
 					<set_value name="md.$nfFactions_Main" exact="['player', 'heartofalbion', 'plutarch', 'canteran', 'argongovernment', 'xenon', 'familyryak', 'terracorp', 'atlas', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'argon_colony', 'hayen', 'mlspirate', 'teladi', 'ls_terran']" comment="end $nfFactions_Main"/>
 					<set_value name="md.$nfFactions_outlaw" exact="['xenon', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'atlas', 'khaak', 'hayen', 'mlspirate', 'ls_dark_space']" comment="end $nfFactions_outlaw"/>
+
+					<do_if value="player.module == 'ep1'">
+						<set_value name="global.$nfconfig.$doBuildSt" exact="0" />
+						<set_value name="global.$nfconfig.$doInv" exact="0" />
+						<set_value name="global.$nfconfig.$plotSafe" />
+					</do_if>
 				</do_if>
 
-				<do_if value="player.module == 'ep1'">
-					<set_value name="global.$nfconfig.$doBuildSt" exact="0" />
-					<set_value name="global.$nfconfig.$doInv" exact="0" />
-					<set_value name="global.$nfconfig.$plotSafe" />
-				</do_if>
 				
 				<!--
 					collect mapdata
@@ -93,7 +113,7 @@
 				<!--
 					make stations
 				-->
-				<set_value name="$noInitCance" exact="if player.age ge 5min then 0 else 100" />
+				<set_value name="$noInitCance" exact="if player.age ge 30s then 0 else 100" />
 
 				<!-- unique stations -->
 				<set_value name="$keys" exact="$tempTableUnique.keys.list" />
@@ -104,6 +124,9 @@
 						<do_if value="$tempSpace" negate="true">
 							<continue />
 						</do_if>
+						<do_elseif value="$tempMMPS.indexof.{$tempSpace.sector}">
+							<continue />
+						</do_elseif>
 
 						<set_value name="$temp_zone" exact="$tempSpace"/>
 						<include_actions ref="md.MM_Corps__Data.MMCData_do_validfreebuildspots" />
@@ -184,6 +207,7 @@
 						</do_if>
 
 						<do_all exact="$tempTable.{$keys.{$f}}.count" counter="$Counter">
+							<set_value name="$BuildLocation" exact="null" />
 							<set_value name="$BuildZone" exact="$tempSpace" />
 							<set_value name="$faction" exact="$tempTable.{$keys.{$f}}.{$Counter}.{3}" />
 							<do_if value="$tempBL.count">
@@ -197,10 +221,16 @@
 							<do_else>
 								<break />
 							</do_else>
-							<set_value name="$Macro" exact="$tempTable.{$keys.{$f}}.{$Counter}.{2}" />
-							<set_value name="$noInit" chance="$noInitCance"/>
-							<include_actions ref="md.MM_Corps__Data.MMCData_create_station" />
+							<do_if value="$BuildLocation">
+								<set_value name="$Macro" exact="$tempTable.{$keys.{$f}}.{$Counter}.{2}" />
+								<set_value name="$noInit" chance="$noInitCance"/>
+								<include_actions ref="md.MM_Corps__Data.MMCData_create_station" />
+							</do_if>
 						</do_all>
+						<remove_value name="$noInit"/>
+						<remove_value name="$Macro"/>
+						<remove_value name="$BuildZone"/>
+						<remove_value name="$BuildLocation"/>
 						<remove_value name="$tempBL"/>
 						<remove_value name="$tempBL2"/>
 						<remove_value name="$tempSpace"/>
@@ -287,13 +317,14 @@
 				<!-- sectors -->
 				<set_value name="$ZO_temp_main" exact="100" />
 				<include_actions ref="md.NF_StationDestruct.SD_owner_check_sector" />
-
+	
 				<remove_value name="$Main_Factions"/>
 				<!-- 
 				TODO:
 					* replace original cluster/sector with new start area
 				 -->
 				<include_actions ref="md.NF_MapMaster.NFMM_Relations" />
+				<remove_value name="$tempSector"/>
 			</actions>
 		</library>
 		<!--

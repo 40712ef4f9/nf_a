@@ -385,6 +385,15 @@
         <do_if value="this.$orders?" negate="true">
           <create_list name="this.$orders"/>
         </do_if>
+        <do_if value="this.$previousStation? and this.$previousStation == this.station">
+          <set_value name="this.$orders" exact="this.$previousOrders.clone" />
+          <remove_value name="$previousStation" />
+          <remove_value name="$previousOrders" />
+        </do_if>
+        <do_elseif value="this.$previousStation? and this.$previousStation != this.station">
+          <remove_value name="$previousStation" />
+          <remove_value name="$previousOrders" />
+        </do_elseif>
 
         <do_if value="this.$ship_xl? and this.$ship_l?" negate="true">
           <find_object_component entitytype="entitytype.shiptrader" name="$shiptraders" object="this.station" multiple="true" />
@@ -509,6 +518,16 @@
   <add sel="//label[@name='init']" pos="after">
     <do_if value="this.$orders?" negate="true">
       <create_list name="this.$orders"/>
+      <do_if value="this.$previousStation? and this.$previousStation == this.station">
+        <set_value name="this.$orders" exact="this.$previousOrders.clone" />
+        <remove_value name="$previousStation" />
+        <remove_value name="$previousOrders" />
+      </do_if>
+      <do_elseif value="this.$previousStation? and this.$previousStation != this.station">
+        <set_value name="this.$orders" exact="this.$previousOrders.clone" />
+        <remove_value name="$previousStation" />
+        <remove_value name="$previousOrders" />
+      </do_elseif>
       <find_object_component entitytype="entitytype.shiptrader" name="$shiptraders" object="this.station" multiple="true" />
       <do_all counter="$int" exact="$shiptraders.count">
         <do_if value="$shiptraders.{$int}.buildmodule and $shiptraders.{$int}.buildmodule.buildmacros.{1}.class == class.ship_l">
@@ -570,6 +589,16 @@
     <remove_value name="$orderFaction"/>
     <remove_value name="$orderID"/>
     <remove_value name="$ceo"/>
+  </add>
+  <add sel="//on_abort">
+    <do_if value="this.$orders? and this.$orders.count">
+      <set_value name="this.$previousStation" exact="this.station" />
+      <set_value name="this.$previousOrders" exact="this.$orders.clone" />
+      <remove_value name="this.$orders"/>
+    </do_if>
+    <do_else>
+      <remove_value name="this.$orders"/>
+    </do_else>
   </add>
 
   <replace sel="//construct_ship/@faction" >$customer_faction</replace>

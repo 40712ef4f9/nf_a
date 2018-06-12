@@ -1,28 +1,52 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <mdscript name="NF_BASE" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../libraries/md.xsd">
 	<cues>
-		<cue name="NF_BASE_patch" instantiate="true">
+		<cue name="Patch_GLWorker">
+			<conditions>
+				<event_cue_signalled/>
+			</conditions>
+			<actions>
+				<set_value name="md.$runNFW" exact="player.age + 2s"/>
+				<reset_cue cue="this"/> 
+			</actions>
+		</cue>
+		<cue name="Patch_GLWorker1" >
 			<conditions>
 				<check_any>
 					<event_cue_signalled cue="md.Setup.GameStart"/>
 					<event_game_loaded />
-					<event_player_created />
 				</check_any>
+				<check_value value="not md.$runNFW? or md.$runNFW lt player.age" />
 			</conditions>
-			<delay min="150ms" />
+			<actions>
+				<signal_cue_instantly cue="md.NF_BASE.Patch_GLWorker" />
+			</actions>
+		</cue>
+		<cue name="Patch_GLWorker2" instantiate="true" checktime="62min" checkinterval="180min" >
+			<conditions>
+				<check_value value="md.$runNFW? and md.$runNFW lt player.age" />
+			</conditions>
+			<actions>
+				<signal_cue_instantly cue="md.NF_BASE.Patch_GLWorker" />
+			</actions>
+		</cue>
+
+		<cue name="NF_BASE_patch" instantiate="true">
+			<conditions>
+				<event_cue_signalled cue="md.NF_BASE.Patch_GLWorker"/>
+			</conditions>
+			<delay min="150ms" max="300ms" />
 			<actions>
 				<remove_value name="md.$shipparts"/>
 				<remove_value name="global.$BR_range_table"/>
 				<do_if value="md.$NFMMprocessesdSectors?" negate="true">
-					<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
-					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_BASE'"/>
+					<signal_cue_instantly cue="md.NF_MapMaster.NFMM_DoRun" param="'NF_BASE'" />
 				</do_if>
 				<do_elseif value="md.$NFMMprocessesdSectors? and player.age lt 3min and md.$NFMMprocessesdSectors.indexof.{'NF_BASE'} == 0">
 					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_BASE'"/>
 				</do_elseif>
 				<do_elseif value="md.$NFMMprocessesdSectors? and player.age ge 3min and md.$NFMMprocessesdSectors.indexof.{'NF_BASE'} == 0">
-					<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
-					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_BASE'"/>
+					<signal_cue_instantly cue="md.NF_MapMaster.NFMM_DoRun" param="'NF_BASE'" />
 				</do_elseif>
 
 				<do_if value="global.$MICT_LR_Ships?" negate="true">
@@ -406,7 +430,9 @@
 							]
 						"/>
 					<do_all exact="$todo.count" counter="$j" >
-						<append_to_list name="md.$todo_ships_capital_mod" exact="$todo.{$j}"/>
+						<do_if value="md.$todo_ships_capital_mod.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="md.$todo_ships_capital_mod" exact="$todo.{$j}"/>
+						</do_if>
 					</do_all> 
 					<remove_value name="$todo"/>
 				</do_if>
@@ -421,7 +447,9 @@
 							]
 						"/>
 					<do_all exact="$todo.count" counter="$j" >
-						<append_to_list name="md.$todo_ships_small_others_fight" exact="$todo.{$j}"/>
+						<do_if value="md.$todo_ships_small_others_fight.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="md.$todo_ships_small_others_fight" exact="$todo.{$j}"/>
+						</do_if>
 					</do_all> 
 					<remove_value name="$todo"/>
 				</do_if>
@@ -436,16 +464,24 @@
 							]
 						"/>
 					<do_all exact="$todo.count" counter="$j" >
-						<append_to_list name="md.$todo_ships_small_others_trade" exact="$todo.{$j}"/>
+						<do_if value="md.$todo_ships_small_others_trade.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="md.$todo_ships_small_others_trade" exact="$todo.{$j}"/>
+						</do_if>
 					</do_all> 
 					<remove_value name="$todo"/>
 				</do_if>
 				<!-- Factions -->
 				<do_if value="md.$todo_factions?">
-					<append_to_list name="md.$todo_factions" exact="[
+					<set_value name="$todo" exact="[]"/>
+					<append_to_list name="$todo" exact="[
 						faction.acmecorp,
 						faction.deepwater
 						]"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="md.$todo_factions.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="md.$todo_factions" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
 				</do_if>
 
 				<do_if value="md.$FieldsOfOpportunity? and md.$FieldsOfOpportunity">
@@ -569,13 +605,37 @@
 		</cue>
 		<library name="NF_BASE_TO">
 			<actions>
-				<append_to_list name="global.$mmpiratesy_pfactions" exact="faction.{'%1'.['teladigunrunner']}"/> 
-				<append_to_list name="global.$mmpiratesy_pfactions" exact="faction.{'%1'.['teladidrugrunner']}"/> 
+				<do_if value="global.$mmpiratesy_pfactions?">
+					<set_value name="$todo" exact="
+						[
+								faction.{'%1'.['teladigunrunner']},
+								faction.{'%1'.['teladidrugrunner']}
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="global.$mmpiratesy_pfactions.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="global.$mmpiratesy_pfactions" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
 			</actions>
 		</library>
 		<library name="NF_BASE_HoL">
 			<actions>
-				<append_to_list name="global.$mmpiratesy_pfactions" exact="faction.{'%1'.['atlas']}"/> 
+				<do_if value="global.$mmpiratesy_pfactions?">
+					<set_value name="$todo" exact="
+						[
+								faction.{'%1'.['atlas']}
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="global.$mmpiratesy_pfactions.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="global.$mmpiratesy_pfactions" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
 			</actions>
 		</library>
 
@@ -801,6 +861,29 @@
 					</do_all>
 				</do_if>
 				<remove_value name="$DockHasShipTrader"/>
+			</actions>
+		</cue>
+
+		<cue name="NF_BASE_SY_repair" instantiate="true" namespace="this">
+			<conditions>
+				<check_any>
+					<event_cue_signalled/>
+					<event_object_signalled object="player.galaxy" param="'do.remove.buildstage'" />
+				</check_any>
+			</conditions>
+			<delay exact="2s" />
+			<actions>
+				<set_value name="$buildmodule" exact="event.param2" />
+				<set_value name="$station" exact="$buildmodule.container" />
+				<find_object_component name="$Buildstage" object="$station" checkoperational="false">
+				  <match_buildsource sequence="$buildmodule.component.sequence" stage="$buildmodule.component.stage" />
+				</find_object_component>
+				<do_all exact="$Buildstage" counter="$k" reverse="true">
+					<destroy_object object="$Buildstage.{$k}" />
+				</do_all>
+				<remove_value name="$buildmodule"/>
+				<remove_value name="$station"/>
+				<remove_value name="$Buildstage"/>
 			</actions>
 		</cue>
 
@@ -1076,15 +1159,10 @@
 			</actions>
 		</cue>
 
-		<cue name="NF_RemoveJOBS" instantiate="true" >
+		<cue name="NF_RemoveJOBS" instantiate="true" checktime="22min" checkinterval="73min" >
 			<conditions>
-				<check_any>
-					<event_game_loaded/>
-					<event_player_created />
-				</check_any>
 				<check_value value="global.$nfconfig? and not global.$nfconfig.$plotSafe?" />
 			</conditions>
-			<delay min="48s" max="60s"/>
 			<actions>
 				<find_ship name="$temp_ships" multiple="true" space="player.galaxy" class="[class.ship_xl, class.ship_l, class.ship_m, class.ship_s]" recursive="true" functional="true"/>
 

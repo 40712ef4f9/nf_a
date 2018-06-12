@@ -9,7 +9,7 @@
 					<event_player_created />
 				</check_any>
 			</conditions>
-			<delay min="2s" />
+			<delay min="2s" max="5s"/>
 			<actions>
 				<do_if value="md.$mmdefenceplatformmacros? and md.$mmdefenceplatformmacros.indexof.{macro.units_size_m_khaak_weaponplatform_macro} == 0">
 					<append_to_list name="md.$mmdefenceplatformmacros" exact="macro.units_size_m_khaak_weaponplatform_macro"/>

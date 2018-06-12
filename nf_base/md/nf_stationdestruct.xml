@@ -414,6 +414,8 @@
 				<find_station name="$StationsSD" space="$thisTargetZone" functional="true" multiple="true">
 					<match owner="faction.ownerless" negate="true"/>
 					<match owner="faction.civilian" negate="true"/>
+					<match owner="faction.acmecorp" negate="true"/>
+					<match owner="faction.deepwater" negate="true"/>
 				</find_station>
 
 				<do_if value="@$StationsSD.count gt 0" >
@@ -488,11 +490,15 @@
 							<find_station name="$Stations_old" space="$thisTargetZone" functional="true" multiple="true">
 								<match owner="faction.ownerless" negate="true"/>
 								<match owner="faction.civilian" negate="true"/>
+								<match owner="faction.acmecorp" negate="true"/>
+								<match owner="faction.deepwater" negate="true"/>
 								<match_relation faction="$thisTargetZone.owner"  relation="neutral" comparison="ge"/>
 							</find_station>
 							<find_station name="$Stations_new" space="$thisTargetZone" functional="true" multiple="true">
 								<match owner="faction.ownerless" negate="true"/>
 								<match owner="faction.civilian" negate="true"/>
+								<match owner="faction.acmecorp" negate="true"/>
+								<match owner="faction.deepwater" negate="true"/>
 								<match_relation faction="$tmp"  relation="neutral" comparison="ge"/>
 							</find_station>
 							<!--
@@ -553,6 +559,8 @@
 							<find_station name="$StationsSD" space="$thisTargetZone.adjacentzones.{$y}" functional="true" multiple="true">
 								<match owner="faction.ownerless" negate="true"/>
 								<match owner="faction.civilian" negate="true"/>
+								<match owner="faction.acmecorp" negate="true"/>
+								<match owner="faction.deepwater" negate="true"/>
 							</find_station>
 
 							<do_all exact="$StationsSD.count" counter="$x">
@@ -807,6 +815,7 @@
 
 						<do_if value="$set_owner" chance="0"> 
 							<do_if value="not $tempSector.{$run}.representative.{$set_owner}.{entitytype.lawenforcement}">
+<debug_text text="$tempSector.{$run}.knownname + ' ' + $set_owner " filter="error" chance="100" />
 								<create_representative_actor sector="$tempSector.{$run}" faction="$set_owner" type="entitytype.lawenforcement" name="$tmpActor" />
 								<do_if value="$tmpActor">
 									<debug_text chance="0" text="'ReCreated representative of \'%1\' in sector \'%2\': %3 (%4)'.[$set_owner.knownname, $tempSector.{$run}.knownname, $tmpActor.knownname, $tmpActor]" filter="scripts_verbose" />
@@ -947,6 +956,7 @@
 				<set_value name="$faction" exact="$todo.{3}.zone.policefaction" />
 				<do_if value="$faction">
 					<do_if value="not $todo.{3}.sector.representative.{$faction}.{entitytype.lawenforcement}">
+<debug_text text="$todo.{3}.sector.knownname + ' ' + $faction " filter="error" chance="100" />
 						<create_representative_actor sector="$todo.{3}.sector" faction="$faction" type="entitytype.lawenforcement" name="$actor" />
 						<do_if value="$actor">
 							<debug_text chance="0" text="'ReCreated representative of \'%1\' in sector \'%2\': %3 (%4)'.[$faction.knownname, $todo.{3}.sector.knownname, $actor.knownname, $actor]" filter="scripts_verbose" />

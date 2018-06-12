@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-<aiscript name="boarding.ship" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
+<aiscript name="boarding.ship" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="3">
   <params>
     <param name="target" default="null" />
     <param name="targetpos" default="null" />
@@ -19,6 +19,30 @@
       <delay min="500ms" max="2s"/>
       <actions>
         <abort_called_scripts resume="gohome" />
+      </actions>
+    </handler>
+    <handler>
+      <conditions>
+        <event_object_signalled object="this.ship" param="'force.boarding'" />
+      </conditions>
+      <actions>
+        <abort_called_scripts resume="forthequeen" />
+      </actions>
+    </handler>
+    <handler>
+      <conditions>
+        <check_any>
+          <event_object_changed_zone group="$targets" />
+          <event_object_destroyed group="$targets" />
+        </check_any>
+      </conditions>
+      <actions>
+        <do_if value="event.name" exact="'event_object_destroyed'"> 
+          <abort_called_scripts resume="gohome"/>
+        </do_if> 
+        <do_else>
+          <abort_called_scripts resume="start"/>
+        </do_else>
       </actions>
     </handler>
     <handler>
@@ -88,9 +112,16 @@
   </interrupts>
   <init>
     <set_value name="this.$boarding" exact="if $target and $target.isclass.station then 'station' else 'somethingelse'"/>
+    <create_group groupname="$targets"/>
   </init>
   <patch sinceversion="2">
     <set_value name="$marineone" exact="this.ship.boardingnpc" />
+  </patch>
+  <patch sinceversion="3" early="true">
+    <create_group groupname="$targets"/>
+    <do_if value="$target.exists">
+      <add_to_group groupname="$targets" object="$target" />
+    </do_if>
   </patch>
   <attention min="unknown">
     <actions>
@@ -127,19 +158,24 @@
       </do_if>
 
       <do_if value="not $target.exists">
+        <create_group groupname="$targets" />
         <find_station space="$targetzone" name="$target">
           <match_relation faction="this.ship.owner" relation="neutral" comparison="le" />
           <match_relation faction="$faction" relation="enemy" comparison="le" />
         </find_station>
-
-        <do_if value="$target.exists">
-          <set_value name="$targetzone" exact="$target.zone" />
-        </do_if>
-        <do_else>
-          <set_value name="$returntocommander" exact="true"/>
-          <resume label="gohome"/>
-        </do_else>
       </do_if>
+
+      <do_if value="$target.exists and $targets.list.indexof.{$target}">
+        <add_to_group groupname="$targets" object="$target" />
+      </do_if>
+
+      <do_if value="$target.exists">
+        <set_value name="$targetzone" exact="$target.zone" />
+      </do_if>
+      <do_else>
+        <set_value name="$returntocommander" exact="true"/>
+        <resume label="gohome"/>
+      </do_else>
 
       <set_command command="command.attackobject" param="$target" />
       <remove_value name="$done"/>
@@ -163,16 +199,23 @@
         <get_safe_pos zone="$targetzone" radius="this.ship.size + 1km" result="$targetpos" ignored="this.ship" object="$target" />
       </do_if>
 
-      <do_if value="this.ship.position != $targetpos">
+      <do_if value="this.ship.distanceto.[$targetzone, $targetpos] gt 3km +this.ship.size">
         <move_to object="this.ship" destination="$targetzone" finishonapproach="true" forceposition="false">
           <position value="$targetpos" />
+          <interrupt_after_time time="300s" />
         </move_to>
+        <do_if value="this.ship.distanceto.[$targetzone, $targetpos] gt 5km + this.ship.size" chance="if $2ndrun? then 0 else 100">
+          <set_value name="$targetpos" exact="null" />
+          <set_value name="$2ndrun" chance="if this.ship.distanceto.[$targetzone, $targetpos] gt 10km + this.ship.size then 0 else 100"/>
+          <resume label="flyclose"/>
+        </do_if>
       </do_if>
 
       <do_if value="$done?">
         <resume label="gohome"/>
       </do_if>
 
+      <label name="forthequeen" />
       <do_if value="$target.exists and this.ship.boardingnpc.exists and $marineone == this.ship.boardingnpc">
         <!-- hack -->
         <do_if value="$canhacktarget">
@@ -212,6 +255,8 @@
         <!-- get the party started -->
         <signal_objects object="this.ship" param="'release.pods'" />
       </do_elseif>
+
+      <set_value name="this.$boardingPodsOut"/>
 
       <wait min="[10s, (200 * this.ship.units.{unitcategory.marine}.count)ms ].max" />
 
@@ -376,6 +421,7 @@
 
 
       <label name="gohome" />
+      <remove_value name="this.$boardingPodsOut" />
       <set_value name="$gotodie" exact="false" />
       <do_if value="$home? and $home.exists and this.ship.dockslot == null and $returntocommander">
         <resume label="dock"/>
@@ -456,7 +502,9 @@
         </run_script>
       </do_if>
       <do_elseif value="this.ship.trueowner == faction.player and (not this.ship.commander or this.ship.commander == player.primaryship)">
+        <remove_value name="this.$boarding" />
         <run_script name="'player.default'" />
+        <signal_objects object="player.galaxy" param="'do.start.pldefault'" param2="this.ship" delay="20ms"/>
       </do_elseif>
 
 
@@ -466,6 +514,8 @@
     </actions>
   </attention>
   <on_abort>
+    <signal_objects object="this.ship" param="'abort.boarding'" />
     <remove_value name="this.$boarding" />
+    <remove_value name="this.$boardingPodsOut" />
   </on_abort>
 </aiscript>

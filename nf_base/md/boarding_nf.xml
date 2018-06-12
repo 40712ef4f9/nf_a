@@ -712,7 +712,10 @@ If ownerless, make easier/skip steps
 
                 <cue name="BoardingFleetShipDestroyed" instantiate="true">
                   <conditions>
-                    <event_object_destroyed group="$BoardingFleet" />
+                    <check_any>
+                      <event_object_destroyed group="$BoardingFleet" />
+                      <event_object_signalled group="$BoardingFleet" param="'abort.boarding'"/>
+                    </check_any>
                   </conditions>
                   <actions>
                     <remove_from_group object="event.object" group="$BoardingFleet"/>
@@ -1475,7 +1478,9 @@ If ownerless, make easier/skip steps
                                     <find_object_component name="$buildmodules" object="$target" class="class.buildmodule" multiple="true"/>
                                     <do_all exact="$buildmodules.count" counter="$Counter">
                                       <do_if value="$buildmodules.{$Counter}.buildanchor.exists">
-                                        <clear_buildmodule buildmodule="$buildmodules.{$Counter}"/>
+                                        <destroy_object object="$buildmodules.{$Count}.buildanchor"/>
+                                        <clear_buildmodule buildmodule="$buildmodules.{$Count}"/>
+                                        <signal_cue_instantly cue="md.NF_BASE.NF_BASE_SY_repair" param="$buildmodules.{$Count}"/>
                                       </do_if>
                                     </do_all>
                                     <remove_value name="$buildmodules" />

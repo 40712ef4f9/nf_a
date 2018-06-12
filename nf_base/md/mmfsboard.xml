@@ -33,6 +33,35 @@
 			</actions>
 		</cue>
 
+		<cue name="SectionHandler_MMBoarding_forthequeen2" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="default" />
+					<event_conversation_returned_to_section section="default" />
+					<event_conversation_next_section section="mmsppodsout" />
+				</check_any>
+				<check_value value="event.object.trueowner" exact="faction.player" />
+				<check_any>
+					<check_value value="event.object.type" exact="entitytype.pilot" />
+					<check_value value="event.object.type" exact="entitytype.commander" />
+				</check_any>
+				<check_value value="event.object.iscontrolentity" />
+				<check_value value="event.object.container.commander and event.object.container.commander != player.primaryship" />
+				<check_value value="event.object.$boarding?" />
+				<check_value value="event.object.container.commander.boardee or @event.object.container.commander.commander.boardee" />
+				<check_value value="event.object.$boardingPodsOut?" negate="true"/>
+			</conditions>
+			<actions>
+				<do_if value="event.param" exact="'mmsppodsout'">
+					<signal_objects object="event.object.container" param="'force.boarding'" />
+				</do_if>
+				<do_else>
+					<add_player_choice text="'release pods'" section="mmsppodsout" position="top_right" comment="release pods"/>
+				</do_else>
+			</actions>
+		</cue>
+
+
 		<cue name="SectionHandler_MMBoarding_forthequeen" instantiate="true" >
 			<conditions>
 				<check_any>

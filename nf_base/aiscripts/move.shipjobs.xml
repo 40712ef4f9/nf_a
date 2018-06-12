@@ -211,6 +211,9 @@
 				<remove_object_commander object="this.ship" />
 
 				<do_if value="not this.$params.$route? or this.$params.$route? and this.$params.$route.count == 0">
+					<find_zone name="$fallback_zones" space="this.ship.sector" tempzone="false" mapzone="true" multiple="true">
+						<match_relation faction="this.ship.owner" relation="neutral" comparison="ge"/>
+					</find_zone>
 					<find_zone name="$zones" space="this.ship.sector" tempzone="false" mapzone="true" multiple="true">
 						<match_relation faction="this.ship.owner" relation="friend" comparison="ge"/>
 					</find_zone>
@@ -218,6 +221,16 @@
 						<find_zone name="$zones" space="this.ship.cluster" tempzone="false" mapzone="true" multiple="true">
 							<match_relation faction="this.ship.owner" relation="friend" comparison="ge"/>
 						</find_zone>
+					</do_if>
+					<do_if value="$zones.count" negate="true">
+						<find_zone name="$zones" space="player.galaxy" tempzone="false" mapzone="true" multiple="false">
+							<match_relation faction="this.ship.owner" relation="friend" comparison="ge"/>
+						</find_zone>
+						<do_if value="$zones">
+							<find_zone name="$zones" space="$zones.cluster" tempzone="false" mapzone="true" multiple="true">
+								<match_relation faction="this.ship.owner" relation="friend" comparison="ge"/>
+							</find_zone>
+						</do_if>
 					</do_if>
 					<do_if value="$zones.count">
 						<set_value name="this.$params.$route" exact="$zones"/>
@@ -239,13 +252,17 @@
 				</do_if>
 
 				<run_script name="'move.patrol.route'" >
-					<param name="route" value="if this.$params.$route? then this.$params.$route else [this.zone]" />
+					<param name="route" value="if this.$params.$route? and this.$params.$route.count then this.$params.$route else if $fallback_zones.count then $fallback_zones else [this.zone]" />
 					<param name="range" value="if this.$params.$range? then this.$params.$range else 5km" />
 					<param name="pursuedistance" value="if this.$params.$pursuedistance? then this.$params.$pursuedistance else this.ship.maxradarrange" />
 					<param name="engageenemies" value="if this.$params.$engageenemies? then this.$params.$engageenemies else true" />
 					<param name="onlyinrange" value="if this.$params.$onlyinrange? then this.$params.$onlyinrange else true" />
 					<param name="allowstations" value="if this.$params.$allowstations? then this.$params.$allowstations else true" />
 				</run_script>
+				<remove_value name="$fallback_zones"/>
+				<do_if value="this.$params.$resetConf le player.age">
+					<set_value name="this.$params.$route" exact="[]"/>
+				</do_if>
 				<do_if value="not this.$params.$route? or (this.$params.$route? and this.$params.$route.count == 0) or (this.$params.$resetConf? and (this.$updateRange? or $updateRange?) and this.$params.$resetConf le player.age)" comment="eat sleep rave repeat">
 					<resume label="work" />
 				</do_if>

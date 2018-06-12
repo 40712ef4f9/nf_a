@@ -6,4 +6,79 @@
 			<return />
 		</do_if>
 	</add>
+	<add sel="/aiscript/attention/actions/label[@name='start']" pos="before">
+		<do_if value="this.ship.dockslot and this.$last_undock? and this.$last_undock ge player.age">
+			<set_value name="$loopend_message" exact="1"/>
+			<set_value name="this.$last_undock" exact="player.age + 5s" />
+			<do_if value="this.ship.docklink">
+				<set_value name="this.$last_undock_count" operation="add"/>
+				<undock ship="this.ship" />
+				<clear_collision_filter object="this.ship" />
+				<warp object="this.ship" zone="this.ship.zone">
+				  <safepos object="this.ship" />
+				</warp>
+			</do_if>
+			<clear_collision_filter object="this.ship" />
+			<return />
+		</do_if>
+		<do_elseif value="not (this.ship.parkedat or this.ship.dockslot) and this.$last_park? and this.$last_park ge player.age" chance="if @this.$last_undock_count gt 4 then 100 else 0">
+			<do_if value="this.ship.isjobship">
+				<destroy_object object="this.ship" explosion="false"/>
+			</do_if>
+			<do_elseif value="this.$whatido? and ['trade.ship', 'trade.ship.ranged'].indexof.{this.$whatido}" chance="if this.$last_undock_count gt 6 then 0 else 100">
+				<set_value name="this.$last_undock_count" operation="add"/>
+				<signal_objects object="this.ship" param="'CM REBOOT'" param2="null" />
+			</do_elseif>
+			<do_elseif value="this.$whatido?" chance="if this.$last_undock_count gt 9 then 0 else 100">
+				<set_value name="this.$last_undock_count" operation="add"/>
+				<set_value name="this.$params" exact="table[]"/>
+				<set_value name="this.$whatido" exact="'move.idle'"/>
+				<signal_objects object="this.ship" param="'CM REBOOT'" param2="null" />
+			</do_elseif>
+			<do_elseif value="this.ship.isplayerowned and not this.$playerHold?" chance="if this.$last_undock_count gt 9 then 0 else 100">
+				<set_value name="this.$last_undock_count" operation="add"/>
+				<set_value name="this.$playerHold"/>
+				<signal_objects object="this.ship" param="'hold position'"/>
+			</do_elseif>
+			<do_else>
+				<destroy_object object="this.ship" explosion="false"/>
+			</do_else>
+		</do_elseif>
+		<do_elseif value="not (this.ship.parkedat or this.ship.dockslot)" chance="if @this.$last_undock_count gt 100 then 100 else 0">
+			<do_if value="this.ship.isjobship">
+				<destroy_object object="this.ship" explosion="false"/>
+			</do_if>
+			<do_elseif value="this.$whatido?" chance="if this.$last_undock_count gt 110 then 0 else 100">
+				<set_value name="this.$last_undock_count" operation="add"/>
+				<set_value name="this.$params" exact="table[]"/>
+				<set_value name="this.$whatido" exact="'move.idle'"/>
+				<signal_objects object="this.ship" param="'CM REBOOT'" param2="null" />
+			</do_elseif>
+			<do_elseif value="this.ship.isplayerowned and not this.$playerHold?" chance="if this.$last_undock_count gt 110 then 0 else 100">
+				<set_value name="this.$last_undock_count" operation="add"/>
+				<set_value name="this.$playerHold"/>
+				<signal_objects object="this.ship" param="'hold position'"/>
+			</do_elseif>
+			<do_else>
+				<destroy_object object="this.ship" explosion="false"/>
+			</do_else>
+		</do_elseif>
+		<do_elseif value="not (this.ship.parkedat or this.ship.dockslot) and this.$last_park? and this.$last_park lt player.age">
+			<remove_value name="this.$last_undock" />
+			<remove_value name="this.$last_undock_count" />
+		</do_elseif>
+		<do_elseif value="this.$last_park? and this.$last_park lt player.age">
+			<set_value name="this.$last_undock" exact="player.age + 500ms" />
+			<remove_value name="this.$last_undock_count" />
+		</do_elseif>
+		<do_else>
+			<do_if value="this.$last_undock_count?" negate="true">
+				<set_value name="this.$last_undock_count" exact="0" />
+			</do_if>
+			<do_else>
+				<set_value name="this.$last_undock_count" operation="add"/>
+			</do_else>
+			<set_value name="this.$last_undock" exact="player.age + 500ms" />
+		</do_else>
+	</add>
 </diff>

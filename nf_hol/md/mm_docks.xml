@@ -9,7 +9,7 @@
 					<event_player_created />
 				</check_any>
 			</conditions>
-			<delay min="220ms" />
+			<delay min="220ms" max="550ms"/>
 			<actions>
 				<do_if value="md.$todo_stations_moddlc?">
 						<set_value name="$todo" exact="

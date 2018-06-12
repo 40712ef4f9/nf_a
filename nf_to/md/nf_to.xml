@@ -3,19 +3,15 @@
 	<cues>
 		<cue name="NF_TO_patch" instantiate="true">
 			<conditions>
-				<check_any>
-					<event_cue_signalled cue="md.Setup.GameStart"/>
-					<event_game_loaded />
-					<event_player_created />
-				</check_any>
+				<event_cue_signalled cue="md.NF_BASE.Patch_GLWorker"/>
 			</conditions>
-			<delay min="190ms" />
+			<delay min="310ms" max="490ms"/>
 			<actions>
 				<do_if value="md.$NFMMprocessesdSectors? and player.age lt 3min and md.$NFMMprocessesdSectors.indexof.{'NF_TO'} == 0">
 					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_TO'"/>
 				</do_if>
 				<do_elseif value="md.$NFMMprocessesdSectors? and player.age ge 3min and md.$NFMMprocessesdSectors.indexof.{'NF_TO'} == 0">
-					<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
+					<signal_cue_instantly cue="md.NF_MapMaster.NFMM_DoRun" />
 					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_TO'"/>
 				</do_elseif>
 

@@ -3,20 +3,15 @@
 	<cues>
 		<cue name="NF_HOL_patch" instantiate="true">
 			<conditions>
-				<check_any>
-					<event_cue_signalled cue="md.Setup.GameStart"/>
-					<event_game_loaded />
-					<event_player_created />
-				</check_any>
+				<event_cue_signalled cue="md.NF_BASE.Patch_GLWorker"/>
 			</conditions>
-			<delay min="300ms" />
+			<delay min="320ms" max="600ms"/>
 			<actions>
 				<do_if value="md.$NFMMprocessesdSectors? and player.age lt 3min and md.$NFMMprocessesdSectors.indexof.{'NF_HOL'} == 0">
 					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_HOL'"/>
 				</do_if>
 				<do_elseif value="md.$NFMMprocessesdSectors? and player.age ge 3min and md.$NFMMprocessesdSectors.indexof.{'NF_HOL'} == 0">
-					<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
-					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_HOL'"/>
+					<signal_cue_instantly cue="md.NF_MapMaster.NFMM_DoRun" param="'NF_HOL'" />
 				</do_elseif>
 
 				<do_if value="global.$mmpiratesy_pfactions?">
