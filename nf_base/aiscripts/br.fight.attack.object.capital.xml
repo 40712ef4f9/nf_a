@@ -315,7 +315,7 @@
 
         <do_all counter="$i" exact="$enemies.count">
           <do_if value="$enemies.{$i}.isoperational">
-            <do_if value="$enemies.{$i}.isclass.[class.ship, class.station] and $enemies.{$i}.boarder and @this.ship.relationto.{$enemies.{$i}.boarder} ge 0 and $enemies.{$i}.hullpercentage le 70">
+            <do_if value="$enemies.{$i}.isclass.[class.ship, class.station] and $enemies.{$i}.boarder and @this.ship.relationto.{$enemies.{$i}.boarder} ge 0 and $enemies.{$i}.hullpercentage le 70 and this.ship.shieldpercentage ge 20">
               <continue />
             </do_if>
             <!--Get random bonus to skill calculations-->
@@ -553,7 +553,7 @@
         <do_if value="$targets.count">
 
           <set_value name="$MainTarget" exact="$target" />
-          <set_value name="$boardingFlag" exact="if @$target and @$target.isclass.defensible and @$target.boarder and @this.ship.relationto.{$target.boarder} ge 0 and $target.hullpercentage le 70 then 0 else 1"/>
+          <set_value name="$boardingFlag" exact="if @$target and @$target.isclass.defensible and @$target.boarder and @this.ship.relationto.{$target.boarder} ge 0 and $target.hullpercentage le 70 then true else false"/>
 
           <do_if value="$target and $target.isclass.station and not $boardingFlag">
             <set_value name="$targetsInSight_chance" exact="if $targetsInSight.count then 100 else 0"/>
@@ -609,14 +609,14 @@
           </do_if>
           <!-- primary_slot-->
           <do_if value="not $boardingFlag and $validbigguntarget.count and $target.isoperational">
-            <shoot_at object="this.ship" target="if $MainTarget.exists then $MainTarget else $target" slot="tag.primary_slot" tolerance="10.0deg" weapontype="combat" additional_targets="$validbigguntarget.list" />
+            <shoot_at object="this.ship" slot="tag.primary_slot" tolerance="10.0deg" target="if $MainTarget.exists and not $MainTarget.iswreck then $MainTarget else $target" weapontype="combat" /> <!-- additional_targets="$validbigguntarget.list" -->
             <do_if value="$LRShip">
               <set_value name="this.ship.pilot.$priotarget" exact="$MainTarget"/>
             </do_if>
           </do_if>
           <do_elseif value="$MainTarget and not $boardingFlag and $validbigguntarget.count and not $MainTarget.isclass.[class.ship_xs, class.ship_s, class.ship_m]">
             <set_value name="this.ship.pilot.$priotarget" exact="$MainTarget"/>
-            <shoot_at object="this.ship" target="$MainTarget" slot="tag.primary_slot" tolerance="10.0deg" weapontype="combat" additional_targets="$validbigguntarget.list" />
+            <shoot_at object="this.ship" slot="tag.primary_slot" tolerance="10.0deg" target="$MainTarget" weapontype="combat" /><!-- additional_targets="$validbigguntarget.list" -->
           </do_elseif>
           <do_else>
             <stop_shooting object="this.ship" slot="tag.primary_slot"/>
@@ -635,21 +635,21 @@
 
           <do_if value="$LRShip and not $boardingFlag" chance="if $target and $target.isclass.station then 100 else 0">
             <set_value name="this.ship.pilot.$priotarget" exact="$MainTarget"/>
-            <shoot_at object="this.ship" target="$MainTarget" slot="tag.secondary_slot" tolerance="$tmpDeg" weapontype="combat" additional_targets="if $validbigguntarget.list.count then $validbigguntarget.list else $targetsInSight.list" />
+            <shoot_at object="this.ship" slot="tag.secondary_slot" tolerance="$tmpDeg" target="$MainTarget" weapontype="combat" /><!-- additional_targets="if $validbigguntarget.list.count then $validbigguntarget.list else $targetsInSight.list" -->
           </do_if>
           <do_elseif value="$MainTarget.exists and not $boardingFlag">
             <do_if value="$LRShip" chance="if $MainTarget.isclass.[class.ship_xs, class.ship_s, class.ship_m] then 0 else 100">
-              <shoot_at object="this.ship" target="$MainTarget" slot="tag.secondary_slot" tolerance="$tmpDeg" locktarget="true" weapontype="combat" />
+              <shoot_at object="this.ship" slot="tag.secondary_slot" tolerance="$tmpDeg" target="$MainTarget" locktarget="true" weapontype="combat" />
             </do_if>
             <do_elseif value="$LRShip" negate="true">
-              <shoot_at object="this.ship" target="$MainTarget" slot="tag.secondary_slot" tolerance="$tmpDeg" locktarget="true" weapontype="combat" additional_targets="if $targetsInSight.list.count then $targetsInSight.list else $validbigguntarget.list" />
+              <shoot_at object="this.ship" slot="tag.secondary_slot" tolerance="$tmpDeg" target="$MainTarget" locktarget="true" weapontype="combat" /><!-- additional_targets="if $targetsInSight.list.count then $targetsInSight.list else $validbigguntarget.list" -->
             </do_elseif>
             <do_else>
               <stop_shooting object="this.ship" slot="tag.secondary_slot" chance="50"/>
             </do_else>
           </do_elseif>
           <do_elseif value="not $boardingFlag and $validbigguntarget.count and ($targetsInSight.indexof.{$validbigguntarget.{1}} or $thiscombinedskill le 70)">
-            <shoot_at object="this.ship" target="$validbigguntarget.{1}" slot="tag.secondary_slot" tolerance="$tmpDeg" weapontype="combat" additional_targets="$validbigguntarget.list" />
+            <shoot_at object="this.ship" target="$validbigguntarget.{1}" slot="tag.secondary_slot" tolerance="$tmpDeg" weapontype="combat" /><!-- additional_targets="$validbigguntarget.list" -->
           </do_elseif>
           <do_else>
             <stop_shooting object="this.ship" slot="tag.secondary_slot"/>
@@ -667,10 +667,10 @@
           </do_else>
 
           <!-- v0.19 test to make stations more destructible IZ -->
-          <do_if value="not $boardingFlag and $target.hullpercentage ge 10 and this.ship.dps.all gt 80000f" chance="if $target and $target.isclass.station then 100 else 0">
-            <set_value name="$damage" min="2" max="7" chance="if $target.shieldpercentage gt 10 then 0 else 100"/>
-            <set_value name="$damage" min="0" max="3" chance="if $target.shieldpercentage gt 10 then 100 else 0"/>
-            <set_object_hull object="$target" exact="$target.hullpercentage - $damage" chance="44"/>
+          <do_if value="not $boardingFlag and $MainTarget.hullpercentage ge 10 and this.ship.dps.all gt 80000f" chance="if $MainTarget and ($MainTarget.isclass.station or $MainTarget.container.isclass.station) then 100 else 0">
+            <set_value name="$damage" min="2" max="5" chance="if $MainTarget.shieldpercentage gt 10 then 0 else 100"/>
+            <set_value name="$damage" min="0" max="1" chance="if $MainTarget.shieldpercentage gt 10 then 100 else 0"/>
+            <set_object_hull object="$MainTarget" exact="$MainTarget.hullpercentage - $damage" chance="44"/>
             <remove_value name="$damage" />
           </do_if>
 
@@ -918,7 +918,7 @@
               <continue />
             </do_if>
             <do_if value="$enemies.{$i}.isclass.[class.ship, class.station]">
-              <do_if value="$enemies.{$i}.boarder and @this.ship.relationto.{$enemies.{$i}.boarder} ge 0 and $enemies.{$i}.hullpercentage le 70" >
+              <do_if value="$enemies.{$i}.boarder and @this.ship.relationto.{$enemies.{$i}.boarder} ge 0 and $enemies.{$i}.hullpercentage le 70 and this.ship.shieldpercentage ge 20" >
                 <continue />
               </do_if>
               <do_elseif value="$targets.list.indexof.{$enemies.{$i}} == 0">
