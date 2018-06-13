@@ -6,7 +6,7 @@
 			<return />
 		</do_if>
 	</add>
-	<add sel="/aiscript/attention/actions/label[@name='start']" pos="before">
+	<!--add sel="/aiscript/attention/actions/label[@name='start']" pos="before">
 		<do_if value="this.ship.dockslot and this.$last_undock? and this.$last_undock ge player.age">
 			<set_value name="$loopend_message" exact="1"/>
 			<set_value name="this.$last_undock" exact="player.age + 5s" />
@@ -80,5 +80,5 @@
 			</do_else>
 			<set_value name="this.$last_undock" exact="player.age + 500ms" />
 		</do_else>
-	</add>
+	</add-->
 </diff>
