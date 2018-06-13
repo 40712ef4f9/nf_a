@@ -11,8 +11,7 @@
 					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_TO'"/>
 				</do_if>
 				<do_elseif value="md.$NFMMprocessesdSectors? and player.age ge 3min and md.$NFMMprocessesdSectors.indexof.{'NF_TO'} == 0">
-					<signal_cue_instantly cue="md.NF_MapMaster.NFMM_DoRun" />
-					<append_to_list name="md.$NFMMprocessesdSectors" exact="'NF_TO'"/>
+					<signal_cue_instantly cue="md.NF_MapMaster.NFMM_DoRun" param="'NF_TO'" />
 				</do_elseif>
 
 				<do_if value="md.$todo_ships_capital_mod?">
