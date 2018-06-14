@@ -67,6 +67,8 @@
 								macro.struct_at_xen_xenon_portal_macro,
 								macro.struct_at_xen_xenon_outpost_macro,
 								macro.struct_at_xen_xenon_complex_macro,
+								macro.xenon_asteroid_02_base_02_macro,
+								macro.xenon_asteroid_01_base_01_macro,
 								macro.xenon_asteroid_01_base_01b_macro
 							]
 						"/>
@@ -76,6 +78,19 @@
 						</do_if>
 					</do_all> 
 					<remove_value name="$todo"/>
+				</do_if>
+
+				<!-- Blueprnt -->
+				<do_if value="md.$NF_ArchiSpMacros? and md.$NF_ArchiSpMacros.indexof.{macro.struct_at_xen_xenon_complex_macro} == 0">
+					<do_if value="
+						md.$NF_ArchiSpMacros.indexof.{macro.struct_at_xen_xenon_portal_macro} and
+						md.$NF_ArchiSpMacros.indexof.{macro.xenon_asteroid_02_base_02_macro} and
+						md.$NF_ArchiSpMacros.indexof.{macro.xenon_asteroid_01_base_01b_macro} and
+						md.$NF_ArchiSpMacros.indexof.{macro.xenon_asteroid_01_base_01_macro}
+					">
+						<append_to_list name="md.$todo_stations_moddlc" exact="macro.struct_at_xen_xenon_complex_macro"/>
+						<show_help position="8" log="true" force="true" duration="15s" custom="'Youre research make %1 available at station-blueprints'.[macro.struct_at_xen_xenon_complex_macro.name]" />
+					</do_if>
 				</do_if>
 		  </actions>
 		</cue>

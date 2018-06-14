@@ -140,6 +140,21 @@
 				<remove_value name="$updateRange"/>
 			</do_if>
 
+			<!-- configurate DO -->
+			<do_if value="$run_script_name" list="['BR.move.escort', 'move.escort', 'move.plunder', 'move.patrol.route', 'boarding.ship', 'carrier.default']" chance="if this.ship.defencenpc then 100 else 0">
+				<do_if value="@this.ship.defencenpc.$config_attackenemies" negate="true">
+					<set_value name="this.ship.defencenpc.$config_attackenemies" exact="1"/>
+					<signal_objects object="this.ship.defencenpc" param="'update config'"  />
+				</do_if>
+			</do_if>
+			<do_elseif value="this.ship.defencenpc.exists">
+				<do_if value="this.ship.defencenpc.$config_attackenemies?">
+					<set_value name="this.ship.defencenpc.$config_attackenemies" exact="0"/>
+					<signal_objects object="this.ship.defencenpc" param="'update config'"  />
+				</do_if>
+			</do_elseif>
+
+			<!-- Jobs -->
 			<do_if value="( ['BR.move.patrol', 'move.patrol'].indexof.{$run_script_name} and this.$params.$range? and (['cluster','sector'].indexof.{this.$params.$range} or (typeof this.$params.$range == datatype.component and this.$params.$range.isclass.[class.sector, class.cluster] )) ) or this.$updateRange?" chance="this.ship.isclass.[class.ship_l, class.ship_xl] * 100">
 				<set_value name="this.$updateRange" exact="if this.$params.$range? and typeof this.$params.$range == datatype.component and this.$params.$range.isclass.[class.sector, class.cluster] then this.$params.$range else if this.$params.$range? and this.$params.$range == 'cluster' then this.ship.cluster else this.ship.sector" chance="(not this.$updateRange?)*100"/>
 				<find_zone name="$zones" space="this.$updateRange" tempzone="false" mapzone="true" multiple="true">

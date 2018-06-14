@@ -123,7 +123,7 @@
         <check_value value="this.ship.commander.exists"/>
       </conditions>
       <actions>
-        <debug_text text="'%1 %2[%3] go.home'.[this.ship.knownname, this.typename, this.combinedskill]" filter="scripts_verbose" chance="100" />
+        <debug_text text="'%1 %2[%3] go.home'.[this.ship.knownname, this.typename, this.combinedskill]" filter="scripts_verbose" chance="0" />
         <run_interrupt_script name="'move.dockat'" abortscripts="true" resume="find trade run" >
           <param name="destination" value="this.ship.commander" />
         </run_interrupt_script>

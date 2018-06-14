@@ -203,7 +203,7 @@
 
       <label name="FindEnemies" />
       <set_value name="$thiscombinedskill" exact="this.combinedskill"/>
-      <set_value name="$doAttackenemies" exact="this.ship.owner == this.ship.trueowner and ((@this.$config_attackenemies == 1 and this.ship.isplayerowned) or not this.ship.isplayerowned)"/>
+      <set_value name="$doAttackenemies" exact="this.ship.owner == this.ship.trueowner and (@this.$config_attackenemies == 1  or (not this.ship.isplayerowned and not this.$config_attackenemies?))"/>
       <set_value name="$doAllowothertargets" exact="$doAttackenemies and $allowothertargets"/>
 
       <do_if value="$target.exists and not @$target.isclass.defensible and @$target.container.isclass.defensible">
@@ -762,7 +762,8 @@
 
       <label name="FindEnemies" />
       <set_value name="$thiscombinedskill" exact="this.combinedskill"/>
-      <set_value name="$doAttackenemies" exact="this.ship.owner == this.ship.trueowner and ((@this.$config_attackenemies == 1 and this.ship.isplayerowned) or not this.ship.isplayerowned)"/>
+      <!--set_value name="$doAttackenemies" exact="this.ship.owner == this.ship.trueowner and ((@this.$config_attackenemies == 1 and this.ship.isplayerowned) or not this.ship.isplayerowned)"/-->
+      <set_value name="$doAttackenemies" exact="this.ship.owner == this.ship.trueowner and (@this.$config_attackenemies == 1  or (not this.ship.isplayerowned and not this.$config_attackenemies?))"/>
       <set_value name="$doAllowothertargets" exact="$doAttackenemies and $allowothertargets"/>
       <do_if value="$target.exists and not @$target.isclass.defensible and @$target.container.isclass.defensible">
         <set_value name="$target" exact="$target.container" />
@@ -884,18 +885,18 @@
         <do_if value="$target.isoperational" negate="true" chance="if @this.$config_attackenemies then 100 else 0">
           <set_value name="$temp" exact="null" />
           <do_all exact="$enemies.count" counter="$y" reverse="true">
-            <do_if value="$enemies.{$i}.isclass.defensible and $enemies.{$i}.isoperational" negate="true">
+            <do_if value="$enemies.{$y}.isclass.defensible and $enemies.{$y}.isoperational" negate="true">
               <remove_value name="$enemies.{$y}" />
               <continue />
             </do_if>
-            <do_if value="$enemies.{$y}.isclass.[class.ship_l, class.ship_xl] and (not $temp or this.ship.distanceto.{$enemies.{$i}} lt this.ship.distanceto.{$temp})" chance="if $temp and $temp.isclass.station then 0 else 100">
+            <do_if value="$enemies.{$y}.isclass.[class.ship_l, class.ship_xl] and (not $temp or this.ship.distanceto.{$enemies.{$y}} lt this.ship.distanceto.{$temp})" chance="if $temp and $temp.isclass.station then 0 else 100">
               <set_value name="$temp" exact="$enemies.{$y}"/>
             </do_if>
-            <do_elseif value="$enemies.{$y}.isclass.station and (not $temp or this.ship.distanceto.{$enemies.{$i}} lt this.ship.distanceto.{$temp}) and this.ship.distanceto.{$enemies.{$i}} lt $FiringRange">
+            <do_elseif value="$enemies.{$y}.isclass.station and (not $temp or this.ship.distanceto.{$enemies.{$i}} lt this.ship.distanceto.{$temp}) and this.ship.distanceto.{$enemies.{$y}} lt $FiringRange">
               <set_value name="$temp" exact="$enemies.{$y}"/>
               <break />
             </do_elseif>
-            <do_elseif value="$enemies.{$i}.isclass.[class.ship_s, class.ship_m] and (not $temp or this.ship.distanceto.{$enemies.{$i}} lt this.ship.distanceto.{$temp})" chance="if $temp and $temp.isclass.[class.ship_l, class.ship_xl, class.station] then 0 else 100">
+            <do_elseif value="$enemies.{$y}.isclass.[class.ship_s, class.ship_m] and (not $temp or this.ship.distanceto.{$enemies.{$y}} lt this.ship.distanceto.{$temp})" chance="if $temp and $temp.isclass.[class.ship_l, class.ship_xl, class.station] then 0 else 100">
               <set_value name="$temp" exact="$enemies.{$y}"/>
             </do_elseif>
           </do_all>

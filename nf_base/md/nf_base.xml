@@ -1209,13 +1209,10 @@
 								<set_value name="$temp_results.$trader" operation="add"/>
 							</do_else>
 							<do_if value="$temp_ships.{$s}.defencenpc">
-								<do_if value="$temp_ships.{$s}.defencenpc.$config_attackenemies?">
-									<remove_value name="$temp_ships.{$s}.defencenpc.$config_attackenemies" />
+								<do_if value="not $temp_ships.{$s}.defencenpc.$config_attackenemies? or @$temp_ships.{$s}.defencenpc.$config_attackenemies">
+									<set_value name="$temp_ships.{$s}.defencenpc.$config_attackenemies" exact="0"/>
 									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'update config'"  />
 								</do_if>
-								<do_else>
-									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'stop attack'"  />
-								</do_else>
 							</do_if>
 						</do_if>
 						<do_elseif value="$temp_ships.{$s}.pilot.$whatido" list="['move.patrol', 'BR.move.patrol', 'move.patrol.route']">
@@ -1230,13 +1227,10 @@
 								<set_value name="$temp_results.$mine" operation="add"/>
 							</do_else>
 							<do_if value="$temp_ships.{$s}.defencenpc">
-								<do_if value="$temp_ships.{$s}.defencenpc.$config_attackenemies?">
-									<remove_value name="$temp_ships.{$s}.defencenpc.$config_attackenemies" />
+								<do_if value="not $temp_ships.{$s}.defencenpc.$config_attackenemies? or @$temp_ships.{$s}.defencenpc.$config_attackenemies">
+									<set_value name="$temp_ships.{$s}.defencenpc.$config_attackenemies" exact="0"/>
 									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'update config'"  />
 								</do_if>
-								<do_else>
-									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'stop attack'"  />
-								</do_else>
 							</do_if>
 						</do_elseif>
 						<do_elseif value="$temp_ships.{$s}.pilot.$whatido" list="['move.plunder']">
@@ -1248,18 +1242,15 @@
 						<do_elseif value="$temp_ships.{$s}.pilot.$whatido" list="['move.buildership']">
 							<set_value name="$temp_results.$build" operation="add"/>
 							<do_if value="$temp_ships.{$s}.defencenpc">
-								<do_if value="$temp_ships.{$s}.defencenpc.$config_attackenemies?">
-									<remove_value name="$temp_ships.{$s}.defencenpc.$config_attackenemies" />
+								<do_if value="not $temp_ships.{$s}.defencenpc.$config_attackenemies? or @$temp_ships.{$s}.defencenpc.$config_attackenemies">
+									<set_value name="$temp_ships.{$s}.defencenpc.$config_attackenemies" exact="0"/>
 									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'update config'"  />
 								</do_if>
-								<do_else>
-									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'stop attack'"  />
-								</do_else>
 							</do_if>
 						</do_elseif>
 						<do_elseif value="$temp_ships.{$s}.pilot.$whatido" list="['move.idle']">
 							<set_value name="$temp_results.$nothing" operation="add"/>
-							<do_if value="$temp_ships.{$s}.defencenpc">
+							<!--do_if value="$temp_ships.{$s}.defencenpc">
 								<do_if value="$temp_ships.{$s}.defencenpc.$config_attackenemies?">
 									<remove_value name="$temp_ships.{$s}.defencenpc.$config_attackenemies" />
 									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'update config'"  />
@@ -1267,7 +1258,7 @@
 								<do_else>
 									<signal_objects object="$temp_ships.{$s}.defencenpc" param="'stop attack'"  />
 								</do_else>
-							</do_if>
+							</do_if-->
 						</do_elseif>
 						<do_else>
 							<set_value name="$temp_results.$unknownC" operation="add"/>
