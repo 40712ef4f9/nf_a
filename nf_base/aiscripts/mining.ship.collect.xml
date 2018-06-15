@@ -5,18 +5,15 @@
 			<get_control_entities groupname="$Entities" object="this.ship"/>
 			<do_if value="$Entities?">
 				<do_all exact="$Entities.count" counter="$i" > 
-					<set_cover_owner object="$Entities.{$i}" faction="$zone.owner"/>
+					<set_cover_owner object="$Entities.{$i}" faction="faction.acmecorp"/>
 				</do_all> 
-				<set_cover_owner object="this.ship" faction="$zone.owner"/>
+				<set_cover_owner object="this.ship" faction="faction.acmecorp"/>
 			</do_if>
 			<do_if value="this.ship.defencenpc">
-				<do_if value="this.ship.defencenpc.$config_attackenemies?">
-					<remove_value name="this.ship.defencenpc.$config_attackenemies" />
+				<do_if value="not this.ship.defencenpc.$config_attackenemies? or @this.ship.defencenpc.$config_attackenemies">
+					<set_value name="this.ship.defencenpc.$config_attackenemies" exact="0"/>
 					<signal_objects object="this.ship.defencenpc" param="'update config'"  />
 				</do_if>
-				<do_else>
-					<signal_objects object="this.ship.defencenpc" param="'stop attack'"  />
-				</do_else>
 			</do_if>
 			<remove_value name="$Entities"/>
 			<set_value name="$checkCoverNext" exact="player.age + 10min" />

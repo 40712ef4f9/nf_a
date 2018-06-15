@@ -4417,6 +4417,43 @@
 			</production>
 			<component ref="struct_econ_prod_shipm_dv_macro" amount="1" />
 		</ware>
+
+		<ware id="stp_props_surf_playerdock_ships_macro" name="stp_props_surf_playerdock_ships_macro" transport="container" size="part" volume="1" tags="part">
+			<price min="1" average="1" max="1" />
+			<production time="94" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="bioopticwiring" amount="758" />
+					<ware ware="energycells" amount="1062" />
+					<ware ware="fusionreactor" amount="264" />
+					<ware ware="reinforcedmetalplating" amount="944" />
+				</primary>
+			</production>
+			<component ref="props_surf_playerdock_ships_macro" amount="1" />
+		</ware>
+		<ware id="stp_props_surf_playerdock_ships_ol_macro" name="stp_props_surf_playerdock_ships_ol_macro" transport="container" size="part" volume="1" tags="part">
+			<price min="1" average="1" max="1" />
+			<production time="94" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="bioopticwiring" amount="758" />
+					<ware ware="energycells" amount="1062" />
+					<ware ware="fusionreactor" amount="264" />
+					<ware ware="reinforcedmetalplating" amount="944" />
+				</primary>
+			</production>
+			<component ref="props_surf_playerdock_ships_ol_macro" amount="1" />
+		</ware>
+		<ware id="stp_props_surf_playerdock_ships_dv_macro" name="stp_props_surf_playerdock_ships_dv_macro" transport="container" size="part" volume="1" tags="part">
+			<price min="1" average="1" max="1" />
+			<production time="94" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="bioopticwiring" amount="758" />
+					<ware ware="energycells" amount="1062" />
+					<ware ware="fusionreactor" amount="264" />
+					<ware ware="reinforcedmetalplating" amount="944" />
+				</primary>
+			</production>
+			<component ref="props_surf_playerdock_ships_dv_macro" amount="1" />
+		</ware>
 	</add>	
 
 	<add sel="//wares/ware[@id='shieldgenerator']/production[@method='default']" pos="after" >

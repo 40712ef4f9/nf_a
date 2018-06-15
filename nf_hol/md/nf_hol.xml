@@ -79,6 +79,20 @@
 					</do_all> 
 					<remove_value name="$todo"/>
 				</do_if>
+				<do_if value="md.$todo_ships_capital_mod?">
+						<set_value name="$todo" exact="
+							[
+								macro.units_size_l_cruise2_macro,
+								macro.units_size_l_ad_zeppelin_01_macro
+							]
+						"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="md.$todo_ships_capital_mod.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="md.$todo_ships_capital_mod" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
 
 				<!-- Blueprnt -->
 				<do_if value="md.$NF_ArchiSpMacros? and md.$NF_ArchiSpMacros.indexof.{macro.struct_at_xen_xenon_complex_macro} == 0">

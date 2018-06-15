@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<add sel="//connection[@ref='ConnectionFor_buildmodule_ships_albion_l_macro']">
+        <build mode="optional" group="production" sequence="F" stage="1" tags="primary " />
+	</add>
+	<add sel="//connection[@ref='ConnectionFor_props_surf_playerdock_ships_macro']">
+        <build mode="optional" group="production" sequence="F" stage="1" />
+	</add>
+</diff>

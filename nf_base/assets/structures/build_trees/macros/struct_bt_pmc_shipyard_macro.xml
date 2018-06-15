@@ -8,6 +8,7 @@
     </properties>
     <connections>
       <connection ref="ConnectionFor_buildmodule_ships_albion_l_macro">
+        <build mode="optional" group="production" sequence="F" stage="1" tags="primary" />
         <macro ref="buildmodule_ships_pmc_l_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_buildmodule_ships_albion_l_macro1">
@@ -127,6 +128,7 @@
         <macro ref="props_surf_playerdock_repair_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_props_surf_playerdock_ships_macro">
+        <build mode="optional" group="production" sequence="F" stage="1" />
         <macro ref="props_surf_playerdock_ships_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_props_surf_playerdock_ships_macro1">

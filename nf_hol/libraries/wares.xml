@@ -219,4 +219,18 @@
 			<icon video="units_size_l_cruise2_macro" />
 		</ware>
 	</add>	
+	<add sel="/wares">   
+		<ware id="stp_pro_shipm_xen" name="stp_pro_shipm_xen" transport="container" size="part" volume="1" tags="part">
+			<price min="1" average="1" max="1" />
+			<production time="94" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="bioopticwiring" amount="2758" />
+					<ware ware="energycells" amount="2062" />
+					<ware ware="fusionreactor" amount="564" />
+					<ware ware="reinforcedmetalplating" amount="2644" />
+				</primary>
+			</production>
+			<component ref="struct_econ_prod_shipsm_xen_macro" amount="1" />
+		</ware>
+	</add>	
 </diff>

@@ -32,35 +32,29 @@
 					<do_else>
 						<get_control_entities groupname="$Entities" object="this.ship"/>
 						<do_all exact="$Entities.count" counter="$h" > 
-							<set_cover_owner object="$Entities.{$h}" faction="if this.ship.zone.owner == faction.player then faction.civilian else this.ship.zone.owner"/>
+							<set_cover_owner object="$Entities.{$h}" faction="if this.ship.zone.owner == faction.player then faction.acmecorp else this.ship.zone.owner"/>
 						</do_all> 
-						<set_cover_owner object="this.ship" faction="if this.ship.zone.owner == faction.player then faction.civilian else this.ship.zone.owner"/>
+						<set_cover_owner object="this.ship" faction="if this.ship.zone.owner == faction.player then faction.acmecorp else this.ship.zone.owner"/>
 						<remove_value name="$Entities"/>
 						<do_all exact="this.ship.subordinates.count" counter="$g">
 							<get_control_entities groupname="$Entities" object="this.ship.subordinates.{$g}"/>
 							<do_all exact="$Entities.count" counter="$h" > 
-								<set_cover_owner object="$Entities.{$h}" faction="if this.ship.zone.owner == faction.player then faction.civilian else this.ship.zone.owner"/>
+								<set_cover_owner object="$Entities.{$h}" faction="if this.ship.zone.owner == faction.player then faction.acmecorp else this.ship.zone.owner"/>
 							</do_all> 
-							<set_cover_owner object="this.ship.subordinates.{$g}" faction="if this.ship.zone.owner == faction.player then faction.civilian else this.ship.zone.owner"/>
+							<set_cover_owner object="this.ship.subordinates.{$g}" faction="if this.ship.zone.owner == faction.player then faction.acmecorp else this.ship.zone.owner"/>
 							<do_if value="this.ship.subordinates.{$g}.defencenpc">
-								<do_if value="this.ship.subordinates.{$g}.defencenpc.$config_attackenemies?">
-									<remove_value name="this.ship.subordinates.{$g}.defencenpc.$config_attackenemies" />
+								<do_if value="not this.ship.subordinates.{$g}.defencenpc.$config_attackenemies? or @this.ship.subordinates.{$g}.defencenpc.$config_attackenemies">
+									<set_value name="this.ship.subordinates.{$g}.defencenpc.$config_attackenemies" exact="0"/>
 									<signal_objects object="this.ship.subordinates.{$g}.defencenpc" param="'update config'"  />
 								</do_if>
-								<do_else>
-									<signal_objects object="this.ship.subordinates.{$g}.defencenpc" param="'stop attack'"  />
-								</do_else>
 							</do_if>
 							<remove_value name="$Entities"/>
 						</do_all>
 						<do_if value="this.ship.defencenpc">
-							<do_if value="this.ship.defencenpc.$config_attackenemies?">
-								<remove_value name="this.ship.defencenpc.$config_attackenemies" />
+							<do_if value="not this.ship.defencenpc.$config_attackenemies? or @this.ship.defencenpc.$config_attackenemies">
+								<set_value name="this.ship.defencenpc.$config_attackenemies" exact="0"/>
 								<signal_objects object="this.ship.defencenpc" param="'update config'"  />
 							</do_if>
-							<do_else>
-								<signal_objects object="this.ship.defencenpc" param="'stop attack'"  />
-							</do_else>
 						</do_if>
 					</do_else>
 				</do_if>

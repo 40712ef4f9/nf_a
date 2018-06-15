@@ -8,6 +8,7 @@
     </properties>
     <connections>
       <connection ref="ConnectionFor_buildmodule_ships_omicron_l_macro">
+        <build mode="optional" group="production" sequence="F" stage="1" tags="primary "/>
         <macro ref="buildmodule_ships_omicron_l_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_buildmodule_ships_omicron_l_macro1">
@@ -45,18 +46,23 @@
         <macro ref="props_adsigns_bt_ship_xl_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_props_adsigns_traffic_l_random_macro">
+        <build mode="optional" group="production" sequence="F" stage="1" />
         <macro ref="props_adsigns_traffic_l_random_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_props_adsigns_traffic_l_random_macro1">
+        <build mode="optional" group="production" sequence="F" stage="1" />
         <macro ref="props_adsigns_traffic_l_random_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_props_adsigns_traffic_l_random_macro10">
+        <build mode="optional" group="production" sequence="F" stage="1" />
         <macro ref="props_adsigns_traffic_l_random_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_props_adsigns_traffic_l_random_macro11">
+        <build mode="optional" group="production" sequence="F" stage="1" />
         <macro ref="props_adsigns_traffic_l_random_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_props_adsigns_traffic_l_random_macro12">
+        <build mode="optional" group="production" sequence="F" stage="1" />
         <macro ref="props_adsigns_traffic_l_random_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_props_adsigns_traffic_l_random_macro13">
@@ -235,6 +241,7 @@
         <macro ref="props_surf_playerdock_ships_ol_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_props_surf_playerdock_ships_ol_macro2">
+        <build mode="optional" group="production" sequence="F" stage="1" />
         <macro ref="props_surf_playerdock_ships_ol_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_props_surf_playerdock_trade_ol_macro">
