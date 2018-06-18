@@ -1189,7 +1189,15 @@
 					<find_object_component name="$buildmodules" object="$target" class="class.buildmodule" multiple="true"/>
 					<do_all exact="$buildmodules.count" counter="$Count">
 						<do_if value="$buildmodules.{$Count}.buildanchor.exists">
+							<destroy_object object="$buildmodules.{$Count}.buildanchor"/>
 							<clear_buildmodule buildmodule="$buildmodules.{$Count}"/>
+						</do_if>
+						<do_if value="$buildmodules.{$Count}.dockslot.component.docking.count">
+							<do_all exact="$buildmodules.{$Count}.dockslot.component.docking.count" counter="$k">
+								<do_if value="$buildmodules.{$Count}.dockslot.component.docking.{$k}.isclass.ship" negate="true">
+									<destroy_object object="$buildmodules.{$Count}.dockslot.component.docking.{$k}"/>
+								</do_if>
+							</do_all>
 						</do_if>
 					</do_all>
 					<remove_value name="$buildmodules" />

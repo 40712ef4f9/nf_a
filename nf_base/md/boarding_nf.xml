@@ -1478,9 +1478,15 @@ If ownerless, make easier/skip steps
                                     <find_object_component name="$buildmodules" object="$target" class="class.buildmodule" multiple="true"/>
                                     <do_all exact="$buildmodules.count" counter="$Counter">
                                       <do_if value="$buildmodules.{$Counter}.buildanchor.exists">
-                                        <destroy_object object="$buildmodules.{$Count}.buildanchor"/>
-                                        <clear_buildmodule buildmodule="$buildmodules.{$Count}"/>
-                                        <signal_cue_instantly cue="md.NF_BASE.NF_BASE_SY_repair" param="$buildmodules.{$Count}"/>
+                                        <destroy_object object="$buildmodules.{$Counter}.buildanchor"/>
+                                        <clear_buildmodule buildmodule="$buildmodules.{$Counter}"/>
+                                      </do_if>
+                                      <do_if value="$buildmodules.{$Counter}.dockslot.component.docking.count">
+                                        <do_all exact="$buildmodules.{$Counter}.dockslot.component.docking.count" counter="$k">
+                                          <do_if value="$buildmodules.{$Counter}.dockslot.component.docking.{$k}.isclass.ship" negate="true">
+                                            <destroy_object object="$buildmodules.{$Counter}.dockslot.component.docking.{$k}"/>
+                                          </do_if>
+                                        </do_all>
                                       </do_if>
                                     </do_all>
                                     <remove_value name="$buildmodules" />

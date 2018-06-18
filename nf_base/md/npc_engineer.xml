@@ -13,10 +13,7 @@
 	  <conditions>
 		<check_any>
 		  <check_all>
-			<check_any>
-			  <event_game_loaded/>
-			  <event_player_created />
-			</check_any>
+			<event_cue_signalled cue="md.NF_BASE.Patch_GLWorker"/>
 			<check_value value="$actor.exists" negate="true"/>
 		  </check_all>
 		  <event_object_destroyed object="$actor" />

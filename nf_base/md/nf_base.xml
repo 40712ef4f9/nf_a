@@ -820,10 +820,58 @@
 					<do_if value="event.param2.tradenpc and not event.param2.tradenpc.$orders?">
 						<set_value name="$text" exact="' RESTART'" operation="add"/>
 						<start_script object="event.param2.tradenpc" name="'trade.shipyard'"/>
+						<set_value name="$startScript" />
 					</do_if>
 				</do_if>
 				<debug_text text="$text" filter="error" chance="0"/>
 				<remove_value name="$text"/>
+				<do_if value="$startScript?">
+					<set_value name="$text" exact="event.param2" />
+					<find_object_component name="$buildmodules" object="event.param2" class="class.buildmodule" multiple="true"/>
+					<find_object_component name="$shiptraders" object="event.param2" entitytype="entitytype.shiptrader" multiple="true" />
+					<set_value name="$text" exact="'\n Buildmodules:%1 ShipTraders:%2 '.[$buildmodules.count, $shiptraders.count]" operation="add"/>
+					<do_all exact="$buildmodules.count" counter="$Count">
+						<do_if value="$buildmodules.{$Count}.buildanchor.exists">
+							<do_all exact="$shiptraders.count" counter="$k" >
+								<do_if value="$shiptraders.{$k}.buildmodule == $buildmodules.{$Count} and $shiptraders.{$k}.$shiptrader_isbusy?">
+									<set_value name="$text" exact="'\n shiptrader_isbusy ' + $buildmodules.{$Count}" operation="add"/>
+									<set_value name="$Shiptrader" exact="true" />
+									<break />
+								</do_if>
+							</do_all>
+							<do_if value="$Shiptrader?" negate="true">
+								<set_value name="$text" exact="'\n REMOVE ' + $buildmodules.{$Count}" operation="add"/>
+								<destroy_object object="$buildmodules.{$Count}.buildanchor"/>
+								<clear_buildmodule buildmodule="$buildmodules.{$Count}"/>
+								<signal_cue_instantly cue="md.NF_BASE.NF_BASE_SY_repair" param="$buildmodules.{$Count}"/>
+							</do_if>
+							<remove_value name="$Shiptrader" />
+						</do_if>
+						<do_elseif value="not $buildmodules.{$Count}.freedockslot and $buildmodules.{$Count}.dockslot.component.docking.count">
+							<do_all exact="$shiptraders.count" counter="$k" >
+								<do_if value="$shiptraders.{$k}.buildmodule == $buildmodules.{$Count} and $shiptraders.{$k}.$shiptrader_isbusy?">
+									<set_value name="$text" exact="'\n shiptrader_isbusy ' + $buildmodules.{$Count}" operation="add"/>
+									<set_value name="$Shiptrader" exact="true" />
+									<break />
+								</do_if>
+							</do_all>
+							<do_if value="$Shiptrader?" negate="true">
+								<do_all exact="$buildmodules.{$Count}.dockslot.component.docking.count" counter="$k">
+									<set_value name="$text" exact="'\n docked ' + $buildmodules.{$Count}.dockslot.component.docking.{$k} + ' ' + $buildmodules.{$Count}.dockslot.component.docking.{$k}.class" operation="add"/>
+									<do_if value="$buildmodules.{$Count}.dockslot.component.docking.{$k}.isclass.ship" negate="true">
+										<destroy_object object="$buildmodules.{$Count}.dockslot.component.docking.{$k}"/>
+									</do_if>
+								</do_all>
+							</do_if>
+							<remove_value name="$Shiptrader" />
+						</do_elseif>
+					</do_all>
+					<remove_value name="$buildmodules" />
+					<remove_value name="$shiptraders" />
+					<debug_text text="$text" filter="error" chance="0"/>
+					<remove_value name="$text"/>
+				</do_if>
+				<remove_value name="$startScript"/>
 				<find_dock_location container="event.param2" name="$ShiptraderDocks" dockpopulationtype="dockpopulationtype.ships" multiple="true" />
 				<do_if value="$ShiptraderDocks.count and event.param2.tradenpc">
 					<do_all exact="$ShiptraderDocks.count" counter="$j" >
@@ -831,6 +879,7 @@
 						<do_all exact="$ShiptraderDocks.{$j}.actors.count" counter="$k" >
 							<do_if value="$ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.shiptrader or $ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.smallshiptrader">
 								<set_remote_commable actor="$ShiptraderDocks.{$j}.actors.{$k}" remote="true" />
+								<share_actor_account actor="$ShiptraderDocks.{$j}.actors.{$k}" otherobject="event.param2.tradenpc" chance="if event.param2.tradenpc.money != $ShiptraderDocks.{$j}.actors.{$k}.money or event.param2.tradenpc.money == 0Cr then 100 else 0" />
 								<set_value name="$DockHasShipTrader" exact="true" />
 							</do_if>
 						</do_all>
@@ -873,7 +922,7 @@
 			</conditions>
 			<delay exact="2s" />
 			<actions>
-				<set_value name="$buildmodule" exact="event.param2" />
+				<set_value name="$buildmodule" exact="if event.name == 'event_object_signalled' then event.param2 else event.param" />
 				<set_value name="$station" exact="$buildmodule.container" />
 				<find_object_component name="$Buildstage" object="$station" checkoperational="false">
 				  <match_buildsource sequence="$buildmodule.component.sequence" stage="$buildmodule.component.stage" />
@@ -1599,10 +1648,10 @@
 						<signal_cue_instantly cue="md.NPC_Specialist.OnPlatformPopulation_Specialist" param="$tempActor" chance="if $tempActor.isspecialist and $temp_faction == faction.player then $temp_setCueChance else 0"/>
 					</do_elseif>
 
-					<do_if value="$temp_faction == faction.player and ['manager','architect','pilot'].indexof.{$temp_assign} ">
+					<do_if value="$temp_faction == faction.player and ['manager','architect','pilot'].indexof.{$temp_assign}">
 						<set_actor_account actor="$tempActor" />
 					</do_if>
-					<do_elseif value="global.$factionCEOs.{'$' + $temp_faction.id}? and ['manager','architect','pilot'].indexof.{$temp_assign} ">
+					<do_elseif value="$temp_faction != faction.player and global.$factionCEOs.{'$' + $temp_faction.id}? and ['manager','architect','pilot'].indexof.{$temp_assign}">
 						<share_actor_account actor="$tempActor" otherobject="global.$factionCEOs.{'$' + $temp_faction.id}"/>
 					</do_elseif>
 

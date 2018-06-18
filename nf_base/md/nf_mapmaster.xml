@@ -5,7 +5,7 @@
 		<cue name="NFMM_DoRun" instantiate="true" >
 			<conditions>
 				<event_cue_signalled/>
-				<check_value value="not md.$NFMM_Run or md.$NFMM_Run lt player.age" />
+				<check_value value="not md.$NFMM_Run? or md.$NFMM_Run lt player.age" />
 			</conditions>
 			<actions>
 				<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
