@@ -61,6 +61,29 @@
 				<do_if value="global.$randumbuild_blacklist?" negate="true">
 					<create_list name="global.$randumbuild_blacklist"/>
 				</do_if>
+				<do_if value="global.$lockedFactions?" negate="true">
+					<create_list name="global.$lockedFactions"/>
+				</do_if>
+				<do_if value="global.$lockedFactions?">
+					<!--
+						civilian
+						ownerless
+						smuggler
+						criminal
+					-->
+					<set_value name="$todo" exact="
+						[
+								faction.acmecorp,
+								faction.deepwater
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="global.$lockedFactions.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="global.$lockedFactions" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
 
 				<do_if value="global.$mmpiratesy_pfactions?" negate="true">
 					<create_list name="global.$mmpiratesy_pfactions"/>
@@ -841,9 +864,11 @@
 							</do_all>
 							<do_if value="$Shiptrader?" negate="true">
 								<set_value name="$text" exact="'\n REMOVE ' + $buildmodules.{$Count}" operation="add"/>
-								<destroy_object object="$buildmodules.{$Count}.buildanchor"/>
+								<set_value name="$buildanchor" exact="$buildmodules.{$Count}.buildanchor"/>
 								<clear_buildmodule buildmodule="$buildmodules.{$Count}"/>
-								<signal_cue_instantly cue="md.NF_BASE.NF_BASE_SY_repair" param="$buildmodules.{$Count}"/>
+								<destroy_object object="$buildanchor"/>
+								<remove_value name="$buildanchor" />
+								<!--signal_cue_instantly cue="md.NF_BASE.NF_BASE_SY_repair" param="$buildmodules.{$Count}"/-->
 							</do_if>
 							<remove_value name="$Shiptrader" />
 						</do_if>
@@ -868,6 +893,44 @@
 					</do_all>
 					<remove_value name="$buildmodules" />
 					<remove_value name="$shiptraders" />
+					<do_all exact="4" counter="$j">
+						<find_dock_location container="event.param2" size="[tag.dock_m, tag.dock_s, tag.dock_l, tag.dock_xl].{$j}" name="$dock" multiple="true"/>
+						<do_all exact="$dock.count" counter="$i">
+							<do_if value="$dock.{$i}.component.docking.count">
+								<do_all exact="$dock.{$i}.component.docking.count" counter="$k">
+									<set_value name="$text" exact="'\n docked ' + $dock.{$i}.component.docking.{$k} + ' ' + $dock.{$i}.component.docking.{$k}.class" operation="add"/>
+									<do_if value="$dock.{$i}.component.docking.{$k}.isclass.ship" negate="true" chance="0">
+										<destroy_object object="$dock.{$i}.component.docking.{$k}"/>
+									</do_if>
+									<do_if value="$dock.{$i}.component.docking.{$k}.isclass.ship and not $dock.{$i}.component.docking.{$k}.pilot.exists">
+										<set_value name="$temp_object" exact="$dock.{$i}.component.docking.{$k}" />
+										<set_value name="$temp_select" exact="[null, race.xenon, if $temp_object.isclass.[class.ship_s, class.ship_m] then tag.pilot else tag.commander, null, null]" />
+										<set_value name="$temp_dock" exact="null" />
+										<set_value name="$temp_entitytype" exact="if $temp_object.isclass.[class.ship_s, class.ship_m] then entitytype.pilot else entitytype.commander" />
+										<set_value name="$temp_assign" exact="'pilot'"/>
+										<set_value name="$temp_script" exact="'move.ownerless'"/>
+										<include_actions ref="md.NF_BASE.NF_create_actor" />
+										<remove_value name="$newActor"/>
+									</do_if>
+								</do_all>
+							</do_if>
+							<do_if value="$dock.{$i}.component.docked.count">
+								<do_all exact="$dock.{$i}.component.docked.count" counter="$k">
+									<do_if value="$dock.{$i}.component.docked.{$k}.isclass.ship and not $dock.{$i}.component.docked.{$k}.pilot.exists">
+										<set_value name="$temp_object" exact="$dock.{$i}.component.docking.{$k}" />
+										<set_value name="$temp_select" exact="[null, race.xenon, if $temp_object.isclass.[class.ship_s, class.ship_m] then tag.pilot else tag.commander, null, null]" />
+										<set_value name="$temp_dock" exact="null" />
+										<set_value name="$temp_entitytype" exact="if $temp_object.isclass.[class.ship_s, class.ship_m] then entitytype.pilot else entitytype.commander" />
+										<set_value name="$temp_assign" exact="'pilot'"/>
+										<set_value name="$temp_script" exact="'move.ownerless'"/>
+										<include_actions ref="md.NF_BASE.NF_create_actor" />
+										<remove_value name="$newActor"/>
+									</do_if>
+								</do_all>
+							</do_if>
+						</do_all>
+						<remove_value name="$dock"/>
+					</do_all>
 					<debug_text text="$text" filter="error" chance="0"/>
 					<remove_value name="$text"/>
 				</do_if>

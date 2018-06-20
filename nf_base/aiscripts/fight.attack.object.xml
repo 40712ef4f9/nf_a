@@ -14,4 +14,29 @@
 	<add sel="//do_elseif[@value='$Defensible.isclass.ship_xs or $Defensible.isclass.ship_s or $Defensible.isclass.ship_m']" >
 		<signal_objects object="player.galaxy" param="'learned.something'" param2="[this, ware.inv_virtualseminarnavigation, 'fight.er']" chance="($Defensible.isclass.[class.ship_s,class.ship_m])*100"/>
 	</add>
+
+	<replace sel="//do_if[@value='not $checkrelation and @$target.isplayerowned and not @this.mayattack.{$target}']" >
+		<do_if value="not $checkrelation and @$target.isoperational and not @this.mayattack.{$target}" comment="target can be null">
+			<do_if value="$target.owner" exact="this.ship.owner"> 
+				<do_if value="$target.owner != $target.trueowner"> 
+					<get_control_entities groupname="$Entities" object="$target"/>
+					<do_all exact="$Entities.count" counter="$i" > 
+						<set_cover_owner object="$Entities.{$i}"/>
+					</do_all> 
+					<set_cover_owner object="$target"/>
+					<remove_value name="$Entities"/>
+				</do_if> 
+				<do_else> 
+					<set_cover_owner object="$target" faction="faction.enemy"/>
+				</do_else> 
+			</do_if> 
+			<do_elseif value="$target.owner" list="global.$lockedFactions"> 
+				<set_object_relation_behaviour object="$target" disable="true"/>
+				<set_relation_boost object="$target" faction="this.owner" value="this.owner.relation.kill.max"/>
+			</do_elseif> 
+			<do_else> 
+				<add_relation_boost object="this" otherobject="$target" value="this.owner.relation.kill.max" decay="1" delay="10min" silent="true" />
+			</do_else> 
+		</do_if>
+	</replace>
 </diff>

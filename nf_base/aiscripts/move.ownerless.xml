@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<aiscript name="move.ownerless" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd">
+  <attention min="unknown">
+    <actions>
+
+	    <run_script name="'move.undock'" />
+
+		<get_control_entities object="this.ship" groupname="$ControlEntities"/>
+		<do_all exact="$ControlEntities.count" counter="$Counter">
+			<do_if value="$ControlEntities.{$Counter} == this" negate="true">
+				<remove_actor_account actor="$ControlEntities.{$Counter}" transfer="true" chance="if $ControlEntities.{$Counter}.hasownaccount then 100 else 0"/>
+				<abort_scripts entity="$ControlEntities.{$Counter}"/>
+				<destroy_object object="$ControlEntities.{$Counter}"/>
+			</do_if>
+		</do_all>
+
+	    <set_owner object="this.ship" faction="faction.ownerless" />
+
+	    <wait exact="3s" />
+
+	    <destroy_object object="this" explosion="false" />
+
+    </actions>
+  </attention>
+</aiscript>

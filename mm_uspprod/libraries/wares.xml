@@ -2181,6 +2181,13 @@
 		</production>
 	</add>
 	<!-- // LostSectors -->
+	<add silent="1" sel="//wares/ware[@id='shp_xl_capital_paladin']/production[@method='default']" pos="after" >
+		<production time="630" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="55" />
+			</primary>
+		</production>
+	</add>
 	<!-- Extinguished Hope -->
 	<add silent="1" sel="//wares/ware[@id='shp_l_dv_new_defence_01_exho']/production[@method='default']" pos="after" >
 		<production time="310" amount="1" method="universalparts" name="Uniparts">

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-<aiscript name="move.plunder.taxi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+<aiscript name="move.plunder.taxi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
   <params>
     <param name="range" default="'sector'" comment="'zone','station','sector'"/>
     <param name="squadleader" default="null" />
@@ -30,6 +30,9 @@
                 <match primarypurpose="objectpurpose.mine"/>
               </match_any>
               <match owner="this.owner" negate="true"/>
+              <match_relation object="this.ship" relation="neutral" comparison="le" />
+              <match_relation faction="this.owner" relation="neutral" comparison="le" />
+              <match_relation faction="$customerfaction" relation="neutral" comparison="le" />
               <match_any_cargo wares="$currentbasket" comment="wares which can fit, exclude fuelcells"/>
               <match_distance object="this.ship" max="$range_max"/>
             </count_gravidar_contacts>
@@ -43,6 +46,9 @@
                 <match primarypurpose="objectpurpose.mine"/>
               </match_any>
               <match owner="this.owner" negate="true"/>
+              <match_relation object="this.ship" relation="neutral" comparison="le" />
+              <match_relation faction="this.owner" relation="neutral" comparison="le" />
+              <match_relation faction="$customerfaction" relation="neutral" comparison="le" />
               <match_any_cargo wares="$currentbasket" comment="wares which can fit, exclude fuelcells"/>
               <match_distance object="this.ship" max="$range_max"/>
             </count_gravidar_contacts>
@@ -102,6 +108,7 @@
     <set_command command="command.patrol"  />
     <set_command_action commandaction="commandaction.calculating" />
     <set_value name="$seektargets" exact="false"/>
+    <set_value name="$customerfaction" exact="if $customerbase.isoperational then $customerbase.owner else if $squadleader.isoperational then $squadleader.owner else this.owner"/>
     <create_group groupname="this.$squadships" />
     <create_group groupname="$squadshipsF" />
     <do_if value="$squadleader.exists">
@@ -126,6 +133,9 @@
     </do_else>
     <set_value name="$movetostart" />
   </init>
+  <patch sinceversion="2" early="true">
+    <set_value name="$customerfaction" exact="if $customerbase.isoperational then $customerbase.owner else if $squadleader.isoperational then $squadleader.owner else this.owner"/>
+  </patch>
   <attention min="unknown">
     <actions>
 
@@ -491,11 +501,16 @@
           <run_script name="$traderunscript" >
             <param name="warelist" value="this.ship.cargo.list" />
             <param name="commander" value="if $customerbase.isoperational then $customerbase else null" />
-            <param name="customerfaction" value="if $customerbase.isoperational then $customerbase.owner else this.ship.owner" />
+            <param name="customerfaction" value="$customerfaction" />
             <param name="range" value="$space" />
             <param name="debugchance" value="$debugoutputchance"/>
             <save_retval name="buyoffer" variable="$buyoffer" />
           </run_script>
+
+          <do_if value="global.$factionCEOs.{'$' + this.ship.trueowner.id}? and global.$factionCEOs.{'$' + $customerfaction.id}?" chance="if this.hasownaccount then 0 else 100">
+            <share_actor_account actor="this" otherobject="global.$factionCEOs.{'$' + $customerfaction.id}" />
+            <set_value name="$resetAccount" exact="global.$factionCEOs.{'$' + this.ship.trueowner.id}"/>
+          </do_if>
           <!-- Execute the trade -->
           <run_script name="'trade.performtraderun'" >
             <param name="selloffer" value="null" />
@@ -503,6 +518,11 @@
             <param name="debugchance" value="$debugoutputchance" />
             <save_retval name="success" variable="$success" />
           </run_script>
+
+          <do_if value="$resetAccount? and $resetAccount">
+            <share_actor_account actor="this" otherobject="$resetAccount" />
+            <remove_value name="$resetAccount" />
+          </do_if>
 
           <remove_value name="$buyoffer" />
           <remove_value name="$traderunscript" />

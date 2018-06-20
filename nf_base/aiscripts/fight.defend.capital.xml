@@ -4,9 +4,28 @@
 		<handler ref="DestroyStation" />
 	</add>
 	<add sel="/aiscript/interrupts/handler[1]/actions/set_value[@name='$checkrelation']" pos="after">
-        <do_if value="not $checkrelation and not @this.mayattack.{$attacker}" comment="target can be null">
-          <add_relation_boost object="this" otherobject="$attacker" value="this.owner.relation.kill.max" decay="1" delay="10min" silent="true" />
-        </do_if>
+		<do_if value="not $checkrelation and not @this.mayattack.{$attacker}" comment="target can be null">
+			<do_if value="$attacker.owner" exact="this.ship.owner"> 
+				<do_if value="$attacker.owner != $attacker.trueowner"> 
+					<get_control_entities groupname="$Entities" object="$attacker"/>
+					<do_all exact="$Entities.count" counter="$i" > 
+						<set_cover_owner object="$Entities.{$i}"/>
+					</do_all> 
+					<set_cover_owner object="$attacker"/>
+					<remove_value name="$Entities"/>
+				</do_if> 
+				<do_else> 
+					<set_cover_owner object="$attacker" faction="faction.enemy"/>
+				</do_else> 
+			</do_if> 
+			<do_elseif value="$attacker.owner" list="global.$lockedFactions"> 
+				<set_object_relation_behaviour object="$attacker" disable="true"/>
+				<set_relation_boost object="$attacker" faction="this.owner" value="this.owner.relation.kill.max"/>
+			</do_elseif> 
+			<do_else> 
+				<add_relation_boost object="this" otherobject="$attacker" value="this.owner.relation.kill.max" decay="1" delay="10min" silent="true" />
+			</do_else> 
+		</do_if>
 	</add>
 
 	<replace sel="/aiscript/attention/actions/do_while/do_elseif/run_script/@name">'BR.fight.attack.object.capital'</replace>

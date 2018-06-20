@@ -2,6 +2,93 @@
 
 <mdscript name="MM_Diplomatics" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
 	<cues>
+		<cue name="MMDIPLO_DEWA" instantiate="true" >
+			<conditions>
+				<check_any>
+					<event_conversation_started conversation="default" />
+					<event_conversation_returned_to_section section="default" />
+				</check_any>
+				<check_value value="event.object.trueowner" exact="faction.deepwater"/>
+				<check_value value="event.object.container.isclass.ship" />
+				<check_value value="event.object.iscontrolentity" />
+				<check_any>
+					<check_value value="event.object.type" exact="entitytype.pilot" />
+					<check_value value="event.object.type" exact="entitytype.commander" />
+				</check_any>
+				<check_value value="event.object.$squadships?" />
+			</conditions>
+			<actions>
+				<add_player_choice_sub text="{2802,1450}" position="left" section="mmdiplo_sdo_start" selectable="event.object.container.relationto.{faction.player} le faction.player.relation.friend.min" choiceparam="1"/>
+				<remove_value name="md.$deal"/>
+			</actions>
+		</cue>
+		<cue name="MMDIPLO_DEWA_work" instantiate="true" >
+			<conditions>
+				<event_conversation_next_section sectionprefix="mmdiplo_sdo"/>
+			</conditions>
+			<actions>
+				<do_if value="event.param" exact="'mmdiplo_sdo_pay'">
+					<transfer_money from="player.entity" to="event.object" amount="[1000000Cr, event.param2].max" />
+					<set_object_relation_behaviour object="event.object.container" disable="true"/>
+					<set_relation_boost object="event.object.container" faction="faction.player" value="faction.player.relation.friend.mid" decay="1" delay="24h" silent="true"/>
+					<add_npc_line speaker="event.object" line="[4300,4301,4302,4310,5141,5140].random" chance="75" />
+				</do_if>
+				<do_elseif value="event.param" exact="'mmdiplo_sdo_frighten'">
+					<do_if value="true" chance="[100, event.param2].min">
+						<add_npc_line speaker="event.object" line="[900201,202003,900503,900103].random" chance="50" />
+						<set_object_relation_behaviour object="event.object.container" disable="true"/>
+						<set_relation_boost object="event.object.container" faction="faction.player" value="faction.player.relation.kill.max" decay="1" delay="1h" silent="true"/>
+					</do_if>
+					<do_else>
+						<add_npc_line speaker="event.object" line="[900504,900102,900101].random" chance="50" />
+						<set_object_relation_behaviour object="event.object.container" disable="true"/>
+						<set_relation_boost object="event.object.container" faction="faction.player" value="faction.player.relation.friend.mid" decay="1" delay="12h" silent="true"/>
+					</do_else>
+				</do_elseif>
+				<do_else>
+					<set_value name="$DPS_DW" exact="event.object.container.dps.all"/>
+					<do_all exact="event.object.container.subordinates.count" counter="$i">
+						<set_value name="$DPS_DW" exact="event.object.container.subordinates.{$i}.dps.all" operation="add"/>
+						<do_all exact="event.object.container.subordinates.{$i}.subordinates.count" counter="$j">
+							<set_value name="$DPS_DW" exact="event.object.container.subordinates.{$i}.subordinates.{$j}.dps.all" operation="add"/>
+						</do_all>
+					</do_all>
+
+					<set_value name="$DPS" exact="0"/>
+					<do_all exact="player.primaryship.subordinates.count" counter="$i">
+						<do_if value="player.primaryship.subordinates.{$i}.dps.all gt 50000hp or player.primaryship.subordinates.{$i}.primarypurpose == objectpurpose.fight">
+							<set_value name="$DPS" exact="player.primaryship.subordinates.{$i}.dps.all" operation="add"/>
+							<do_all exact="player.primaryship.subordinates.{$i}.subordinates.count" counter="$j">
+								<set_value name="$DPS" exact="player.primaryship.subordinates.{$i}.subordinates.{$j}.dps.all" operation="add"/>
+							</do_all>
+						</do_if>
+					</do_all>
+					<do_if value="$DPS lt $DPS_DW">
+						<find_ship name="$tmp" class="[class.ship_l,class.ship_xl]" owner="faction.player" space="event.object.container.zone" multiple="true" />
+						<do_all exact="$tmp.count" counter="$i">
+							<set_value name="$DPS" exact="$tmp.{$i}.dps.all" operation="add"/>
+						</do_all>
+						<remove_value name="$tmp"/>
+					</do_if>
+
+					<do_if value="event.object.container.relationto.{faction.player} le faction.player.relation.neutral.min">
+						<set_value name="$Cost" exact="15000000Cr"/>
+					</do_if>
+					<do_else>
+						<set_value name="$Cost" exact="10000000Cr"/>
+					</do_else>
+
+					<add_player_choice text="{2802,1481}" tooltip="{2802,1482}.[if $Cost gt 1000000Cr then $Cost/1000000Cr else 1]" selectable="$DPS and player.entity.money ge $Cost" section="mmdiplo_sdo_pay" choiceparam="$Cost"/>
+					<add_player_choice text="{2802,1483}" tooltip="{2802,1484}" selectable="$DPS gt $DPS_DW*2" section="mmdiplo_sdo_frighten" choiceparam="16"/>
+					<add_player_choice text="{2802,1485}" tooltip="{2802,1486}" selectable="$DPS gt $DPS_DW*1.5f" section="mmdiplo_sdo_frighten" choiceparam="if $DPS gt $DPS_DW*2 then 33 else 66"/>
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+
+					<remove_value name="$DPS"/>
+					<remove_value name="$DPS_DW"/>
+					<remove_value name="$Cost"/>
+				</do_else>
+			</actions>
+		</cue>
 		<cue name="MMDIPLO_base" instantiate="true" >
 			<conditions>
 				<check_any>
@@ -143,7 +230,7 @@
 
 					<do_if value="md.$deal.$faction and md.$deal.$faction_old != md.$deal.$faction">
 
-						<add_player_choice text="{2802,1454}" tooltip="{2802,1455}" selectable="md.$deal.$faction_old.relationto.{md.$deal.$faction} le md.$deal.$faction.relation.enemy.min" section="mmdiplo_do_finish" choiceparam="[md.$deal.$faction, md.$deal.$faction.relation.enemy.max]"/>
+						<add_player_choice text="{2802,1454}" tooltip="{2802,1455}" selectable="md.$deal.$faction_old.relationto.{md.$deal.$faction} le md.$deal.$faction.relation.enemy.max" section="mmdiplo_do_finish" choiceparam="[md.$deal.$faction, md.$deal.$faction.relation.enemy.mid]"/>
 						<add_player_choice text="{2802,1456}" tooltip="{2802,1457}" selectable="md.$deal.$faction_multi_old gt md.$deal.$faction_multi and md.$deal.$faction_old.relationto.{md.$deal.$faction} le md.$deal.$faction.relation.neutral.min" section="mmdiplo_do_finish" choiceparam="[md.$deal.$faction, md.$deal.$faction.relation.neutral.min+0.001f]"/>
 						<add_player_choice text="{2802,1458}" tooltip="{2802,1459}" selectable="md.$deal.$faction_old.relationto.{md.$deal.$faction} gt md.$deal.$faction.relation.friend.min and md.$deal.$faction_old.relationto.{md.$deal.$faction} le md.$deal.$faction.relation.member.min" section="mmdiplo_do_finish" choiceparam="[md.$deal.$faction, [md.$deal.$faction.relation.member.min+0.1f, null, 'sync']]"/>
 

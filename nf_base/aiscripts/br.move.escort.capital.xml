@@ -246,7 +246,7 @@
               <!--set_value name="$formationparam" exact="[400m + $target.length, 400m + this.ship.length].max"/-->
             </do_if>
             <do_else>
-              <set_value name="$formationparam" exact="[100m, this.ship.length*2, 400m + $target.length].max"/>
+              <set_value name="$formationparam" exact="[400m, this.ship.length*2].max"/>
             </do_else>
             <create_formation object="$target" formation="$MICT_formation" param="$formationparam" param2="$formationparam2"/>
             <join_formation leader="$target" object="this.ship"/>
@@ -735,7 +735,7 @@
               <!--set_value name="$formationparam" exact="[400m + $target.length, 400m + this.ship.length].max"/-->
             </do_if>
             <do_else>
-              <set_value name="$formationparam" exact="[100m, this.ship.length*2, 400m + $target.length].max"/>
+              <set_value name="$formationparam" exact="[400m, this.ship.length*2].max"/>
             </do_else>
             <create_formation object="$target" formation="$MICT_formation" param="$formationparam" param2="$formationparam2"/>
             <join_formation leader="$target" object="this.ship"/>

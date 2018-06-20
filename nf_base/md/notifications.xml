@@ -2,11 +2,11 @@
 <diff>
 	<add sel="//cue[@name='TempRelationDropped']/conditions">
           <check_value value="player.entity.owner == faction.player" />
-          <check_value value="event.param3 lt faction.player.relation.enemy.min and event.param2 lt faction.player.relation.enemy.min" negate="true" />
+          <check_value value="event.param3 lt faction.player.relation.neutral.min and event.param2 lt faction.player.relation.neutral.min" negate="true" />
 	</add>
 	<add sel="//cue[@name='BaseRelationChanged']/conditions">
           <check_value value="player.entity.owner == faction.player" />
-          <check_value value="event.param3 lt faction.player.relation.enemy.min and event.param2 lt faction.player.relation.enemy.min" negate="true" />
+          <check_value value="event.param3 lt faction.player.relation.neutral.min and event.param2 lt faction.player.relation.neutral.min" negate="true" />
 	</add>
 	
 	<add sel="//cue[@name='BaseRelationChanged']/actions/do_if/show_notification" type="@chance" >$showchance</add>
@@ -21,9 +21,9 @@
 		<do_elseif value="event.param3 gt faction.player.relation.neutral.min and event.param2 gt faction.player.relation.neutral.min and event.param2 le faction.player.relation.neutral.max">
 			<set_value name="$showchance" exact="0" />
 		</do_elseif>
-		<do_elseif value="event.param3 gt faction.player.relation.enemy.min and event.param2 gt faction.player.relation.enemy.min and event.param2 le faction.player.relation.kill.max">
+		<!--do_elseif value="event.param3 lt faction.player.relation.neutral.min and event.param2 gt lt faction.player.relation.neutral.min and event.param2 ge faction.player.relation.kill.min">
 			<set_value name="$showchance" exact="0" />
-		</do_elseif>
+		</do_elseif-->
 		<do_else>
 			<set_value name="$showchance" exact="100" />
 		</do_else>

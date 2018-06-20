@@ -1090,7 +1090,7 @@
 					</do_elseif>
 					<!-- take a fast look into all zones -->
 					<do_elseif value="event.param" exact="'mmca_own_fleet_do_explore'">
-						<find_zone groupname="$zones" space="$theShip.sector" multiple="true" mapzone="true" tempzone="false"/>
+						<find_zone groupname="$zones" space="$theShip.sector" multiple="true" priorityzone="true" mapzone="true" tempzone="false"/>
 						<do_all exact="$zones.count" counter="$i" reverse="true">
 							<do_if value="$zones.{$i}.istemporaryzone or $zones.{$i}.isclass.highway or not $zones.{$i}.ismapzone">
 								<remove_from_group group="$zones" object="$zones.{$i}"/>
@@ -1116,6 +1116,9 @@
 							</do_if>
 							<set_value name="$k" operation="add" />
 							<do_if value="$k" max="$l">
+								<do_if value="$theShipfollowers.list.{$k}? and $theShipfollowers.list.{$k}.exists" negate="true">
+									<continue />
+								</do_if>
 								<set_value name="$toCommand" exact="$theShipfollowers.list.{$k}" />
 								<do_while value="not (($toCommand.primarypurpose == objectpurpose.fight or $toCommand.macro.ismacro.{md.$mmc_explorers}) and (not $toCommand.engineer.exists or $toCommand.engineer.isclass.computer) and $toCommand.commander == $theShip)" chance="if $k le $l then 100 else 0">
 									<set_value name="$k" operation="add" />
@@ -2196,28 +2199,52 @@
 
 		<cue name="MM_Carriers_patch2" instantiate="true">
 			<conditions>
-				<check_any>
-					<event_cue_signalled cue="md.Setup.GameStart"/>
-					<event_game_loaded/>
-					<event_player_created />
-				</check_any>
+				<event_cue_signalled cue="md.NF_BASE.Patch_GLWorker"/>
 			</conditions>
 			<actions>
 				<do_if value="global.$mmcarrierconfig?" negate="true">
-					<set_value name="global.$mmcarrierconfig" exact="table[
-						$mm_carriers_ad_glob = 1,
-						$mm_carriers_garage_min = 70
-					]" comment="end $mmcarrierconfig"/>
+					<set_value name="global.$mmcarrierconfig" exact="table[]" comment="end $mmcarrierconfig"/>
 				</do_if>
-				<do_if value="global.$mmcarrierconfig.$mm_carriers_sdockplus?" negate="true">
-					<set_value name="global.$mmcarrierconfig.$mm_carriers_sdockplus" exact="1" />
+				<do_if value="global.$mmcarrierconfig?">
+					<set_value name="$todo" exact="
+						table[
+							$mm_carriers_ad_glob = 1,
+							$mm_carriers_garage_min = 70,
+							$mm_carriers_sdockplus = 1
+						]
+					"/>
+					<set_value name="$todoKeys" exact="$todo.keys.list.clone"/>
+					<do_all exact="$todoKeys.count" counter="$j" >
+						<do_if value="global.$mmcarrierconfig.{$todoKeys.{$j}}?" negate="true">
+							<set_value name="global.$mmcarrierconfig.{$todoKeys.{$j}}" exact="$todo.{$todoKeys.{$j}}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+					<remove_value name="$todoKeys"/>
 				</do_if>
 
-				<set_value name="global.$mmcarriers" exact="[
-						macro.units_size_xl_capital_destroyer_1_macro
-					]"/>
-				<set_value name="global.$mmcarriers_xl" exact="[ ]"/>
-				<set_value name="md.$mmc_explorers" exact="[ ]"/>
+				<do_if value="global.$mmcarriers?" negate="true">
+					<create_list name="global.$mmcarriers"/>
+				</do_if>
+				<do_if value="global.$mmcarriers_xl?" negate="true">
+					<create_list name="global.$mmcarriers_xl"/>
+				</do_if>
+				<do_if value="md.$mmc_explorers?" negate="true">
+					<create_list name="md.$mmc_explorers"/>
+				</do_if>
+				<do_if value="global.$mmcarriers?">
+					<set_value name="$todo" exact="
+						[
+							macro.units_size_xl_capital_destroyer_1_macro
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="global.$mmcarriers.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="global.$mmcarriers" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
 
 				<do_if value="global.$RRFspaces?" negate="true">
 					<find_sector groupname="global.$RRFspaces" space="player.galaxy" multiple="true" />
@@ -2257,11 +2284,7 @@
 		</cue>	
 		<cue name="MM_Carriers_AdvCom_init" instantiate="true">
 			<conditions>
-				<check_any>
-					<event_cue_signalled cue="md.Setup.GameStart"/>
-					<event_game_loaded/>
-					<event_player_created />
-				</check_any>
+				<event_cue_signalled cue="md.NF_BASE.Patch_GLWorker"/>
 			</conditions>
 			<delay max="500ms"/>
 			<actions>

@@ -81,6 +81,12 @@ you can configure jumpbehavior of ships in the mod-setting, there are the levels
 
 * by dropping a NavBeakon you can call a delivery service for Weaponplattforms and more
 
+* Manage your Shipyard
+- call SY over property list -> Shipyard settings 
+  "Set up a trade ware" (Manage additinal tradeware at price and amounts, but do NOT use this UI to add/change at production wares)
+  "Do NPC Buildorders" yes (accept orders from other factions) / friends (or better) / members / no (do not accept new Orders, queue orders will processd anyway - Queue can controlled buy call a shipdealer -> special constructions top left option at mouseover) 
+  "Shoppingbreak" (time Manager won't start new construction at orders, can used to fill ressources)
+
 * Building own Shipyard and Unique Stations
 	A CV can build also not predefined Stations, here you must first get the Station blueprint!
 ** get blueprint: You need a Architect (and in case a Engineer) at the Skunk, then you have a Conversation option (with the Architect) if you are docked at a Station (the Blueprint you want)
@@ -91,3 +97,7 @@ you can configure jumpbehavior of ships in the mod-setting, there are the levels
 	-- you need the CV (or more then one if you like) in your Squad at the local Zone. 
 	-- Talk to your Skunk-Architect and select the Station you want to build (if you have blueprints), then set the Blueprint to all or only a selected CV.
 	-- Use CV like always, with selection of a buildspot, or order to build at a Zone by talking to Architect - Then you can use the regular Stations the CV do build (top-left), or you can Order the "Special Blueprint" if preset (option left and right of menu) left-option build only the base Station as always, right will directly continue after each step and build the station up to max
+	
+* Diplomatics
+  - you can adjust your reputation, or trade zones/stations by call a NPC-Station-DefenceOfficer and use Diplomatics
+  - this is also available at Mercenary-Plunder-Ships at call them, based on your Firepower you can offer Money, or force them to not do anything stupid - this will effect the behavior (from called ship) ~12-24h

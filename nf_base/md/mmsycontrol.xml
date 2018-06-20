@@ -112,6 +112,9 @@
 						<do_if value="event.param2" exact="'add'">
 							<set_value name="$Station.tradenpc.$stop_trading" exact="10min" operation="add" />
 						</do_if>
+						<do_elseif value="event.param2" exact="'add12'">
+							<set_value name="$Station.tradenpc.$stop_trading" exact="12h" operation="add" />
+						</do_elseif>
 						<do_elseif value="event.param2" exact="'sub'">
 							<set_value name="$Station.tradenpc.$stop_trading" exact="10min" operation="subtract" chance="if $Station.tradenpc.$stop_trading-11min lt player.age then 0 else 100"/>
 							<set_value name="$Station.tradenpc.$stop_trading" exact="player.age" chance="if $Station.tradenpc.$stop_trading lt player.age then 100 else 0"/>
@@ -127,20 +130,29 @@
 					<add_player_choice text="{2802,2216}" section="mmsyc_settings" choiceparam="'add'" />
 					<add_player_choice text="{2802,2215}.[$range]" section="mmsyc_settings" choiceparam="'restart'" immediate="player.age lt $Station.tradenpc.$stop_trading and event.param2?"/>
 					<add_player_choice text="{2802,2217}" section="mmsyc_settings" choiceparam="'sub'" />
+					<add_player_choice text="{2802,2216} + ' 12h'" section="mmsyc_settings" choiceparam="'add12'" />
 					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
 					<remove_value name="$range"/>
 				</do_elseif>
 				<do_elseif value="event.param == 'mmsyc_menu'">  
-					<do_if value="event.param2 == 'randombuild' and $Station.tradenpc.$denyBuildRandomNPC?">
+					<do_if value="event.param2? and event.param2 == 'randombuild' and $Station.tradenpc.$denyBuildRandomNPC?">
 						<remove_value name="$Station.tradenpc.$denyBuildRandomNPC"/>
+						<remove_value name="$Station.tradenpc.$ordersMin"/>
 					</do_if>
+					<do_elseif value="event.param2? and event.param2 == 'randombuild' and not $Station.tradenpc.$denyBuildRandomNPC? and not $Station.tradenpc.$ordersMin?">
+						<set_value name="$Station.tradenpc.$ordersMin" exact="'friend'" />
+					</do_elseif>
+					<do_elseif value="event.param2? and event.param2 == 'randombuild' and not $Station.tradenpc.$denyBuildRandomNPC? and $Station.tradenpc.$ordersMin == 'friend'">
+						<set_value name="$Station.tradenpc.$ordersMin" exact="'member'" />
+					</do_elseif>
 					<do_elseif value="event.param2? and event.param2 == 'randombuild' and not $Station.tradenpc.$denyBuildRandomNPC?">
 						<set_value name="$Station.tradenpc.$denyBuildRandomNPC" />
+						<remove_value name="$Station.tradenpc.$ordersMin"/>
 					</do_elseif>
 					<!--
 					<add_player_choice_sub text="{2802,2218}" position="top_left" section="mmsyc_build" />
 					 -->
-					<add_player_choice position="left" text="'Do NPC Buildorders [%1]'.[if $Station.tradenpc.$denyBuildRandomNPC? then $off else $on]" tooltip="'station will build ships random with specific order for NPC'" section="mmsyc_menu" choiceparam="'randombuild'"/>
+					<add_player_choice position="left" text="'Do NPC Buildorders [%1]'.[if $Station.tradenpc.$denyBuildRandomNPC? then $off else if $Station.tradenpc.$ordersMin? then $Station.tradenpc.$ordersMin else $on]" tooltip="'station will build ships random with specific order for NPC'" section="mmsyc_menu" choiceparam="'randombuild'"/>
 					<add_player_choice_sub position="bottom_left" text="{2802,2211}" section="mmsyc_settings" />
 
 					<add_player_choice_sub position="top_right" text="{30114,20001}" section="gMain_objectTradeWares" choiceparam="[0, 0, $Station.tradenpc]" comment="Tradeware"/>

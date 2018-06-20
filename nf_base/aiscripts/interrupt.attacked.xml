@@ -9,4 +9,30 @@
           <check_value value="not [command.attackobject,command.patrol,command.escort].indexof.{this.command.value} or (this.ship.primarypurpose != objectpurpose.fight or (this.ship.primarypurpose == objectpurpose.fight and this.ship.hullpercentage lt 40 and this.ship.shieldpercentage lt 10))" />
           <check_value value="this.ship.isboostactive or this.commandaction.value == commandaction.jumping" negate="true" />
 	</add>
+
+
+	<add sel="//handler[@name='AttackHandler']/actions" pos="prepend">
+		<do_if value="not @this.mayattack.{event.param}" comment="target can be null">
+			<do_if value="event.param.owner" exact="this.ship.owner"> 
+				<do_if value="event.param.owner != event.param.trueowner"> 
+					<get_control_entities groupname="$Entities" object="event.param"/>
+					<do_all exact="$Entities.count" counter="$i" > 
+						<set_cover_owner object="$Entities.{$i}"/>
+					</do_all> 
+					<set_cover_owner object="event.param"/>
+					<remove_value name="$Entities"/>
+				</do_if> 
+				<do_else> 
+					<set_cover_owner object="event.param" faction="faction.enemy"/>
+				</do_else> 
+			</do_if> 
+			<do_elseif value="event.param.owner" list="global.$lockedFactions"> 
+				<set_object_relation_behaviour object="event.param" disable="true"/>
+				<set_relation_boost object="event.param" faction="this.owner" value="this.owner.relation.kill.max"/>
+			</do_elseif> 
+			<do_else> 
+				<add_relation_boost object="this" otherobject="event.param" value="this.owner.relation.kill.max" decay="1" delay="10min" silent="true" />
+			</do_else> 
+		</do_if>
+	</add>
 </diff>

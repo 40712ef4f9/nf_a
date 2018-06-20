@@ -376,8 +376,10 @@
 							<append_to_list name="$temp_ships.$mine_sm" exact="macro.units_size_m_hydrogen_collector_macro"/>
 						</do_elseif>
 						<do_else>
-							<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_capital_destroyer_1_macro"/>
-							<append_to_list name="$temp_ships.$fight" exact="macro.units_size_l_single_attack_ship_macro"/>
+							<do_if value="$_faction.id" list="['terracorp']">
+								<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_capital_destroyer_1_macro"/>
+								<append_to_list name="$temp_ships.$fight" exact="macro.units_size_l_single_attack_ship_macro"/>
+							</do_if>
 							<append_to_list name="$temp_ships.$fight" exact="macro.units_size_l_weaponplatform_macro"/>
 							<append_to_list name="$temp_ships.$fight" exact="macro.units_size_l_laserjet_01_macro"/>
 
@@ -3332,7 +3334,7 @@
 							<match owner="$_faction"/>
 						</find_station>
 						<do_all exact="$ShipYardOfTrust_Multi.count" counter="$y" reverse="true">
-							<do_if value="$ShipYardOfTrust_Multi.{$y} and $ShipYardOfTrust_Multi.{$y}.tradenpc.exists and not $ShipYardOfTrust_Multi.{$y}.tradenpc.$denyBuildRandomNPC? and $ShipYardOfTrust_Multi.{$y}.tradenpc.$orders? and $ShipYardOfTrust_Multi.{$y}.tradenpc.$orders.count lt 5 and $ShipYardOfTrust_Multi.{$y}.units.{unitcategory.welder}.count gt 10" negate="true">
+							<do_if value="$ShipYardOfTrust_Multi.{$y} and $ShipYardOfTrust_Multi.{$y}.tradenpc.exists and not $ShipYardOfTrust_Multi.{$y}.tradenpc.$denyBuildRandomNPC? and $ShipYardOfTrust_Multi.{$y}.tradenpc.$orders? and $ShipYardOfTrust_Multi.{$y}.tradenpc.$orders.count lt 5 and $ShipYardOfTrust_Multi.{$y}.units.{unitcategory.welder}.count gt 10 and $ShipYardOfTrust_Multi.{$y}.owner.relationto.{$_faction} ge $ShipYardOfTrust_Multi.{$y}.owner.relation.{if $ShipYardOfTrust_Multi.{$y}.tradenpc.$ordersMin? then $ShipYardOfTrust_Multi.{$y}.tradenpc.$ordersMin else 'neutral'}.min" negate="true">
 								<remove_value name="$ShipYardOfTrust_Multi.{$y}"/>
 							</do_if>
 						</do_all>
@@ -4182,7 +4184,7 @@
 					<set_value name="$temp_validZones" exact="$object.adjacentzones.clone"/>
 					<append_to_list name="$temp_validZones" exact="$object.zone"/>
 					<do_all exact="$temp_validZones.count" counter="$x" reverse="true"> 
-						<do_if value="not $temp_validZones.{$x}.owner or $temp_validZones.{$x}.owner and $temp_validZones.{$x}.owner.relationto.{$_faction} gt $_faction.relation.enemy.min">
+						<do_if value="not $temp_validZones.{$x}.owner or $temp_validZones.{$x}.owner and $temp_validZones.{$x}.owner.relationto.{$_faction} gt $_faction.relation.enemy.max">
 							<find_object name="$temp_object" space="$temp_validZones.{$x}" class="[class.gate, class.highwayentrygate]" multiple="true"/>
 							<do_all exact="$temp_object.count" counter="$y">
 								<do_if value="$temp_object.{$y}.exists and $temp_object.{$y}.destination" negate="true">
@@ -4204,12 +4206,13 @@
 				</do_elseif>
 		
 				<do_all exact="$temp_validZones.count" counter="$x" reverse="true"> 
-					<do_if value="$temp_validZones.{$x}.owner and $temp_validZones.{$x}.owner.relationto.{$_faction} lt $_faction.relation.enemy.min" chance="if $_CEO.$style == 'domination' then 100 else 0">
+					<do_if value="$temp_validZones.{$x}.owner and $temp_validZones.{$x}.owner.relationto.{$_faction} lt $_faction.relation.enemy.max" chance="if $_CEO.$style == 'domination' then 100 else 0">
 						<find_station name="$temp_station" space="$temp_validZones.{$x}" multiple="false">
 							<match_relation faction="$_faction"  relation="enemy" comparison="le"/>
 						</find_station>
 						<do_if value="$temp_station">
 							<remove_value name="$temp_validZones.{$x}"/>
+							<continue />
 						</do_if>
 						<do_else> 
 							<find_ship name="$ZoneEnemyShips" class="[class.ship_xl, class.ship_l]" space="$temp_validZones.{$x}"  multiple="false">
@@ -4225,10 +4228,12 @@
 								</find_ship>
 								<do_if value="$ZoneMyShips" negate="true">
 									<remove_value name="$temp_validZones.{$x}"/>
+									<continue />
 								</do_if>
 							</do_if>
 							<do_else>
 								<remove_value name="$temp_validZones.{$x}"/>
+								<continue />
 							</do_else>
 						</do_else>
 						<remove_value name="$temp_station"/>
@@ -4236,8 +4241,9 @@
 						<remove_value name="$ZoneMyShips"/>
 					</do_if>
 
-					<do_if value="not $temp_validZones.{$x}.owner or $temp_validZones.{$x}.owner and $temp_validZones.{$x}.owner.relationto.{$_faction} gt $_faction.relation.enemy.min" negate="true" chance="if $_CEO.$style == 'cooperative' then 100 else 0">
+					<do_if value="not $temp_validZones.{$x}.owner or $temp_validZones.{$x}.owner and $temp_validZones.{$x}.owner.relationto.{$_faction} gt $_faction.relation.enemy.max" negate="true" chance="if $_CEO.$style == 'cooperative' then 100 else 0">
 						<remove_value name="$temp_validZones.{$x}"/>
+						<continue />
 					</do_if>
 					<do_else>
 						<set_value name="$temp_zone" exact="$temp_validZones.{$x}"/>
@@ -4259,6 +4265,7 @@
 							<include_actions ref="md.MM_Corps__Data.MMCData_do_validfreebuildspots" />
 							<do_if value="$temp_buildspots.count" negate="true">
 								<remove_value name="$temp_validZones.{$x}"/>
+								<continue />
 							</do_if>
 							<remove_value name="$temp_buildspots"/>
 						</do_all> 
@@ -4275,6 +4282,7 @@
 						</find_station>
 						<do_if value="$temp_station">
 							<remove_value name="$temp_validZones.{$x}"/>
+							<continue />
 						</do_if>
 						<remove_value name="$temp_station"/>
 					</do_all> 
@@ -4294,13 +4302,13 @@
 						<do_if value="not $temp_validZones.{$x}.owner"> 
 							<set_value name="$temp_zone" exact="$temp_validZones.{$x}"/>
 						</do_if> 
-						<do_elseif value="$temp_validZones.{$x}.owner.relationto.{$_faction} lt $_faction.relation.enemy.min" chance="if $doRun == 3 and $_CEO.$style == 'domination' then 100 else 0"> 
+						<do_elseif value="$temp_validZones.{$x}.owner.relationto.{$_faction} lt $_faction.relation.enemy.max" chance="if $doRun == 3 and $_CEO.$style == 'domination' then 100 else 0"> 
 							<set_value name="$temp_zone" exact="$temp_validZones.{$x}"/>
 						</do_elseif> 
-						<do_elseif value="$temp_validZones.{$x}.owner.relationto.{$_faction} gt $_faction.relation.enemy.min" chance="if $_CEO.$style != 'domination' then 100 else 0"> 
+						<do_elseif value="$temp_validZones.{$x}.owner.relationto.{$_faction} gt $_faction.relation.enemy.max" chance="if $_CEO.$style != 'domination' then 100 else 0"> 
 							<set_value name="$temp_zone" exact="$temp_validZones.{$x}"/>
 						</do_elseif> 
-						<do_elseif value="$temp_validZones.{$x}.owner != $_faction and $temp_validZones.{$x}.owner.relationto.{$_faction} gt $_faction.relation.enemy.min" chance="if $doRun == 2 and $_CEO.$style == 'domination' then 100 else 0"> 
+						<do_elseif value="$temp_validZones.{$x}.owner != $_faction and $temp_validZones.{$x}.owner.relationto.{$_faction} gt $_faction.relation.enemy.max" chance="if $doRun == 2 and $_CEO.$style == 'domination' then 100 else 0"> 
 							<set_value name="$temp_zone" exact="$temp_validZones.{$x}"/>
 						</do_elseif> 
 						<do_elseif value="$temp_validZones.{$x}.owner == $_faction" chance="if $doRun == 3 and $_CEO.$style != 'domination' then 100 else 0"> 
@@ -4996,7 +5004,7 @@
 						<match owner="$_faction"/>
 					</find_station>
 					<do_all exact="$ShipYardOfTrust2.count" counter="$y">
-						<do_if value="$ShipYardOfTrust2.{$y} and $ShipYardOfTrust2.{$y}.tradenpc.exists and not $ShipYardOfTrust2.{$y}.tradenpc.$denyBuildRandomNPC? and $ShipYardOfTrust2.{$y}.tradenpc.$orders? and $ShipYardOfTrust2.{$y}.tradenpc.$orders.count lt 5 and $ShipYardOfTrust2.{$y}.units.{unitcategory.welder}.count gt 10">
+						<do_if value="$ShipYardOfTrust2.{$y} and $ShipYardOfTrust2.{$y}.tradenpc.exists and not $ShipYardOfTrust2.{$y}.tradenpc.$denyBuildRandomNPC? and $ShipYardOfTrust2.{$y}.tradenpc.$orders? and $ShipYardOfTrust2.{$y}.tradenpc.$orders.count lt 5 and $ShipYardOfTrust2.{$y}.units.{unitcategory.welder}.count gt 10 and $ShipYardOfTrust2.{$y}.owner.relationto.{$_faction} ge $ShipYardOfTrust2.{$y}.owner.relation.{if $ShipYardOfTrust2.{$y}.tradenpc.$ordersMin? then $ShipYardOfTrust2.{$y}.tradenpc.$ordersMin else 'neutral'}.min">
 							<set_value name="$ShipYardOfTrust" exact="$ShipYardOfTrust2.{$y}"/>
 							<break />
 						</do_if>
@@ -5008,13 +5016,13 @@
 						</find_station>
 						<set_value name="$SY_Matches_max" exact="$ShipYardOfTrust2.count" chance="if $SY_Matches_max lt $ShipYardOfTrust2.count then 100 else 0"/>
 						<do_all exact="$ShipYardOfTrust2.count" counter="$y">
-							<do_if value="$ShipYardOfTrust2.{$y} and $ShipYardOfTrust2.{$y}.tradenpc.exists and not $ShipYardOfTrust2.{$y}.tradenpc.$denyBuildRandomNPC? and $ShipYardOfTrust2.{$y}.tradenpc.$orders? and $ShipYardOfTrust2.{$y}.tradenpc.$orders.count lt 5 and $ShipYardOfTrust2.{$y}.units.{unitcategory.welder}.count gt 10">
+							<do_if value="$ShipYardOfTrust2.{$y} and $ShipYardOfTrust2.{$y}.tradenpc.exists and not $ShipYardOfTrust2.{$y}.tradenpc.$denyBuildRandomNPC? and $ShipYardOfTrust2.{$y}.tradenpc.$orders? and $ShipYardOfTrust2.{$y}.tradenpc.$orders.count lt 5 and $ShipYardOfTrust2.{$y}.units.{unitcategory.welder}.count gt 10 and $ShipYardOfTrust2.{$y}.owner.relationto.{$_faction} ge $ShipYardOfTrust2.{$y}.owner.relation.{if $ShipYardOfTrust2.{$y}.tradenpc.$ordersMin? then $ShipYardOfTrust2.{$y}.tradenpc.$ordersMin else 'neutral'}.min">
 								<set_value name="$ShipYardOfTrust" exact="$ShipYardOfTrust2.{$y}"/>
 								<break />
 							</do_if>
 						</do_all>
 					</do_if>
-					<do_if value="$ShipYardOfTrust and $ShipYardOfTrust.tradenpc.exists and not $ShipYardOfTrust.tradenpc.$denyBuildRandomNPC? and $ShipYardOfTrust.tradenpc.$orders? and $ShipYardOfTrust.tradenpc.$orders.count lt 5 and $ShipYardOfTrust.units.{unitcategory.welder}.count gt 10">
+					<do_if value="$ShipYardOfTrust and $ShipYardOfTrust.tradenpc.exists and not $ShipYardOfTrust.tradenpc.$denyBuildRandomNPC? and $ShipYardOfTrust.tradenpc.$orders? and $ShipYardOfTrust.tradenpc.$orders.count lt 5 and $ShipYardOfTrust.units.{unitcategory.welder}.count gt 10 and $ShipYardOfTrust.owner.relationto.{$_faction} ge $ShipYardOfTrust.owner.relation.{if $ShipYardOfTrust.tradenpc.$ordersMin? then $ShipYardOfTrust.tradenpc.$ordersMin else 'neutral'}.min">
 						<break />
 					</do_if>
 				</do_all>
@@ -5024,7 +5032,7 @@
 						<match_relation faction="$_faction"  relation="neutral" comparison="ge"/>
 					</find_station>
 					<do_all exact="$ShipYardOfTrust2.count" counter="$y">
-						<do_if value="$ShipYardOfTrust2.{$y} and $ShipYardOfTrust2.{$y}.tradenpc.exists and not $ShipYardOfTrust2.{$y}.tradenpc.$denyBuildRandomNPC? and $ShipYardOfTrust2.{$y}.tradenpc.$orders? and $ShipYardOfTrust2.{$y}.tradenpc.$orders.count lt 5 and $ShipYardOfTrust2.{$y}.units.{unitcategory.welder}.count gt 10">
+						<do_if value="$ShipYardOfTrust2.{$y} and $ShipYardOfTrust2.{$y}.tradenpc.exists and not $ShipYardOfTrust2.{$y}.tradenpc.$denyBuildRandomNPC? and $ShipYardOfTrust2.{$y}.tradenpc.$orders? and $ShipYardOfTrust2.{$y}.tradenpc.$orders.count lt 5 and $ShipYardOfTrust2.{$y}.units.{unitcategory.welder}.count gt 10 and $ShipYardOfTrust2.{$y}.units.{unitcategory.welder}.count gt 10 and $ShipYardOfTrust2.{$y}.owner.relationto.{$_faction} ge $ShipYardOfTrust2.{$y}.owner.relation.{if $ShipYardOfTrust2.{$y}.tradenpc.$ordersMin? then $ShipYardOfTrust2.{$y}.tradenpc.$ordersMin else 'neutral'}.min">
 							<do_if value="$ShipYardOfTrust" negate="true">
 								<set_value name="$ShipYardOfTrust" exact="$ShipYardOfTrust2.{$y}"/>
 							</do_if>
@@ -5986,7 +5994,7 @@
 					</do_all>
 
 					<do_all exact="$validZones.count" counter="$r">
-						<do_if value="(not $validZones.{$r}.owner or $validZones.{$r}.owner.relationto.{$_faction} le $_faction.relation.enemy.min) and ($tmp_1.indexof.{$validZones.{$r}} == 0 and $tmp_2.indexof.{$validZones.{$r}} == 0)">
+						<do_if value="(not $validZones.{$r}.owner or $validZones.{$r}.owner.relationto.{$_faction} le $_faction.relation.enemy.max) and ($tmp_1.indexof.{$validZones.{$r}} == 0 and $tmp_2.indexof.{$validZones.{$r}} == 0)">
 							<do_if value="$tmpCoreSectors.indexof.{$validZones.{$r}.sector}">
 								<append_to_list name="$tmp_1" exact="$validZones.{$r}"/>
 							</do_if>

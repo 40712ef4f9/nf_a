@@ -590,7 +590,9 @@
     <remove_value name="$orderID"/>
     <remove_value name="$ceo"/>
   </add>
-  <add sel="//on_abort">
+  <replace sel="//on_abort">
+  <on_abort>
+    <remove_ware_reservation object="this.station" entity="this" />
     <do_if value="this.$orders? and this.$orders.count">
       <set_value name="this.$previousStation" exact="this.station" />
       <set_value name="this.$previousOrders" exact="this.$orders.clone" />
@@ -599,7 +601,32 @@
     <do_else>
       <remove_value name="this.$orders"/>
     </do_else>
-  </add>
+    <!-- TEMP to clean up
+    <find_object_component name="$buildmodules" object="this.station" class="class.buildmodule" multiple="true"/>
+    <find_object_component name="$shiptraders" object="this.station" entitytype="entitytype.shiptrader" multiple="true" />
+    <do_all exact="$buildmodules.count" counter="$Count">
+      <do_if value="$buildmodules.{$Count}.buildanchor.exists">
+        <do_all exact="$shiptraders.count" counter="$k" >
+          <do_if value="$shiptraders.{$k}.buildmodule == $buildmodules.{$Count} and $shiptraders.{$k}.$shiptrader_isbusy?">
+            <set_value name="$Shiptrader" exact="true" />
+            <break />
+          </do_if>
+        </do_all>
+        <do_if value="$Shiptrader?" negate="true">
+          <clear_buildmodule buildmodule="$buildmodules.{$Count}"/>
+        </do_if>
+      </do_if>
+      <do_if value="not $Shiptrader? and $buildmodules.{$Count}.dockslot.component.docking.count">
+        <do_all exact="$buildmodules.{$Count}.dockslot.component.docking.count" counter="$k">
+          <do_if value="$buildmodules.{$Count}.dockslot.component.docking.{$k}.isclass.ship" negate="true">
+            <destroy_object object="$buildmodules.{$Count}.dockslot.component.docking.{$k}"/>
+          </do_if>
+        </do_all>
+      </do_if>
+      <remove_value name="$Shiptrader"/>
+    </do_all> -->
+  </on_abort>
+  </replace>
 
   <replace sel="//construct_ship/@faction" >$customer_faction</replace>
 
