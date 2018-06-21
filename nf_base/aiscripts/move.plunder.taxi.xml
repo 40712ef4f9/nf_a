@@ -508,6 +508,7 @@
           </run_script>
 
           <do_if value="global.$factionCEOs.{'$' + this.ship.trueowner.id}? and global.$factionCEOs.{'$' + $customerfaction.id}?" chance="if this.hasownaccount then 0 else 100">
+            <remove_actor_account actor="this" transfer="if this.isplayerowned and this.hasownaccount then true else false" />
             <share_actor_account actor="this" otherobject="global.$factionCEOs.{'$' + $customerfaction.id}" />
             <set_value name="$resetAccount" exact="global.$factionCEOs.{'$' + this.ship.trueowner.id}"/>
           </do_if>
@@ -520,6 +521,7 @@
           </run_script>
 
           <do_if value="$resetAccount? and $resetAccount">
+            <remove_actor_account actor="this" transfer="false" />
             <share_actor_account actor="this" otherobject="$resetAccount" />
             <remove_value name="$resetAccount" />
           </do_if>

@@ -1224,6 +1224,7 @@
 									<find_dock_location name="$target_dock"  multiple="false" container="$subordinates.{$i}" size="tag.dock_p" />
 									<do_if value="$subordinates.{$i}.architect.money and $subordinates.{$i}.architect.playerowned">
 										<transfer_money from="$subordinates.{$i}.architect" to="player.entity" amount="$subordinates.{$i}.architect.money" />
+										<remove_actor_account actor="$subordinates.{$i}.architect" transfer="true" />
 									</do_if>
 
 									<set_value name="$Skill" exact="[skilltype.leadership, skilltype.navigation, skilltype.combat, skilltype.engineering, skilltype.management, skilltype.morale, skilltype.science]" />
@@ -1265,6 +1266,9 @@
 						<do_else>
 							<get_control_entities object="$subordinates.{$i}" groupname="$ControlEntities"/>
 							<do_all exact="$ControlEntities.count" counter="$Counter">
+								<do_if value="$ControlEntities.{$Counter}.hasownaccount">
+									<remove_actor_account actor="$ControlEntities.{$Counter}" transfer="$ControlEntities.{$Counter}.isplayerowned" />
+								</do_if>
 								<set_owner object="$ControlEntities.{$Counter}" faction="$faction"/>
 							</do_all>
 							<set_owner object="$subordinates.{$i}" faction="$faction" />
@@ -1290,6 +1294,9 @@
 					<remove_value name="$buildmodules" />
 					<find_object_component name="$ControlEntities" entitytype="entitytype.shiptrader" object="$target" multiple="true" />
 					<do_all exact="$ControlEntities.count" counter="$Counter">
+						<do_if value="$ControlEntities.{$Counter}.hasownaccount">
+							<remove_actor_account actor="$ControlEntities.{$Counter}" transfer="$ControlEntities.{$Counter}.isplayerowned" />
+						</do_if>
 						<destroy_object object="$ControlEntities.{$Counter}"/>
 					</do_all>
 				</do_if>
@@ -1297,6 +1304,9 @@
 				<do_if value="$target.canproduceships">
 					<find_object_component name="$ControlEntities" entitytype="entitytype.smallshiptrader" object="$target" multiple="true" />
 					<do_all exact="$ControlEntities.count" counter="$Counter">
+						<do_if value="$ControlEntities.{$Counter}.hasownaccount">
+							<remove_actor_account actor="$ControlEntities.{$Counter}" transfer="$ControlEntities.{$Counter}.isplayerowned" />
+						</do_if>
 						<destroy_object object="$ControlEntities.{$Counter}"/>
 					</do_all>
 				</do_if>
@@ -1304,7 +1314,9 @@
 				<create_list name="$specialists" />
 				<get_control_entities object="$target" groupname="$ControlEntities"/>
 				<do_all exact="$ControlEntities.count" counter="$Counter">
-					<remove_actor_account actor="$ControlEntities.{$Counter}" transfer="true" chance="if $ControlEntities.{$Counter}.hasownaccount then 100 else 0"/>
+					<do_if value="$ControlEntities.{$Counter}.hasownaccount">
+						<remove_actor_account actor="$ControlEntities.{$Counter}" transfer="$ControlEntities.{$Counter}.isplayerowned" />
+					</do_if>
 					<abort_scripts entity="$ControlEntities.{$Counter}"/>
 					<destroy_object object="$ControlEntities.{$Counter}"/>
 				</do_all>

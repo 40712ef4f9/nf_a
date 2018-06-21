@@ -202,12 +202,14 @@
       <do_if value="this.ship.distanceto.[$targetzone, $targetpos] gt 3km +this.ship.size">
         <move_to object="this.ship" destination="$targetzone" finishonapproach="true" forceposition="false">
           <position value="$targetpos" />
-          <interrupt_after_time time="300s" />
+          <interrupt_after_time time="900s" />
         </move_to>
-        <do_if value="this.ship.distanceto.[$targetzone, $targetpos] gt 5km + this.ship.size" chance="if $2ndrun? then 0 else 100">
+        <do_if value="this.ship.distanceto.[$targetzone, $targetpos] gt 2km + this.ship.size" chance="if $2ndrun? then 0 else 100">
           <set_value name="$targetpos" exact="null" />
-          <set_value name="$2ndrun" chance="if this.ship.distanceto.[$targetzone, $targetpos] gt 10km + this.ship.size then 0 else 100"/>
-          <resume label="flyclose"/>
+          <set_value name="$2ndrun" chance="if this.ship.distanceto.[$targetzone, $targetpos] gt 5km + this.ship.size then 0 else 100"/>
+          <do_if value="this.ship.bboxdistanceto.{$target} gt 2km">
+            <resume label="flyclose"/>
+          </do_if>
         </do_if>
       </do_if>
 
@@ -262,6 +264,7 @@
 
 
       <label name="withdraw" />
+      <remove_value name="$2ndrun"/>
       <!-- Command -->
       <set_command command="command.withdrawbattle" />
       <!-- Find enemies -->
@@ -421,6 +424,7 @@
 
 
       <label name="gohome" />
+      <remove_value name="$2ndrun"/>
       <remove_value name="this.$boardingPodsOut" />
       <set_value name="$gotodie" exact="false" />
       <do_if value="$home? and $home.exists and this.ship.dockslot == null and $returntocommander">

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<diff>
+	<remove silent="1" sel="//connection[@ref='ConnectionFor_struct_econ_ref_te_pmc_dronedock_macro']" />
+	<add sel="/components/component/connections">
+           <connection name="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro" group="stationGroup" tags="dronelauncher">
+				<offset>
+					<position x="2418" y="-11" z="-1261"/>
+                    <rotation yaw="-90" pitch="0" roll="0"/>
+				</offset>
+            </connection>
+            <connection name="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro1" group="stationGroup" tags="dronelauncher">
+				<offset>
+					<position x="1125" y="16" z="2858"/>
+                    <rotation yaw="180" pitch="0" roll="0"/>
+				</offset>
+            </connection>
+	</add>
+</diff>

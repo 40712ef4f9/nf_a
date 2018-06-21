@@ -942,6 +942,9 @@
 						<do_all exact="$ShiptraderDocks.{$j}.actors.count" counter="$k" >
 							<do_if value="$ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.shiptrader or $ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.smallshiptrader">
 								<set_remote_commable actor="$ShiptraderDocks.{$j}.actors.{$k}" remote="true" />
+								<do_if value="$ShiptraderDocks.{$j}.hasownaccount">
+									<remove_actor_account actor="$ShiptraderDocks.{$j}" transfer="$ShiptraderDocks.{$j}.isplayerowned" />
+								</do_if>
 								<share_actor_account actor="$ShiptraderDocks.{$j}.actors.{$k}" otherobject="event.param2.tradenpc" chance="if event.param2.tradenpc.money != $ShiptraderDocks.{$j}.actors.{$k}.money or event.param2.tradenpc.money == 0Cr then 100 else 0" />
 								<set_value name="$DockHasShipTrader" exact="true" />
 							</do_if>
