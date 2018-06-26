@@ -107,7 +107,7 @@
       </do_else>
     </do_elseif>
     <do_elseif value="event.param == 'cArch_workat_contractor'">
-      <do_if value="event.param2? and event.param2.{3}.isclass.zone and event.param2.{3}.freebuildlocations.count">
+      <do_if value="event.param2? and event.param2.{3}.isclass.zone and (event.param2.{3}.freebuildlocations.count or event.param2.{3}.freenpcbuildlocations.count)">
         <set_value name="$location" exact="event.param2.{3}.freebuildlocations.random" />
         <do_if value="$location.child">
           <do_all exact="event.param2.{3}.buildlocations.count" counter="$bs"> 
@@ -116,6 +116,17 @@
               <break />
             </do_if>
           </do_all>
+        </do_if>
+        <do_if value="event.param2.{3}.owner and event.param2.{3}.owner.relationto.{$actor.owner} ge $actor.owner.relation.friend.min">
+          <set_value name="$location" exact="event.param2.{3}.freenpcbuildlocations.random" />
+          <do_if value="$location.child">
+            <do_all exact="event.param2.{3}.npcbuildlocations.count" counter="$bs"> 
+              <do_if value="event.param2.{3}.npcbuildlocations.{$bs}.child" negate="true">
+                <set_value name="$location" exact="event.param2.{3}.npcbuildlocations.{$bs}"/>
+                <break />
+              </do_if>
+            </do_all>
+          </do_if>
         </do_if>
 
         <do_if value="$location.child" negate="true">

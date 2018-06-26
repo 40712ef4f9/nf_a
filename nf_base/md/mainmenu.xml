@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <diff>
 	<add sel="//cue[@name='SectionHandler']/actions/do_elseif/do_if[@value='$object.isclass.station']/do_if/do_if[@value='@$object.buildingmodule.ship.architect']" type="@chance" >if $object.canbuildships and $object.tradenpc then 0 else 100</add>
+	<add sel="//do_elseif[@value=&quot;event.param == 'gMain_charProfileMenu'&quot;]" pos="prepend" >
+		<do_if value="event.name == 'event_conversation_next_section' and event.object == event.param2.{3} and not event.object.skillsvisible and not event.object.isplayerowned and event.object.container.isplayerowned and event.object.owner.relationto.{faction.player} ge faction.player.relation.friend.min" chance="if global.$nfconfig.$cheatShowCandidates? and global.$nfconfig.$cheatShowCandidates then 100 else 0">
+			<set_skills_visible entity="event.object" visible="true" chance="if event.object.owner.relationto.{faction.player} ge faction.player.relation.member.min then 100 else 66" />
+		</do_if>
+	</add>
 </diff>

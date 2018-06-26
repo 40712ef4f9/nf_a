@@ -56,9 +56,11 @@
         <macro ref="props_adsigns_bt_scanningarray_xl_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_props_adsigns_bt_ship_m_macro">
+        <build mode="optional" group="production" sequence="A" stage="2" />
         <macro ref="props_adsigns_bt_ship_m_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_props_adsigns_bt_ship_m_macro1">
+        <build mode="optional" group="production" sequence="A" stage="2" />
         <macro ref="props_adsigns_bt_ship_m_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_props_adsigns_traffic_l_random_macro">
@@ -199,6 +201,7 @@
         <macro ref="props_surf_playerdock_repair_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_props_surf_playerdock_ships_macro">
+        <build mode="optional" group="production" sequence="A" stage="2" />
         <macro ref="props_surf_playerdock_ships_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_props_surf_playerdock_trade_macro">
@@ -407,12 +410,15 @@
         <macro ref="struct_econ_prod_scaningarray_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_struct_econ_prod_shipm_macro">
+        <build mode="optional" group="production" sequence="A" stage="2" tags="primary " />
         <macro ref="struct_econ_prod_shipm_dv_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_struct_econ_prod_ships_macro">
+        <build mode="optional" group="production" sequence="A" stage="2" />
         <macro ref="struct_econ_prod_ships_dv_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_struct_econ_prod_ships_macro1">
+        <build mode="optional" group="production" sequence="A" stage="2" />
         <macro ref="struct_econ_prod_ships_dv_macro" connection="space" />
       </connection>
       <connection ref="ConnectionFor_struct_econ_prod_stor_container_macro">

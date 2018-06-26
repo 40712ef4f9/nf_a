@@ -187,6 +187,8 @@
 							$HyperDrive = 1,
 							$buildOwnerNotice = 0,
 							$cheatRestoreSkunk = 1,
+							$cheatBetterCandidates = 0,
+							$cheatShowCandidates = 0,
 							$payOnUrSy = 1
 						]
 					"/>
@@ -760,9 +762,11 @@
 					<add_player_choice section="nfconf_do_player" text="{40002,338}.[if global.$nfconfig.$autoRefuel then $on else $off]"		position="right"		choiceparam="['autoRefuel', 'do']" />
 				</do_elseif>
 				<do_elseif value="event.param" exact="'nfconf_do_player_cheat'">
-					<add_player_choice section="nfconf_do_player_cheat" text="{40002,342}.[if global.$nfconfig.$ignoreFuel then $on else $off]"	position="top_left"		choiceparam="['ignoreFuel', 'do']" tooltip="{40002,343}"/>
-					<add_player_choice section="nfconf_do_player_cheat" text="{40002,344}.[if global.$nfconfig.$cheatMaxSkill then $on else $off]"	position="top_right"	choiceparam="['cheatMaxSkill', 'do']" />
-					<add_player_choice section="nfconf_do_player_cheat" text="{40002,345}.[if global.$nfconfig.$cheatRestoreSkunk then $on else $off]"	position="left"	choiceparam="['cheatRestoreSkunk', 'do']" tooltip="{40002,346}" />
+					<add_player_choice section="nfconf_do_player_cheat" text="{40002,344}.[if global.$nfconfig.$cheatMaxSkill then $on else $off]"	position="top_left"	choiceparam="['cheatMaxSkill', 'do']" />
+					<add_player_choice section="nfconf_do_player_cheat" text="{40002,349}.[if global.$nfconfig.$cheatShowCandidates then $on else $off]"	position="left"	choiceparam="['cheatShowCandidates', 'do']" />
+					<add_player_choice section="nfconf_do_player_cheat" text="{40002,347}.[if global.$nfconfig.$cheatBetterCandidates then $on else $off]"	position="bottom_left"	choiceparam="['cheatBetterCandidates', 'do']" />
+					<add_player_choice section="nfconf_do_player_cheat" text="{40002,342}.[if global.$nfconfig.$ignoreFuel then $on else $off]"	position="top_right"		choiceparam="['ignoreFuel', 'do']" tooltip="{40002,343}"/>
+					<add_player_choice section="nfconf_do_player_cheat" text="{40002,345}.[if global.$nfconfig.$cheatRestoreSkunk then $on else $off]"	position="right"	choiceparam="['cheatRestoreSkunk', 'do']" tooltip="{40002,346}" />
 				</do_elseif>
 				<do_elseif value="event.param" exact="'nfconf_do_detail'" chance="(event.param2? and typeof event.param2 == datatype.list and (typeof event.param2.{1}).isstring)*100">
 					<create_list name="$add" />

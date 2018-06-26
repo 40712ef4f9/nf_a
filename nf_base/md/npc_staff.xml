@@ -25,4 +25,13 @@
     <set_owner object="$actor" faction="faction.neutral" />
     <signal_cue_instantly chance="0" cue="md.NF_BASE.NF_kill_NPC" param="$actor" delay="20s"/>
   </add>
+  <add sel="//library[@name='FeeCalculation']/actions" pos="prepend">
+    <do_if value="$actor? and $actor.exists and not $actor.isplayerowned and $actor.container.isplayerowned and $actor.owner.relationto.{faction.player} ge faction.player.relation.friend.min" chance="if global.$nfconfig.$cheatBetterCandidates? and global.$nfconfig.$cheatBetterCandidates then 33 else 0">
+      <set_value name="$tempActor" exact="$Object" />
+      <set_value name="$temp_Skill" exact="true" />
+      <include_actions ref="md.NF_BASE.NF_skill_actor" />
+      <remove_value name="$tempActor"/>
+      <remove_value name="$temp_Skill"/>
+    </do_if>
+  </add>
 </diff>
