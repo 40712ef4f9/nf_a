@@ -6,4 +6,35 @@
 			<set_skills_visible entity="event.object" visible="true" chance="if event.object.owner.relationto.{faction.player} ge faction.player.relation.member.min then 100 else 66" />
 		</do_if>
 	</add>
+	<!-- CheatFix StationDetail-UI-Problem -->
+	<add sel="//do_elseif[@value=&quot;event.param == 'gMain_object'&quot;]" pos="prepend" >
+		<do_if value="event.name == 'event_conversation_next_section' and event.param2.{3}.exists and event.param2.{3}.isclass.station">
+			<find_object_component name="$components" object="event.param2.{3}" multiple="true">
+				<match class="class.production" />
+				<match_parent macro="event.param2.{3}.macro" />
+				<match repairable="true" invulnerable="false">
+					<match_hull min="35" negate="true" />
+				</match>
+			</find_object_component>
+			<do_all exact="$components.count" counter="$i">
+				<set_object_hull object="$components.{$i}" exact="36"/>
+			</do_all>
+			<remove_value name="$components"/>
+		</do_if>
+	</add>
+	<add sel="//do_elseif[@value=&quot;event.param == 'gMain_object_closeup'&quot;]" pos="prepend" >
+		<do_if value="event.name == 'event_conversation_next_section' and event.param2.{3}.exists and event.param2.{3}.isclass.station">
+			<find_object_component name="$components" object="event.param2.{3}" multiple="true">
+				<match class="class.production" />
+				<match_parent macro="event.param2.{3}.macro" />
+				<match repairable="true" invulnerable="false">
+					<match_hull min="35" negate="true" />
+				</match>
+			</find_object_component>
+			<do_all exact="$components.count" counter="$i">
+				<set_object_hull object="$components.{$i}" exact="36"/>
+			</do_all>
+			<remove_value name="$components"/>
+		</do_if>
+	</add>
 </diff>

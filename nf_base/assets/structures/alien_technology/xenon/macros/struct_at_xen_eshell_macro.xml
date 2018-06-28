@@ -2,13 +2,14 @@
 <!--Exported by: lino (192.168.3.144) at 03.12.2014_11-03-18-->
 <macros>
   <macro name="struct_at_xen_eshell_macro" class="production">
-    <component ref="struct_at_xen_shell" />
+    <component ref="struct_at_xen_pshell" />
     <properties>
       <identification name="{20107,5401}" description="{20107,5402}" unique="0" />
       <explosiondamage value="100000" />
-      <hull max="3600000" />
+      <hull max="12600000" />
       <effects>
         <explosion ref="explosion_station_01" />
+        <sefx_hack_disabled ref="hack_deactivated_l" />
       </effects>
       <secrecy level="6" />
       <production wares="energycells">

@@ -7,11 +7,16 @@
       <identification name="{20107,3901}" description="{20107,3902}" unique="0" />
 	  <explosiondamage value="100000" />
       <hull max="3600000" />
+      <secrecy level="4" />
+      <effects>
+        <explosion ref="explosion_station_01" />
+        <sefx_hack_disabled ref="hack_deactivated_m" />
+      </effects>
       <production wares="shp_pmc_xen_01 shp_pmc_xen_02 shp_s_torpedo_01 ">
         <queue>          
-		  <item ware="shp_pmc_xen_01" />
-		  <item ware="shp_pmc_xen_02" />	
-			<item ware="shp_s_torpedo_01" />
+          <item ware="shp_pmc_xen_01" />
+          <item ware="shp_pmc_xen_02" />	
+          <item ware="shp_s_torpedo_01" />
         </queue>
       </production>
     </properties>

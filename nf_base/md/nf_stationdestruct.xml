@@ -222,10 +222,7 @@
 
 				<cue name="StationDestruct_worker" instantiate="true">
 					<conditions>
-						<check_any>
-						  <event_game_loaded/>
-						  <event_player_created />
-						</check_any>
+						<event_cue_signalled cue="md.NF_BASE.Patch_GLWorker"/>
 					</conditions>
 					<actions>
 						<do_if value="$watchedObjects? and $watchedObjects.count">
