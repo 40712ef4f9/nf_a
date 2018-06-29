@@ -1475,6 +1475,7 @@ If ownerless, make easier/skip steps
                                   </do_if>
 
                                   <do_if value="$target.isclass.station">
+                                    <restore_object object="$target" hull="[$target.hullpercentage, 40].max" recursive="true" />
                                     <find_object_component name="$buildmodules" object="$target" class="class.buildmodule" multiple="true"/>
                                     <do_all exact="$buildmodules.count" counter="$Counter">
                                       <do_if value="$buildmodules.{$Counter}.buildanchor.exists">
@@ -1533,7 +1534,7 @@ If ownerless, make easier/skip steps
                                       <remove_value name="$value"/>
                                     </do_if> 
                                     <do_else>
-                                      <restore_object object="$target" hull="$target.hullpercentage" recursive="true" />
+                                      <restore_object object="$target" hull="[$target.hullpercentage, 65].max" recursive="true" />
 
                                       <do_if value="$isplayerinvolved">
                                         <find_station name="$temp_station" space="$target.cluster" functional="true" multiple="false">
@@ -1557,113 +1558,7 @@ If ownerless, make easier/skip steps
                                     </do_else> 
                                   </do_if> 
                                   <do_if value="$target.isclass.station and $isplayerinvolved">
-                                    <do_if value="$target.canbuildships or $target.canproduceships">
-                                      <find_dock_location container="$target" name="$ShiptraderDocks" dockpopulationtype="dockpopulationtype.ships" multiple="true" />
-                                      <!-- add required NPCs -->     
-                                      <find_dock_location name="$Stationdock" container="$target" size="tag.dock_p" multiple="false" dockpopulationtype="dockpopulationtype.administrative"/>
-                                      <do_if value="not $Stationdock">
-                                        <find_dock_location name="$Stationdock" container="$target" size="tag.dock_p" multiple="false"/>
-                                      </do_if>
-                                      <do_if value="$target.zone.npcbuildlocations.indexof.{$target.buildlocation} or $target.zone.buildlocations.indexof.{$target.buildlocation}" negate="true">
-                                        <!-- add engineer -->
-                                        <create_cue_actor name="$engineer" cue="this">
-                                          <select race="[race.argon, race.split, race.terran, race.teladi].random" tags="tag.engineer"/>
-                                          <owner exact="$faction"/>
-                                        </create_cue_actor>
-                                        <set_skill entity="$engineer" type="combat" exact="5"/>
-                                        <set_skill entity="$engineer" type="engineering" exact="5"/>
-                                        <set_skill entity="$engineer" type="leadership" exact="5"/>
-                                        <set_skill entity="$engineer" type="management" exact="5"/>
-                                        <set_skill entity="$engineer" type="morale" exact="5"/>
-                                        <set_skill entity="$engineer" type="navigation" exact="5"/>
-                                        <set_skill entity="$engineer" type="science" exact="5"/>
-                                        <set_entity_type entity="$engineer" type="entitytype.engineer"/>
-                                        <do_if value="$Stationdock">
-                                          <add_actor_to_platform actor="$engineer" dockingbay="$Stationdock.component"/>
-                                        </do_if>
-                                        <do_else>
-                                          <add_actor_to_room actor="$engineer" object="$target" />
-                                        </do_else>
-                                        <assign_engineer actor="$engineer" object="$target"/>
-                                        <start_script object="$engineer" name="if global.$nfconfig.$Check? then 'engineer.ai.plus2' else 'engineer.ai'"/>
-                                        <remove_cue_actor actor="$engineer" cue="this"/>
-                                      </do_if>
-                                      <!-- add manager -->    
-                                      <create_cue_actor name="$manager" cue="this">
-                                        <select race="[race.argon, race.split, race.terran, race.teladi].random" tags="tag.manager"/>
-                                        <owner exact="$faction"/>
-                                      </create_cue_actor>
-                                      <set_skill entity="$manager" type="combat" min="3" max="5"/>
-                                      <set_skill entity="$manager" type="engineering" min="3" max="5"/>
-                                      <set_skill entity="$manager" type="leadership" min="3" max="5"/>
-                                      <set_skill entity="$manager" type="management" min="3" max="5"/>
-                                      <set_skill entity="$manager" type="morale" min="3" max="5"/>
-                                      <set_skill entity="$manager" type="navigation" min="3" max="5"/>
-                                      <set_skill entity="$manager" type="science" min="3" max="5"/>
-                                      <set_entity_type entity="$manager" type="entitytype.manager"/>
-                                      <do_if value="$Stationdock">
-                                        <add_actor_to_platform actor="$manager" dockingbay="$Stationdock.component"/>
-                                      </do_if>
-                                      <do_else>
-                                        <add_actor_to_room actor="$manager" object="$target" />
-                                      </do_else>
-                                      <assign_trade_manager actor="$manager" object="$target"/>
-                                      <set_actor_account actor="$manager" />
-                                      <!-- AI -->
-                                      <do_if value="$target.canbuildships">
-                                        <start_script object="$manager" name="'trade.shipyard'"/>
-                                      </do_if>
-                                      <do_elseif value="$target.canproduceships">
-                                        <start_script object="$manager" name="'trade.shipyard.small'"/>
-                                      </do_elseif>
-                                      <do_elseif value="$target.isplayerowned">
-                                        <start_script object="$manager" name="'trade.station.player'"/>
-                                      </do_elseif>
-                                      <do_else>
-                                        <start_script object="$manager" name="'trade.station'"/>
-                                      </do_else>
-                                      <!-- add Shiptrader -->
-                                      <do_if value="$ShiptraderDocks.count">
-                                        <do_all exact="$ShiptraderDocks.count" counter="$j" >
-                                          <set_value name="$DockHasShipTrader" exact="false" />
-                                          <do_all exact="$ShiptraderDocks.{$j}.actors.count" counter="$k" >
-                                            <do_if value="$ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.shiptrader or $ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.smallshiptrader">
-                                              <set_remote_commable actor="$ShiptraderDocks.{$j}.actors.{$k}" remote="true" />
-                                              <set_value name="$DockHasShipTrader" exact="true" />
-                                            </do_if>
-                                          </do_all>
-                                          <do_if value="$DockHasShipTrader" negate="true">
-                                            <!-- shiptrader / smallshiptrader -->
-                                            <find_object_component name="$buildmodule" object="$target" class="class.buildmodule" checkoperational="false">
-                                              <match_buildsource sequence="$ShiptraderDocks.{$j}.component.sequence" stage="$ShiptraderDocks.{$j}.component.stage" />
-                                            </find_object_component>
-                                            <do_if value="$buildmodule">
-                                              <create_platform_actor name="$Shiptrader" dockingbay="$ShiptraderDocks.{$j}.component" type="entitytype.shiptrader">
-                                                <select race="race.argon" tags="tag.shiptrader"/>
-                                                <owner exact="$faction"/>
-                                              </create_platform_actor>
-                                            </do_if>
-                                            <do_else>
-                                              <create_platform_actor name="$Shiptrader" dockingbay="$ShiptraderDocks.{$j}.component" type="entitytype.smallshiptrader">
-                                                <select race="race.argon" tags="tag.smallshiptrader"/>
-                                                <owner exact="$faction"/>
-                                              </create_platform_actor>
-                                            </do_else>
-                                            <set_remote_commable actor="$Shiptrader" remote="true" />
-                                            <share_actor_account actor="$Shiptrader" otherobject="$manager" /> <!-- Share account of Manager -->
-                                            <set_comm_handler actor="$Shiptrader" customhandler="true" />
-                                            <remove_value name="$Shiptrader"/>
-                                          </do_if>
-                                          <remove_value name="$buildmodule"/>
-                                          <remove_value name="$DockHasShipTrader"/>
-                                        </do_all>
-                                      </do_if>
-                                      <remove_cue_actor actor="$manager" cue="this"/>
-                                      <remove_value name="$Stationdock"/>
-                                      <remove_value name="$manager"/>
-                                      <remove_value name="$engineer"/>
-                                      <remove_value name="$ShiptraderDocks"/>
-                                    </do_if> 
+                                    <!-- Shiptraders not required at NF -->
                                     <do_if value="$commander.container == $boardership and $commander.container.boardingnpc == null">
                                       <assign_boarding_commander object="$boardership" actor="$commander"/>
                                     </do_if> 

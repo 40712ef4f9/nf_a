@@ -23,10 +23,11 @@ In case you have performance issues at new-game-start by reason of your CPU, try
 
 Will NOT WORK together with CWIR-mod or an CWIR-based-Savegame!!
 
-For some Mods are compatibility patch-mods includet
-- LostSectors [1.26]
-- Herschels Gift
-- Prosper Devries
+For some Mods are compatibility patch-mods includet (but that Mods not directly required, also official DLC are optional too)
+- LostSectors [1.30] :: https://forum.egosoft.com/viewtopic.php?t=392085
+- Herschels Gift [1.02] :: https://forum.egosoft.com/viewtopic.php?t=395381
+- Extinguished Hope [1.01] :: https://forum.egosoft.com/viewtopic.php?t=398765
+- Prosper Devries [2.10] :: https://steamcommunity.com/sharedfiles/filedetails/?id=795568195
 
 Mods to change the combat AI can work, but can have unwanted side effects
 

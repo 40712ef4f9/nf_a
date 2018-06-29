@@ -2266,6 +2266,10 @@
 							<add_units object="$Object" macro="macro.units_size_xs_welder_drone_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7"/>
 							<add_units object="$Object" macro="macro.units_size_xs_transp_empty_macro" min="1" max="1"/>
 						</do_elseif>
+						<set_value name="$Unitcapacity" exact="$Object.units.maxcount - $Object.units.count" />
+						<do_if value="$Unitcapacity gt 10" chance="33">
+							<add_units object="$Object" category="unitcategory.marine" mk="[1,2].random" min="[$Unitcapacity/2, 10].min" max="[$Unitcapacity, 30].min"/>
+						</do_if>
 						<remove_value name="$Unitcapacity" />
 					</do_if>
 
@@ -6630,6 +6634,10 @@
 									<add_units object="$createdShip" macro="macro.units_size_xs_welder_drone_macro" min="$Unitcapacity/7/2" max="$Unitcapacity/7"/>
 									<add_units object="$createdShip" macro="macro.units_size_xs_transp_empty_macro" exact="[5 ,[$createdShip.units.maxcount, 1000].min -$createdShip.units.count].min"/>
 								</do_elseif>
+							</do_if>
+							<set_value name="$Unitcapacity" exact="$Object.units.maxcount - $Object.units.count" />
+							<do_if value="$Unitcapacity gt 10" chance="33">
+								<add_units object="$Object" category="unitcategory.marine" mk="[1,2].random" min="[$Unitcapacity/2, 10].min" max="[$Unitcapacity, 50].min"/>
 							</do_if>
 							<remove_value name="$Unitcapacity" />
 						</do_else>
