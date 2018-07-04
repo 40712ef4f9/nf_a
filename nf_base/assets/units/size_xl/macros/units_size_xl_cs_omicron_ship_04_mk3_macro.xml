@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Exported by: Lino (192.168.3.137) at 07.08.2014_16-54-45-->
 <macros>
-  <macro name="units_size_xl_cs_omicron_ship_04_mk2_macro" class="ship_xl">
+  <macro name="units_size_xl_cs_omicron_ship_04_mk3_macro" class="ship_xl">
     <component ref="units_size_xl_cs_omicron_ship_04" />
     <properties>
-      <identification name="{20101,13711}" description="{20101,13702}" unique="0" mapicon="shipicon_miner_ore_xl" />
+      <identification name="{20101,13713}" description="{20101,13702}" unique="0" mapicon="shipicon_freighter_xl" />
       <explosiondamage value="200000" />
-      <hull max="6900000" />
+      <hull max="7200000" />
       <effects>
         <explosion ref="capital_explosion" />
         <jumpin ref="jump_jumpin_xl" />
         <jumpout ref="jump_jumpout_xl" />
       </effects>
-      <purpose primary="mine" />
+      <purpose primary="fight" />
     </properties>
     <connections>
       <connection ref="ConnectionFor_units_size_xl_cs_omicron_antenna_a">
@@ -527,12 +527,6 @@
             <connection ref="connection_turret_small_mg04">
               <macro ref="turret_small_mg_macro" connection="connection_component01" />
             </connection>
-            <connection ref="connection_turret_mining01">
-              <macro ref="turret_medium_ml_macro" connection="turret_connection" />
-            </connection>
-            <connection ref="connection_turret_mining02">
-              <macro ref="turret_medium_ml_macro" connection="turret_connection" />
-            </connection>
           </connections>
         </macro>
       </connection>
@@ -564,12 +558,6 @@
             <connection ref="connection_turret_small_mg04">
               <macro ref="turret_small_mg_macro" connection="connection_component01" />
             </connection>
-            <connection ref="connection_turret_mining01">
-              <macro ref="turret_medium_ml_macro" connection="turret_connection" />
-            </connection>
-            <connection ref="connection_turret_mining02">
-              <macro ref="turret_medium_ml_macro" connection="turret_connection" />
-            </connection>
           </connections>
         </macro>
       </connection>
@@ -595,43 +583,36 @@
             <connection ref="connection_shieldgen06">
               <macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component" />
             </connection>
-            <!-- pe
             <connection ref="connection_shieldgen07">
               <macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component" />
             </connection>
--->
             <connection ref="connection_shieldgen08">
               <macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component" />
             </connection>
-            <!--
             <connection ref="connection_turret_medium_lb02">
               <macro ref="turret_medium_lb_macro" connection="connection_component01" />
             </connection>
             <connection ref="connection_turret_medium_lb03">
               <macro ref="turret_medium_lb_macro" connection="connection_component01" />
             </connection>
--->
             <connection ref="connection_turret_medium_lb04">
               <macro ref="turret_medium_lb_macro" connection="connection_component01" />
             </connection>
             <connection ref="connection_turret_medium_lb05">
               <macro ref="turret_medium_lb_macro" connection="connection_component01" />
             </connection>
-            <!--
             <connection ref="connection_turret_medium_pe01">
               <macro ref="turret_medium_pe_macro" connection="connection_component01" />
             </connection>
             <connection ref="connection_turret_medium_pe02">
               <macro ref="turret_medium_pe_macro" connection="connection_component01" />
             </connection>
--->
             <connection ref="connection_turret_medium_pe03">
               <macro ref="turret_medium_pe_macro" connection="connection_component01" />
             </connection>
             <connection ref="connection_turret_medium_pe04">
               <macro ref="turret_medium_pe_macro" connection="connection_component01" />
             </connection>
-            <!--
             <connection ref="connection_turret_medium_pe05">
               <macro ref="turret_medium_pe_macro" connection="connection_component01" />
             </connection>
@@ -644,7 +625,6 @@
             <connection ref="connection_turret_medium_pe08">
               <macro ref="turret_medium_pe_macro" connection="connection_component01" />
             </connection>
--->
             <connection ref="connection_turret_medium_pe09">
               <macro ref="turret_medium_pe_macro" connection="connection_component01" />
             </connection>
@@ -728,12 +708,6 @@
             </connection>
             <connection ref="connection_turret_small_sg05">
               <macro ref="turret_small_sg_macro" connection="connection_component01" />
-            </connection>
-            <connection ref="connection_turret_mining02">
-              <macro ref="turret_medium_ml_macro" connection="turret_connection" />
-            </connection>
-            <connection ref="connection_dock_m01">
-              <macro ref="props_surf_ar_docks_size_m_lr_macro" connection="Connection01" />
             </connection>
           </connections>
         </macro>
@@ -763,39 +737,33 @@
             <connection ref="connection_shieldgen07">
               <macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component" />
             </connection>
-            <!-- pe
             <connection ref="connection_shieldgen08">
               <macro ref="shieldgenerator_size_m_mk2_macro" connection="connection_component" />
             </connection>
--->
             <connection ref="connection_turret_medium_lb02">
               <macro ref="turret_medium_lb_macro" connection="connection_component01" />
             </connection>
             <connection ref="connection_turret_medium_lb03">
               <macro ref="turret_medium_lb_macro" connection="connection_component01" />
             </connection>
-            <!--
             <connection ref="connection_turret_medium_lb04">
               <macro ref="turret_medium_lb_macro" connection="connection_component01" />
             </connection>
             <connection ref="connection_turret_medium_lb05">
               <macro ref="turret_medium_lb_macro" connection="connection_component01" />
             </connection>
--->
             <connection ref="connection_turret_medium_pe01">
               <macro ref="turret_medium_pe_macro" connection="connection_component01" />
             </connection>
             <connection ref="connection_turret_medium_pe02">
               <macro ref="turret_medium_pe_macro" connection="connection_component01" />
             </connection>
-            <!--
             <connection ref="connection_turret_medium_pe03">
               <macro ref="turret_medium_pe_macro" connection="connection_component01" />
             </connection>
             <connection ref="connection_turret_medium_pe04">
               <macro ref="turret_medium_pe_macro" connection="connection_component01" />
             </connection>
--->
             <connection ref="connection_turret_medium_pe05">
               <macro ref="turret_medium_pe_macro" connection="connection_component01" />
             </connection>
@@ -808,7 +776,6 @@
             <connection ref="connection_turret_medium_pe08">
               <macro ref="turret_medium_pe_macro" connection="connection_component01" />
             </connection>
-            <!--
             <connection ref="connection_turret_medium_pe09">
               <macro ref="turret_medium_pe_macro" connection="connection_component01" />
             </connection>
@@ -821,7 +788,6 @@
             <connection ref="connection_turret_medium_pe12">
               <macro ref="turret_medium_pe_macro" connection="connection_component01" />
             </connection>
--->
             <connection ref="connection_turret_small_mg002">
               <macro ref="turret_small_mg_macro" connection="connection_component01" />
             </connection>
@@ -894,12 +860,6 @@
             <connection ref="connection_turret_small_sg05">
               <macro ref="turret_small_sg_macro" connection="connection_component01" />
             </connection>
-            <connection ref="connection_turret_mining01">
-              <macro ref="turret_medium_ml_macro" connection="turret_connection" />
-            </connection>
-            <connection ref="connection_dock_m01">
-              <macro ref="props_surf_ar_docks_size_m_lr_macro" connection="Connection01" />
-            </connection>
           </connections>
         </macro>
       </connection>
@@ -924,9 +884,6 @@
       <connection ref="connection_radar_fallback01">
         <macro ref="radar_ship_xl_fallback_01_macro" connection="ship" />
       </connection>
-      <connection ref="connection_turret_medium_ml_macro01">
-        <macro ref="turret_medium_ml_macro" connection="turret_connection" />
-      </connection>
       <connection ref="connection_shieldgen002">
         <macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
       </connection>
@@ -947,6 +904,12 @@
       </connection>
       <connection ref="connection_storage03">
         <macro ref="storage_ship_xl_universal_04_macro" connection="ShipConnection" />
+      </connection>
+      <connection ref="connection_storage04">
+        <macro ref="storage_ship_xl_universal_04_macro" connection="ShipConnection" />
+      </connection>
+      <connection ref="connection_storage05">
+        <macro ref="storage_ship_xl_fuel_01_macro" connection="ShipConnection" />
       </connection>
     </connections>
   </macro>

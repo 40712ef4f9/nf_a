@@ -16,7 +16,7 @@
 	</add>
 
 	<replace sel="//do_if[@value='not $checkrelation and @$target.isplayerowned and not @this.mayattack.{$target}']" >
-		<do_if value="not $checkrelation and @$target.isoperational and not @this.mayattack.{$target}" comment="target can be null">
+		<do_if value="not $checkrelation and not @this.mayattack.{$target}" comment="target can be null">
 			<do_if value="$target.owner" exact="this.ship.owner"> 
 				<do_if value="$target.owner != $target.trueowner"> 
 					<get_control_entities groupname="$Entities" object="$target"/>

@@ -190,6 +190,18 @@
         </do_else>
       </do_if>
     </do_if>
+    <do_elseif value="['trade.findsimpletraderun.nf', 'trade.findfreetraderun.nf', 'trade.findfreetraderun', 'trade.findsimpletraderun'].indexof.{$traderunscript}" chance="if not $nextTWLcheck? or $nextTWLcheck lt player.age then 100 else 0">
+      <do_if value="global.$factionCEOs.{'$' + this.ship.trueowner.id}? and global.$factionCEOs.{'$' + this.ship.trueowner.id}.$overallwarelist? and global.$factionCEOs.{'$' + this.ship.trueowner.id}.$overallwarelist.count">
+        <set_value name="$tmp" exact="global.$factionCEOs.{'$' + this.ship.trueowner.id}.$overallwarelist" />
+        <do_all exact="$tmp.count" counter="$zj">
+          <do_if value="$warelist.indexof.{$tmp.{$zj}} == 0 and this.ship.cargo.{$tmp.{$zj}}.max">
+            <append_to_list name="$warelist" exact="$tmp.{$zj}" />
+          </do_if>
+        </do_all>
+        <set_value name="$nextTWLcheck" exact="player.age + 1h" />
+        <remove_value name="$tmp" />
+      </do_if>
+    </do_elseif>
   </add>
   <add sel="//aiscript" >
     <on_abort>

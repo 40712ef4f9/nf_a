@@ -59,7 +59,7 @@
 
 						<set_value name="$_CEO" exact="global.$ATLAS_CEO" />
 						<!-- load config -->
-						<set_value name="$build" exact="['al','massenergy','energy','food','drug','tech','ship']" comment="['massenergy','energy','food','drug','tech','ship','al','ol','warehouse']"/>
+						<set_value name="$build" exact="['al','massenergy','energy','food','drug','tech','ship','shippart']" comment="['massenergy','energy','food','drug','tech','ship','al','ol','warehouse']"/>
 						<set_value name="$style" exact="['pirate', 'domination', 'cooperative']" comment="min 3 entries required"/>
 						<set_value name="$next_Check"	exact="[	180min,	45min,		1h,		4h,			12h			]" 
 														comment="[	Build,	Shopping,	Job,	Invasion,	Donation	]"/>

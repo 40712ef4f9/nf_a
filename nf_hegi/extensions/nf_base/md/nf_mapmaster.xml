@@ -51,7 +51,6 @@
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone05_macro, macro.struct_bt_alb_medical_supplies_macro, faction.vacanaltd]"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone05_macro, macro.struct_bt_alb_tech_complex_macro, faction.vacanaltd]"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone06_macro, macro.struct_bt_alb_fuelstation_macro, faction.vacanaltd]"/>
-					<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone06_macro, macro.struct_bt_alb_big_ships_yard_macro, faction.vacanaltd]"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone08_macro, macro.struct_bt_alb_small_ships_complex_macro, faction.vacanaltd]"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone08_macro, macro.struct_bt_alb_weaponry_production_macro, faction.vacanaltd]"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone09_macro, macro.struct_bt_alb_small_ships_yard_macro, faction.vacanaltd]"/>
@@ -59,8 +58,16 @@
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector04_Zone01_macro, macro.struct_bt_alb_fuelstation_macro, faction.vacanaltd]"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector04_Zone02_macro, macro.struct_bt_alb_solar_power_plant_macro, faction.vacanaltd]"/>
 					<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector04_Zone07_macro, macro.struct_bt_alb_cell_refinery_macro, faction.vacanaltd]"/>
-					<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone04_macro, macro.struct_bt_alb_shippart_production_macro, faction.vacanaltd]" comment="replace stuff"/>
-					<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone06_macro, macro.struct_bt_alb_shippart_production_macro, faction.vacanaltd]" comment="replace stuff"/>
+					<do_if value="@macro.{['struct_bt_alb_shippart_production_macro'].random}">
+						<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone04_macro, macro.{['struct_bt_alb_shippart_production_macro'].random}, faction.vacanaltd]"/>
+						<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone06_macro, macro.{['struct_bt_alb_shippart_production_macro'].random}, faction.vacanaltd]"/>
+					</do_if>
+					<do_if value="@macro.{['struct_bt_alb_big_ships_yard_hegi_macro'].random}">
+						<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone06_macro, macro.{['struct_bt_alb_big_ships_yard_hegi_macro'].random}, faction.vacanaltd]"/>
+					</do_if>
+					<do_else comment="'fallback'">
+						<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone06_macro, macro.struct_bt_alb_big_ships_yard_macro, faction.vacanaltd]"/>
+					</do_else>
 					<!--
 					faction.homeland
 					-->
@@ -136,7 +143,6 @@
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone05_macro, macro.struct_bt_alb_medical_supplies_macro, faction.vacanaltd]"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone05_macro, macro.struct_bt_alb_tech_complex_macro, faction.vacanaltd]"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone06_macro, macro.struct_bt_alb_fuelstation_macro, faction.vacanaltd]"/>
-			<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone06_macro, macro.struct_bt_alb_big_ships_yard_macro, faction.vacanaltd]"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone08_macro, macro.struct_bt_alb_small_ships_complex_macro, faction.vacanaltd]"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone08_macro, macro.struct_bt_alb_weaponry_production_macro, faction.vacanaltd]"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone09_macro, macro.struct_bt_alb_small_ships_yard_macro, faction.vacanaltd]"/>
@@ -144,8 +150,16 @@
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector04_Zone01_macro, macro.struct_bt_alb_fuelstation_macro, faction.vacanaltd]"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector04_Zone02_macro, macro.struct_bt_alb_solar_power_plant_macro, faction.vacanaltd]"/>
 			<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector04_Zone07_macro, macro.struct_bt_alb_cell_refinery_macro, faction.vacanaltd]"/>
-			<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone04_macro, macro.struct_bt_alb_shippart_production_macro, faction.vacanaltd]" comment="replace stuff"/>
-			<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone06_macro, macro.struct_bt_alb_shippart_production_macro, faction.vacanaltd]" comment="replace stuff"/>
+			<do_if value="@macro.{['struct_bt_alb_shippart_production_macro'].random}">
+				<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone04_macro, macro.{['struct_bt_alb_shippart_production_macro'].random}, faction.vacanaltd]"/>
+				<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone06_macro, macro.{['struct_bt_alb_shippart_production_macro'].random}, faction.vacanaltd]"/>
+			</do_if>
+			<do_if value="@macro.{['struct_bt_alb_big_ships_yard_hegi_macro'].random}">
+				<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone06_macro, macro.{['struct_bt_alb_big_ships_yard_hegi_macro'].random}, faction.vacanaltd]"/>
+			</do_if>
+			<do_else comment="'fallback'">
+				<append_to_list name="$foobar" exact="[macro.tzoneCluster_hegi_Sector03_Zone06_macro, macro.struct_bt_alb_big_ships_yard_macro, faction.vacanaltd]"/>
+			</do_else>
 			<!--
 			faction.homeland
 			-->

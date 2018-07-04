@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <diff>
+  <add sel="/aiscript[@name='trade.shipyard']/attention/actions/do_all[@exact='$tradewares.count']" pos="prepend">
+    <do_if value="$tradewares.{$i}" exact="ware.drp_assault">
+      <continue />
+    </do_if>
+  </add>
   <add sel="//upgradeplan">
     <upgradeentry upgrade="'turret_medium_sp'" level="1"/>
   </add>

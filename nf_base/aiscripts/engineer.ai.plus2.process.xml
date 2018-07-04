@@ -2,6 +2,8 @@
 <aiscript name="engineer.ai.plus2.process" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" >
   <params>
     <param name="Defensible" default="this.defensible"/>
+    <param name="part" default="null" comment="compatibility"/>
+    <param name="stage" default="null" comment="compatibility"/>
     <param name="debugoutputchance" default="0"/>
     <param name="debugoutputchance2" default="0"/>
   </params>

@@ -431,17 +431,25 @@
 							<append_to_list name="$temp_ships.$mine_sm" exact="macro.units_size_m_hydrogen_collector_macro"/>
 						</do_if>
 						<do_else>
-							<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_ship_02_macro"/>
-							<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_ship_03_macro"/>
-
-							<append_to_list name="$temp_ships.$fight" exact="macro.units_size_l_cs_omicron_ship_03_sa_macro"/>
-							<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_ship_02_5_macro"/>
-							<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_ship_02_yz_macro"/>
-							<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_ship_02_mk2_macro"/>
+							<do_if value="$_faction.id" list="['argongovernment','jonferson']">
+								<do_any>
+									<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_ship_02_macro" weight="25"/>
+									<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_ship_02_mk2_macro" weight="10"/>
+									<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_ship_03_macro" weight="40"/>
+									<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_ship_03_mk2_macro" weight="25"/>
+								</do_any>
+								<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_ship_02_5_macro"/>
+								<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_ship_02_yz_macro"/>
+							</do_if>
 							<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_ship_02_dc_macro"/>
+							<append_to_list name="$temp_ships.$fight" exact="macro.units_size_l_cs_omicron_ship_02_mk6_macro"/>
+							<append_to_list name="$temp_ships.$fight" exact="macro.units_size_l_cs_omicron_ship_03_sa_macro"/>
 
 							<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_cs_omicron_ship_01_macro"/>
-							<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_cs_omicron_ship_04_macro"/>
+							<do_any>
+								<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_ship_04_macro" weight="70"/>
+								<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_ship_04_mk3_macro" weight="30"/>
+							</do_any>
 
 							<append_to_list name="$temp_ships.$build" exact="macro.units_size_xl_builder_ship_ol_macro"/>
 
@@ -2061,7 +2069,10 @@
 					<debug_text text="'ERROR MMCData_create_station: f:%1  Z:%2  M:%3'.[@$faction.id, @$BuildZone.macro.id, @$Macro.id]" filter="error" chance="100" />
 				</do_else>
 
-				<remove_value name="$Object"/>
+				<do_if value="$getObject?" negate="true">
+					<remove_value name="$Object"/>
+				</do_if>
+				<remove_value name="$getObject"/>
 				<remove_value name="$CEO"/>
 				<remove_value name="$position"/>
 				<remove_value name="$faction"/>
@@ -3166,6 +3177,10 @@
 						</do_all>
 					</do_elseif>
 					<remove_value name="$temp_stations"/>
+					<!-- cache for updates -->
+					<do_if value="$temp_warelist.count == 0 and global.$factionCEOs.{'$' + $faction.id}?">
+						<set_value name="global.$factionCEOs.{'$' + $faction.id}.$overallwarelist" exact="$temp_warelist.clone" />
+					</do_if>
 					<!-- fallback -->
 					<do_if value="$temp_warelist.count == 0 or ($temp_warelist.count == 1 and $temp_warelist.indexof.{ware.fuelcells})">
 						<set_value name="$temp_warelist" exact="warebasket.all.list" />
@@ -6635,9 +6650,9 @@
 									<add_units object="$createdShip" macro="macro.units_size_xs_transp_empty_macro" exact="[5 ,[$createdShip.units.maxcount, 1000].min -$createdShip.units.count].min"/>
 								</do_elseif>
 							</do_if>
-							<set_value name="$Unitcapacity" exact="$Object.units.maxcount - $Object.units.count" />
+							<set_value name="$Unitcapacity" exact="$createdShip.units.maxcount - $createdShip.units.count" />
 							<do_if value="$Unitcapacity gt 10" chance="33">
-								<add_units object="$Object" category="unitcategory.marine" mk="[1,2].random" min="[$Unitcapacity/2, 10].min" max="[$Unitcapacity, 50].min"/>
+								<add_units object="$createdShip" category="unitcategory.marine" mk="[1,2].random" min="[$Unitcapacity/2, 10].min" max="[$Unitcapacity, 50].min"/>
 							</do_if>
 							<remove_value name="$Unitcapacity" />
 						</do_else>
@@ -7527,7 +7542,7 @@
 								<remove_value name="$_CEO.$freeShips.{$_CEO.$freeShips.indexof.{$temp_base}}"/>
 		
 								<find_station name="$ShipYards" space="player.galaxy" functional="true" multiple="true" productsize="ship">
-									<match_relation faction="$_CEO.owner" comparison="not" relation="enemy" />
+									<match_relation faction="$_CEO.owner" comparison="gt" relation="enemy" />
 								</find_station>
 								<do_all exact="$ShipYards.count" counter="$x" reverse="true">
 									<do_if value="$ShipYards.{$x}.exists and $ShipYards.{$x}.isoperational and $ShipYards.{$x}.canproduceships" negate="true">
@@ -7546,6 +7561,7 @@
 									<set_value name="$ref" exact="[macro.units_size_s_torpedo_bomber_macro, macro.units_size_s_ship_pirate_03_macro, macro.units_size_s_ship_pirate_02_macro].random"/>
 									<include_actions ref="md.MM_Corps__Data.MMCData_dohandler_include_rentaship_buy_squads" />
 									<set_value name="$spawnZone" exact="$targetZone" />
+									<set_value name="$dockObject" exact="$temp_base" />
 									<set_value name="$clearAll" />
 									<include_actions ref="md.MM_Corps__Data.MMCData_ship_spawner" />
 			
@@ -7569,6 +7585,7 @@
 										<set_value name="$ref" exact="[macro.units_size_s_ship_pirate_01_macro, macro.units_size_s_ship_pirate_03_macro, macro.units_size_s_ship_pirate_02_macro].random"/>
 										<include_actions ref="md.MM_Corps__Data.MMCData_dohandler_include_rentaship_buy_squads" />
 										<set_value name="$spawnZone" exact="$targetZone" />
+										<set_value name="$dockObject" exact="$temp_base" />
 										<set_value name="$clearAll" />
 										<include_actions ref="md.MM_Corps__Data.MMCData_ship_spawner" />
 				

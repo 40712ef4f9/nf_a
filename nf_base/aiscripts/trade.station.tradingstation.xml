@@ -20,6 +20,45 @@
       <add_default_production_wares object="this.station" lowerlimit="40" upperlimit="60"/>
     </do_elseif>
   </add>
+  <replace sel="/aiscript/attention[@min='unknown']/actions/do_elseif[@value='this.station.macro.ismacro.struct_bt_alb_warehouse_macro']" >
+      <do_elseif value="this.station.macro.ismacro.struct_bt_alb_warehouse_macro">
+        <do_if value="this.station.cluster.macro.id" list="['cluster_b_macro','cluster_a_macro']">
+          <add_tradeware ware="ware.bioelectricneurongel" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+          <add_tradeware ware="ware.bofu" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+          <add_tradeware ware="ware.plankton" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+          <add_tradeware ware="ware.spices" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+          <add_tradeware ware="ware.reinforcedmetalplating" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        </do_if>
+        <do_elseif value="this.station.cluster.macro.id" list="['cluster_t_macro']">
+          <add_tradeware ware="ware.bioopticwiring" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+          <add_tradeware ware="ware.foodrations" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+          <add_tradeware ware="ware.teladianium" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        </do_elseif>
+        <do_else>
+          <add_tradeware ware="ware.bioopticwiring" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+          <add_tradeware ware="ware.foodrations" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+          <add_tradeware ware="ware.meat" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+          <add_tradeware ware="ware.reinforcedmetalplating" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+          <add_tradeware ware="ware.spices" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+          <add_tradeware ware="ware.wheat" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        </do_else>
+        <add_tradeware ware="ware.crystals" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        <add_tradeware ware="ware.cutcrystals" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        <add_tradeware ware="ware.energycells" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        <add_tradeware ware="ware.ice" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        <add_tradeware ware="ware.medicalsupplies" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        <add_tradeware ware="ware.narcotics" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        <add_tradeware ware="ware.nividium" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        <add_tradeware ware="ware.nividiumgems" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        <add_tradeware ware="ware.ore" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        <add_tradeware ware="ware.refinedmetals" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        <add_tradeware ware="ware.silicon" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        <add_tradeware ware="ware.siliconwafers" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        <add_tradeware ware="ware.spacefuel" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        <add_tradeware ware="ware.water" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
+        <add_default_production_wares object="this.station" lowerlimit="40" upperlimit="60"/>
+      </do_elseif>
+  </replace>
 
   <!--add sel="//do_while" >
       <set_value name="$text" exact="this.station + ' ' + this.station.name + ' ' + this.station.zone.name" />

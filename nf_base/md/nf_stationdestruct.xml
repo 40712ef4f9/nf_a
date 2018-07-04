@@ -237,6 +237,9 @@
 										</do_if>
 										<remove_value name="$watchedObjects.{$i}" />
 									</do_if>
+									<do_elseif value="$watchedObjects.{$i}.{1}.isclass.station and $watchedObjects.{$i}.{1}.boarder">
+										<continue />
+									</do_elseif>
 									<do_elseif value="$watchedObjects.{$i}.{1}.isclass.station and $watchedObjects.{$i}.{1}.owner != faction.ownerless">
 										<do_if value="$watchedObjects_helper.indexof.{$watchedObjects.{$i}.{1}}">
 											<remove_value name="$watchedObjects_helper.{$watchedObjects_helper.indexof.{$watchedObjects.{$i}.{1}}}" />
@@ -902,6 +905,9 @@
 
 						<add_default_production_wares object="$target" lowerlimit="50" upperlimit="75" chance="if [level.veryeasy, level.easy, level.medium].indexof.{player.difficulty} then $defaultproducts else 0"/>
 						<add_default_production_wares object="$target" lowerlimit="20" upperlimit="25" chance="if [level.hard].indexof.{player.difficulty} then $defaultproducts else 0"/>
+						<do_if value="$target.cargo.{ware.unknown}.count gt 0">
+							<remove_cargo object="$target" ware="ware.unknown" exact="$target.cargo.{ware.unknown}.count" />
+						</do_if>
 						<remove_value name="$defaultproducts"/>
 						<remove_value name="$target"/>
 						<remove_value name="$faction"/>

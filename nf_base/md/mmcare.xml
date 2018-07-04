@@ -293,21 +293,239 @@
 				<check_value value="event.object.trueowner" exact="faction.player" />
 			</conditions>
 			<actions>
-				<set_value name="$theShip" exact="event.object.container"/>
+				<set_value name="$theObject" exact="event.object.container"/>
 				<set_value name="$menue"/>
 				<do_if value="event.param" exact="'mmcareEC_do_work'">
 					<set_value name="$listComp" exact="event.param2"/>
 					<do_if value="event.object.$work? and event.object.$work.$object == $listComp" negate="true">
-						<signal_objects object="$theShip" param="'engineer.support.this'" param2="$listComp" />
+						<signal_objects object="$theObject" param="'engineer.support.this'" param2="$listComp" />
 					</do_if>
 					<remove_value name="$menue" />
 				</do_if>
 				<do_elseif value="event.param" exact="'mmcareEC_do_element'">
-					<signal_objects object="$theShip" param="'engineer.repair.this'" param2="event.param2" delay="2s"/>
+					<signal_objects object="$theObject" param="'engineer.repair.this'" param2="event.param2" delay="2s"/>
+					<remove_value name="$menue" />
+				</do_elseif>
+				<do_elseif value="event.param" exact="'mmcareEC_do_element_remove'">
+					<signal_objects object="$theObject" param="'engineer.destruct.this'" param2="event.param2" delay="2s"/>
 					<remove_value name="$menue" />
 				</do_elseif>
 
-				<do_if value="$listComp?">
+				<do_if value="event.param" exact="'mmcareEC_do_remove'">
+					<remove_value name="$menue" />
+					<set_value name="$ABC" exact="['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']"/>
+					<set_value name="$RemoveTargets" exact="if typeof event.param2 == datatype.list and event.param2.{2}? and typeof event.param2.{2} == datatype.list then event.param2.{2} else []"/>
+					<set_value name="$RemoveStages" exact="if typeof event.param2 == datatype.list and event.param2.{3}? and typeof event.param2.{3} == datatype.table then event.param2.{3} else []"/>
+
+					<do_if value="$RemoveTargets.count == 0 and typeof $RemoveStages == datatype.list">
+						<do_if value="true" comment="Architect (re)build parts twice?">
+							<set_value name="$classes" exact="[class.production, class.storage, class.buildmodule]"/>
+							<do_all exact="$classes.count" counter="$y">
+								<find_object_component name="$PossibleElements" object="$theObject" class="$classes.{$y}" checkoperational="false" multiple="true" />
+								
+								<add_player_choice	text="'Do %1 [%2]'.[$classes.{$y}, $PossibleElements.count]" position="$y" section="mmcareEC_do_remove" choiceparam="[1, $PossibleElements]" chance="if $PossibleElements.count then 100 else 0"/>
+	
+								<remove_value name="$PossibleElements" />
+							</do_all>
+							<remove_value name="$classes" />
+						</do_if>
+
+						<find_object_component name="$PossibleElements" object="$theObject" checkoperational="false" multiple="true">
+							<match_buildsource sequence="''" stage="0" negate="true" />
+						</find_object_component>
+						<set_value name="$todo_BP" exact="table[]" />
+						<do_all exact="$ABC.count" counter="$Counter">
+							<do_if value="$todo_BP.{'$%1'.[$ABC.{$Counter}]}?" negate="true">
+								<set_value name="$todo_BP.{'$%1'.[$ABC.{$Counter}]}" exact="[]" />
+							</do_if>
+						</do_all>
+						<do_all exact="$PossibleElements.count" counter="$y">
+							<set_value name="$tmpSequence" exact="if typeof $PossibleElements.{$y} == datatype.component then $PossibleElements.{$y}.sequence else $PossibleElements.{$y}.component.sequence" />
+							<set_value name="$tmpStage" exact="if typeof $PossibleElements.{$y} == datatype.component then $PossibleElements.{$y}.stage else $PossibleElements.{$y}.component.stage" />
+							<do_if value="$todo_BP.{'$%1'.[$tmpSequence]}? and $todo_BP.{'$%1'.[$tmpSequence]}.{$tmpStage}?">
+								<do_if value="$todo_BP.{'$%1'.[$tmpSequence]}.{$tmpStage}" negate="true">
+									<set_value name="$todo_BP.{'$%1'.[$tmpSequence]}.{$tmpStage}" exact="$tmpStage" />
+								</do_if>
+								<continue />
+							</do_if>
+							<do_elseif value="not $todo_BP.{'$%1'.[$tmpSequence]}?">
+								<set_value name="$todo_BP.{'$%1'.[$tmpSequence]}" exact="[]" />
+								<do_all exact="$tmpStage" counter="$Counter">
+									<do_if value="$todo_BP.{'$%1'.[$tmpSequence]}.{$tmpStage}?" negate="true">
+										<append_to_list name="$todo_BP.{'$%1'.[$tmpSequence]}" exact="if $tmpStage == $Counter then $tmpStage else false"/>
+									</do_if>
+								</do_all>
+							</do_elseif>
+							<do_else>
+								<do_if value="$ABC.indexof.{$tmpSequence}">
+									<remove_value name="$ABC.{$ABC.indexof.{$tmpSequence}}" />
+								</do_if>
+								<do_all exact="$tmpStage" counter="$Counter">
+									<do_if value="$todo_BP.{'$%1'.[$tmpSequence]}.{$tmpStage}?" negate="true">
+										<append_to_list name="$todo_BP.{'$%1'.[$tmpSequence]}" exact="if $tmpStage == $Counter then $tmpStage else false"/>
+									</do_if>
+								</do_all>
+							</do_else>
+						</do_all>
+						<do_all exact="$ABC.count" counter="$Counter">
+							<do_if value="$todo_BP.{'$%1'.[$ABC.{$Counter}]}.count == 0">
+								<remove_value name="$todo_BP.{'$%1'.[$ABC.{$Counter}]}" />
+							</do_if>
+						</do_all>
+						<remove_value name="$tmpStage" />
+						<remove_value name="$tmpSequence" />
+						<remove_value name="$PossibleElements" />
+						<add_player_choice		text="'Buildstages'"  	position="4" 	 section="mmcareEC_do_remove" choiceparam="[1, null, $todo_BP]" selectable="$todo_BP.keys.list.count"/>
+						<add_player_choice		text="'Full Station'"  	position="5" 	 section="mmcareEC_do_element_remove" choiceparam="[null, null, null, 'remove']"/>
+						<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+						<remove_value name="$todo_BP" />
+					</do_if>
+					<do_elseif value="typeof $RemoveStages == datatype.table" >
+						<set_value name="$todo_options_start" exact="event.param2.{1}" />
+						<set_value name="$todo_options_key" exact="if event.param2.{4}? then event.param2.{4} else null" />
+						<set_value name="$todo_options_max" exact="$RemoveStages.keys.list.count" />
+
+						<do_if value="$todo_options_key">
+							<set_value name="$todo_options_max" exact="$RemoveStages.{$todo_options_key}.count" />
+							<do_all exact="6" counter="$i">
+								<do_if value="$i == 6 and ($todo_options_start + 1) le $todo_options_max">
+									<add_player_choice_sub 		text="{2802,1300}.[$todo_options_start, $todo_options_max]" position="bottom_right" section="mmcareEC_do_remove" choiceparam="[$todo_options_start, null, $RemoveStages, $todo_options_key]"/>
+								</do_if>
+								<do_elseif value="$todo_options_start le $todo_options_max">
+									<set_value name="$tmpKeyID" exact="$todo_options_key" />
+									<do_all exact="$ABC.count" counter="$Counter">
+										<do_if value="'$%1'.[$ABC.{$Counter}]" exact="$todo_options_key">
+											<set_value name="$tmpKeyID" exact="$ABC.{$Counter}" />
+											<break />
+										</do_if>
+									</do_all>
+									<find_object_component name="$PossibleElements" object="$theObject" class="[class.production, class.storage, class.buildmodule, class.radar]" checkoperational="false" multiple="true">
+										<match_buildsource sequence="$tmpKeyID" stage="$RemoveStages.{$todo_options_key}.{$todo_options_start}" />
+									</find_object_component>
+									<set_value name="$text" exact="''" />
+									<set_value name="$text2" exact="''" />
+									<set_value name="$text3" exact="''" />
+									<do_all exact="$PossibleElements.count" counter="$Counter">
+										<do_if value="$PossibleElements.{$Counter}.name and $PossibleElements.{$Counter}.isclass.storage">
+											<set_value name="$text2" exact="'%1%2'.[if $text2 != '' then '\n' else '', $PossibleElements.{$Counter}.name]" operation="add"/>
+										</do_if>
+										<do_elseif value="$PossibleElements.{$Counter}.name">
+											<set_value name="$text" exact="'%1%2'.[if $text != '' then '\n' else '', $PossibleElements.{$Counter}.name]" operation="add"/>
+										</do_elseif>
+										<do_else>
+											<set_value name="$text3" exact="'%1%2'.[if $text3 != '' then '\n' else '', $PossibleElements.{$Counter}.isclass]" operation="add"/>
+										</do_else>
+									</do_all>
+									<remove_value name="$PossibleElements" />
+	
+									<add_player_choice text="'Remove Seq:%1 Stage:%2'.[$tmpKeyID, $RemoveStages.{$todo_options_key}.{$todo_options_start}]" tooltip="if $text != '' and $text2 != '' then ($text +'\n'+$text2) else if $text != '' then $text else if $text2 != '' then $text2 else $text3" position="$i" section="mmcareEC_do_element_remove" choiceparam="[null, $tmpKeyID, $RemoveStages.{$todo_options_key}.{$todo_options_start}]"/>
+									<remove_value name="$text" />
+									<remove_value name="$text2" />
+									<remove_value name="$text3" />
+									<remove_value name="$tmpKeyID" />
+									<set_value name="$todo_options_start"  operation="add" exact="1" /> 
+								</do_elseif>
+								<do_elseif value="$i == 6">
+									<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+								</do_elseif>
+							</do_all>
+						</do_if>
+						<do_elseif value="$todo_options_key" negate="true">
+							<do_all exact="6" counter="$i">
+								<do_if value="$i == 6 and ($todo_options_start + 1) le $todo_options_max">
+									<add_player_choice_sub 		text="{2802,1300}.[$todo_options_start, $todo_options_max]" position="bottom_right" section="mmcareEC_do_remove" choiceparam="[$todo_options_start, null, $RemoveStages, $RemoveStages.keys.list.{$todo_options_start}]"/>
+								</do_if>
+								<do_elseif value="$todo_options_start le $todo_options_max">
+									<set_value name="$tmpKeyID" exact="$RemoveStages.keys.list.{$todo_options_start}" />
+									<do_all exact="$ABC.count" counter="$Counter">
+										<do_if value="'$%1'.[$ABC.{$Counter}]" exact="$RemoveStages.keys.list.{$todo_options_start}">
+											<set_value name="$tmpKeyID" exact="$ABC.{$Counter}" />
+											<break />
+										</do_if>
+									</do_all>
+	
+									<add_player_choice text="'Seq:%1 Stages:%2'.[$tmpKeyID, $RemoveStages.{$RemoveStages.keys.list.{$todo_options_start}}.max]" section="mmcareEC_do_remove" choiceparam="[1, null, $RemoveStages, $RemoveStages.keys.list.{$todo_options_start}]"/>
+									<remove_value name="$tmpKeyID" />
+									<set_value name="$todo_options_start"  operation="add" exact="1" /> 
+								</do_elseif>
+								<do_elseif value="$i == 6">
+									<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+								</do_elseif>
+							</do_all>
+						</do_elseif>
+						<do_else>
+							<do_all exact="6" counter="$i">
+								<do_if value="$i == 6 and ($todo_options_start + 1) le $todo_options_max">
+									<add_player_choice_sub 		text="{2802,1300}.[$todo_options_start, $todo_options_max]" position="bottom_right" section="mmcareEC_do_remove" choiceparam="[$todo_options_start, null, $RemoveStages]"/>
+								</do_if>
+								<do_elseif value="$todo_options_start le $todo_options_max">
+									<set_value name="$tmpKeyID" exact="$RemoveStages.keys.list.{$todo_options_start}" />
+									<do_all exact="$ABC.count" counter="$Counter">
+										<do_if value="'$%1'.[$ABC.{$Counter}]" exact="$RemoveStages.keys.list.{$todo_options_start}">
+											<set_value name="$tmpKeyID" exact="$ABC.{$Counter}" />
+											<break />
+										</do_if>
+									</do_all>
+									<find_object_component name="$PossibleElements" object="$theObject" class="[class.production, class.storage, class.buildmodule, class.radar]" checkoperational="false" multiple="true">
+										<match_buildsource sequence="$tmpKeyID" stage="$RemoveStages.{$RemoveStages.keys.list.{$todo_options_start}}.max" />
+									</find_object_component>
+									<set_value name="$text" exact="''" />
+									<set_value name="$text2" exact="''" />
+									<set_value name="$text3" exact="''" />
+									<do_all exact="$PossibleElements.count" counter="$Counter">
+										<do_if value="$PossibleElements.{$Counter}.name and $PossibleElements.{$Counter}.isclass.storage">
+											<set_value name="$text2" exact="'%1%2'.[if $text2 != '' then '\n' else '', $PossibleElements.{$Counter}.name]" operation="add"/>
+										</do_if>
+										<do_elseif value="$PossibleElements.{$Counter}.name">
+											<set_value name="$text" exact="'%1%2'.[if $text != '' then '\n' else '', $PossibleElements.{$Counter}.name]" operation="add"/>
+										</do_elseif>
+										<do_else>
+											<set_value name="$text3" exact="'%1%2'.[if $text3 != '' then '\n' else '', $PossibleElements.{$Counter}.isclass]" operation="add"/>
+										</do_else>
+									</do_all>
+									<remove_value name="$PossibleElements" />
+	
+									<add_player_choice text="'Do Seq:%1 Stage:%2'.[$tmpKeyID, $RemoveStages.{$RemoveStages.keys.list.{$todo_options_start}}.max]" tooltip="if $text != '' and $text2 != '' then ($text +'\n'+$text2) else if $text != '' then $text else if $text2 != '' then $text2 else $text3" position="$i" section="mmcareEC_do_element_remove" choiceparam="[null, $tmpKeyID, $RemoveStages.{$RemoveStages.keys.list.{$todo_options_start}}.max]"/>
+									<remove_value name="$text" />
+									<remove_value name="$text2" />
+									<remove_value name="$text3" />
+									<remove_value name="$tmpKeyID" />
+									<set_value name="$todo_options_start"  operation="add" exact="1" /> 
+								</do_elseif>
+								<do_elseif value="$i == 6">
+									<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+								</do_elseif>
+							</do_all>
+						</do_else>
+
+						<remove_value name="$todo_options_key"/>
+						<remove_value name="$todo_options_start"/>
+						<remove_value name="$todo_options_max"/>
+					</do_elseif>
+					<do_else>
+						<set_value name="$todo_options_start" exact="event.param2.{1}" />
+						<set_value name="$todo_options_max" exact="$RemoveTargets.count" />
+
+						<do_all exact="6" counter="$i">
+							<do_if value="$i == 6 and ($todo_options_start + 1) le $todo_options_max">
+								<add_player_choice_sub 		text="{2802,1300}.[$todo_options_start, $todo_options_max]" 	position="bottom_right" section="mmcareEC_do_remove" 		choiceparam="[$todo_options_start, $RemoveTargets]"/>
+							</do_if>
+							<do_elseif value="$todo_options_start le $todo_options_max">
+								<add_player_choice		text="'Do %1'.[$RemoveTargets.{$todo_options_start}.name]" tooltip="'Seq:%1 Stage:%2'.[if typeof $RemoveTargets.{$todo_options_start} == datatype.component then $RemoveTargets.{$todo_options_start}.sequence else $RemoveTargets.{$todo_options_start}.component.sequence, if typeof $RemoveTargets.{$todo_options_start} == datatype.component then $RemoveTargets.{$todo_options_start}.stage else $RemoveTargets.{$todo_options_start}.component.stage]" 	position="$i" 	 section="mmcareEC_do_element_remove" choiceparam="$RemoveTargets.{$todo_options_start}"/>
+								<set_value name="$todo_options_start"  operation="add" exact="1" /> 
+							</do_elseif>
+							<do_elseif value="$i == 6">
+								<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
+							</do_elseif>
+						</do_all>
+						<remove_value name="$todo_options_start"/>
+						<remove_value name="$todo_options_max"/>
+					</do_else>
+					<remove_value name="$RemoveTargets"/>
+					<remove_value name="$RemoveStages"/>
+					<remove_value name="$ABC"/>
+				</do_if>
+				<do_elseif value="$listComp?">
 					<set_value name="$classes" exact="[class.jumpdrive, class.engine, class.dronelaunchpad, class.radar]"/>
 					<do_if value="event.object.$work?">
 						<do_all exact="$classes.count" counter="$y">
@@ -405,14 +623,15 @@
 					<remove_value name="$tmpE" />
 					<remove_value name="$classes" />
 					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
-				</do_if>
+				</do_elseif>
 
 				<do_if value="$menue?" chance="if event.object.$hacked? and event.object.$hacked gt player.age then 0 else 100">
 					<!-- select Object -->
-					<add_player_choice_sub text="'Repair selection'" position="4" selectable="not event.object.$work? or event.object.$work.$object == $theShip" section="mmcareEC_do_work" choiceparam="$theShip" />
+					<add_player_choice_sub text="'Repair selection'" position="4" selectable="not event.object.$work? or event.object.$work.$object == $theObject" section="mmcareEC_do_work" choiceparam="$theObject" chance="if event.object.$destruct? then 0 else 100"/>
+					<add_player_choice_sub text="'Destruction'" position="1" selectable="not event.object.$destruct?" tooltip="if event.object.$work? and event.object.$work.$object then event.object.$work.$object.name else ''" section="mmcareEC_do_remove" choiceparam="$theObject" chance="if $theObject.tradenpc.exists or $theObject.defencenpc.exists then 0 else 0" />
 				</do_if>
 				<remove_value name="$menue" />
-				<remove_value name="$Ship" />
+				<remove_value name="$theObject" />
 				<remove_value name="$listComp" />
 			</actions>
 		</cue>

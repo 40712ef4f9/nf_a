@@ -240,6 +240,7 @@
 								macro.units_size_xl_cs_omicron_ship_02_mk5_macro,
 								macro.units_size_xl_cs_omicron_repairship_02_macro,
 								macro.units_size_xl_cs_omicron_ship_04_mk2_macro,
+								macro.units_size_xl_cs_omicron_ship_04_dw_macro,
 								macro.units_size_xl_split_m1_macro,
 								macro.units_size_xl_split_m1s_macro,
 								macro.units_size_xl_xenon_01_c_macro
@@ -416,13 +417,18 @@
 								macro.units_size_xl_cs_omicron_ship_02_5_macro,
 								macro.units_size_xl_cs_omicron_ship_02_y_macro,
 								macro.units_size_xl_cs_omicron_ship_02_dc_macro,
+								macro.units_size_l_cs_omicron_ship_02_mk6a_macro,
+								macro.units_size_l_cs_omicron_ship_02_mk6_macro,
 								macro.units_size_xl_cs_omicron_ship_02_x_macro,
 								macro.units_size_xl_cs_omicron_ship_02_xc_macro,
 								macro.units_size_xl_cs_omicron_ship_02_mk5_macro,
 								macro.units_size_xl_cs_omicron_ship_02_yz_macro,
+								macro.units_size_xl_cs_omicron_ship_02_mk6_macro,
 								macro.units_size_xl_cs_omicron_ship_02_mk2_macro,
 								macro.units_size_xl_cs_omicron_ship_03_mk2_macro,
 								macro.units_size_xl_cs_omicron_ship_04_mk2_macro,
+								macro.units_size_xl_cs_omicron_ship_04_mk3_macro,
+								macro.units_size_xl_cs_omicron_ship_04_dw_macro,
 								macro.units_size_xl_capital_destroyer_1_mk2_macro,
 								macro.units_size_xl_capital_destroyer_2_mk2_macro,
 								macro.units_size_xl_capital_destroyer_2_cargo_macro,
@@ -833,6 +839,28 @@
 				<remove_value name="$todo"/>
 				<remove_value name="$done"/>
 			</actions>
+		</cue>
+
+		<cue name="NF_BASE_DESTRUCTION" instantiate="true" namespace="this">
+			<conditions>
+				<event_object_signalled object="player.galaxy" param="'do.remove.this'" />
+			</conditions>
+			<actions>
+				<do_if value="event.param2.exists and event.param2.isclass.[class.station, class.ship]">
+					<set_value name="$Object" exact="event.param2"/>
+					<destroy_object object="$Object" explosion="true"/>
+				</do_if>
+			</actions>
+			<cues>
+				<cue name="NF_BASE_DESTRUCTION_2">
+					<delay min="60s" max="180s" />
+					<actions>
+						<do_if value="$Object.exists">
+							<destroy_object object="$Object" explosion="false"/>
+						</do_if>
+					</actions>
+				</cue>
+			</cues>
 		</cue>
 
 		<cue name="NF_BASE_SY" instantiate="true" namespace="this">
@@ -1535,7 +1563,7 @@
 						<set_value name="$ref" exact="macro.units_size_xl_kit_cargo_01_macro"/>
 					</do_elseif>
 					<do_else>
-						<set_value name="$ref" exact="macro.units_size_xl_cs_omicron_ship_04_mk2_macro"/>
+						<set_value name="$ref" exact="macro.units_size_xl_cs_omicron_ship_04_mk3_macro"/>
 					</do_else>
 					<!-- spawn -->
 					<set_value name="$Elite" />

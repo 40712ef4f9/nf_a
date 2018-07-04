@@ -70,8 +70,22 @@
           <!--this is sparta-->
           <set_value name="$attacker" exact="null"/>
           <do_if value="event.param and typeof event.param == datatype.component" chance="$counterstrike">
+            <set_value name="$thiscombinedskill" exact="this.combinedskill"/>
+            <set_value name="$doAttackenemies" exact="this.ship.owner == this.ship.trueowner and (@this.$config_attackenemies == 1  or (not this.ship.isplayerowned and not this.$config_attackenemies?))"/>
             <set_value name="$attacker" exact="if event.param.isclass.defensible then event.param else event.param.defensible"/>
             <add_to_group groupname="$attackers" object="$attacker"/>
+            <do_if value="$attacker.commander or $attacker.subordinates.count" chance="if not $doAttackenemies and $thiscombinedskill gt 70 then 100 else 0">
+              <do_if value="$attacker.commander and $attacker.commander.isclass.ship and not $attackers.indexof.{$attacker} and this.mayattack.{$attacker} and this.ship.zone == $attacker.commander.zone">
+                <add_to_group groupname="$attackers" object="$attacker.commander"/>
+              </do_if>
+              <do_if value="$attacker.subordinates.count">
+                <do_all exact="$attacker.subordinates.count" counter="$j" >
+                  <do_if value="not $attackers.indexof.{$attacker.subordinates.{$j}} and $attacker.subordinates.{$j}.isclass.ship and this.mayattack.{$attacker.subordinates.{$j}} and this.ship.zone == $attacker.subordinates.{$j}.zone">
+                    <add_to_group groupname="$attackers" object="$attacker.subordinates.{$j}"/>
+                  </do_if>
+                </do_all>
+              </do_if>
+            </do_if>
           </do_if>
           <debug_text text="' %1 attention. add attacker %2 (%3) to $attackers (%4) | enemies %5.'.[this.ship.attention, $attacker.knownname, $attacker, $attackers.count, $enemies.count]" chance="$debugoutputchance" />
           <remove_value name="$counterstrike"/>

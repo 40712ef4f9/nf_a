@@ -26,6 +26,20 @@
         <abort_called_scripts resume="runprocess"/>
       </actions>
     </handler>
+    <handler comment="Destruct object">
+      <conditions>
+        <event_object_signalled object="this.object" param="'engineer.destruct.this'" />
+        <check_value value="this.defensible.tradenpc or this.defensible.defencenpc" negate="true"/>
+      </conditions>
+      <actions>
+        <set_value name="$Defensible" exact="this.defensible" />
+        <set_value name="this.$Defensible" exact="this.defensible" />
+        <set_value name="this.$destruct" exact="true" />
+        <set_value name="$part" exact="if typeof event.param2 == datatype.list and event.param2.{1} then event.param2.{1} else event.param2" />
+        <set_value name="$stage" exact="if typeof event.param2 == datatype.list then [event.param2.{2}, event.param2.{3}] else if typeof event.param2 == datatype.list and event.param2.{4}? and (typeof event.param2.{4}).istring then event.param2.{4} else null" />
+        <abort_called_scripts resume="runprocess"/>
+      </actions>
+    </handler>
   </interrupts>
   <init>
     <set_command command="command.repair" />
@@ -218,11 +232,16 @@
         <set_command command="command.repair" />
       </do_else>
 
-      <run_script name="'engineer.ai.plus2.process'">
+      <run_script name="if this.$destruct? and this.$destruct then 'engineer.ai.plus2.destruct' else 'engineer.ai.plus2.process'">
         <param name="Defensible" value="$Defensible" />
+        <param name="part" value="if this.$destruct? and this.$destruct and @$part then $part else null" />
+        <param name="stage" value="if this.$destruct? and this.$destruct and @$stage then $stage else null" />
         <param name="debugoutputchance" value="$debugoutputchance" />
         <param name="debugoutputchance2" value="$debugoutputchance2" />
       </run_script>
+      <remove_value name="this.$destruct"/>
+      <remove_value name="$part"/>
+      <remove_value name="$stage"/>
 
       <set_command_action commandaction="commandaction.repairchecking" />
 
@@ -233,5 +252,6 @@
   <on_abort>
     <remove_value name="this.$Defensible"/>
     <remove_value name="this.$doSupport"/>
+    <remove_value name="this.$destruct"/>
   </on_abort>
 </aiscript>

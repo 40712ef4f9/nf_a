@@ -64,13 +64,39 @@
           <!--<debug_text text="'capitalfreighters: ' + $capitalfreighters" chance="$debugoutputchance"/>-->
           <set_value name="$enemy" exact="$capitalfreighters.{1}"/>
           <set_value name="$NearestDistance" exact="this.ship.distanceto.{$enemy}"/>
+          <set_value name="$CurrentValue" exact="0Cr"/>
+          <do_all exact="$enemy.cargo.list.count" counter="$CargoCounter">
+            <do_if value="$enemy.exists and $enemy.isoperational" negate="true">
+              <break />
+            </do_if>
+            <set_value name="$tmpWare" exact="$enemy.cargo.list.{$CargoCounter}"/>
+            <do_if value="$tmpWare" list="$currentbasket">
+              <set_value name="$CurrentValue" exact="$tmpWare.minprice * [$enemy.cargo.{$tmpWare}.count, this.ship.cargo.{$tmpWare}.free].min" operation="add" />
+            </do_if>
+          </do_all>
           <do_all exact="$capitalfreighters.count" counter="$DistanceCounter">
             <do_if value="$DistanceCounter" min="2">
               <set_value name="$tempdist" exact="this.ship.distanceto.{$capitalfreighters.{$DistanceCounter}}" />
-              <do_if value="$tempdist" max="$NearestDistance">
+              <set_value name="$tmpValue" exact="0Cr"/>
+              <do_all exact="$capitalfreighters.{$DistanceCounter}.cargo.list.count" counter="$CargoCounter">
+                <do_if value="$capitalfreighters.{$DistanceCounter}.exists and $capitalfreighters.{$DistanceCounter}.isoperational" negate="true">
+                  <break />
+                </do_if>
+                <set_value name="$tmpWare" exact="$capitalfreighters.{$DistanceCounter}.cargo.list.{$CargoCounter}"/>
+                <do_if value="$tmpWare" list="$currentbasket">
+                  <set_value name="$tmpValue" exact="$tmpWare.minprice * [$capitalfreighters.{$DistanceCounter}.cargo.{$tmpWare}.count, this.ship.cargo.{$tmpWare}.free].min" operation="add" />
+                </do_if>
+              </do_all>
+              <do_if value="$tmpValue gt $CurrentValue*1.2f">
                 <set_value name="$enemy" exact="$capitalfreighters.{$DistanceCounter}"/>
                 <set_value name="$NearestDistance" exact="$tempdist"/>
+                <set_value name="$CurrentValue" exact="$tmpValue"/>
               </do_if>
+              <do_elseif value="$tempdist lt $NearestDistance and $tmpValue ge $CurrentValue">
+                <set_value name="$enemy" exact="$capitalfreighters.{$DistanceCounter}"/>
+                <set_value name="$NearestDistance" exact="$tempdist"/>
+                <set_value name="$CurrentValue" exact="$tmpValue"/>
+              </do_elseif>
             </do_if>
           </do_all>
         </do_if>
@@ -85,6 +111,8 @@
         <remove_value name="$NearestDistance"/>
         <remove_value name="$DistanceCounter"/>
         <remove_value name="$tempdist"/>
+        <remove_value name="$tmpValue"/>
+        <remove_value name="$tmpWare"/>
         <remove_value name="$smallfreighters"/>
         <remove_value name="$capitalfreighters"/>
 

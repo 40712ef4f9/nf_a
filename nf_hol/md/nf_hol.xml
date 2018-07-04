@@ -60,9 +60,14 @@
 					</do_all> 
 					<remove_value name="$todo"/>
 				</do_if>
+
 				<do_if value="md.$todo_stations_moddlc?">
 						<set_value name="$todo" exact="
 							[
+								macro.struct_bt_alb_gatedefence_macro,
+								macro.struct_econ_weapon_ar_defence_2_macro,
+								macro.struct_bt_hol_dock_macro,
+								macro.masstraffic_station_03_macro,
 								macro.xenon_asteroid_shipyard_macro,
 								macro.struct_at_xen_xenon_portal_macro,
 								macro.struct_at_xen_xenon_outpost_macro,
@@ -92,6 +97,12 @@
 						</do_if>
 					</do_all> 
 					<remove_value name="$todo"/>
+				</do_if>
+				<do_if value="md.$mmdefenceplatformmacros? and md.$mmdefenceplatformmacros.indexof.{macro.units_size_m_khaak_weaponplatform_macro} == 0">
+					<append_to_list name="md.$mmdefenceplatformmacros" exact="macro.units_size_m_khaak_weaponplatform_macro"/>
+				</do_if>
+				<do_if value="md.$mmdefenceplatformmacros_cm? and md.$mmdefenceplatformmacros_cm.indexof.{macro.units_size_m_khaak_weaponplatform_macro} == 0">
+					<append_to_list name="md.$mmdefenceplatformmacros_cm" exact="macro.units_size_m_khaak_weaponplatform_macro"/>
 				</do_if>
 
 				<!-- Blueprnt -->

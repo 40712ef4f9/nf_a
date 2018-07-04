@@ -51,18 +51,9 @@
       </connection>
       <connection ref="ConnectionFor_buildmodule_stations_cw_xen_macro">
         <build mode="optional" group="production" sequence="C" stage="1" tags="primary " />
-        <macro> 
-          <component ref="big_ship_production_dummy_xl" connection="space" />
+        <macro ref="buildmodule_ships_xsd_xl_macro" connection="space" >
           <properties>
-            <identification name="{20107,3801}" description="{20107,3802}" unique="0" />
             <build method="br_xenon" />
-            <explosiondamage value="100000" />
-            <hull max="6200000" />
-            <effects>
-              <explosion ref="explosion_station_01" />
-              <sefx_hack_disabled ref="hack_deactivated_m" />
-            </effects>
-            <secrecy level="4" />
             <builder>
               <macro ref="units_size_xl_xenon_01_macro" />
               <macro ref="units_size_xl_xenon_newi_macro" />
@@ -79,18 +70,9 @@
       </connection>
       <connection ref="ConnectionFor_buildmodule_stations_cw_xen_macro1">
         <build mode="optional" group="production" sequence="A" stage="1" tags="primary " />
-        <macro> 
-          <component ref="big_ship_production_dummy_l" connection="space" />
+        <macro ref="buildmodule_ships_xsd_l_macro" connection="space" >
           <properties>
-            <identification name="{20107,3801}" description="{20107,3802}" unique="0" />
             <build method="br_xenon" />
-            <explosiondamage value="100000" />
-            <hull max="6200000" />
-            <effects>
-              <explosion ref="explosion_station_01" />
-              <sefx_hack_disabled ref="hack_deactivated_m" />
-            </effects>
-            <secrecy level="4" />
             <builder>
               <macro ref="units_size_l_xenon_01_macro" />
               <macro ref="units_size_l_xenon_01_dc_macro" />
@@ -100,27 +82,13 @@
               <macro ref="units_size_l_xenon_outk_macro" />
             </builder>
           </properties>
-          <connections>
-            <connection ref="connection_dockingbay01">
-              <macro ref="props_surf_ar_docks_size_l_inv_macro" connection="connection_component01" />
-            </connection>
-          </connections>
         </macro> 
       </connection>
       <connection ref="ConnectionFor_buildmodule_stations_cw_xen_macro2">
         <build mode="optional" group="production" sequence="B" stage="1" tags="primary " />
-        <macro> 
-          <component ref="big_ship_production_dummy_l" connection="space" />
+        <macro ref="buildmodule_ships_xsd_l_macro" connection="space" >
           <properties>
-            <identification name="{20107,3801}" description="{20107,3802}" unique="0" />
             <build method="br_xenon" />
-            <explosiondamage value="100000" />
-            <hull max="6200000" />
-            <effects>
-              <explosion ref="explosion_station_01" />
-              <sefx_hack_disabled ref="hack_deactivated_m" />
-            </effects>
-            <secrecy level="4" />
             <builder>
               <macro ref="units_size_l_xenon_01_macro" />
               <macro ref="units_size_l_xenon_01_dc_macro" />
@@ -130,11 +98,6 @@
               <!--macro ref="units_size_l_xenon_outk_macro" /-->
             </builder>
           </properties>
-          <connections>
-            <connection ref="connection_dockingbay01">
-              <macro ref="props_surf_ar_docks_size_l_inv_macro" connection="connection_component01" />
-            </connection>
-          </connections>
         </macro> 
       </connection>
       <!--connection ref="connection_dock_xl01">

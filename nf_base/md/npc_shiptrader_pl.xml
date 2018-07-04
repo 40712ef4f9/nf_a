@@ -1440,6 +1440,25 @@
 
         <library name="ApplyDroneplan">
           <actions>
+            <do_if value="true or $object.units.maxcount == 0">
+              <find_object_component name="$tmpPE" object="$object" class="class.dronelaunchpad" checkoperational="false" multiple="true">
+                <match_any>
+                  <match restorable="true" comment="wrecked"/>
+                  <match repairable="true" invulnerable="false">
+                    <match_hull min="76" negate="true" />
+                  </match>
+                </match_any>
+              </find_object_component>
+              <do_all exact="$tmpPE.count" counter="$i">
+                <do_if value="$tmpPE.{$i}.iswreck">
+                  <restore_object object="$tmpPE.{$i}" hull="77" recursive="true" />
+                </do_if>
+                <do_else>
+                  <set_object_hull object="$tmpPE.{$i}" exact="77" />
+                </do_else>
+              </do_all>
+              <remove_value name="$tmpPE" />
+            </do_if>
             <do_all exact="$droneplan.count" counter="$i">
               <do_if value="$droneplan.{$i}.{2} lt 0">
                 <remove_units object="$object" macro="macro.{$droneplan.{$i}.{1}}" exact="-$droneplan.{$i}.{2}" />

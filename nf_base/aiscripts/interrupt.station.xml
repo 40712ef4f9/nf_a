@@ -12,6 +12,7 @@
           <check_value value="event.param.isclass.{class.station}" />
           <check_value value="not global.$nextDScheck? or (global.$nextDScheck? and global.$nextDScheck lt player.age)" />
           <check_value value="[faction.enemy, faction.criminal, faction.smuggler, faction.neutral, faction.friend, faction.ownerless].indexof.{event.param.owner}" negate="true"/>
+          <check_value value="event.param.boarder" negate="true" />
           <check_any>
             <check_value value="global.$nfStationdestructionHulls.{'$%1'.[event.param.macro.id]}?" negate="true"/>
             <check_value value="event.param.hullpercentage le [(global.$nfStationdestructionHulls.{'$%1'.[event.param.macro.id]}+2), 99].min" />
