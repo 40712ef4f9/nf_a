@@ -470,9 +470,12 @@
 					</do_if>
 					<do_if value="'merc'" list="$build">
 						<append_to_list name="$temp_ships.$fight" exact="macro.units_size_l_kit_repairship_macro"/>
-						<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_repairship_02_macro"/>
+						<do_any>
+							<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_repairship_02_macro" weight="16"/>
+							<append_to_list name="$temp_ships.$fight" exact="macro.units_size_xl_cs_omicron_ship_04_dw_macro" weight="84"/>
+						</do_any>
 
-						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_cs_omicron_ship_04_macro"/>
+						<append_to_list name="$temp_ships.$trade" exact="macro.units_size_xl_cs_omicron_ship_04_mk3_macro"/>
 
 						<append_to_list name="$temp_ships.$build" exact="macro.units_size_xl_builder_ship_ol_macro"/>
 
@@ -3365,6 +3368,13 @@
 						<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_buyships" />
 						<set_value name="$requiredUnits_count" exact="$requiredUnits.count"/>
 
+						<do_if value="$requiredUnits_count ge 100">
+							<set_value name="$ShipYard_Limit" exact="$requiredUnits_count" />
+						</do_if>
+						<do_elseif value="$requiredUnits_count lt 100 and $ShipYard_Limit?">
+							<set_value name="$ShipYard_Limit" exact="false" />
+						</do_elseif>
+
 						<do_all exact="$ShipYardOfTrust_Multi.count" counter="$sy">
 <set_value name="$text2" exact="' \n# Buy Ship %1 #\n'.[$requiredUnits_count]" operation="add" />
 							<do_if value="$requiredUnits_count and $requiredUnits.count lt 1">
@@ -3393,6 +3403,13 @@
 					</do_if>
 					<do_else>
 						<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_buyships" />
+
+						<do_if value="$requiredUnits.count ge 100">
+							<set_value name="$ShipYard_Limit" exact="$requiredUnits.count" />
+						</do_if>
+						<do_elseif value="$requiredUnits.count lt 100 and $ShipYard_Limit?">
+							<set_value name="$ShipYard_Limit" exact="false" />
+						</do_elseif>
 	
 <set_value name="$text2" exact="' \n# Buy Ship %1 #\n'.[$requiredUnits.count]" operation="add" />
 
@@ -3407,6 +3424,36 @@
 
 						<set_value name="$nextShoppingTrip" exact="if $requiredUnits.count gt 3 then player.age + 10min else if $next_Check? and $next_Check.{2} then player.age + $next_Check.{2} else player.age + 45min"/>
 					</do_else>
+					<!-- Limit orders -->
+					<do_if value="$ShipYard_Limit?">
+						<find_station name="$ShipYardOfTrust_Multi" space="player.galaxy" functional="true" multiple="true">
+							<match_content class="class.buildmodule" />
+							<match owner="$_faction"/>
+						</find_station>
+						<set_value name="$tempSetting" exact="if $ShipYard_Limit gt 150 then 'member' else 'friend'" />
+						<do_all exact="$ShipYardOfTrust_Multi.count" counter="$sy" reverse="true">
+							<do_if value="$ShipYardOfTrust_Multi.{$sy}.tradenpc">
+								<do_if value="$ShipYard_Limit">
+									<do_if value="@$ShipYardOfTrust_Multi.{$sy}.tradenpc.$ordersMin == $tempSetting" negate="true">
+										<set_value name="$ShipYardOfTrust_Multi.{$sy}.tradenpc.$ordersMin" exact="$tempSetting" />
+									</do_if>
+								</do_if>
+								<do_else>
+									<do_if value="$ShipYardOfTrust_Multi.{$sy}.tradenpc.$ordersMin?">
+										<remove_value name="$ShipYardOfTrust_Multi.{$sy}.tradenpc.$ordersMin"/>
+									</do_if>
+								</do_else>
+							</do_if>
+						</do_all>
+						<do_if value="$ShipYard_Limit" negate="true">
+							<remove_value name="$ShipYard_Limit"/>
+						</do_if>
+						<do_else>
+							<set_value name="$ShipYard_Limit" exact="true" />
+						</do_else>
+<set_value name="$text2" exact="'* %2 Limit SYs: %1 #\n'.[$ShipYardOfTrust_Multi.count, if $ShipYard_Limit? then 'do' else 'un']" operation="add" />
+						<remove_value name="$tempSetting"/>
+					</do_if>
 					<remove_value name="$ShipYardOfTrust_Multi"/>
 					<remove_value name="$requiredUnits"/>
 				</do_if>

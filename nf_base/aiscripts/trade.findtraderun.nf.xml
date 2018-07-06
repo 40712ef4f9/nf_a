@@ -799,11 +799,10 @@
         </do_elseif>
 
         <do_if value="not $trade_zones? and not $tradeClusters? and not $range.isclass.zone and $commander.sector == this.ship.sector" chance="if this.combinedskill gt 50 then this.combinedskill else 0">
-          <find_object space="this.ship.sector" name="$th_objects" class="[class.gate]" multiple="true" chance="if $th_objects? then 0 else 100"/>
+          <find_object space="if $capship then $commander.sector else $commander.zone" name="$th_objects" class="[class.gate]" multiple="true" chance="if $th_objects? then 0 else 100"/>
           <create_list name="$trade_zones"/>
           <append_to_list name="$trade_zones" exact="$trade_zones.{$z}" />
           <do_all exact="$th_objects.count" counter="$ojk" chance="$th_objects? *100">
-            <append_to_list name="$trade_zones" exact="$th_objects.{$ojk}.destination.sector" />
             <do_if value="$th_objects.{$ojk}.isclass.gate and $th_objects.{$ojk}.isactive and $th_objects.{$ojk}.destination">
               <do_if value="not $capship">
                 <append_to_list name="$trade_zones" exact="$th_objects.{$ojk}.destination" chance="if this.$trade_zones_blacklist? and this.$trade_zones_blacklist.indexof.{$th_objects.{$ojk}.destination} then 0 else 100" />

@@ -25,8 +25,8 @@
 			</conditions>
 			<actions>
 				<set_value name="$hint" exact="false"/>
-				<do_if value="this.ship.zone.owner and this.ship.zone.owner.hasrelation.enemy.{this.ship.owner}" chance="$cover">
-					<do_if value="this.ship.owner != this.ship.trueowner and not this.ship.zone.owner.hasrelation.enemy.{this.ship.trueowner}">
+				<do_if value="this.ship.zone.owner and this.ship.zone.owner.hasrelation.enemy.{this.ship.owner}" chance="if this.ship.coverowner then 100 else $cover">
+					<do_if value="this.ship.coverowner and not this.ship.zone.owner.hasrelation.enemy.{this.ship.trueowner}">
 						<signal_objects object="this.ship" param="'do.uncover'" delay="1s"/>
 					</do_if>
 					<do_else>
@@ -248,7 +248,11 @@
 
 			<do_all exact="$workspace.count" counter="$w">
 				<!-- fallback macro -> space -->
-				<do_if value="typeof $workspace.{$w} == datatype.macro">
+				<do_if value="$workspace.{$w}" negate="true">
+					<remove_value name="$workspace.{$w}"/>
+					<resume label="start"/>
+				</do_if>
+				<do_elseif value="typeof $workspace.{$w} == datatype.macro">
 					<find_cluster name="$temp" macro="$workspace.{$w}"/>
 					<do_if value="$temp" negate="true">
 						<find_sector name="$temp" macro="$workspace.{$w}"/>
@@ -263,7 +267,25 @@
 						<set_value name="$workspace.{$w}" exact="$temp"/>
 					</do_if>
 					<remove_value name="$temp"/>
-				</do_if>
+				</do_elseif>
+				<do_elseif value="typeof $workspace.{$w} == datatype.list">
+					<do_all exact="$workspace.{$w}.count" counter="$i">
+						<do_if value="typeof $workspace.{$w}.{$i}" list="[datatype.macro, datatype.list, datatype.component, datatype.group]">
+							<append_to_list name="$workspace" exact="$workspace.{$w}.{$i}"/>
+						</do_if>
+					</do_all>
+					<remove_value name="$workspace.{$w}"/>
+					<resume label="start"/>
+				</do_elseif>
+				<do_elseif value="typeof $workspace.{$w} == datatype.group">
+					<do_all exact="$workspace.{$w}.list.count" counter="$i">
+						<do_if value="typeof $workspace.{$w}.list.{$i}" list="[datatype.macro, datatype.list, datatype.component, datatype.group]">
+							<append_to_list name="$workspace" exact="$workspace.{$w}.list.{$i}"/>
+						</do_if>
+					</do_all>
+					<remove_value name="$workspace.{$w}"/>
+					<resume label="start"/>
+				</do_elseif>
 				<!-- collect zones -->
 				<find_station space="$workspace.{$w}" name="$stations" multiple="true" chance="if $ignoreknown then 100 else 0" known="false" />
 				<find_station space="$workspace.{$w}" name="$stations" multiple="true" chance="if $ignoreknown then 0 else 100" />
@@ -395,9 +417,16 @@
 				<find_ship space="this.ship.zone" name="$ownerless" class="[class.ship_s,class.ship_m,class.ship_l,class.ship_xl]" owner="faction.ownerless" multiple="true" />
 				<do_if value="$ownerless.count">
 					<set_value name="$text" exact="''"/>
-					<do_if value="$ownerlessFound?" negate="true">
-						<create_list name="$ownerlessFound" />
+					<do_if value="global.$ownerlessFound?" negate="true">
+						<create_list name="global.$ownerlessFound" />
 					</do_if>
+					<do_else>
+						<do_all exact="global.$ownerlessFound.count" counter="$i" reverse="true">
+							<do_if value="global.$ownerlessFound.{$i}.exists and global.$ownerlessFound.{$i}.isclass.ship and global.$ownerlessFound.{$i}.trueowner == faction.ownerless" negate="true">
+								<remove_value name="global.$ownerlessFound.{$i}"/>
+							</do_if>
+						</do_all>
+					</do_else>
 					<do_all exact="$ownerless.count" counter="$i">
 						<do_if value="this.ship.macro.ismacro.{global.$mmcarriers} and $ownerless.{$i}.isclass.[class.ship_s,class.ship_m] and $ownerless.{$i}.hullpercentage gt 10" chance="(not this.ship.zone.owner or (this.ship.zone.owner and not this.ship.zone.owner.hasrelation.enemy.{this.ship.trueowner})) *100">
 							<set_owner object="$ownerless.{$i}" faction="this.ship.trueowner" />
@@ -413,8 +442,46 @@
 							<set_value name="$text" exact="'%1 acquired\n'.[$ownerless.{$i}.name]" operation="add"/>
 							<set_value name="$print"/>
 						</do_if>
-						<do_elseif value="$ownerlessFound.indexof.{$ownerless.{$i}}" negate="true">
-							<append_to_list name="$ownerlessFound" exact="$ownerless.{$i}"/>
+						<do_elseif value="this.ship.macro.ismacro.{global.$mmcarriers_xl} and $ownerless.{$i}.isclass.[class.ship_l,class.ship_xl] and $ownerless.{$i}.hullpercentage gt 10" chance="(not this.ship.zone.owner or (this.ship.zone.owner and not this.ship.zone.owner.hasrelation.enemy.{this.ship.trueowner})) *100">
+							<find_dock_location container="this.ship" size="$ownerless.{$i}.docksize" name="$docks" multiple="true"/>
+							<set_value name="$dock" exact="null"/>
+							<do_all exact="$docks.count" counter="$j" >
+								<do_if value="($docks.{$j}.external and $docks.{$j}.docked.count == 0 and $docks.{$j}.docking.count == 0) or not $docks.{$j}.external">
+									<set_value name="$dock" exact="$docks.{$j}"/>
+									<break />
+								</do_if>
+							</do_all>
+							<do_if value="$dock">
+								<set_owner object="$ownerless.{$i}" faction="this.ship.trueowner" />
+								<request_docking ship="$ownerless.{$i}" dock="$dock" result="$success" />
+								<do_if value="$success">
+									<disable_collisions_between object="$ownerless.{$i}" target="$destination" />
+									<warp object="$ownerless.{$i}" zone="this.ship.zone">
+										<position object="$dock.component" />
+										<rotation value="this.ship.rotation" />
+									</warp>
+									<do_if value="not $dock.component.isoperational">
+										<do_if value="$ownerless.{$i}.docklink">
+											<undock ship="$ownerless.{$i}" />
+										</do_if>
+										<clear_collision_filter object="$ownerless.{$i}" />
+									</do_if>      
+									<dock ship="$ownerless.{$i}" />
+									<set_value name="$text" exact="'%1 acquired\n'.[$ownerless.{$i}.name]" operation="add"/>
+									<set_value name="$print"/>
+								</do_if>      
+								<remove_value name="$success"/>
+							</do_if>
+							<do_elseif value="global.$ownerlessFound.indexof.{$ownerless.{$i}}" negate="true">
+								<append_to_list name="global.$ownerlessFound" exact="$ownerless.{$i}"/>
+								<set_value name="$text" exact="'%1 x:%2 y:%3 z:%4\n'.[$ownerless.{$i}.name, $ownerless.{$i}.position.x, $ownerless.{$i}.position.y, $ownerless.{$i}.position.z]" operation="add"/>
+								<set_value name="$print"/>
+							</do_elseif>
+							<remove_value name="$docks"/>
+							<remove_value name="$dock"/>
+						</do_elseif>
+						<do_elseif value="global.$ownerlessFound.indexof.{$ownerless.{$i}}" negate="true">
+							<append_to_list name="global.$ownerlessFound" exact="$ownerless.{$i}"/>
 							<set_value name="$text" exact="'%1 x:%2 y:%3 z:%4\n'.[$ownerless.{$i}.name, $ownerless.{$i}.position.x, $ownerless.{$i}.position.y, $ownerless.{$i}.position.z]" operation="add"/>
 							<set_value name="$print"/>
 						</do_elseif>

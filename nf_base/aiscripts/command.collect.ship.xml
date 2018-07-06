@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-<aiscript name="command.collect.ship" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" priority="2" version="1" >
+<aiscript name="command.collect.ship" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" priority="2" version="2" >
   <!--
   Wrapper script for player cargo collect mode
   by Adrian
@@ -219,6 +219,7 @@
             <resume label="endofdocking" />
           </do_if>
         </do_if>
+        <wait min="3s" max="8s" sinceversion="2" />
       </do_while>
 
       <disable_collisions_between object="$target" target="$destination" />

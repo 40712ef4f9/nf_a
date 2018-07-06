@@ -521,7 +521,7 @@
 
                 <include_actions ref="md.NPC_Shiptrader_Pl.QueueListTooltipText" />
 
-                <add_player_choice text="{2802,2725}.[$cloneMacro.name]" selectable="@$cloneMacro.ware.maxprice*2 lt player.money and (not $actor.container.tradenpc.$orders? or $actor.container.tradenpc.$orders.count lt 6)" comment="order a vessel" section="cArch_buildclone_order" choiceparam="$cloneMacro" tooltip="$tooltipText" />
+                <add_player_choice text="{2802,2725}.[$cloneMacro.name]" selectable="@$cloneMacro.ware.maxprice*2 lt player.money and (not $actor.container.tradenpc.$orders? or $actor.container.tradenpc.$orders.count lt 6) and $actor.container.units.{unitcategory.welder}.count gt 10 and $actor.container.owner.relationto.{$_faction} ge $actor.container.owner.relation.{if $actor.container.tradenpc.$ordersMin? then $actor.container.tradenpc.$ordersMin else 'neutral'}.min" comment="order a vessel" section="cArch_buildclone_order" choiceparam="$cloneMacro" tooltip="$tooltipText" />
                 <remove_value name="$tooltipText"/>
                 <remove_value name="$cloneMacro"/>
               </do_if>

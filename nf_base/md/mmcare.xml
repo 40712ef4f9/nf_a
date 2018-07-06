@@ -163,6 +163,43 @@
 						<param name="ownstations" value="if event.param == 'mmcare_do_pos_plus' then true else false" />
 					</start_script>
 				</do_elseif>
+				<do_elseif value="event.param" exact="'mmcare_do_collect'">
+					<create_list name="$workspace" />
+					<set_value name="$canSmall" exact="if event.object.container.macro.ismacro.{global.$mmcarriers_xl} then true else false"/>
+					<set_value name="$canXL" exact="if event.object.container.macro.ismacro.{global.$mmcarriers} then true else false"/>
+					<do_all exact="global.$ownerlessFound.count" counter="$i">
+						<do_if value="global.$ownerlessFound.{$i}.exists and global.$ownerlessFound.{$i}.isclass.ship" negate="true">
+							<continue />
+						</do_if>
+						<do_elseif value="global.$ownerlessFound.{$i}.isclass.[class.ship_s, class.ship_m] and not $canSmall">
+							<continue />
+						</do_elseif>
+						<do_elseif value="global.$ownerlessFound.{$i}.isclass.[class.ship_l, class.ship_xl] and not $canXL">
+							<continue />
+						</do_elseif>
+						<do_elseif value="global.$ownerlessFound.{$i}.isclass.[class.ship_l, class.ship_xl] and $canXL">
+							<set_value name="$canXL" exact="false" comment="normal is only one external L/XL dock, prevent useless visits"/>
+							<do_if value="$workspace.indexof.{global.$ownerlessFound.{$i}.zone} == 0">
+								<append_to_list name="$workspace" exact="global.$ownerlessFound.{$i}.zone"/>
+							</do_if>
+						</do_elseif>
+						<do_elseif value="$workspace.indexof.{global.$ownerlessFound.{$i}.zone} == 0">
+							<append_to_list name="$workspace" exact="global.$ownerlessFound.{$i}.zone"/>
+						</do_elseif>
+					</do_all>
+
+					<do_if value="$workspace.count">
+						<remove_object_commander object="event.object.container" />
+						<start_script name="'move.voyager'" object="event.object">
+							<param name="workspace" value="$workspace" />
+							<param name="ignoreknown" value="true" />
+							<param name="continue" value="false" />
+						</start_script>
+					</do_if>
+					<remove_value name="$workspace" />
+					<remove_value name="$canSmall" />
+					<remove_value name="$canXL" />
+				</do_elseif>
 				<do_elseif value="event.param" exact="'mmcare_do_care'">
 					<do_if value="event.object.container.isclass.[class.ship_l, class.ship_xl]">
 						<find_gravidar_contact name="$RestoreTargets" object="event.object.container" restorable="true" multiple="true">
@@ -174,6 +211,9 @@
 					</do_if>
 					<add_player_choice text="{2802,1310}" section="gOrders_advancedflytopos" tooltip="{2802,1311}" comment="Fly to position" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectposition', ['mmcare_do_pos']]"/>
 					<add_player_choice text="{2802,1315}" section="gOrders_advancedflytopos" tooltip="{2802,1316}" comment="Fly to position" choiceparam="[0, 0, 'cluster', player.primaryship.cluster, null, null, 'selectposition', ['mmcare_do_pos_plus']]"/>
+					<do_if value="global.$ownerlessFound? and global.$ownerlessFound.count and (global.$mmcarriers_xl? and event.object.container.macro.ismacro.{global.$mmcarriers_xl} or global.$mmcarriers? and event.object.container.macro.ismacro.{global.$mmcarriers})">
+						<add_player_choice text="'Collect found Ownerless'" position="right" section="mmcare_do_collect" selectable="global.$ownerlessFound.count gt 0" choiceparam="1" />
+					</do_if>
 				</do_elseif>
 				<do_else>
 					<do_if value="event.object.ship.primarypurpose == objectpurpose.build and @event.object.ship.buildanchor">
@@ -628,7 +668,7 @@
 				<do_if value="$menue?" chance="if event.object.$hacked? and event.object.$hacked gt player.age then 0 else 100">
 					<!-- select Object -->
 					<add_player_choice_sub text="'Repair selection'" position="4" selectable="not event.object.$work? or event.object.$work.$object == $theObject" section="mmcareEC_do_work" choiceparam="$theObject" chance="if event.object.$destruct? then 0 else 100"/>
-					<add_player_choice_sub text="'Destruction'" position="1" selectable="not event.object.$destruct?" tooltip="if event.object.$work? and event.object.$work.$object then event.object.$work.$object.name else ''" section="mmcareEC_do_remove" choiceparam="$theObject" chance="if $theObject.tradenpc.exists or $theObject.defencenpc.exists then 0 else 0" />
+					<add_player_choice_sub text="'Destruction'" position="1" selectable="not event.object.$destruct?" tooltip="if event.object.$work? and event.object.$work.$object then event.object.$work.$object.name else ''" section="mmcareEC_do_remove" choiceparam="$theObject" chance="if $theObject.tradenpc.exists or $theObject.defencenpc.exists then 0 else 100" />
 				</do_if>
 				<remove_value name="$menue" />
 				<remove_value name="$theObject" />

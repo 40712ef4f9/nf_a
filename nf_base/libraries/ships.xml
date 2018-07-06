@@ -383,8 +383,8 @@
 				<unit category="welder" mk="1" min="10" max="20"/>
 			</units>
 		</ship>
-		<ship id="acmecorp_trader_ol_bulk_liquid_large" macro="units_size_l_kit_cargo_03_macro">
-			<category tags="[freighter, bulk, liquid]" faction="acmecorp" size="ship_l"/>
+		<ship id="acmecorp_trader_ol_bulk_liquid_large" macro="units_size_xl_cs_omicron_ship_04_mk3_macro">
+			<category tags="[freighter, bulk, liquid]" faction="acmecorp" size="ship_xl"/>
 			<pilot ref="acmecorp_trader_random"/>
 			<defence ref="acmecorp_fighter_random"/>
 			<engineer ref="acmecorp_engineer_random"/>
@@ -489,8 +489,8 @@
 				<unit category="welder" mk="1" min="10" max="20"/>
 			</units>
 		</ship>
-		<ship id="acmecorp_trader_ol_container_large" macro="units_size_l_kit_cargo_03_macro">
-			<category tags="[freighter, container]" faction="acmecorp" size="ship_l"/>
+		<ship id="acmecorp_trader_ol_container_large" macro="units_size_xl_cs_omicron_ship_04_mk3_macro">
+			<category tags="[freighter, container]" faction="acmecorp" size="ship_xl"/>
 			<pilot ref="acmecorp_trader_random"/>
 			<defence ref="acmecorp_fighter_random"/>
 			<engineer ref="acmecorp_engineer_random"/>
@@ -531,8 +531,8 @@
 				<unit category="welder" mk="1" min="10" max="20"/>
 			</units>
 		</ship>
-		<ship id="acmecorp_trader_container_large_l" macro="units_size_l_kit_cargo_03_macro">
-			<category tags="[freighter, container]" faction="acmecorp" size="ship_l"/>
+		<ship id="acmecorp_trader_container_large_l" macro="units_size_xl_cs_omicron_ship_04_mk3_macro">
+			<category tags="[freighter, container]" faction="acmecorp" size="ship_xl"/>
 			<pilot ref="acmecorp_trader_random"/>
 			<defence ref="acmecorp_fighter_random"/>
 			<engineer ref="acmecorp_engineer_random"/>
@@ -636,6 +636,66 @@
 				<unit category="transport" mk="1" min="10" max="20"/>
 				<unit category="welder" mk="1" min="10" max="20"/>
 			</units>
+		</ship>
+
+		<ship id="acmecorp_miner_large" macro="units_size_l_kit_miner_03s_macro">
+			<category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, miner, mission]" faction="acmecorp" size="ship_l"/>
+			<pilot ref="acmecorp_trader_random"/>
+			<defence ref="acmecorp_fighter_random"/>
+			<engineer ref="acmecorp_engineer_random"/>
+			<cargo>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="30" max="80"/>
+				</wares>
+			</cargo>
+			<units>
+				<unit category="defence" mk="4" min="40" max="60"/>
+				<unit category="orecollector" mk="1" min="10" max="30"/>
+				<unit category="orecollector" mk="2" min="10" max="20"/>
+				<unit category="welder" mk="1" min="5" max="10"/>
+				<unit category="transport" mk="1" min="60" max="90"/>
+			</units>
+			<drop ref="ship_large_civilian"/>
+		</ship>
+		<ship id="acmecorp_collector_large" macro="units_size_l_kit_minerl_03s_macro">
+			<category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, miner, mission]" faction="acmecorp" size="ship_l"/>
+			<pilot ref="acmecorp_trader_random"/>
+			<defence ref="acmecorp_fighter_random"/>
+			<engineer ref="acmecorp_engineer_random"/>
+			<cargo>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="30" max="80"/>
+				</wares>
+			</cargo>
+			<units>
+				<unit category="defence" mk="4" min="40" max="60"/>
+				<unit category="gascollector" mk="1" min="20" max="40"/>
+				<unit category="gascollector" mk="2" min="20" max="30"/>
+				<unit category="transport" mk="1" min="60" max="90"/>
+				<unit category="welder" mk="1" min="5" max="10"/>
+			</units>
+			<drop ref="ship_large_civilian"/>
+		</ship>
+		<ship id="acmecorp_miner_large_ol" macro="units_size_xl_cs_omicron_ship_04_mk2_macro">
+			<category tags="[albion, devries, omicronlyrae, maelstrom, fieldsofopportunity, homeoflight, miner, mission]" faction="acmecorp" size="ship_xl"/>
+			<pilot ref="acmecorp_trader_random"/>
+			<defence ref="acmecorp_fighter_random"/>
+			<engineer ref="acmecorp_engineer_random"/>
+			<cargo>
+				<wares list="[fuelcells]" onjobrespawn="true">
+					<fillpercent min="30" max="80"/>
+				</wares>
+			</cargo>
+			<units>
+				<unit category="defence" mk="4" min="40" max="60"/>
+				<unit category="gascollector" mk="1" min="10" max="30"/>
+				<unit category="gascollector" mk="2" min="20" max="30"/>
+				<unit category="orecollector" mk="1" min="40" max="70"/>
+				<unit category="orecollector" mk="2" min="20" max="40"/>
+				<unit category="welder" mk="1" min="5" max="10"/>
+				<unit category="transport" mk="1" min="20" max="50"/>
+			</units>
+			<drop ref="ship_large_civilian"/>
 		</ship>
 
 		<!-- ACME tradesupport -->
