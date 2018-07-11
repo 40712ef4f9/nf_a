@@ -1163,6 +1163,13 @@
 			</primary>
 		</production>
 	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_xl_van_destroyer_mk2']/production[@method='default']" pos="after" >
+		<production time="480" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="56" />
+			</primary>
+		</production>
+	</add>
 	<add silent="1" sel="//wares/ware[@id='shp_xl_fort']/production[@method='default']" pos="after" >
 		<production time="518" amount="1" method="universalparts" name="Uniparts">
 			<primary>

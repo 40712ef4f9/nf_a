@@ -50,6 +50,14 @@
 			faction.xenon
 			-->
 			<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone004_macro, macro.struct_at_xen_xenon_hive_macro, faction.xenon]"/>
+			<!--
+			faction.acmecorp
+			-->
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone001_macro, macro.struct_bt_alb_warehouse_macro, faction.acmecorp]"/>
+			<!--
+			faction.deepwater
+			-->
+			<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone002_macro, macro.struct_bt_alb_warehouse_macro, faction.deepwater]"/>
 		</do_if>
 	</add>
 </diff>

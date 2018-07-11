@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<add sel="/components/component/connections"> 	
+			<connection name="ConnectionFor_props_surf_playerdock_admin_macro" group="stationGroup" tags="destructible">
+				<offset>
+					<position x="900" y="1500" z="150"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro" group="stationGroup" tags="dronelaunchpad">
+				<offset>
+					<position x="-300" y="-2600" z="-600"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_ref_ar_pmc_dronedock_macro1" group="stationGroup" tags="dronelaunchpad">
+				<offset>
+					<position x="-300" y="-2500" z="-600"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_tradeoffer_buy_minerals" group="stationGroup" tags="tradeofferdock">
+				<offset>
+					<position x="100" y="900" z="1903.481"/>
+					<quaternion qx="-0" qy="0.7071066" qz="-0" qw="-0.7071069"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_props_tradeoffer_sell_shiptech" group="stationGroup" tags="tradeofferdock">
+				<offset>
+					<position x="1080" y="900" z="1800"/>
+					<quaternion qx="-0" qy="-0.7071068" qz="-0" qw="-0.7071067"/>
+				</offset>
+			</connection>
+			<connection name="ConnectionFor_struct_econ_prod_shipsm_xen_macro" group="stationGroup" tags="production">
+				<offset>
+					<position x="0" y="2000" z="-823"/>
+				</offset>
+			</connection>
+		</add>   
+</diff>

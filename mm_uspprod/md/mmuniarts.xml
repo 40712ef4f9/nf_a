@@ -16,12 +16,14 @@
 				<do_if value="md.$todo_stations_moddlc?">
 					<set_value name="$todo" exact="
 						[
-							macro.xenon_asteroid_01_base_01_macro,
 							macro.struct_bt_alb_shippart_production_macro,
 							macro.struct_bt_te_shippartproduction_macro,
 							macro.struct_bt_ol_shippartproduction_macro
 						]
 					"/>
+					<!--do_if value="@macro.{['xenon_asteroid_01_base_01_macro'].random}" >
+						<append_to_list name="$todo" exact="macro.{['xenon_asteroid_01_base_01_macro'].random}"/>
+					</do_if-->
 					<do_all exact="$todo.count" counter="$j" >
 						<do_if value="md.$todo_stations_moddlc.indexof.{$todo.{$j}}" negate="true">
 							<append_to_list name="md.$todo_stations_moddlc" exact="$todo.{$j}"/>

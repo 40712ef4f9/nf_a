@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<add sel="//library[@name='NFMM_Basic']/actions/do_if[@value='$differentWorld?']">
-				<do_if value="true">
-					<append_to_list name="$foobar" exact="[macro.tzonecluster_a_sector03_zone112_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
-					<append_to_list name="$foobar" exact="[macro.tzonecluster_a_sector03_zone112_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
-					<append_to_list name="$foobar" exact="[macro.tzonecluster_a_sector03_zone112_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
+				<do_if value="@macro.{['cluster_m_macro'].random}">
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_a_sector03_zone112_macro, macro.{['xenon_asteroid_01_base_01_macro'].random}, faction.xenon]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_a_sector03_zone112_macro, macro.{['xenon_asteroid_01_base_01_macro'].random}, faction.xenon]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_a_sector03_zone112_macro, macro.{['xenon_asteroid_01_base_01_macro'].random}, faction.xenon]" comment="replace stuff"/>
 
-					<append_to_list name="$foobar" exact="[macro.tzonecluster_a_sector03_zone114_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
-					<append_to_list name="$foobar" exact="[macro.tzonecluster_a_sector03_zone114_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
-					<append_to_list name="$foobar" exact="[macro.tzonecluster_a_sector03_zone114_macro, macro.xenon_asteroid_01_base_01_macro, faction.xenon]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_a_sector03_zone114_macro, macro.{['xenon_asteroid_01_base_01_macro'].random}, faction.xenon]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_a_sector03_zone114_macro, macro.{['xenon_asteroid_01_base_01_macro'].random}, faction.xenon]" comment="replace stuff"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_a_sector03_zone114_macro, macro.{['xenon_asteroid_01_base_01_macro'].random}, faction.xenon]" comment="replace stuff"/>
 				</do_if>
 	</add>
 
 	<!--
-	vanilla MAP
+	vanilla + cust MAP
 	-->
 	<add sel="//library[@name='NFMM_Basic_incl_vanilla']/actions">
 			<do_if value="@macro.{['cluster_t_macro'].random}" comment="md.$FieldsOfOpportunity">
-				<append_to_list name="$foobar" exact="[macro.cluster_t_sector02_zone005_macro, macro.struct_bt_te_shippartproduction_macro, faction.teladi]"/>
-				<append_to_list name="$foobar" exact="[macro.cluster_t_sector01_zone002_macro, macro.struct_bt_te_shippartproduction_macro, faction.teladi]"/>
+				<append_to_list name="$foobar" exact="[macro.{['cluster_t_sector02_zone005_macro'].random}, macro.struct_bt_te_shippartproduction_macro, faction.{['teladi'].random}]"/>
+				<append_to_list name="$foobar" exact="[macro.{['cluster_t_sector01_zone002_macro'].random}, macro.struct_bt_te_shippartproduction_macro, faction.{['teladi'].random}]"/>
 			</do_if>
 			<do_if value="@macro.{['cluster_m_macro'].random}" comment="md.$DLC2_Clusters.count">
-				<append_to_list name="$foobar" exact="[macro.tzonecluster_l_sector03_zone005_macro, macro.struct_bt_alb_shippart_production_macro, faction.atlas]"/>
-				<append_to_list name="$foobar" exact="[macro.tzonecluster_m_sector01_zone005_macro, macro.struct_bt_alb_shippart_production_macro, faction.terracorp]"/>
-				<append_to_list name="$foobar" exact="[macro.tzonecluster_m_sector01_zone005_macro, macro.struct_bt_alb_shippart_production_macro, faction.terracorp]"/>
+				<append_to_list name="$foobar" exact="[macro.{['tzonecluster_l_sector03_zone005_macro'].random}, macro.struct_bt_alb_shippart_production_macro, faction.{['atlas'].random}]"/>
+				<append_to_list name="$foobar" exact="[macro.{['tzonecluster_m_sector01_zone005_macro'].random}, macro.struct_bt_alb_shippart_production_macro, faction.{['terracorp'].random}]"/>
+				<append_to_list name="$foobar" exact="[macro.{['tzonecluster_m_sector01_zone005_macro'].random}, macro.struct_bt_alb_shippart_production_macro, faction.{['terracorp'].random}]"/>
 			</do_if>
 
 			<append_to_list name="$foobar" exact="[macro.tzonecluster_d_sector18_zone50_macro, macro.struct_bt_alb_shippart_production_macro, faction.canteran]"/>

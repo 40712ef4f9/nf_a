@@ -291,6 +291,7 @@
 								macro.units_size_xl_red_destroyer_macro,
 								macro.units_size_l_single_attack_ship_macro,
 								macro.units_size_xl_van_destroyer_macro,
+								macro.units_size_xl_van_destroyer_mk2_macro,
 								macro.units_size_xl_cs_omicron_ship_02_5_macro,
 								macro.units_size_xl_cs_omicron_ship_02_mk2_macro,
 								macro.units_size_l_cs_omicron_ship_03_sa_macro
@@ -457,7 +458,8 @@
 								macro.units_size_l_xenon_01_dc_macro,
 								macro.units_size_xl_xenon_01_c_macro,
 								macro.units_size_l_xenon_outk_macro,
-								macro.units_size_xl_builder_outpost_macro
+								macro.units_size_xl_builder_outpost_macro,
+								macro.units_size_xl_van_destroyer_mk2_macro
 							]
 						"/>
 					<do_all exact="$todo.count" counter="$j" >
@@ -497,6 +499,24 @@
 					<do_all exact="$todo.count" counter="$j" >
 						<do_if value="md.$todo_ships_small_others_trade.indexof.{$todo.{$j}}" negate="true">
 							<append_to_list name="md.$todo_ships_small_others_trade" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
+				<do_if value="md.$todo_stations_moddlc?">
+						<set_value name="$todo" exact="
+							[
+								macro.struct_bt_alb_small_ships_complex_hoa_macro,
+								macro.struct_econ_weapon_ar_defence_pl_macro,
+								macro.struct_bt_hoa_shipyard_macro,
+								macro.struct_bt_pmc_shipyard_macro,
+								macro.struct_bt_sy_heretic_macro,
+								macro.struct_bt_pir_shipyard_2_macro
+							]
+						"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="md.$todo_stations_moddlc.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="md.$todo_stations_moddlc" exact="$todo.{$j}"/>
 						</do_if>
 					</do_all> 
 					<remove_value name="$todo"/>
@@ -639,8 +659,8 @@
 				<do_if value="global.$mmpiratesy_pfactions?">
 					<set_value name="$todo" exact="
 						[
-								faction.{'%1'.['teladigunrunner']},
-								faction.{'%1'.['teladidrugrunner']}
+								faction.{['teladigunrunner'].random},
+								faction.{['teladidrugrunner'].random}
 						]
 					"/>
 					<do_all exact="$todo.count" counter="$j" >
@@ -657,7 +677,7 @@
 				<do_if value="global.$mmpiratesy_pfactions?">
 					<set_value name="$todo" exact="
 						[
-								faction.{'%1'.['atlas']}
+								faction.{['atlas'].random}
 						]
 					"/>
 					<do_all exact="$todo.count" counter="$j" >
@@ -974,8 +994,8 @@
 						<do_all exact="$ShiptraderDocks.{$j}.actors.count" counter="$k" >
 							<do_if value="$ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.shiptrader or $ShiptraderDocks.{$j}.actors.{$k}.type == entitytype.smallshiptrader">
 								<set_remote_commable actor="$ShiptraderDocks.{$j}.actors.{$k}" remote="true" />
-								<do_if value="$ShiptraderDocks.{$j}.hasownaccount">
-									<remove_actor_account actor="$ShiptraderDocks.{$j}" transfer="$ShiptraderDocks.{$j}.isplayerowned" />
+								<do_if value="$ShiptraderDocks.{$j}.actors.{$k}.hasownaccount">
+									<remove_actor_account actor="$ShiptraderDocks.{$j}.actors.{$k}" transfer="$ShiptraderDocks.{$j}.actors.{$k}.isplayerowned" />
 								</do_if>
 								<share_actor_account actor="$ShiptraderDocks.{$j}.actors.{$k}" otherobject="event.param2.tradenpc" chance="if event.param2.tradenpc.money != $ShiptraderDocks.{$j}.actors.{$k}.money or event.param2.tradenpc.money == 0Cr then 100 else 0" />
 								<set_value name="$DockHasShipTrader" exact="true" />

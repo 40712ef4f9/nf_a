@@ -2632,7 +2632,38 @@
 				</primary>
 			</production>    
 			<component ref="units_size_xl_van_destroyer_macro" amount="1" />
-			<icon video="units_size_xl_red_destroyer_macro" />
+			<icon video="units_size_xl_van_destroyer_macro" />
+		</ware>
+		<ware id="shp_xl_van_destroyer_mk2" name="{40000,113}" description="{40000,14}" transport="ship" size="ship" volume="1" tags="ship">
+			<price min="24397462" average="27863282" max="30329103" />
+			<production time="480" amount="1" method="default" name="{20206,101}">
+				<primary>
+					<ware ware="bioopticwiring" amount="284" />
+					<ware ware="energycells" amount="1520" />
+					<ware ware="foodrations" amount="740" />
+					<ware ware="fusionreactor" amount="80" />
+					<ware ware="holtzmanfieldgenerator" amount="154" />
+					<ware ware="microchips" amount="278" />
+					<ware ware="plasmaflowregulator" amount="102" />
+					<ware ware="reinforcedmetalplating" amount="246" />
+					<ware ware="scanningarray" amount="188" />
+				</primary>
+			</production>
+			<production time="480" amount="1" method="omicron" name="{20206,301}">
+				<primary>
+					<ware ware="bioelectricneurongel" amount="228" />
+					<ware ware="bofu" amount="320" />
+					<ware ware="emspectrometer" amount="148" />
+					<ware ware="energycells" amount="1320" />
+					<ware ware="fusionreactor" amount="46" />
+					<ware ware="holtzmanfieldgenerator" amount="114" />
+					<ware ware="plasmaflowregulator" amount="62" />
+					<ware ware="plasmapumps" amount="238" />
+					<ware ware="reinforcedmetalplating" amount="186" />
+				</primary>
+			</production>    
+			<component ref="units_size_xl_van_destroyer_mk2_macro" amount="1" />
+			<icon video="units_size_xl_van_destroyer_mk2_macro" />
 		</ware>
 		<ware id="shp_xl_fort" name="{40000,19}" description="{40000,20}" transport="ship" size="ship" volume="1" tags="ship">
 			<price min="28634423" average="30179230" max="33724038" />
@@ -4636,6 +4667,55 @@
 				</primary>
 			</production>
 			<component ref="struct_econ_prod_shipm_dv_macro" amount="1" />
+		</ware>
+
+		<ware id="stp_pro_eshell" name="stp_pro_eshell" transport="container" size="part" volume="1" tags="part">
+			<price min="1" average="1" max="1" />
+			<production time="94" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="bioopticwiring" amount="2758" />
+					<ware ware="energycells" amount="2062" />
+					<ware ware="fusionreactor" amount="564" />
+					<ware ware="reinforcedmetalplating" amount="2644" />
+				</primary>
+			</production>
+			<component ref="struct_at_xen_eshell_macro" amount="1" />
+		</ware>
+		<ware id="stp_pro_fshell" name="stp_pro_fshell" transport="container" size="part" volume="1" tags="part">
+			<price min="1" average="1" max="1" />
+			<production time="94" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="bioopticwiring" amount="2758" />
+					<ware ware="energycells" amount="2062" />
+					<ware ware="fusionreactor" amount="564" />
+					<ware ware="reinforcedmetalplating" amount="2644" />
+				</primary>
+			</production>
+			<component ref="struct_at_xen_fshell_macro" amount="1" />
+		</ware>
+		<ware id="stp_pro_tshell" name="stp_pro_tshell" transport="container" size="part" volume="1" tags="part">
+			<price min="1" average="1" max="1" />
+			<production time="94" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="bioopticwiring" amount="2758" />
+					<ware ware="energycells" amount="2062" />
+					<ware ware="fusionreactor" amount="564" />
+					<ware ware="reinforcedmetalplating" amount="2644" />
+				</primary>
+			</production>
+			<component ref="struct_at_xen_tshell_macro" amount="1" />
+		</ware>
+		<ware id="stp_pro_oshell" name="stp_pro_oshell" transport="container" size="part" volume="1" tags="part">
+			<price min="1" average="1" max="1" />
+			<production time="94" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="bioopticwiring" amount="2758" />
+					<ware ware="energycells" amount="2062" />
+					<ware ware="fusionreactor" amount="564" />
+					<ware ware="reinforcedmetalplating" amount="2644" />
+				</primary>
+			</production>
+			<component ref="struct_at_xen_oshell_macro" amount="1" />
 		</ware>
 
 		<ware id="stp_props_surf_playerdock_ships_macro" name="stp_props_surf_playerdock_ships_macro" transport="container" size="part" volume="1" tags="part">

@@ -274,7 +274,7 @@
 					</do_elseif>
 					<do_elseif value="event.param2.{1}? and event.param2.{1} == 'do_restrict'">
 						<do_if value="not event.object.$trade_restrictions?">
-							<set_value name="event.object.$trade_restrictions" exact="table[$tags = [], $tags_sell = [], $tags_buy = []]"/><!-- , $ware = [] -->
+							<set_value name="event.object.$trade_restrictions" exact="table[$tags = [], $tags_sell = [], $tags_buy = [], $ware_sell = [], $ware_buy = []]"/><!--  -->
 						</do_if>
 						<do_if value="event.param2.{2} == 'tag' and (event.object.$trade_restrictions.$tags.indexof.{event.param2.{3}} or event.object.$trade_restrictions.$tags_buy.indexof.{event.param2.{3}} or event.object.$trade_restrictions.$tags_sell.indexof.{event.param2.{3}})">
 							<do_if value="event.object.$trade_restrictions.$tags_sell.indexof.{event.param2.{3}}">

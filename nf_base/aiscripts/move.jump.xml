@@ -23,7 +23,12 @@
     </do_if>
   </add>
 
-  <replace sel="//do_if[@value='this.ship.cargo.{ware.fuelcells}.count lt this.ship.cargo.{ware.fuelcells}.max * 0.2f']/@value">this.ship.cargo.{ware.fuelcells}.count lt [this.ship.cargo.{ware.fuelcells}.max, 2500].min * 0.2f</replace>
+  <add sel="//do_if[@value='this.ship.cargo.{ware.fuelcells}.count lt this.ship.cargo.{ware.fuelcells}.max * 0.2f']" pos="prepend">
+      <do_if value="$doRefuel?">
+        <set_value name="$doRefuel" exact="false" />
+      </do_if>
+  </add>
+  <replace sel="//do_if[@value='this.ship.cargo.{ware.fuelcells}.count lt this.ship.cargo.{ware.fuelcells}.max * 0.2f']/@value">@$doRefuel or this.ship.cargo.{ware.fuelcells}.count lt [this.ship.cargo.{ware.fuelcells}.max, 2500].min * 0.2f</replace>
 
   <add sel="//label[@name='checkpath']" pos="after">
     <do_if value="not $ignorefuel and $startsector? and global.$nfconfig.$AdvJump and this.ship.gatedistance.{$startsector}">
@@ -68,22 +73,28 @@
   </add>
 
   <add sel="//do_if[@value='this.ship.cargo.{ware.fuelcells}.count lt this.ship.jumpcostto.[$targetsector, $jumpposition]']" pos="before">
-    <set_value name="$baseFuel" exact="this.ship.jumpcostto.[$targetsector, $jumpposition]" />
-    <set_value name="$requiredFuel" exact="$baseFuel" />
-    <set_value name="$additionalFuel" exact="0" />
-    <do_if value="not $ignorefuel and global.$nfconfig.$AdvJump and this.ship.gatedistance.{$targetsector}">
-      <set_value name="$additionalFuel" exact="this.ship.gatedistance.{$targetsector} * @$gateCost"/>
-    </do_if>
-
-    <do_if value="$additionalFuel and this.ship.cargo.{ware.fuelcells}.count lt ($baseFuel + $additionalFuel)">
-      <set_value name="$requiredFuel" exact="$baseFuel + $additionalFuel" />
-    </do_if>
-    <do_elseif value="$additionalFuel and this.ship.cargo.{ware.fuelcells}.count lt ($baseFuel + $additionalFuel) and this.ship.cargo.{ware.fuelcells}.count lt $baseFuel">
+    <do_if value="true">
+      <set_value name="$baseFuel" exact="this.ship.jumpcostto.[$targetsector, $jumpposition]" />
       <set_value name="$requiredFuel" exact="$baseFuel" />
-      <set_value name="$canJumpGate" exact="false"/>
-    </do_elseif>
-    <remove_value name="$baseFuel"/>
-    <remove_value name="$additionalFuel"/>
+      <set_value name="$additionalFuel" exact="0" />
+      <do_if value="not $ignorefuel and global.$nfconfig.$AdvJump and this.ship.gatedistance.{$targetsector}">
+        <set_value name="$additionalFuel" exact="this.ship.gatedistance.{$targetsector} * @$gateCost"/>
+      </do_if>
+
+      <do_if value="$additionalFuel and this.ship.cargo.{ware.fuelcells}.count ge ($baseFuel + $additionalFuel)">
+        <set_value name="$requiredFuel" exact="$baseFuel + $additionalFuel" />
+      </do_if>
+      <do_elseif value="this.ship.cargo.{ware.fuelcells}.count lt $baseFuel" chance="if $autorefuel and not $doRefuel? then 100 else 0">
+        <set_value name="$doRefuel" />
+        <resume label="fuelcheck"/>
+      </do_elseif>
+      <do_elseif value="$additionalFuel and this.ship.cargo.{ware.fuelcells}.count lt ($baseFuel + $additionalFuel) and this.ship.cargo.{ware.fuelcells}.count ge $baseFuel">
+        <set_value name="$requiredFuel" exact="$baseFuel" />
+        <set_value name="$canJumpGate" exact="false"/>
+      </do_elseif>
+      <remove_value name="$baseFuel"/>
+      <remove_value name="$additionalFuel"/>
+    </do_if>
   </add>
   <replace sel="//do_if[@value='this.ship.cargo.{ware.fuelcells}.count lt this.ship.jumpcostto.[$targetsector, $jumpposition]']/@value">this.ship.cargo.{ware.fuelcells}.count lt $requiredFuel</replace>
 

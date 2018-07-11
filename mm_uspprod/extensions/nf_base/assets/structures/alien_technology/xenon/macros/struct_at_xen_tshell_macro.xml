@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<remove sel="//properties/production" silent="1" /> 	
+		<add sel="//properties"> 	
+			<production wares="shieldgenerator drp_cargolifter drp_construction drp_interceptor_mk1 drp_interceptor_mk2 drp_intrepid_mk1 drp_intrepid_mk2 drp_overrun_mk1 drp_overrun_mk2 drp_scoopcollector_mk1 drp_scoopcollector_mk2 drp_surfaceminer_mk1 drp_surfaceminer_mk2">
+				<queue>
+				  <item ware="shieldgenerator" method="xenon" />
+				  <item ware="drp_cargolifter" method="universalparts" />
+				  <item ware="drp_construction" method="universalparts" />
+				  <item ware="drp_interceptor_mk1" method="universalparts" />
+				  <item ware="drp_interceptor_mk2" method="universalparts" />
+				  <item ware="drp_intrepid_mk1" method="universalparts" />
+				  <item ware="drp_intrepid_mk2" method="universalparts" />
+				  <item ware="drp_overrun_mk1" method="universalparts" />
+				  <item ware="drp_overrun_mk2" method="universalparts" />
+				  <item ware="drp_scoopcollector_mk1" method="universalparts" />
+				  <item ware="drp_scoopcollector_mk2" method="universalparts" />
+				  <item ware="drp_surfaceminer_mk1" method="universalparts" />
+				  <item ware="drp_surfaceminer_mk2" method="universalparts" />
+				</queue>
+			</production>
+		</add>   
+</diff>

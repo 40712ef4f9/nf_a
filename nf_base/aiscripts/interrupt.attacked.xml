@@ -9,6 +9,11 @@
           <check_value value="not [command.attackobject,command.patrol,command.escort].indexof.{this.command.value} or (this.ship.primarypurpose != objectpurpose.fight or (this.ship.primarypurpose == objectpurpose.fight and this.ship.hullpercentage lt 40 and this.ship.shieldpercentage lt 10))" />
           <check_value value="this.ship.isboostactive or this.commandaction.value == commandaction.jumping" negate="true" />
 	</add>
+	<add sel="//aiscript/interrupts/library/handler/actions" pos="prepend">
+	  <do_if value="this.ship.isclass.[class.ship_s, class.ship_m] and this.ship.dps.turrets.all">
+		<set_turret_targets object="this.ship" target="[event.param]" />
+	  </do_if>
+	</add>
 
 
 	<add sel="//handler[@name='AttackHandler']/actions" pos="prepend">
