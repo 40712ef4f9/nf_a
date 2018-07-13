@@ -2273,16 +2273,23 @@
 		</production>
 	</add>
 	<add silent="1" sel="//wares/ware[@id='shp_xl_vacana_battleship_01']/production[@method='default']" pos="after" >
-		<production time="780" amount="1" method="universalparts" name="Uniparts">
+		<production time="680" amount="1" method="universalparts" name="Uniparts">
 			<primary>
 				<ware ware="shippart" amount="112" />
 			</primary>
 		</production>
 	</add>
 	<add silent="1" sel="//wares/ware[@id='shp_xl_vacana_destroyer_01']/production[@method='default']" pos="after" >
-		<production time="780" amount="1" method="universalparts" name="Uniparts">
+		<production time="580" amount="1" method="universalparts" name="Uniparts">
 			<primary>
 				<ware ware="shippart" amount="109" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_xl_pirates_destroyer_01']/production[@method='default']" pos="after" >
+		<production time="580" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="110" />
 			</primary>
 		</production>
 	</add>

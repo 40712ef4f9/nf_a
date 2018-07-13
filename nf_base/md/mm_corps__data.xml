@@ -2725,7 +2725,7 @@
 					<set_value name="$temp" exact="if $tmp_jobs? then $tmp_jobs.count else false"/>
 					<set_value name="$temp_next" exact="true"/>
 					<!-- scout -->
-					<do_if value="$temp and $temp_next"><!--  chance="if global.$nfconfig.$Check? then 100 else 0"-->
+					<do_if value="$temp and $temp_next" chance="if $tmp_jobs.count gt 2 then 33 else 100" comment="reduce similar scouts"><!--  chance="if global.$nfconfig.$Check? then 100 else 0"-->
 						<set_value name="$temp" exact="$tmp_jobs.count"/>
 						<set_value name="$param" exact="[]"/>
 						<set_value name="$destination" exact="$sectors.random" chance="if $destination? and $destination.exists then 0 else 100"/>
@@ -5616,10 +5616,22 @@
 					</do_if>
 					<!-- start Job / create order -->
 					<do_if value="$tmp">
+						<set_value name="$tmpDestination" exact="null"/>
+						<do_if value="$validZonesCore.indexof.{$tmp.zone}">
+							<set_value name="$tmpDestination" exact="$tmp.zone"/>
+						</do_if>
+						<do_all exact="$validZonesCore.count" counter="$r" chance="if $tmpDestination then 0 else 100">
+							<do_if value="$validZonesCore.{$r}.cluster == $tmp.cluster">
+								<set_value name="$tmpDestination" exact="$validZonesCore.{$r}"/>
+								<break />
+							</do_if>
+						</do_all>
 						<start_script object="$tmp.pilot" name="'move.shipjobs'">
 							<param name="run_script_name" value="'move.voyager'"/>
 							<param name="run_script_param" value="[['ignoreownedzones', true], ['workspace', [player.galaxy]]]"/>
+							<param name="destination" value="if $tmpDestination then $tmpDestination else if @$validZonesCore.count then $validZonesCore.random else null"/>
 						</start_script>
+						<remove_value name="$tmpDestination"/>
 					</do_if>
 					<do_else>
 						<append_to_list name="$tmp_jobs" exact="['move.voyager', if @$validZonesCore.count then $validZonesCore.random else null, [['ignoreownedzones', true], ['workspace', [player.galaxy]]]]"/>
