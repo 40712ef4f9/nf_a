@@ -445,6 +445,7 @@
         <do_all exact="$resources.count" counter="$i">
           <set_value name="$ware" exact="$resources.{$i}" />
           <do_if value="this.ship.cargo.{$ware}.max gt 0">
+<debug_text text="'No Cargo %1 [%5] %2/%3 %4'.[$homebase.macro.id, $homebase.cargo.{$ware}.count , $homebase.cargo.{$ware}.target, $homebase.hullpercentage, $ware.id]" filter="scripts_verbose" chance="if $checkPriority? and $homebase.cargo.{$ware}.target == 0 and $homebase.hullpercentage ge 98 then 100 else 0" />
             <do_if value="$homebase.cargo.{$ware}.count == 0 or $homebase.cargo.{$ware}.count/$homebase.cargo.{$ware}.target lt 0.1f" chance="if $checkPriority? and $homebase.cargo.{$ware}.target then 100 else 0">
               <set_value name="$importantBuy" operation="add" />
               <do_if value="this.$trade_restrictions.$ware_buy.indexof.{$ware} == 0" chance="$wareChance">
@@ -1055,6 +1056,15 @@
       <set_value name="$amount" />
       <debug_text text="'Amount that will be traded: ' + $amount" chance="$debugchance" />
       <retval name="amount" value="$amount" />-->
+  <do_if value="$buyoffer.exists and not ($commander.resources.list.indexof.{$buyoffer.ware} or $commander.products.list.indexof.{$buyoffer.ware} or $commander.tradewares.list.indexof.{$buyoffer.ware})">
+<debug_text text="'WRONG ByOffer %5: %1 %2/%3 %4 ::so %6'.[$commander.macro.id, $commander.cargo.{$buyoffer.ware}.count , $commander.cargo.{$buyoffer.ware}.target, $commander.hullpercentage, $buyoffer.ware, [@$commander.cargo.{@$selloffer.ware}.count , @$commander.cargo.{@$selloffer.ware}.target, @$selloffer.ware]]" filter="scripts_verbose" />
+  </do_if>
+  <do_if value="$selloffer.exists and not ($commander.resources.list.indexof.{$selloffer.ware} or $commander.products.list.indexof.{$selloffer.ware} or $commander.tradewares.list.indexof.{$selloffer.ware})">
+<debug_text text="'WRONG SellOffer %5: %1 %2/%3 %4'.[$commander.macro.id, $commander.cargo.{$selloffer.ware}.count , $commander.cargo.{$selloffer.ware}.target, $commander.hullpercentage, $selloffer.ware]" filter="scripts_verbose" />
+  </do_if>
+  <do_if value="$buyoffer.exists and $selloffer.exists and $buyoffer.buyer.cluster != $selloffer.seller.cluster">
+<debug_text text="'XtraWIDE Trade %5: %1 %2/%3 %4 ::so %6 %7 %8'.[$commander.macro.id, $commander.cargo.{$buyoffer.ware}.count , $commander.cargo.{$buyoffer.ware}.target, $commander.hullpercentage, $buyoffer.ware, [@$commander.cargo.{@$selloffer.ware}.count , @$commander.cargo.{@$selloffer.ware}.target, @$selloffer.ware], [$sellrange, $buyrange, $range, @$trade_zones.count], @$tradeClusters ]" filter="scripts_verbose" />
+  </do_if>
 
       <return>
         <retval name="buyoffer" value="$buyoffer" />

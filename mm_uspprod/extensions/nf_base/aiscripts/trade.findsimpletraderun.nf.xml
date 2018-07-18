@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<replace sel="//do_if[@value='false']">
+        <do_if value="$warelist.indexof.{ware.shippart} or $warelist.indexof.{ware.shippartcomp}" chance="100 - ($selloffers.count gt 0)*100">
+            <create_list name="$expware" />
+            <do_if value="$warelist.indexof.{ware.shippart}">
+              <append_to_list name="$expware" exact="ware.shippart" />
+            </do_if>
+            <do_if value="$warelist.indexof.{ware.shippartcomp}">
+              <append_to_list name="$expware" exact="ware.shippartcomp" />
+            </do_if>
+			<find_sell_offer tradepartner="this.ship" wares="$expware" result="$selloffers" multiple="true" space="$range">
+			  <amount min="5"/>
+			</find_sell_offer>
+			<remove_value name="$expware"/>
+        </do_if>
+	</replace>
+</diff>

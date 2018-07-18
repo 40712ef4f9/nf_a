@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-<aiscript name="trade.findsimpletraderun.nf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+<aiscript name="trade.findsimpletraderun.nf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="2">
   <params>
     <param name="warelist" />
     <param name="range" />
     <param name="sellrange" default="null"/>
     <param name="buyrange" default="null"/>
     <param name="lasttrade" default="null" comment="list: [$buyoffer, $ware, $tradepartner]"/>
+    <param name="commander" default="null" />
+    <param name="customerfaction" default="this.ship.trueowner" />
     <param name="debugchance" default="0"/>
     <param name="debugchance2" default="0" comment="more spammy"/>
   </params>
@@ -14,6 +16,10 @@
   </init>
   <patch sinceversion="1">
     <set_value name="$buyoffer" exact="null" />
+  </patch>
+  <patch sinceversion="2">
+    <set_value name="$commander" exact="null"/>
+    <set_value name="$customerfaction" exact="this.ship.trueowner"/>
   </patch>
   <attention min="unknown">
     <actions>
@@ -48,9 +54,10 @@
 
       <do_if value="$currentcargo.count gt 0 and this.ship.cargo.capacity gt 0 and (this.ship.cargo.free / this.ship.cargo.capacity) lt 0.20f">
         <debug_text text="player.age + ' look for buy offers'" chance="$debugchance" />
+        <create_list name="$buyoffers" />
         <!-- own CV -->
-        <find_buy_offer tradepartner="this.ship" wares="$currentcargo" space="$range" result="$buyoffers">
-          <match_buyer owner="this.ship.trueowner">
+        <find_buy_offer tradepartner="this.ship" wares="$currentcargo" space="$range" result="$buyoffers" chance="if ['acmecorp', 'deepwater'].indexof.{$customerfaction} then 0 else 100">
+          <match_buyer owner="$customerfaction">
             <match class="class.ship_xl" />
           </match_buyer>
         </find_buy_offer>
@@ -61,12 +68,24 @@
           </match_buyer>
         </find_buy_offer>
         <!-- own trades any -->
-        <find_buy_offer tradepartner="this.ship" wares="$currentcargo" result="$buyoffer" space="$range" chance="100 - $buyoffer.available*100">
-          <match_buyer owner="this.ship.trueowner">
-            <match negate="true" class="class.ship_xl" />
-          </match_buyer>
-          <stocklevel max="0.5f" />
-        </find_buy_offer>
+        <do_if value="['acmecorp', 'deepwater'].indexof.{$customerfaction}">
+          <find_buy_offer tradepartner="this.ship" wares="$currentcargo" result="$buyoffer" space="$range" chance="100 - $buyoffer.available*100">
+            <match_buyer>
+              <match negate="true" class="class.ship_xl" />
+              <match negate="true" owner="faction.acmecorp" />
+              <match negate="true" owner="faction.deepwater" />
+            </match_buyer>
+            <stocklevel max="0.5f" />
+          </find_buy_offer>
+        </do_if>
+        <do_else>
+          <find_buy_offer tradepartner="this.ship" wares="$currentcargo" result="$buyoffer" space="$range" chance="100 - $buyoffer.available*100">
+            <match_buyer owner="$customerfaction">
+              <match negate="true" class="class.ship_xl" />
+            </match_buyer>
+            <stocklevel max="0.5f" />
+          </find_buy_offer>
+        </do_else>
         <!-- default -->
         <find_buy_offer tradepartner="this.ship" wares="$currentcargo" result="$buyoffer" space="$range" chance="100 - $buyoffer.available*100">
           <stocklevel max="0.5f" />
@@ -78,15 +97,31 @@
       </do_if>
       <do_else>
         <debug_text text="player.age + ' look for sell offers'" chance="$debugchance" />
+        <create_list name="$selloffers" />
         <!-- own trades -->
-        <find_sell_offer tradepartner="this.ship" wares="$warelist" result="$selloffers" multiple="true" space="$range">
-          <match_seller owner="this.ship.trueowner" />
-          <stocklevel min="0.5f" />
-        </find_sell_offer>
+        <do_if value="['acmecorp', 'deepwater'].indexof.{$customerfaction}">
+          <find_sell_offer tradepartner="this.ship" wares="$warelist" result="$selloffers" multiple="true" space="$range">
+            <match_seller>
+              <match negate="true" owner="faction.acmecorp" />
+              <match negate="true" owner="faction.deepwater" />
+            </match_seller>
+            <stocklevel min="0.5f" />
+          </find_sell_offer>
+        </do_if>
+        <do_else>
+          <find_sell_offer tradepartner="this.ship" wares="$warelist" result="$selloffers" multiple="true" space="$range">
+            <match_seller owner="$customerfaction" />
+            <stocklevel min="0.5f" />
+          </find_sell_offer>
+        </do_else>
         <!-- default -->
         <find_sell_offer tradepartner="this.ship" wares="$warelist" result="$selloffers" multiple="true" space="$range" chance="100 - ($selloffers.count gt 0)*100">
           <stocklevel min="0.5f" />
         </find_sell_offer>
+        <!-- expensive ware -->
+        <do_if value="false">
+          <!-- shipparts -->
+        </do_if>
         <debug_text text="player.age + ': found %1 selloffers for wares %2 in %3'.[$selloffers.count, $warelist, $range]" chance="$debugchance" />
         <do_if value="$selloffers.count gt 0">
           <create_list name="$tradewareoffers" />

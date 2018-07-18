@@ -12,10 +12,20 @@
 					<event_conversation_returned_to_section section="gMain_propertyResult" />
 				</check_any>
 				<check_value value="event.param2.owner" exact="faction.player" />
-				<check_value value="event.param2.canbuildships" />
+				<check_value value="event.param2.tradenpc" />
+				<check_any>
+					<check_value value="event.param2.canbuildships" />
+					<check_value value="event.param2.canproduceships" />
+					<check_value value="event.param2.tradewares.list.count and event.param2.products.list.count" />
+				</check_any>
 			</conditions>
 			<actions>
-            	<add_player_choice_subconv text="{2802,2210}" position="top_left" conversation="mmsyc_menu" actor="event.param2.tradenpc" baseparam="event.param2" />
+				<do_if value="event.param2.canbuildships">
+					<add_player_choice_subconv text="{2802,2210}" position="top_left" conversation="mmsyc_menu" actor="event.param2.tradenpc" baseparam="event.param2" />
+				</do_if>
+				<do_else>
+					<add_player_choice_sub position="top_left" text="{30114,20001}" section="gMain_objectTradeWares" choiceparam="[0, 0, event.param2.tradenpc]" comment="Tradeware"/>
+				</do_else>
 			</actions>
 		</cue>
 

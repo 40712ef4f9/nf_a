@@ -147,6 +147,10 @@
       <do_if value="$traderunscript" exact="'trade.findtraderun'">
         <set_value name="$traderunscript" exact="'trade.findtraderun.nf'" />
       </do_if>
+      <do_elseif value="$sellrange and $traderunscript == 'trade.findtraderun.nf' and this.ship.isclass.[class.ship_m, class.ship_s]">
+        <set_value name="$sellrange" exact="null"/>
+        <set_value name="$buyrange" exact="null"/>
+      </do_elseif>
 
       <do_if value="$tmpIdle?" negate="true">
         <set_value name="$findrun" exact="if this.$trade_failedfindruns? and this.$trade_failedfindruns gt 7 then 8 else if not this.$trade_failedfindruns? or this.$trade_failedfindruns lt 1 then 1 else this.$trade_failedfindruns"/>

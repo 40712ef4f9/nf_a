@@ -71,6 +71,7 @@
 					<set_value name="$tmpConfig.$sectorPatrol" exact="2" />
 					<set_value name="$tmpConfig.$clusterPatrol" exact="2" />
 					<set_value name="$tmpConfig.$patrolEscorts" exact="2" />
+					<set_value name="$tmpConfig.$carrierEscorts" exact="24" />
 					<set_value name="$tmpConfig.$scouts" exact="1" />
 					<set_value name="$tmpConfig.$fleets" exact="1" />
 					<set_value name="$tmpConfig.$max_builders" exact="2" />
@@ -89,6 +90,7 @@
 					<set_value name="$tmpConfig.$sectorPatrol" exact="0" />
 					<set_value name="$tmpConfig.$clusterPatrol" exact="0" />
 					<set_value name="$tmpConfig.$patrolEscorts" exact="2" />
+					<set_value name="$tmpConfig.$carrierEscorts" exact="24" />
 					<set_value name="$tmpConfig.$scouts" exact="0" />
 					<set_value name="$tmpConfig.$fleets" exact="1" />
 					<set_value name="$tmpConfig.$max_builders" exact="1" />
@@ -107,6 +109,7 @@
 					<set_value name="$tmpConfig.$sectorPatrol" exact="0" />
 					<set_value name="$tmpConfig.$clusterPatrol" exact="0" />
 					<set_value name="$tmpConfig.$patrolEscorts" exact="0" />
+					<set_value name="$tmpConfig.$carrierEscorts" exact="0" />
 					<set_value name="$tmpConfig.$scouts" exact="0" />
 					<set_value name="$tmpConfig.$fleets" exact="10" />
 					<set_value name="$tmpConfig.$max_builders" exact="0" />
@@ -125,6 +128,7 @@
 					<set_value name="$tmpConfig.$sectorPatrol" exact="0" />
 					<set_value name="$tmpConfig.$clusterPatrol" exact="0" />
 					<set_value name="$tmpConfig.$patrolEscorts" exact="0" />
+					<set_value name="$tmpConfig.$carrierEscorts" exact="0" />
 					<set_value name="$tmpConfig.$scouts" exact="0" />
 					<set_value name="$tmpConfig.$fleets" exact="0" />
 					<set_value name="$tmpConfig.$max_builders" exact="0" />
@@ -143,6 +147,7 @@
 					<set_value name="$tmpConfig.$sectorPatrol" exact="0" />
 					<set_value name="$tmpConfig.$clusterPatrol" exact="0" />
 					<set_value name="$tmpConfig.$patrolEscorts" exact="2" />
+					<set_value name="$tmpConfig.$carrierEscorts" exact="12" />
 					<set_value name="$tmpConfig.$scouts" exact="0" />
 					<set_value name="$tmpConfig.$fleets" exact="0" />
 					<set_value name="$tmpConfig.$max_builders" exact="3" />
@@ -760,7 +765,9 @@
 					<set_value name="$tmpConfig.$serviceFee" exact="$tmpConfig.$serviceFee *2" />
 
 					<set_value name="$tmpConfig.$cheatNPC" comment="cheat resources at NPC shipyards"/>
-					<set_value name="$tmpConfig.$cheatEscorts" comment="cheat escortvessels"/>
+					<do_if value="$_CEO.$isService?" negate="true">
+						<set_value name="$tmpConfig.$cheatEscorts" comment="cheat escortvessels"/>
+					</do_if>
 				</do_elseif>
 				<do_else comment="level.medium">
 					<!-- default -->
@@ -940,6 +947,7 @@
 							<set_value name="$tmp" exact="$tmpConfig.$scouts" operation="add"/>
 
 							<do_if value="$tmpConfig.$ships.$fight.count and $tmp">
+								<create_list name="$nonCarriers" />
 								<set_value name="$escorts_master_cap" exact="[4, $tmpConfig.$patrolEscorts].min"/>
 
 								<set_value name="$escorts_profile" exact="	if [level.veryhard, level.impossible].indexof.{player.difficulty} then 'increasing' else 
@@ -962,24 +970,65 @@
 									<set_value name="$escorts_cap_chance" exact="0"/>
 								</do_else>
 
+								<set_value name="$escortsC" exact="[$tmpConfig.$patrolEscorts, $tmpConfig.$carrierEscorts].max"/>
+
+								<do_if value="global.$mmcarriers? and $escortsC">
+									<set_value name="$escortsC_mid_chance" exact="$escorts_mid_chance"/>
+									<set_value name="$escortsC_cap_chance" exact="$escorts_cap_chance"/>
+								</do_if>
+								<do_else>
+									<set_value name="$escortsC_mid_chance" exact="0"/>
+									<set_value name="$escortsC_cap_chance" exact="0"/>
+								</do_else>
+
+								<do_if value="$escortsC_cap_chance">
+									<do_all exact="$tmpConfig.$ships.$fight.count" counter="$j" >
+										<do_if value="global.$mmcarriers.indexof.{$tmpConfig.$ships.$fight.{$j}}" negate="true">
+											<append_to_list name="$nonCarriers" exact="$tmpConfig.$ships.$fight.{$j}"/>
+										</do_if>
+									</do_all> 
+								</do_if>
+
 								<do_all exact="[($tmp * 0.7f)i, 1].max">
 									<set_value name="$temp" exact="$validZonesCore.random" />
+									<set_value name="$tempShp" exact="$tmpConfig.$ships.$fight.random" />
 									
-									<do_if value="true" chance="$escorts_mid_chance">
-										<set_value name="$escorts" min="$tmpConfig.$patrolEscorts/2" max="$tmpConfig.$patrolEscorts" profile="$escorts_profile"/>
+									<do_if value="global.$mmcarriers.indexof.{$tempShp}" chance="$escortsC_mid_chance">
 										<append_to_list name="$todo_ships" exact="
 											[ $temp.macro, null, [
-																		['fight', $tmpConfig.$ships.$fight.random, 1 ],
-																		['fight', $tmpConfig.$ships.$fight_sm.random, $escorts ]
+																		['fight', $tempShp, 1 ],
+																		['fight', $tmpConfig.$ships.$fight_sm.random, $escortsC]
 																	]
 											]
 										" />
 									</do_if>
+									<do_elseif value="global.$mmcarriers.indexof.{$tempShp}" chance="$escortsC_cap_chance">
+										<set_value name="$escorts" min="$escorts_master_cap/2" max="$escorts_master_cap" profile="$escorts_profile"/>
+										<set_value name="$tempShp2" exact="if $nonCarriers.count then $nonCarriers.random else $tmpConfig.$ships.$fight.random" />
+										<append_to_list name="$todo_ships" exact="
+											[ $temp.macro, null, [
+																		['fight', $tempShp, 1 ],
+																		['fight', $tmpConfig.$ships.$fight_sm.random, $escortsC],
+																		['fight', $tempShp2, $escorts ]
+																	]
+											]
+										" />
+									</do_elseif>
+									<do_elseif value="true" chance="$escorts_mid_chance">
+										<set_value name="$escorts" min="$tmpConfig.$patrolEscorts/2" max="$tmpConfig.$patrolEscorts" profile="$escorts_profile"/>
+										<append_to_list name="$todo_ships" exact="
+											[ $temp.macro, null, [
+																		['fight', $tempShp, 1 ],
+																		['fight', $tmpConfig.$ships.$fight_sm.random, $escorts ]
+																	]
+											]
+										" />
+									</do_elseif>
 									<do_elseif value="true" chance="$escorts_cap_chance">
 										<set_value name="$escorts" min="$escorts_master_cap/2" max="$escorts_master_cap" profile="$escorts_profile"/>
 										<append_to_list name="$todo_ships" exact="
 											[ $temp.macro, null, [
-																		['fight', $tmpConfig.$ships.$fight.random, 1 ],
+																		['fight', $tempShp, 1 ],
 																		['fight', $tmpConfig.$ships.$fight.random, $escorts ]
 																	]
 											]
@@ -988,11 +1037,14 @@
 									<do_else>
 										<append_to_list name="$todo_ships" exact="
 											[ $temp.macro, null, [
-																		['fight', $tmpConfig.$ships.$fight.random, 1 ]
+																		['fight', $tempShp, 1 ]
 																	]
 											]
 										" />
 									</do_else>
+									<remove_value name="$tempShp"/>
+									<remove_value name="$tempShp2"/>
+									<remove_value name="$escorts"/>
 								</do_all>
 							</do_if>
 						</do_if>
@@ -1000,8 +1052,12 @@
 						<remove_value name="$temp"/>
 
 						<remove_value name="$escorts"/>
+						<remove_value name="$escortsC"/>
+						<remove_value name="$nonCarriers"/>
 						<remove_value name="$escorts_cap_chance"/>
 						<remove_value name="$escorts_mid_chance"/>
+						<remove_value name="$escortsC_cap_chance"/>
+						<remove_value name="$escortsC_mid_chance"/>
 						<remove_value name="$escorts_profile"/>
 						<remove_value name="$escorts_master_cap"/>
 					</do_if>
@@ -2690,15 +2746,20 @@
 						</do_all>
 					</do_else>
 
-					<do_if value="$Object.cargo.{ware.fuelcells}.max" chance="if not global.$nfconfig.$plotSafe? then 25 else 0">
+					<do_if value="$Object.commander and $Object.commander.isclass.station">
+						<set_value name="$param" exact="[['warelist', $warebasket], ['range', 'cluster']]"/>
+						<set_value name="$script" exact="'trade.ship'"/>
+						<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_runscript" />
+					</do_if>
+					<do_elseif value="$Object.cargo.{ware.fuelcells}.max and $Object.isclass.[class.ship_l, class.ship_xl]" chance="if not global.$nfconfig.$plotSafe? then 25 else 0">
 						<set_value name="$param" exact="[['warelist', $warebasket], ['minbuy', 0], ['maxbuy', 2], ['minsell', 0], ['maxsell', 2]]"/>
 						<set_value name="$destination" exact="$sectors.random" chance="if $destination? and $destination.exists then 0 else 100"/>
 						<set_value name="$script" exact="'trade.ship.ranged'"/>
 						<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_tmp" />
 
 						<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_runscript" />
-					</do_if>
-					<do_elseif value="$Object.cargo.{ware.fuelcells}.max">
+					</do_elseif>
+					<do_elseif value="$Object.cargo.{ware.fuelcells}.max and $Object.isclass.[class.ship_l, class.ship_xl]">
 						<do_if value="$_CEO.$style? and $_CEO.$style == 'cooperative'">
 							<set_value name="$param" exact="[['warelist', $warebasket], ['range', 'cluster']]"/>
 						</do_if>
@@ -2721,7 +2782,7 @@
 					</do_else>
 					<remove_value name="$warebasket"/>
 				</do_elseif>
-				<do_elseif value="$Object.cargo.{ware.fuelcells}.max" >
+				<do_elseif value="$Object.cargo.{ware.fuelcells}.max and $Object.isclass.[class.ship_l, class.ship_xl]" >
 					<set_value name="$temp" exact="if $tmp_jobs? then $tmp_jobs.count else false"/>
 					<set_value name="$temp_next" exact="true"/>
 					<!-- scout -->
@@ -2840,7 +2901,7 @@
 					<remove_value name="$temp"/>
 					<remove_value name="$temp_next"/>
 				</do_elseif>
-				<do_elseif value="$Object.cargo.{ware.fuelcells}.max == 0" >
+				<do_elseif value="$Object.isclass.[class.ship_s, class.ship_m]" >
 					<set_value name="$newcommander" exact="null"/>
 					<set_value name="$subs" exact="if $tmpConfig.$patrolEscorts? then $tmpConfig.$patrolEscorts else 2"/>
 					<find_ship name="$tmpShips" space="$Object.cluster" owner="$Object.owner" primarypurpose="objectpurpose.fight" multiple="true">
@@ -3128,7 +3189,15 @@
 		<library name="MMCData_ship_job_runscript">
 			<actions>
 				<do_if value="['move.escort', 'BR.move.escort'].indexof.{$script} and $param.{1}.{1}? and $param.{1}.{1} == 'target'" chance="if not $noCommander? then 100 else 0">
-					<set_object_commander object="$Object" commander="$param.{1}.{2}" />
+					<do_if value="$param.{1}.{2}.defencenpc" chance="if $Object.isclass.[class.ship_s, class.ship_m] then 100 else 0">
+						<set_object_commander object="$Object" commander="$param.{1}.{2}" type="$param.{1}.{2}.defencenpc.type"/>
+					</do_if>
+					<do_elseif value="$param.{1}.{2}.pilot" chance="if $Object.isclass.[class.ship_l, class.ship_xl] then 100 else 0">
+						<set_object_commander object="$Object" commander="$param.{1}.{2}" type="$param.{1}.{2}.pilot.type"/>
+					</do_elseif>
+					<do_else>
+						<set_object_commander object="$Object" commander="$param.{1}.{2}"/>
+					</do_else>
 				</do_if>
 				<do_elseif value="$Object.subordinates.count == 0 and ['move.patrol', 'BR.move.patrol', 'BR.move.plunder', 'move.patrol.route'].indexof.{$script}" chance="($_CEO.$cheatEscorts? and $_CEO.money gt $_CEO.$cheatEscorts)*100">
 					<signal_objects object="$_CEO" param="'GIVE.ESCORTS'" param2="$Object" delay="60s"/>
@@ -5844,7 +5913,7 @@
 					<do_all exact="$tmp_todo.count" counter="$r">
 						<set_value name="$tmp_List" exact="$tmp_todo.{$r}.clone"/>
 						<do_all exact="$tmp_List.count" counter="$s" chance="if $tmp then 100 else 0">
-							<do_if value="$checkForNewJob.indexof.{$tmp_List.{$s}} == 0 and $tmp_List.{$s}.isclass.[class.ship_l, class.ship_xl] and $tmp_List.{$s}.subordinates.count lt $tmpConfig.$patrolEscorts">
+							<do_if value="$checkForNewJob.indexof.{$tmp_List.{$s}} == 0 and $tmp_List.{$s}.isclass.[class.ship_l, class.ship_xl] and $tmp_List.{$s}.subordinates.{$tmp_List.{$s}.pilot.type}.count lt $tmpConfig.$patrolEscorts">
 								<append_to_list name="$needEscort" exact="$tmp_List.{$s}"/>
 								<set_value name="$tmp" operation="subtract"/>
 							</do_if>
@@ -5948,15 +6017,15 @@
 					</do_if>
 					<set_value name="$tmpVmax" exact="$tempLeader.{$x}.maxspeed"/> 
 					<set_value name="$tmpVmax_sub" exact="$tmpVmax"/> 
-					<do_all exact="$tempLeader.{$x}.subordinates.count" counter="$y">
-						<do_if value="$tempLeader.{$x}.subordinates.{$y}.hullpercentage lt 95 or $tempLeader.{$x}.subordinates.{$y}.isboostactive or not $tempLeader.{$x}.subordinates.{$y}.isclass.[class.ship_l, class.ship_xl]">
+					<do_all exact="$tempLeader.{$x}.subordinates.{$tempLeader.{$x}.pilot.type}.count" counter="$y">
+						<do_if value="$tempLeader.{$x}.subordinates.{$tempLeader.{$x}.pilot.type}.{$y}.hullpercentage lt 95 or $tempLeader.{$x}.subordinates.{$tempLeader.{$x}.pilot.type}.{$y}.isboostactive or not $tempLeader.{$x}.subordinates.{$tempLeader.{$x}.pilot.type}.{$y}.isclass.[class.ship_l, class.ship_xl]">
 							<continue />
 						</do_if>
-						<do_elseif value="$tempLeader.{$x}.subordinates.{$y}.maxspeed ge $tmpVmax_sub">
+						<do_elseif value="$tempLeader.{$x}.subordinates.{$tempLeader.{$x}.pilot.type}.{$y}.maxspeed ge $tmpVmax_sub">
 							<continue />
 						</do_elseif>
 						<do_else>
-							<set_value name="$tmpVmax_sub" exact="$tempLeader.{$x}.subordinates.{$y}.maxspeed"/> 
+							<set_value name="$tmpVmax_sub" exact="$tempLeader.{$x}.subordinates.{$tempLeader.{$x}.pilot.type}.{$y}.maxspeed"/> 
 						</do_else>
 					</do_all> 
 					<do_if value="$tmpVmax gt $tmpVmax_sub">
@@ -5975,18 +6044,18 @@
 					<set_value name="$tmpNewLeader" exact="$tempLeader.{$x}"/>
 					<append_to_list name="$tempgroup" exact="$tempLeader.{$x}"/> 
 					<!-- check speed -->
-					<do_all exact="$tempLeader.{$x}.subordinates.count" counter="$y">
-						<do_if value="not $tempLeader.{$x}.subordinates.{$y}.isclass.[class.ship_l, class.ship_xl]">
+					<do_all exact="$tempLeader.{$x}.subordinates.{$tempLeader.{$x}.pilot.type}.count" counter="$y">
+						<do_if value="not $tempLeader.{$x}.subordinates.{$tempLeader.{$x}.pilot.type}.{$y}.isclass.[class.ship_l, class.ship_xl]">
 							<continue />
 						</do_if>
-						<do_elseif value="$tempLeader.{$x}.subordinates.{$y}.hullpercentage lt 95 or $tempLeader.{$x}.subordinates.{$y}.isboostactive or $tempLeader.{$x}.subordinates.{$y}.maxspeed ge $tmpVmax_sub">
-							<append_to_list name="$tempgroup" exact="$tempLeader.{$x}.subordinates.{$y}"/>
+						<do_elseif value="$tempLeader.{$x}.subordinates.{$tempLeader.{$x}.pilot.type}.{$y}.hullpercentage lt 95 or $tempLeader.{$x}.subordinates.{$tempLeader.{$x}.pilot.type}.{$y}.isboostactive or $tempLeader.{$x}.subordinates.{$tempLeader.{$x}.pilot.type}.{$y}.maxspeed ge $tmpVmax_sub">
+							<append_to_list name="$tempgroup" exact="$tempLeader.{$x}.subordinates.{$tempLeader.{$x}.pilot.type}.{$y}"/>
 							<continue />
 						</do_elseif>
 						<do_else>
-							<append_to_list name="$tempgroup" exact="$tempLeader.{$x}.subordinates.{$y}"/>
-							<set_value name="$tmpVmax_sub" exact="$tempLeader.{$x}.subordinates.{$y}.maxspeed"/>
-							<set_value name="$tmpNewLeader" exact="$tempLeader.{$x}.subordinates.{$y}"/> 
+							<append_to_list name="$tempgroup" exact="$tempLeader.{$x}.subordinates.{$tempLeader.{$x}.pilot.type}.{$y}"/>
+							<set_value name="$tmpVmax_sub" exact="$tempLeader.{$x}.subordinates.{$tempLeader.{$x}.pilot.type}.{$y}.maxspeed"/>
+							<set_value name="$tmpNewLeader" exact="$tempLeader.{$x}.subordinates.{$tempLeader.{$x}.pilot.type}.{$y}"/> 
 						</do_else>
 					</do_all> 
 					<!-- set new slowest ship as leader -->
@@ -6298,8 +6367,8 @@
 						<do_if value="$requiredCapships gt 1">
 							<set_value name="$countCapships" exact="1" />
 							<append_to_list name="$InvasionFleetList" exact="$InvasionFleet"/>
-							<do_all exact="$InvasionFleet.subordinates.count" counter="$x">
-								<do_if value="$InvasionFleet.subordinates.{$x}.isclass.[class.ship_l, class.ship_xl]">
+							<do_all exact="$InvasionFleet.subordinates.{$InvasionFleet.pilot.type}.count" counter="$x">
+								<do_if value="$InvasionFleet.subordinates.{$InvasionFleet.pilot.type}.{$x}.isclass.[class.ship_l, class.ship_xl]">
 									<set_value name="$countCapships" operation="add"/>
 								</do_if>
 							</do_all>
@@ -6311,8 +6380,8 @@
 								<do_if value="$InvasionFleet.isclass.[class.ship_l, class.ship_l]">
 									<set_value name="$countCapships" operation="add"/>
 								</do_if>
-								<do_all exact="$InvasionFleet.subordinates.count" counter="$x">
-									<do_if value="$InvasionFleet.subordinates.{$x}.isclass.[class.ship_l, class.ship_xl]">
+								<do_all exact="$InvasionFleet.subordinates.{$InvasionFleet.pilot.type}.count" counter="$x">
+									<do_if value="$InvasionFleet.subordinates.{$InvasionFleet.pilot.type}.{$x}.isclass.[class.ship_l, class.ship_xl]">
 										<set_value name="$countCapships" operation="add"/>
 									</do_if>
 								</do_all>
@@ -6329,7 +6398,7 @@
 <set_value name="$text2" exact="' -Invasion can start?: %1 ge %2 [%3] %4\n'.[$countCapships, $requiredCapships, $InvasionFleetList.count, $targetZone.name]" operation="add" />
 
 						<do_all exact="$InvasionFleetList.count" counter="$x" chance="if $countCapships ge $requiredCapships then 100 else 0">
-<set_value name="$text2" exact="'*** Invasion: %1 subs[%2]\n'.[$InvasionFleetList.{$x}.knownname, $InvasionFleetList.{$x}.subordinates.count]" operation="add" />
+<set_value name="$text2" exact="'*** Invasion: %1 subs[%2 / %3]\n'.[$InvasionFleetList.{$x}.knownname, $InvasionFleetList.{$x}.subordinates.{$InvasionFleetList.{$x}.pilot.type}.count, $InvasionFleetList.{$x}.subordinates.{entitytype.defencecontrol}.count]" operation="add" />
 							<set_value name="$param" exact="[['range', 'zone'], ['allowstations', true], ['sfo', 0]]"/>
 							<set_value name="$destination" exact="$targetZone"/>
 							<set_value name="$script" exact="if global.$nfconfig.$Check? then 'BR.move.patrol' else 'move.patrol'"/>

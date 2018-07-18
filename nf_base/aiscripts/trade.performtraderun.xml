@@ -41,27 +41,27 @@
 		</do_if>
 	</add>
 	<!--replace sel="/aiscript/attention/actions/do_if[@value='not $targetobject.isoperational']">
-		<do_if value="not $targetobject.isoperational or @this.ship.owner.relationto.{$targetobject.owner} le this.ship.owner.relation.enemy.min">
+		<do_if value="not $targetobject.isoperational or @this.ship.owner.relationto.{$targetobject.owner} le this.ship.owner.relation.enemy.max">
 			<set_value name="$failreason" exact="'ERR_TARGET_INVALID'" />
 			<resume label="finish" />
 		</do_if>
 	</replace>
 	
 	<add sel="/aiscript/attention/actions/set_value[@name='$reserved']" pos="before">
-		<do_if value="@$targetobject and $targetobject.owner and this.ship.owner.relationto.{$targetobject.owner} le this.ship.owner.relation.enemy.min">		
+		<do_if value="@$targetobject and $targetobject.owner and this.ship.owner.relationto.{$targetobject.owner} le this.ship.owner.relation.enemy.max">		
 			<set_value name="$failreason" exact="'ERR_TARGET_INVALID'" />
 			<resume label="finish" />
 		</do_if>
 	</add>
 
 	<add sel="//do_if[@value='$parkresult']" pos="before">
-		<do_if value="@$targetobject and $targetobject.owner and this.ship.owner.relationto.{$targetobject.owner} le this.ship.owner.relation.enemy.min">		
+		<do_if value="@$targetobject and $targetobject.owner and this.ship.owner.relationto.{$targetobject.owner} le this.ship.owner.relation.enemy.max">		
 			<set_value name="$failreason" exact="'ERR_TARGET_INVALID'" />
 			<resume label="finish" />
 		</do_if>
 	</add>
 	<add sel="//do_if[@value='not $dockresult']" pos="before">
-		<do_if value="@$targetobject and $targetobject.owner and this.ship.owner.relationto.{$targetobject.owner} le this.ship.owner.relation.enemy.min">		
+		<do_if value="@$targetobject and $targetobject.owner and this.ship.owner.relationto.{$targetobject.owner} le this.ship.owner.relation.enemy.max">		
 			<set_value name="$failreason" exact="'ERR_TARGET_INVALID'" />
 			<resume label="finish" />
 		</do_if>
