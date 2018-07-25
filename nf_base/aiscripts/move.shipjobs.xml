@@ -324,7 +324,7 @@
 					<param name="warebasket" value="if this.$params.$warebasket? then this.$params.$warebasket else null" />
 				</run_script>
 			</do_elseif>
-			<do_elseif value="$run_script_name" exact="'trade.ship.ranged'">
+			<do_elseif value="$run_script_name" exact="'trade.ship.ranged'" chance="0">
 				<run_script name="'trade.ship.ranged'" >
 					<param name="warelist" value="if this.$params.$warelist? then this.$params.$warelist else null" />
 					<param name="minbuy" value="if this.$params.$minbuy? then this.$params.$minbuy else 0" />
@@ -333,11 +333,24 @@
 					<param name="maxsell" value="if this.$params.$maxsell? then this.$params.$maxsell else 1" />
 				</run_script>
 			</do_elseif>
-			<do_elseif value="$run_script_name" exact="'trade.ship'">
-				<run_script name="'trade.ship'" >
+			<do_elseif value="$run_script_name" list="['trade.ship','trade.ship.nf','trade.ship.ranged']">
+				<do_if value="this.ship.isclass.[class.ship_l, class.ship_xl] and (this.ship.cargo.{ware.fuelcells}.max gt 2500 or this.ship.cargo.capacity gt 255000)">
+					<set_value name="this.$params.$additionalparams" exact="[1,2,1,4]"/>
+				</do_if>
+				<do_if value="$run_script_name" exact="'trade.ship.ranged'">
+					<set_value name="this.$params.$additionalparams" exact="[
+						if this.$params.$minsell? then this.$params.$minsell else 0,
+						if this.$params.$maxsell? then this.$params.$maxsell else 1,
+						if this.$params.$minbuy? then this.$params.$minbuy else 0,
+						if this.$params.$maxbuy? then this.$params.$maxbuy else 1]"/>
+				</do_if>
+				<set_value name="$run_script_name" exact="'trade.ship.nf'"/>
+				<run_script name="$run_script_name" >
 					<param name="warelist" value="if this.$params.$warelist? then this.$params.$warelist else null" />
 					<param name="range" value="if this.$params.$range? then this.$params.$range else 'sector'" />
 					<param name="simple" value="if this.$params.$simple? then this.$params.$simple else null" />
+					<param name="additionalparams" value="if this.$params.$additionalparams? then this.$params.$additionalparams else null" />
+					<param name="docustomerbase" value="if this.$params.$docustomerbase? then this.$params.$docustomerbase else if this.ship.isclass.[class.ship_l, class.ship_xl] and not this.ship.commander then true else null" />
 					<param name="additionalparams" value="if this.$params.$additionalparams? then this.$params.$additionalparams else null" />
 				</run_script>
 			</do_elseif>

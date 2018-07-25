@@ -893,7 +893,7 @@
 								</do_all>
 							</do_if>
 							<do_if value="$tmpConfig.$ships.$trade.count and $tmpConfig.$traderCluster and $validCluster.count">
-								<do_all exact="[(($tmpConfig.$traderCluster * $validCluster.count) * 0.75f)i, 1].max">
+								<do_all exact="[(($tmpConfig.$traderCluster * $validCluster.count) * 0.85f)i, 1].max">
 									<set_value name="$temp" exact="$validZonesCore.random" />
 									<append_to_list name="$todo_ships" exact="
 										[ $temp.macro, null, [
@@ -904,7 +904,7 @@
 								</do_all>
 							</do_if>
 							<do_if value="$tmpConfig.$ships.$trade.count and $tmpConfig.$traderSector and $validSectors.count">
-								<do_all exact="[(($tmpConfig.$traderSector * $validSectors.count) * 0.75f)i, 1].max">
+								<do_all exact="[(($tmpConfig.$traderSector * $validSectors.count) * 0.85f)i, 1].max">
 									<set_value name="$temp" exact="$validZonesCore.random" />
 									<append_to_list name="$todo_ships" exact="
 										[ $temp.macro, null, [
@@ -989,7 +989,7 @@
 									</do_all> 
 								</do_if>
 
-								<do_all exact="[($tmp * 0.7f)i, 1].max">
+								<do_all exact="[($tmp * 0.8f)i, 1].max">
 									<set_value name="$temp" exact="$validZonesCore.random" />
 									<set_value name="$tempShp" exact="$tmpConfig.$ships.$fight.random" />
 									
@@ -2752,7 +2752,7 @@
 						<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_runscript" />
 					</do_if>
 					<do_elseif value="$Object.cargo.{ware.fuelcells}.max and $Object.isclass.[class.ship_l, class.ship_xl]" chance="if not global.$nfconfig.$plotSafe? then 25 else 0">
-						<set_value name="$param" exact="[['warelist', $warebasket], ['minbuy', 0], ['maxbuy', 2], ['minsell', 0], ['maxsell', 2]]"/>
+						<set_value name="$param" exact="[['warelist', $warebasket], ['minbuy', 0], ['maxbuy', 4], ['minsell', 0], ['maxsell', 2]]"/>
 						<set_value name="$destination" exact="$sectors.random" chance="if $destination? and $destination.exists then 0 else 100"/>
 						<set_value name="$script" exact="'trade.ship.ranged'"/>
 						<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_tmp" />
@@ -3522,7 +3522,7 @@
 						<set_value name="$nextShoppingTrip" exact="if $requiredUnits.count gt 3 then player.age + 10min else if $next_Check? and $next_Check.{2} then player.age + $next_Check.{2} else player.age + 45min"/>
 					</do_else>
 					<!-- Limit orders -->
-					<do_if value="$ShipYard_Limit?">
+					<do_if value="$ShipYard_Limit?" chance="if $_CEO.$style == 'cooperative' then 0 else 100">
 						<find_station name="$ShipYardOfTrust_Multi" space="player.galaxy" functional="true" multiple="true">
 							<match_content class="class.buildmodule" />
 							<match owner="$_faction"/>
@@ -3531,9 +3531,28 @@
 						<do_all exact="$ShipYardOfTrust_Multi.count" counter="$sy" reverse="true">
 							<do_if value="$ShipYardOfTrust_Multi.{$sy}.tradenpc">
 								<do_if value="$ShipYard_Limit">
-									<do_if value="@$ShipYardOfTrust_Multi.{$sy}.tradenpc.$ordersMin == $tempSetting" negate="true">
+									<do_if value="@$ShipYardOfTrust_Multi.{$sy}.tradenpc.$ordersMin == $tempSetting" negate="true" chance="if $ShipYardOfTrust_Multi.{$sy}.tradenpc.$orders? and $ShipYardOfTrust_Multi.{$sy}.tradenpc.$orders.count then 100 else 0">
 										<set_value name="$ShipYardOfTrust_Multi.{$sy}.tradenpc.$ordersMin" exact="$tempSetting" />
 									</do_if>
+									<do_elseif value="@$ShipYardOfTrust_Multi.{$sy}.tradenpc.$ordersMin == $tempSetting" negate="true">
+										<do_if value="$tempSetting == 'member' and @$ShipYardOfTrust_Multi.{$sy}.tradenpc.$ordersMin == 'friend' and @$ShipYardOfTrust_Multi.{$sy}.tradenpc.$orders.count == 0">
+											<remove_value name="$ShipYardOfTrust_Multi.{$sy}.tradenpc.$ordersMin"/>
+										</do_if>
+										<do_elseif value="$tempSetting == 'friend' and @$ShipYardOfTrust_Multi.{$sy}.tradenpc.$orders.count == 0">
+											<remove_value name="$ShipYardOfTrust_Multi.{$sy}.tradenpc.$ordersMin"/>
+										</do_elseif>
+										<do_else>
+											<set_value name="$ShipYardOfTrust_Multi.{$sy}.tradenpc.$ordersMin" exact="$tempSetting" />
+										</do_else>
+									</do_elseif>
+									<do_elseif value="@$ShipYardOfTrust_Multi.{$sy}.tradenpc.$ordersMin == $tempSetting and $ShipYardOfTrust_Multi.{$sy}.tradenpc.$orders? and $ShipYardOfTrust_Multi.{$sy}.tradenpc.$orders.count == 0">
+										<do_if value="$tempSetting" exact="'member'">
+											<set_value name="$ShipYardOfTrust_Multi.{$sy}.tradenpc.$ordersMin" exact="'friend'" />
+										</do_if>
+										<do_else>
+											<remove_value name="$ShipYardOfTrust_Multi.{$sy}.tradenpc.$ordersMin"/>
+										</do_else>
+									</do_elseif>
 								</do_if>
 								<do_else>
 									<do_if value="$ShipYardOfTrust_Multi.{$sy}.tradenpc.$ordersMin?">
@@ -3551,6 +3570,9 @@
 <set_value name="$text2" exact="'* %2 Limit SYs: %1 #\n'.[$ShipYardOfTrust_Multi.count, if $ShipYard_Limit? then 'do' else 'un']" operation="add" />
 						<remove_value name="$tempSetting"/>
 					</do_if>
+					<do_else>
+						<remove_value name="$ShipYard_Limit"/>
+					</do_else>
 					<remove_value name="$ShipYardOfTrust_Multi"/>
 					<remove_value name="$requiredUnits"/>
 				</do_if>
@@ -3723,6 +3745,60 @@
 					</do_if>
 					<include_actions ref="md.MM_Corps__Data.MMCData_do_cheatressources" />
 					<set_value name="$nextSYcheck" exact="if $next_Check? and @$next_Check.{6} then player.age + $next_Check.{6} else player.age + 3h" />
+				</do_if>
+				<!-- ECONOMY SUPPORT: free station tradeships -->
+				<do_if value="not $nextSTcheck? or ($nextSTcheck? and $nextSTcheck lt player.age)" >
+					<find_station name="$tmp_stations" space="player.galaxy" functional="true" multiple="true">
+						<match_any>
+							<match_content class="class.buildmodule" />
+							<match_content class="class.production" />
+						</match_any>
+						<match owner="$_faction"/>
+					</find_station>
+					<do_if value="$_CEO.$stationbasics?" negate="true">
+						<set_value name="$_CEO.$stationbasics" exact="[]"/>
+					</do_if>
+					<!-- check stations -->
+					<do_all exact="$_CEO.$stationbasics.count" counter="$r" reverse="true">
+						<do_if value="$tmp_stations.indexof.{$_CEO.$stationbasics.{$r}}">
+							<remove_value name="$tmp_stations.{$tmp_stations.indexof.{$_CEO.$stationbasics.{$r}}}" />
+							<do_if value="$_CEO.$stationbasics.{$r}.tradenpc and $_CEO.$stationbasics.{$r}.$tempsubordinates?">
+								<!-- check asigned traders -->
+								<do_all exact="$_CEO.$stationbasics.{$r}.$tempsubordinates.count" counter="$s" reverse="true">
+									<do_if value="$_CEO.$stationbasics.{$r}.$tempsubordinates.{$s}.isoperational" negate="true">
+										<remove_value name="$_CEO.$stationbasics.{$r}.$tempsubordinates.{$s}" />
+									</do_if>
+								</do_all>
+							</do_if>
+							<do_elseif value="$_CEO.$stationbasics.{$r}.tradenpc.exists">
+								<!-- fine? -->
+							</do_elseif>
+							<do_else>
+								<remove_value name="$_CEO.$stationbasics.{$r}" />
+							</do_else>
+						</do_if>
+						<do_else>
+							<remove_value name="$_CEO.$stationbasics.{$r}" />
+						</do_else>
+					</do_all>
+					<do_all exact="$tmp_stations.count" counter="$r" reverse="true">
+						<do_if value="$tmp_stations.{$r}.tradenpc and $tmp_stations.{$r}.$tempsubordinates?">
+							<!-- check asigned traders -->
+							<do_all exact="$tmp_stations.{$r}.$tempsubordinates.count" counter="$s" reverse="true">
+								<do_if value="$tmp_stations.{$r}.$tempsubordinates.{$s}.isoperational" negate="true">
+									<remove_value name="$tmp_stations.{$r}.$tempsubordinates.{$s}" />
+								</do_if>
+							</do_all>
+						</do_if>
+						<do_elseif value="$tmp_stations.{$r}.tradenpc.exists" negate="true">
+							<continue />
+						</do_elseif>
+						<do_if value="$_CEO.$stationbasics.indexof.{$tmp_stations.{$r}}" negate="true">
+							<append_to_list name="$_CEO.$stationbasics" exact="$tmp_stations.{$r}" />
+						</do_if>
+					</do_all>
+					<remove_value name="$tmp_stations"/>
+					<set_value name="$nextSTcheck" exact="if $next_Check? and @$next_Check.{6} then player.age + $next_Check.{6} else player.age + 3h" />
 				</do_if>
 
 				<!-- nothing left? -->
@@ -7562,10 +7638,10 @@
 <set_value name="$temp_add" operation="add"/>
 					<do_if value="$ref.ware and $temp_shipyard.cargo.{$ref.ware}.count">
 						<remove_cargo object="$temp_shipyard" ware="$ref.ware" exact="1" />
-						<set_value name="$cost" exact="$ref.ware.maxprice" chance="if $temp_shipyard.owner != $faction then 100 else 0"/>
+						<set_value name="$cost" exact="$ref.ware.minprice" chance="if $temp_shipyard.owner != $faction then 100 else 0"/>
 					</do_if>
-					<do_elseif value="$ref.ware and $ref.ware.maxprice">
-						<set_value name="$cost" exact="$ref.ware.maxprice"/>
+					<do_elseif value="$ref.ware and $ref.ware.minprice">
+						<set_value name="$cost" exact="$ref.ware.minprice"/>
 						<do_if value="stat.nf_ships_spawned?">
 							<set_value name="stat.nf_ships_spawned" operation="add" />
 						</do_if>
@@ -7807,9 +7883,9 @@
 			<actions>
 				<set_value name="$temp_shipyard" exact="$ShipYards.random" />
 
-				<do_if value="$temp_shipyard.exists and $ref.ware and $ref.ware.maxprice">
+				<do_if value="$temp_shipyard.exists and $ref.ware and $ref.ware.averageprice">
 
-					<set_value name="$costShip" exact="$ref.ware.maxprice"/>
+					<set_value name="$costShip" exact="$ref.ware.averageprice"/>
 
 					<do_if value="$temp_shipyard.cargo.{$ref.ware}.count">
 						<remove_cargo object="$temp_shipyard" ware="$ref.ware" exact="1" />

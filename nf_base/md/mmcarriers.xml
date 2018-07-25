@@ -675,15 +675,21 @@
 				</do_if>
 				<do_elseif value="event.param" exact="'mmca_salvage_restore'">
 
-					<set_value name="$dock" exact="null" />
-					<find_dock_location container="event.object.container" size="event.param2.{3}.macro.docksize" name="$dock" chance="if event.param2.{4}? and event.param2.{4} then 100 else 0"/>
-
-					<start_script object="event.object" name="'player.default'" />
-					<signal_objects object="event.object.container" param="'collect ship restore'" param2="event.param2.{3}" param3="$dock" delay="3s" />
-
-					<do_if value="event.object.container.engineer.exists and event.param2.{5}? and event.param2.{5}">
-						<start_script object="event.object.container.engineer" name="event.param2.{5}"/>
+					<do_if value="event.param2.{6}? and typeof event.param2.{6} == datatype.list and event.param2.{6}.count">
+						<start_script object="event.object" name="'player.default'" />
+						<signal_objects object="event.object.container" param="'recycle ship'" param2="event.param2.{3}" param3="event.param2.{6}" delay="3s" />
 					</do_if>
+					<do_else>
+						<set_value name="$dock" exact="null" />
+						<find_dock_location container="event.object.container" size="event.param2.{3}.macro.docksize" name="$dock" chance="if event.param2.{4}? and event.param2.{4} then 100 else 0"/>
+	
+						<start_script object="event.object" name="'player.default'" />
+						<signal_objects object="event.object.container" param="'collect ship restore'" param2="event.param2.{3}" param3="$dock" delay="3s" />
+	
+						<do_if value="event.object.container.engineer.exists and event.param2.{5}? and event.param2.{5}">
+							<start_script object="event.object.container.engineer" name="event.param2.{5}"/>
+						</do_if>
+					</do_else>
 
 				</do_elseif>
 				<do_elseif value="event.param" exact="'mmca_salvage_something'">

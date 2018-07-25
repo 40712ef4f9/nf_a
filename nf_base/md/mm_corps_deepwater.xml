@@ -45,8 +45,7 @@
 					</actions>
 				</cue>
 
-				<cue name="DO_Worker" instantiate="true" checktime="4min" checkinterval="15min">
-					<delay min="120s" max="600s"/>
+				<cue name="DO_Worker" instantiate="true" checktime="4min" checkinterval="17min">
 					<actions>
 						<!--
 						* define play style domination/cooperative/pirate
@@ -103,7 +102,7 @@
 							<match owner="$_faction"/>
 						</find_station>
 						<do_all exact="$ShipYardOfTrust_Multi.count" counter="$y" reverse="true">
-							<do_if value="$ShipYardOfTrust_Multi.{$y} and $ShipYardOfTrust_Multi.{$y}.tradenpc.exists and not $ShipYardOfTrust_Multi.{$y}.tradenpc.$denyBuildRandomNPC? and $ShipYardOfTrust_Multi.{$y}.tradenpc.$orders? and $ShipYardOfTrust_Multi.{$y}.tradenpc.$orders.count lt 5 and $ShipYardOfTrust_Multi.{$y}.units.{unitcategory.welder}.count gt 10" negate="true">
+							<do_if value="$ShipYardOfTrust_Multi.{$y} and $ShipYardOfTrust_Multi.{$y}.tradenpc.exists and not $ShipYardOfTrust_Multi.{$y}.tradenpc.$denyBuildRandomNPC? and $ShipYardOfTrust_Multi.{$y}.tradenpc.$orders? and $ShipYardOfTrust_Multi.{$y}.tradenpc.$orders.count lt 5 and $ShipYardOfTrust_Multi.{$y}.units.{unitcategory.welder}.count gt 10 and $ShipYardOfTrust_Multi.{$y}.owner.relationto.{$_faction} ge $ShipYardOfTrust_Multi.{$y}.owner.relation.{if $ShipYardOfTrust_Multi.{$y}.tradenpc.$ordersMin? then $ShipYardOfTrust_Multi.{$y}.tradenpc.$ordersMin else 'neutral'}.min" negate="true">
 								<remove_value name="$ShipYardOfTrust_Multi.{$y}"/>
 							</do_if>
 						</do_all>
@@ -115,8 +114,20 @@
 						<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_buyships" />
 						<set_value name="$requiredUnits_count" exact="$requiredUnits.count"/>
 
+						<do_if value="$requiredUnits_count ge 100">
+							<set_value name="$ShipYard_Limit" exact="$requiredUnits_count" />
+						</do_if>
+						<do_elseif value="$requiredUnits_count lt 100 and $ShipYard_Limit?">
+							<set_value name="$ShipYard_Limit" exact="false" />
+						</do_elseif>
+
 						<do_all exact="$ShipYardOfTrust_Multi.count" counter="$sy">
 <set_value name="$text2" exact="' \n# Buy Ship %1 #\n'.[$requiredUnits_count]" operation="add" />
+							<do_if value="$requiredUnits_count and $requiredUnits.count lt 1">
+								<remove_value name="$requiredUnits"/>
+								<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_buyships" />
+							</do_if>
+
 							<do_if value="$requiredUnits_count">
 								<set_value name="$ShipYardOfTrust" exact="$ShipYardOfTrust_Multi.{$sy}"/>
 								<include_actions ref="md.MM_Corps__Data.MMCData_do_orderships" />
@@ -138,11 +149,16 @@
 					</do_if>
 					<do_else>
 						<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_buyships" />
+
+						<do_if value="$requiredUnits.count ge 100">
+							<set_value name="$ShipYard_Limit" exact="$requiredUnits.count" />
+						</do_if>
+						<do_elseif value="$requiredUnits.count lt 100 and $ShipYard_Limit?">
+							<set_value name="$ShipYard_Limit" exact="false" />
+						</do_elseif>
 	
 <set_value name="$text2" exact="' \n# Buy Ship %1 #\n'.[$requiredUnits.count]" operation="add" />
-	
-						<set_value name="$nextShoppingTrip" exact="if $requiredUnits.count gt 1 then player.age + 10min else if $next_Check? and $next_Check.{2} then player.age + $next_Check.{2} else player.age + 45min"/>
-	
+
 						<do_if value="$requiredUnits.count">
 							<include_actions ref="md.MM_Corps__Data.MMCData_do_orderships" />
 						</do_if>
@@ -151,8 +167,11 @@
 							<include_actions ref="md.MM_Corps__Data.MMCData_disable_jobs" />
 							<set_value name="$_CEO.$jobsdisabled" />
 						</do_elseif>
+
+						<set_value name="$nextShoppingTrip" exact="if $requiredUnits.count gt 3 then player.age + 10min else if $next_Check? and $next_Check.{2} then player.age + $next_Check.{2} else player.age + 45min"/>
 					</do_else>
 					<remove_value name="$ShipYardOfTrust_Multi"/>
+					<remove_value name="$requiredUnits"/>
 				</do_if>
 
 				<!-- command -->

@@ -30,6 +30,13 @@
       <set_value name="$buyoffer" exact="null" />
       <set_value name="$selloffer" exact="null" />
       <set_value name="$capship" exact="this.ship.isclass.[class.ship_l, class.ship_xl]"/>
+      <do_if value="not $capship and ($sellrange != null or $buyrange != null)">
+        <set_value name="$sellrange" exact="null"/>
+        <set_value name="$buyrange" exact="null"/>
+        <remove_value name="this.$traderange_sellclusters" />
+        <remove_value name="this.$traderange_buyclusters" />
+        <remove_value name="this.$traderange_clusters" />
+      </do_if>
 
       <do_if value="$commander.exists and $commander.isoperational" negate="true">
         <resume label="finish" />
@@ -47,6 +54,10 @@
       <do_if value="not $findrun?">
         <set_value name="$findrun" exact="1" />
       </do_if>
+      <do_elseif value="$findrun == 6 and $commander != this.ship.commander">
+        <remove_value name="this.$nextTWLcheck" />
+        <resume label="finish" />
+      </do_elseif>
       <do_elseif value="$findrun gt 5">
         <set_value name="$findrun" exact="6" />
         <do_if value="$gohome? and not $capship and ($commander.zone != this.ship.zone or this.ship.dockslot == null)">
@@ -127,19 +138,21 @@
         <set_value name="$tradeClusters" exact="table[]"/>
         <set_value name="this.$homespace" exact="if $range.isclass.galaxy then if $commander.exists then $commander.cluster else this.ship.cluster else $range"/>
 
-        <do_if value="$sellrange.{1} == $buyrange.{1} and $sellrange.{2} == $buyrange.{2}">
-          <find_cluster name="this.$traderange_clusters" multiple="true" presentation="false">
-            <match_gate_distance object="this.$homespace" min="$sellrange.{1}" max="$sellrange.{2}"/>
-          </find_cluster>
+        <do_if value="$sellrange.{2} or $buyrange.{2}">
+          <do_if value="$sellrange.{1} == $buyrange.{1} and $sellrange.{2} == $buyrange.{2}">
+            <find_cluster name="this.$traderange_clusters" multiple="true" presentation="false">
+              <match_gate_distance object="this.$homespace" min="[1,$sellrange.{1}].max" max="$sellrange.{2}"/>
+            </find_cluster>
+          </do_if>
+          <do_else>
+            <find_cluster name="this.$traderange_sellclusters" multiple="true" presentation="false">
+              <match_gate_distance object="this.$homespace" min="[1,$sellrange.{1}].max" max="$sellrange.{2}"/>
+            </find_cluster>
+            <find_cluster name="this.$traderange_buyclusters" multiple="true" presentation="false">
+              <match_gate_distance object="this.$homespace" min="[1,$buyrange.{1}].max" max="$buyrange.{2}"/>
+            </find_cluster>
+          </do_else>
         </do_if>
-        <do_else>
-          <find_cluster name="this.$traderange_sellclusters" multiple="true" presentation="false">
-            <match_gate_distance object="this.$homespace" min="$sellrange.{1}" max="$sellrange.{2}"/>
-          </find_cluster>
-          <find_cluster name="this.$traderange_buyclusters" multiple="true" presentation="false">
-            <match_gate_distance object="this.$homespace" min="$buyrange.{1}" max="$buyrange.{2}"/>
-          </find_cluster>
-        </do_else>
         <set_value name="$checkrange" exact="null" />
         <set_value name="$RangedChance" exact="100" />
       </do_elseif>
@@ -562,6 +575,10 @@
         <resume label="finish" />
       </do_if>
       <do_elseif value="$warelist.count == 0">
+        <do_if value="this.ship.commander != $commander">
+          <remove_value name="this.$nextTWLcheck" />
+          <resume label="finish" />
+        </do_if>
         <set_value name="$idletime" exact="10min" />
         <resume label="takeabreak" />
       </do_elseif>
@@ -910,8 +927,8 @@
           <do_if value="$buyoffers.{$i}.available" negate="true">
             <continue />
           </do_if>
-          <do_if value="$commander.tradewares.list.indexof.{$buyoffers.{$i}.ware} or $commander.products.list.indexof.{$buyoffers.{$i}.ware} or $commander.resources.list.indexof.{$buyoffers.{$i}.ware}" chance="if $CommanderCV? then 0 else 100">
-            <do_if value="($buyoffers.{$i}.offeramount.{this})f / ([$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target,$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.free].min)f le (if $CommanderStation? then if this.$trade_inandout? and (this.$trade_inandout == 1 or this.$trade_inandout == 3) then 0.05f else 0.2f else 0f)">
+          <do_if value="$commander.tradewares.list.indexof.{$buyoffers.{$i}.ware} or $commander.products.list.indexof.{$buyoffers.{$i}.ware} or $commander.resources.list.indexof.{$buyoffers.{$i}.ware}" chance="if $CommanderCV? or ($buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target == 0 and $commander.tradewares.list.indexof.{$buyoffers.{$i}.ware}) then 0 else 100">
+            <do_if value="$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.free == 0 or ( ($buyoffers.{$i}.offeramount.{this})f / ([$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target, $buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.free].min)f le (if $CommanderStation? then if this.$trade_inandout? and (this.$trade_inandout == 1 or this.$trade_inandout == 3) then 0.05f else 0.2f else 0f) )">
               <continue />
             </do_if>
           </do_if>
@@ -970,8 +987,8 @@
             <do_if value="$buyoffers.{$i}.available" negate="true">
               <continue />
             </do_if>
-            <do_if value="$commander.tradewares.list.indexof.{$buyoffers.{$i}.ware} or $commander.products.list.indexof.{$buyoffers.{$i}.ware} or $commander.resources.list.indexof.{$buyoffers.{$i}.ware}" chance="if $CommanderCV? then 0 else 100">
-              <do_if value="($buyoffers.{$i}.offeramount.{this})f / ([$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target,$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.free].min)f le (if $CommanderStation? then if this.$trade_inandout? and (this.$trade_inandout == 1 or this.$trade_inandout == 3) then 0.05f else 0.2f else 0f)">
+            <do_if value="$commander.tradewares.list.indexof.{$buyoffers.{$i}.ware} or $commander.products.list.indexof.{$buyoffers.{$i}.ware} or $commander.resources.list.indexof.{$buyoffers.{$i}.ware}" chance="if $CommanderCV? or ($buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target == 0 and $commander.tradewares.list.indexof.{$buyoffers.{$i}.ware}) then 0 else 100">
+              <do_if value="$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.free == 0 or ( ($buyoffers.{$i}.offeramount.{this})f / ([$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.target,$buyoffers.{$i}.buyer.cargo.{$buyoffers.{$i}.ware}.free].min)f le (if $CommanderStation? then if this.$trade_inandout? and (this.$trade_inandout == 1 or this.$trade_inandout == 3) then 0.05f else 0.2f else 0f) )">
                 <continue />
               </do_if>
             </do_if>

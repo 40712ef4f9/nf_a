@@ -39,13 +39,19 @@
 								</do_if>
 							</do_all>
 						</do_else>
+						<set_value name="$canrecycle" exact="if (event.object.container.units.{unitcategory.welder}.count + event.object.container.units.{unitcategory.marine}.count) gt 40 and event.object.container.cargo.{ware.fusionreactor}.free then true else false"/>
 
 						<do_all exact="6" counter="$i">
 							<do_if value="$i == 6 and ($todo_options_start + 1) le $todo_options_max">
 								<add_player_choice_sub 		text="{2802,1300}.[$todo_options_start, $todo_options_max]" 	position="bottom_right" section="mmcare_do_restore" 		choiceparam="$todo_options_start"/>
 							</do_if>
 							<do_elseif value="$todo_options_start le $todo_options_max">
-								<add_player_choice		text="$RestoreTargets.{$todo_options_start}.macro.name" tooltip="{2802,1330}.[$RestoreTargets.{$todo_options_start}.distanceto.{event.object.container}]" 	position="$i" 	 selectable="md.$mmcareWrecks.indexof.{$RestoreTargets.{$todo_options_start}} == 0"	section="mmcare_do_restore_do" choiceparam="$RestoreTargets.{$todo_options_start}"/>
+								<do_if value="$RestoreTargets.{$todo_options_start}.iswreck and md.$mmcareWrecks.indexof.{$RestoreTargets.{$todo_options_start}} and $canrecycle">
+									<add_player_choice		text="'\033Y%1\033X'.[$RestoreTargets.{$todo_options_start}.macro.name]" tooltip="{2802,1330}.[$RestoreTargets.{$todo_options_start}.distanceto.{event.object.container}]" 	position="$i" 	 section="mmcare_do_restore_do" choiceparam="$RestoreTargets.{$todo_options_start}"/>
+								</do_if>
+								<do_else>
+									<add_player_choice		text="$RestoreTargets.{$todo_options_start}.macro.name" tooltip="{2802,1330}.[$RestoreTargets.{$todo_options_start}.distanceto.{event.object.container}]" 	position="$i" 	 selectable="md.$mmcareWrecks.indexof.{$RestoreTargets.{$todo_options_start}} == 0"	section="mmcare_do_restore_do" choiceparam="$RestoreTargets.{$todo_options_start}"/>
+								</do_else>
 								<set_value name="$todo_options_start"  operation="add" exact="1" /> 
 							</do_elseif>
 							<do_elseif value="$i == 6">
@@ -59,73 +65,18 @@
 					<remove_value name="$RestoreTargets"/>
 					<remove_value name="$todo_options_start"/>
 					<remove_value name="$todo_options_max"/>
+					<remove_value name="$canrecycle"/>
 				</do_if>
 				<do_elseif value="event.param" exact="'mmcare_do_restore_do'">
+
+					<create_list name="$recycleLoot" />
 					<create_group groupname="$docks" />
-					<do_if value="global.$mmcarriers_xl? and event.object.container.macro.ismacro.{global.$mmcarriers_xl}">
-						<do_all exact="2" counter="$j">
-							<find_dock_location container="event.object.container" size="[tag.dock_xl, tag.dock_l].{$j}" name="$dock" multiple="true"/>
-							<do_all exact="$dock.count" counter="$i">
-								<do_if value="$docks.indexof.{$dock.{$i}.component} == 0 and not ($dock.{$i}.component.external and $dock.{$i}.component.docked.count)">
-									<add_to_group groupname="$docks" object="$dock.{$i}.component" />
-								</do_if>
-								<do_else>
-									<continue />
-								</do_else>
-							</do_all>
-							<remove_value name="$dock"/>
-						</do_all>
-						<add_player_choice text="{2802,8200}" position="top_left" section="mmca_salvage_restore" choiceparam="[null, null, event.param2, true, 'engineer.ai.plus2']" comment="Dock Ships" />
-						<add_player_choice text="{2802,8202}" position="left" section="mmca_salvage_restore" choiceparam="[null, null, event.param2, false, 'engineer.ai.plus2']" comment="Dock Ships" selectable="$docks.count" />
-						<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
-
-						<remove_value name="$docks"/>
-					</do_if>
-					<do_else>
-						<set_value name="$oldShip" exact="event.param2"/>
-						<set_value name="$theShip" exact="event.object.container"/>
-	
-						<include_actions ref="md.MM_Care.MM_Care_restore_do" />
-
-						<do_if value="$Ship? and $Ship.exists and $Ship.isclass.ship">
-							<remove_from_player_squad object="$theShip" />
-							<do_if value="$Ship.isclass.[class.ship, class.station]">
-								<start_script name="'move.patrol.care'" object="$theShip.pilot">
-									<param name="patrolobject" value="$Ship" />
-								</start_script>
-							</do_if>
-						</do_if>
-						<do_else>
-							<!-- nothing -->
-						</do_else>
-						<remove_value name="$Ship" />
-						<remove_value name="$theShip" />
-					</do_else>
-
-				</do_elseif>
-				<!--do_elseif value="event.param" exact="'mmcare_do_restore_do_old'">
-
-					<set_value name="$oldShip" exact="event.param2"/>
 					<set_value name="$theShip" exact="event.object.container"/>
+					<set_value name="$canCarry" exact="if $theShip.cargo.{ware.energycells}.free or $theShip.cargo.{ware.fusionreactor}.free or $theShip.cargo.{ware.ore}.free then true else false"/>
+					<set_value name="$isCarrier" exact="global.$mmcarriers_xl? and $theShip.macro.ismacro.{global.$mmcarriers_xl}"/>
+					<set_value name="$sum" exact="$theShip.units.{unitcategory.welder}.count + $theShip.units.{unitcategory.marine}.count"/>
 
-					<include_actions ref="md.MM_Care.MM_Care_restore_do" />
-
-					<do_if value="$theShip.isclass.ship and event.param2.exists">
-						<remove_from_player_squad object="$theShip" />
-						<do_if value="$theShip.isclass.[class.ship, class.station]">
-							<start_script name="'move.patrol.care'" object="$theShip.pilot">
-								<param name="patrolobject" value="if $Ship? and $Ship.exists then $Ship else event.param2" />
-							</start_script>
-						</do_if>
-						<do_else>
-							<start_script name="'move.patrol.care'" object="$theShip.pilot">
-								<param name="range" value="'zone'" />
-								<param name="patrolobject" value="event.param2.zone" />
-							</start_script>
-						</do_else>
-					</do_if>
-					<do_if value="$Ship? and global.$mmcarriers_xl? and $theShip.macro.ismacro.{global.$mmcarriers_xl}">
-						<create_group groupname="$docks" />
+					<do_if value="$isCarrier">
 						<do_all exact="2" counter="$j">
 							<find_dock_location container="$theShip" size="[tag.dock_xl, tag.dock_l].{$j}" name="$dock" multiple="true"/>
 							<do_all exact="$dock.count" counter="$i">
@@ -138,12 +89,50 @@
 							</do_all>
 							<remove_value name="$dock"/>
 						</do_all>
-						<add_player_choice text="{2802,8200}" position="top_left" section="mmca_salvage" choiceparam="[null, null, $Ship]" comment="Dock Ships" selectable="$docks.count" />
-						<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
 					</do_if>
-					<remove_value name="$Ship" />
-					<remove_value name="$theShip" />
-				</do_elseif-->
+					<do_if value="$canCarry">
+						<set_value name="$targetCap" exact="if event.param2.macro.class == class.ship_xl then true else false"/>
+						<do_if value="md.$shipparts?" chance="0">
+						</do_if>
+						<do_else>
+							<set_value name="$profile" exact="if $sum gt 75 then 'increasing' else if $sum gt 40 then 'bell' else 'flat'"/>
+							<set_value name="$todo" exact="[
+									[ware.reinforcedmetalplating, if $targetCap then 64 else 42],
+									[ware.scanningarray, if $targetCap then 3 else 2],
+									[ware.microchips, if $targetCap then 34 else 23],
+									[ware.plasmaflowregulator, if $targetCap then 2 else 1],
+									[ware.bioopticwiring, if $targetCap then 23 else 16],
+									[ware.bioelectricneurongel, if $targetCap then 33 else 25],
+									[ware.holtzmanfieldgenerator, if $targetCap then 6 else 3],
+									[ware.plasmapumps, if $targetCap then 8 else 4],
+									[ware.fusionreactor, if $targetCap then 3 else 2]
+								]"/>
+							<do_all exact="$todo.count" counter="$i">
+								<set_value name="$tmp" min="$todo.{$i}.{2}*0.5f" max="$todo.{$i}.{2}"  profile="$profile"/>
+								<do_if value="($tmp)i ge 1">
+									<append_to_list name="$recycleLoot" exact="[$todo.{$i}.{1}, ($tmp)i]" />
+								</do_if>
+								<remove_value name="$tmp"/>
+							</do_all>
+						</do_else>
+						<remove_value name="$todo"/>
+						<remove_value name="$profile"/>
+						<remove_value name="$targetCap"/>
+					</do_if>
+
+					<add_player_choice text="{2802,8200}" position="top_left" section="mmca_salvage_restore" choiceparam="[null, null, event.param2, true, 'engineer.ai.plus2']" comment="Restore and Dock Ship" selectable="$docks.count and md.$mmcareWrecks.indexof.{event.param2} == 0" />
+					<add_player_choice text="{2802,8202}" position="left" section="mmca_salvage_restore" choiceparam="[null, null, event.param2, false, 'engineer.ai.plus2']" comment="Restore Ship" selectable="md.$mmcareWrecks.indexof.{event.param2} == 0" />
+					<add_player_choice text="{2802,8203}" position="bottom_left" section="mmca_salvage_restore" choiceparam="[null, null, event.param2, null, null, $recycleLoot]" comment="Recycle Wreck" tooltip="if $sum lt 10 then 'more repair drones required' else ''" selectable="$canCarry and $sum ge 10" />
+					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
+
+					<remove_value name="$recycleLoot"/>
+					<remove_value name="$isCarrier"/>
+					<remove_value name="$canCarry"/>
+					<remove_value name="$theShip"/>
+					<remove_value name="$docks"/>
+					<remove_value name="$sum"/>
+
+				</do_elseif>
 				<do_elseif value="['mmcare_do_care', 'mmcare_do_pos', 'mmcare_do_pos_plus'].indexof.{event.param} and event.object.ship.primarypurpose == objectpurpose.build and @event.object.ship.buildanchor">
 					<do_if value="event.object.container.engineer.exists and (not event.object.container.engineer.$Defensible? or not event.object.container.engineer.$doSupport?)">
 						<set_value name="event.object.container.engineer.$doSupport" />
@@ -225,60 +214,6 @@
 				</do_else>
 			</actions>
 		</cue>
-		<cue name="MM_Care_CheckCarriers" instantiate="true">
-			<conditions>
-			  <check_any>
-				  <event_cue_signalled cue="md.Setup.GameStart"/>
-				  <event_game_loaded/>
-				  <event_player_created />
-			  </check_any>
-			</conditions>
-			<delay max="6s"/>
-			<actions>
-				<set_value name="global.$mmcare_mmcarrier_is_active" exact="false"/>
-				<do_if value="@md.$mmcarrierversion" min="142">
-					<do_if value="md.$mmcarrier_on ge player.age - 10s">
-						<set_value name="global.$mmcare_mmcarrier_is_active" exact="true"/>
-					</do_if>
-				</do_if>
-			</actions>
-		</cue>
-		<cue name="MM_Care_AdvCom_work" instantiate="true">
-			<conditions>
-				<check_any>
-					<event_conversation_next_section sectionprefix="mmadvcom_"/>
-					<event_conversation_returned_to_section sectionprefix="mmadvcom_" />
-				</check_any>
-				<check_value value="md.$mm_advcom" exact="'care'" />
-			</conditions>
-			<actions>
-
-				<do_if value="event.param == 'mmadvcom_main'">
-					<add_player_choice 		text="{1002,12025}" 	position="bottom_right" section="mmadvcom_next" />
-				</do_if>
-				<do_elseif value="event.param == 'mmadvcom_next'">
-					<!--add_player_choice 		text="{1002,12025}" 	position="bottom_right" section="mmadvcom_last" />
-				</do_elseif>
-				<do_elseif value="event.param == 'mmadvcom_last'"-->
-					<add_player_choice_sub text="{1002,1051}" tooltip="{1026, 20006}" section="gMain_object" position="right" choiceparam="[0, 0, event.object.ship]" comment="Show Ship Details" />
-					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back" />
-				</do_elseif>
-
-			</actions>
-		</cue>	
-		<cue name="MM_Care_AdvCom_init" instantiate="true">
-			<conditions>
-			  <check_any>
-				  <event_cue_signalled cue="md.Setup.GameStart"/>
-				  <event_game_loaded/>
-				  <event_player_created />
-			  </check_any>
-			</conditions>
-			<delay max="500ms"/>
-			<actions>
-				<set_value name="md.$mm_advcom" exact="'care'"/>
-			</actions>
-		</cue>
 		<!--
 			<signal_objects object="player.galaxy" param="'learned.something'" param2="[this, ware.inv_virtualseminarnavigation]" />
 		-->
@@ -292,29 +227,49 @@
 				<set_value name="$oldShip" exact="event.param2.{1}"/>
 				<set_value name="$theShip" exact="event.param2.{2}"/>
 				<set_value name="$doCollect" exact="if event.param2.{3}? and event.param2.{3} then true else false"/>
-				<include_actions ref="md.MM_Care.MM_Care_restore_do" />
+				<set_value name="$doRecycle" exact="if event.param2.{4}? and event.param2.{4} then true else false"/>
 
-				<do_if value="$Ship? and $Ship.exists and $Ship.isclass.ship and $doCollect">
-					<find_dock_location container="event.object.container" size="$Ship.docksize" name="$dock" />
-					<signal_objects object="$theShip" param="'collect ship'" param2="$Ship" param3="$dock" delay="10s"/>
-					<remove_value name="$dock" />
-				</do_if>
-				<do_elseif value="$Ship? and $Ship.exists and $Ship.isclass.ship and not $doCollect">
-					<remove_from_player_squad object="$theShip" />
-					<do_if value="$Ship.isclass.[class.ship, class.station]">
-						<start_script name="'move.patrol.care'" object="$theShip.pilot">
-							<param name="patrolobject" value="$Ship" />
-						</start_script>
+				<do_if value="$doRecycle" negate="true">
+					<include_actions ref="md.MM_Care.MM_Care_restore_do" />
+	
+					<do_if value="$Ship? and $Ship.exists and $Ship.isclass.ship and $doCollect">
+						<find_dock_location container="event.object.container" size="$Ship.docksize" name="$dock" />
+						<signal_objects object="$theShip" param="'collect ship'" param2="$Ship" param3="$dock" delay="10s"/>
+						<remove_value name="$dock" />
 					</do_if>
-				</do_elseif>
+					<do_elseif value="$Ship? and $Ship.exists and $Ship.isclass.ship and not $doCollect">
+						<remove_from_player_squad object="$theShip" />
+						<do_if value="$Ship.isclass.[class.ship, class.station]">
+							<start_script name="'move.patrol.care'" object="$theShip.pilot">
+								<param name="patrolobject" value="$Ship" />
+							</start_script>
+						</do_if>
+					</do_elseif>
+					<do_else>
+						<signal_objects object="$theShip" param="'stop order'" delay="3s"/>
+					</do_else>
+	
+					<do_if value="$Ship? and $Ship.exists and $Ship.isclass.ship and $theShip.engineer.exists">
+						<signal_objects object="$theShip" param="'engineer.support.this'" param2="$Ship" delay="20s"/>
+					</do_if>
+				</do_if>
 				<do_else>
-					<signal_objects object="$theShip" param="'stop order'" delay="3s"/>
+					<!-- Recycle do work in AI, this may prevent second restore/recycle -->
+					<do_if value="md.$mmcareWrecks?" negate="true">
+						<create_list name="md.$mmcareWrecks"/>
+					</do_if>
+					<do_if value="md.$mmcareWrecks.indexof.{$oldShip}" negate="true">
+						<append_to_list name="md.$mmcareWrecks" exact="$oldShip" />
+					</do_if>
+					<do_elseif value="md.$mmcareWrecks.indexof.{$oldShip}" chance="75">
+						<destroy_object object="$oldShip" explosion="false" />
+					</do_elseif>
+					<do_else>
+						<signal_objects object="$theShip" param="'stop order'" delay="3s"/>
+					</do_else>
 				</do_else>
 
-				<do_if value="$Ship? and $Ship.exists and $Ship.isclass.ship and $theShip.engineer.exists">
-					<signal_objects object="$theShip" param="'engineer.support.this'" param2="$Ship" delay="20s"/>
-				</do_if>
-
+				<remove_value name="$doRecycle" />
 				<remove_value name="$doCollect" />
 				<remove_value name="$theShip" />
 				<remove_value name="$Ship" />
@@ -668,7 +623,7 @@
 				<do_if value="$menue?" chance="if event.object.$hacked? and event.object.$hacked gt player.age then 0 else 100">
 					<!-- select Object -->
 					<add_player_choice_sub text="'Repair selection'" position="4" selectable="not event.object.$work? or event.object.$work.$object == $theObject" section="mmcareEC_do_work" choiceparam="$theObject" chance="if event.object.$destruct? then 0 else 100"/>
-					<add_player_choice_sub text="'Destruction'" position="1" selectable="not event.object.$destruct?" tooltip="if event.object.$work? and event.object.$work.$object then event.object.$work.$object.name else ''" section="mmcareEC_do_remove" choiceparam="$theObject" chance="if $theObject.tradenpc.exists or $theObject.defencenpc.exists then 0 else 100" />
+					<add_player_choice_sub text="'Destruction'" position="1" selectable="not event.object.$destruct?" tooltip="if event.object.$work? and event.object.$work.$object then event.object.$work.$object.name else ''" section="mmcareEC_do_remove" choiceparam="$theObject" chance="if $theObject.tradenpc.exists then 0 else 100" />
 				</do_if>
 				<remove_value name="$menue" />
 				<remove_value name="$theObject" />
@@ -688,11 +643,16 @@
 				<set_value name="$Position" exact="if $oldShip.exists then $oldShip.position else null"/>
 				<set_value name="$Rotation" exact="if $oldShip.exists then $oldShip.rotation else null"/>
 				<set_value name="$Zone" exact="if $oldShip.exists then $oldShip.zone else $theShip.zone"/>
-				<set_value name="$breakupChance" exact="210"/>
+				<set_value name="$breakupChance" exact="230"/>
+				<set_value name="$breakupChance" exact="60" operation="add" comment="repairdrones or marines" />
 				<set_value name="$breakupChance" exact="20" operation="add" chance="if $Macro.class == class.ship_xl then 100 else 0"/>
 				<set_value name="$breakupChance" exact="$theShip.pilot.combinedskill" operation="subtract" chance="if $theShip.pilot and $theShip.pilot.exists then 100 else 0"/>
 				<set_value name="$breakupChance" exact="$theShip.engineer.combinedskill" operation="subtract" chance="if $theShip.engineer and $theShip.engineer.exists then 100 else 0"/>
 				<set_value name="$breakupChance" exact="$theShip.architect.combinedskill" operation="subtract" chance="if $theShip.architect and $theShip.architect.exists then 100 else 0"/>
+				<set_value name="$breakupChance" exact="$theShip.units.{unitcategory.welder}.count + $theShip.units.{unitcategory.marine}.count" operation="subtract"/>
+				<do_if value="$breakupChance lt 0">
+					<set_value name="$breakupChance" exact="0"/>
+				</do_if>
 				
 				<do_if value="$oldShip.exists" negate="true">
 					<show_help position="8" log="true" force="true" duration="5s" custom="'ERROR: Wrack not exists anymore in %1'.[$Zone.knownname]" />

@@ -30,11 +30,60 @@
 					<!-- plott game -->
 					<set_faction_relation faction="faction.sovereignsyndicate" otherfaction="faction.player" value="faction.sovereignsyndicate.relation.enemy.mid"/>
 				</do_if>
+				<!-- CWIR starts -->
+				<do_elseif value="player.module" exact="'cwir_heretic'">
+					<set_faction_relation faction="faction.player" otherfaction="faction.hereticvanguards" value="faction.player.relation.member.max"/>
+					<set_faction_relation faction="faction.player" otherfaction="faction.plutarch" value="faction.player.relation.kill.max"/> 
+					<set_faction_relation faction="faction.player" otherfaction="faction.argongovernment" value="faction.player.relation.kill.max"/> 
+					<set_faction_relation faction="faction.player" otherfaction="faction.heartofalbion" value="faction.player.relation.kill.max"/> 
+					<set_faction_relation faction="faction.player" otherfaction="faction.canteran" value="faction.player.relation.kill.max"/> 
+					<set_faction_relation faction="faction.player" otherfaction="faction.familyryak" value="faction.player.relation.kill.max"/> 
+					<do_if value="@macro.{['cluster_t_macro'].random}" comment="md.$FieldsOfOpportunity">
+						<set_faction_relation faction="faction.player" otherfaction="faction.{['teladi'].random}" value="faction.player.relation.kill.max"/> 
+					</do_if>
+					<do_if value="@macro.{['cluster_m_macro'].random}" comment="md.$DLC2_Clusters.count">
+						<set_faction_relation faction="faction.player" otherfaction="faction.{['terracorp'].random}" value="faction.player.relation.kill.max"/> 
+						<set_faction_relation faction="faction.player" otherfaction="faction.{['terran'].random}" value="faction.player.relation.kill.max"/> 
+					</do_if>
+				</do_elseif>
+				<do_elseif value="player.module" exact="'cwir_ambitiousentrepreneur'">
+					<set_faction_relation faction="faction.player" otherfaction="faction.hereticvanguards" value="faction.player.relation.neutral.mid"/>
+					<set_faction_relation faction="faction.player" otherfaction="faction.familyryak" value="faction.player.relation.neutral.mid"/> 
+				</do_elseif>
+				<do_elseif value="player.module" exact="'cwir_pmcstart'">
+					<set_faction_relation faction="faction.player" otherfaction="faction.plutarch" value="faction.player.relation.friend.max"/>
+					<set_faction_relation faction="faction.player" otherfaction="faction.heartofalbion" value="faction.player.relation.kill.max"/> 
+					<set_faction_relation faction="faction.player" otherfaction="faction.canteran" value="faction.player.relation.kill.max"/> 
+				</do_elseif>
+				<do_elseif value="player.module" exact="'cwir_hoastart'">
+					<set_faction_relation faction="faction.player" otherfaction="faction.plutarch" value="faction.player.relation.kill.max"/>
+					<set_faction_relation faction="faction.player" otherfaction="faction.heartofalbion" value="faction.player.relation.friend.max"/> 
+					<set_faction_relation faction="faction.player" otherfaction="faction.canteran" value="faction.player.relation.friend.max"/> 
+				</do_elseif>
+				<do_elseif value="player.module" exact="'cwir_agstart'">
+					<set_faction_relation faction="faction.player" otherfaction="faction.hereticvanguards" value="faction.player.relation.kill.max"/>
+					<set_faction_relation faction="faction.player" otherfaction="faction.argongovernment" value="faction.player.relation.friend.max"/> 
+					<set_faction_relation faction="faction.player" otherfaction="faction.plutarch" value="faction.player.relation.neutral.min"/> 
+				</do_elseif>
+				<do_elseif value="player.module" exact="'cwir_xenon'">
+					<set_value name="$todoFactions" exact="[ 'beryll', 'nolimits', 'reivers', 'plutarch', 'heartofalbion', 'canteran', 'familyryak', 'argongovernment', 'albionenergy', 'aquarius', 'leddaindustrial', 'sonraenergy', 'sovereignsyndicate', 'hereticvanguards', 'chow', 'jonferson', 'frantonpharma', 'wholesomefoods', 'terracorp', 'terran', 'atlas', 'khaak', 'teladi', 'teladidrugrunner', 'teladigunrunner', 'argon_colony', 'ls_terran', 'hayen', 'mlspirate', 'ls_dark_space', 'dyssen', 'hungrill', 'vacanaltd', 'homeland', 'ariashorde']" />
+					<do_all exact="$todoFactions.count" counter="$td"> 
+						<do_if value="@faction.{$todoFactions.{$td}}">
+							<set_faction_relation faction="faction.player" otherfaction="faction.{$todoFactions.{$td}}" value="faction.player.relation.kill.max" /> 
+						</do_if>
+					</do_all>
+					<remove_value name="$todoFactions"/>
+
+					<set_faction_relation faction="faction.player" otherfaction="faction.xenon" value="faction.player.relation.member.max"/>
+				</do_elseif>
+				<!-- / CWIR starts -->
 				<do_else>
 					<set_faction_relation faction="faction.plutarch" otherfaction="faction.canteran" value="faction.plutarch.relation.kill.mid"/>
 					<set_faction_relation faction="faction.plutarch" otherfaction="faction.heartofalbion" value="faction.plutarch.relation.kill.mid"/>
-					<set_faction_relation faction="faction.plutarch" otherfaction="faction.reivers" value="faction.plutarch.relation.neutral.min"/>
-					<set_faction_relation faction="faction.sovereignsyndicate" otherfaction="faction.reivers" value="faction.sovereignsyndicate.relation.neutral.min"/>
+					<set_faction_relation faction="faction.plutarch" otherfaction="faction.reivers" value="faction.plutarch.relation.neutral.mid"/>
+					<set_faction_relation faction="faction.plutarch" otherfaction="faction.argongovernment" value="faction.plutarch.relation.neutral.min"/>
+					<set_faction_relation faction="faction.sovereignsyndicate" otherfaction="faction.reivers" value="faction.sovereignsyndicate.relation.neutral.mid"/>
+					<set_faction_relation faction="faction.sovereignsyndicate" otherfaction="faction.player" value="faction.sovereignsyndicate.relation.neutral.min"/>
 				</do_else>
 			</actions>
 		</library>
@@ -65,8 +114,8 @@
 						$cheatRestoreSkunk = 1,
 						$payOnUrSy = 1
 					]" comment="end $nfconfig"/>
-					<set_value name="md.$nfFactions_Main" exact="['player', 'heartofalbion', 'plutarch', 'canteran', 'argongovernment', 'xenon', 'familyryak', 'terracorp', 'atlas', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'argon_colony', 'hayen', 'mlspirate', 'teladi', 'ls_terran']" comment="end $nfFactions_Main"/>
-					<set_value name="md.$nfFactions_outlaw" exact="['xenon', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'atlas', 'khaak', 'hayen', 'mlspirate', 'ls_dark_space']" comment="end $nfFactions_outlaw"/>
+					<set_value name="md.$nfFactions_Main" exact="['player', 'heartofalbion', 'plutarch', 'canteran', 'argongovernment', 'xenon', 'familyryak', 'terracorp', 'atlas', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'argon_colony', 'hayen', 'mlspirate', 'teladi', 'ls_terran', 'dyssen', 'hungrill', 'vacanaltd', 'homeland']" comment="end $nfFactions_Main"/>
+					<set_value name="md.$nfFactions_outlaw" exact="['xenon', 'sovereignsyndicate', 'reivers', 'hereticvanguards', 'atlas', 'khaak', 'hayen', 'mlspirate', 'ls_dark_space', 'ariashorde']" comment="end $nfFactions_outlaw"/>
 
 					<do_if value="player.module == 'ep1'">
 						<set_value name="global.$nfconfig.$doBuildSt" exact="0" />

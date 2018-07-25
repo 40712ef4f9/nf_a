@@ -239,6 +239,7 @@
 					<append_to_list name="md.$NF_ArchiSpMacrosShips" exact="player.platform.container.macro" chance="(md.$NF_ArchiSpMacrosShips.indexof.{player.platform.container.macro} == 0)*100"/>
 					<write_to_logbook category="tips" text="{2802,2715}.[player.platform.container.knownname, player.platform.container.sector.name, player.platform.container.macro.id]"/>
 				</do_if>
+				<reveal_object object="player.platform.container" exact="100"/>
 			</actions>
 		</library>
 		<!--

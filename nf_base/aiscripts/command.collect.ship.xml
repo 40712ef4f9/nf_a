@@ -9,6 +9,7 @@
     <param name="destination" default="this.ship" />
     <param name="dockingslot" default="null" />
     <param name="restore" default="false" />
+    <param name="recycle" default="null" />
     <param name="pickup" default="true" />
     <param name="debugchance" default="0"/>
   </params>
@@ -19,15 +20,16 @@
     <actions>
 
       <set_value name="$bigship" exact="this.ship.isclass.ship_xl or this.ship.isclass.ship_l" />
+      <set_value name="$dorecycle" exact="if $recycle and typeof $recycle == datatype.list and $recycle.count then true else false" />
 
 
       <!-- Label to allow us to repeat indefinitely -->
       <label name="start" />
-      
+
       <!-- command action for waiting time -->
       <set_command_action commandaction="commandaction.calculating" />
 
-      <do_if value="not $restore and $target.exists and $target.iswreck">
+      <do_if value="not ($restore or $dorecycle) and $target.exists and $target.iswreck">
         <return />
       </do_if>
       <do_elseif value="not $target.exists and not $target.iswreck">
@@ -42,7 +44,7 @@
 
       <!-- recall drones -->
       <run_script name="'lib.recall.drones'" />      
-      
+
       <run_script name="'move.undock'" />
 
       <do_if value="$target.zone.isclass.highway">
@@ -73,14 +75,14 @@
       <!-- ...and go there! -->
       <label name="move" />
 
-      <do_if value="not $restore and $target.exists and $target.iswreck">
+      <do_if value="not ($restore or $dorecycle) and $target.exists and $target.iswreck">
         <return />
       </do_if>
       <do_elseif value="not $target.exists and not $target.iswreck">
         <return />
       </do_elseif>
       <set_command_action commandaction="commandaction.flying" />
-     
+
       <do_if value="$bigship">
         <!-- go close to player or wait-->
         <do_if value="this.ship.distanceto.{$target}" min="1km + this.ship.size">
@@ -90,7 +92,7 @@
           <!-- Pick a target point near the object we need to follow -->
           <move_to object="this.ship" destination="$target.zone" usehighways="not $bigship" forceposition="true" forcesteering="not $bigship" finishonapproach="true" sinceversion="1" >
             <position value="$safepos" />
-			<rotation value="$target.rotation" />
+            <rotation value="$target.rotation" />
             <!--interrupt_after_time time="10s" /-->
           </move_to>
         </do_if>
@@ -110,6 +112,9 @@
 
       <do_if value="$restore">
         <resume label="restore" />
+      </do_if>
+      <do_if value="$dorecycle">
+        <resume label="recycle" />
       </do_if>
 
 
@@ -223,7 +228,7 @@
       </do_while>
 
       <disable_collisions_between object="$target" target="$destination" />
-<!--
+      <!--
       <debug_text text="'move_docking'" chance="$debugchance" />
       <do_if value="$precisiondocking">
         <move_docking object="$target" dock="$dockingslot" abortpath="false" />
@@ -232,11 +237,11 @@
         <move_to object="$target" destination="$dockingslot.component" finishonapproach="1" flightbehaviour="flightbehaviour.dock"/>
       </do_else>
 -->
-	  <warp object="$target" zone="$destination.zone">
-	   <position object="$dockingslot.component" /><!-- object="$destination" y="-700m" -->
-	   <rotation value="$destination.rotation" />
-	  </warp>
-	  <wait min="1s" max="2s" />
+      <warp object="$target" zone="$destination.zone">
+        <position object="$dockingslot.component" /><!-- object="$destination" y="-700m" -->
+        <rotation value="$destination.rotation" />
+      </warp>
+      <wait min="1s" max="2s" />
 
       <do_if value="not $dockingslot.component.isoperational">
         <do_if value="$target.docklink">
@@ -247,7 +252,7 @@
         <clear_collision_filter object="$target" />
         <resume label="endofdocking" />
       </do_if>      
-      
+
       <do_if value="not $dockingslot.component.external">
         <close_dockingbay_doors dock="$dockingslot" />
         <!-- wait for the doors to close! -->
@@ -274,6 +279,42 @@
         <set_command_action commandaction="commandaction.repairchecking" />
         <signal_objects object="player.computer" param="'Care.DO.restore'" param2="[$target, this.ship, $pickup]" delay="2s" />
         <signal_objects object="this.ship" param="'hold position'" delay="500ms" />
+      </do_if>
+
+
+      <label name="recycle" />
+      <do_if value="$recycle and typeof $recycle == datatype.list and $recycle.count">
+        <set_command command="command.scan" />
+        <set_command_action commandaction="commandaction.repairchecking" />
+        <signal_objects object="player.computer" param="'Care.DO.restore'" param2="[$target, this.ship, false, true]" delay="2s" />
+        <set_value name="$time" exact="player.age" />
+        <set_value name="$time" exact="if $target.macro.class == class.ship_xl then 30min else 20min" operation="add"/>
+        <set_value name="$wait" exact="if $recycle.count gt 3 then 5min else 10min"/>
+        <do_while value="$target.exists">        
+          <wait min="$wait*0.33f" max="$wait" />
+          <do_if value="$target.exists and $recycle.count">
+            <set_value name="$tmp" exact="$recycle.random" />      
+            <do_if value="typeof $tmp == datatype.list and typeof $tmp.{1} == datatype.ware and this.ship.cargo.{$tmp.{1}}.free">
+              <add_cargo ware="$tmp.{1}" object="this.ship" exact="$tmp.{2}" result="$result" />
+              <do_if value="$tmp.{2} gt $result">
+                <set_value name="$tmp2" exact="[$tmp.{1}, $tmp.{2}-$result]" />
+              </do_if>
+            </do_if>
+            <remove_value name="$result"/>
+            <remove_value name="$recycle.{$recycle.indexof.{$tmp}}"/>
+            <do_if value="$tmp2?">
+              <append_to_list name="$recycle" exact="$tmp2" />
+            </do_if>
+            <remove_value name="$tmp2"/>
+            <remove_value name="$tmp"/>
+          </do_if>
+          <do_if value="$time lt player.age and $target.exists">
+            <destroy_object object="$target" explosion="false" />
+            <set_value name="$wait" exact="2min"/>
+          </do_if>
+        </do_while>
+        <remove_value name="$time"/>
+        <remove_value name="$wait"/>
       </do_if>
       <!--do_else>
         <signal_objects object="this.ship" param="'stop order'" delay="3s"/>

@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="trade.ship.nf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+  <params>
+    <param name="warelist" default="null" />
+    <param name="range" default="null" />
+    <param name="simple" default="null" />
+    <!--if $range == 'ranged' then $additionalparams defines min and max jumps for the buy and sell ranges [$minbuy, $maxbuy, $minsell, $maxsell]-->
+    <param name="additionalparams" default="null" />
+    <param name="docustomerbase" default="null" />
+    <param name="debugchance" default="0" />
+    <param name="debugchance2" default="0" />
+  </params>
+  <interrupts>
+    <handler ref="discoverall" />
+    <handler ref="TargetInvalidHandler" />
+    <handler ref="AttackHandler" />
+    <handler ref="ScannedHandler" />
+    <handler comment="handler kept local since it modifies a value local to this script">
+      <conditions>
+        <event_object_signalled object="this.ship" param="'range_setting_updated'" />
+      </conditions>
+      <actions>
+        <do_if value="@event.param2">
+          <set_value name="$range" exact="event.param2" />
+        </do_if>
+        <do_elseif value="@this.ship.commanderentity.$config_subordinate_range">
+          <set_value name="$range" exact="this.ship.commanderentity.$config_subordinate_range" />
+        </do_elseif>
+        <do_if value="not @$range.isclass.space">
+          <do_if value="$range" exact="'zone'">
+            <set_value name="$range" exact="this.ship.zone" />
+          </do_if>
+          <do_elseif value="$range" exact="'sector'">
+            <set_value name="$range" exact="this.ship.sector" />
+          </do_elseif>
+          <do_elseif value="$range" exact="'cluster'">
+            <set_value name="$range" exact="this.ship.cluster" />
+          </do_elseif>
+          <do_else>
+            <do_if value="(@$commander.maxradarrange gt 30km) and (this.ship.isclass.ship_l or this.ship.isclass.ship_xl)">
+              <set_value name="$range" exact="this.ship.cluster" />
+            </do_if>
+            <do_else>
+              <set_value name="$range" exact="this.ship.sector" />
+            </do_else>
+          </do_else>
+        </do_if>
+        <debug_text text="'updated operational range for %1(%2) to %3(%4)'.[this.ship.knownname, this.ship, $range.knownname, $range]" chance="$debugchance" />
+      </actions>
+    </handler>
+    <handler>
+      <conditions>
+        <event_object_hull_damaged object="this.ship"/>
+        <check_value value="not $nextDo? or $nextDo lt player.age" />
+        <check_value value="this.ship.hullpercentage lt 50" />
+        <check_value value="this.ship.owner != this.ship.trueowner" />
+      </conditions>
+      <actions>
+        <get_control_entities groupname="$Entities" object="this.ship"/>
+        <do_all exact="$Entities.count" counter="$j" > 
+          <set_cover_owner object="$Entities.{$j}"/>
+        </do_all> 
+        <set_cover_owner object="this.ship"/>
+        <remove_value name="$Entities"/>
+        <set_value name="$nextDo" exact="player.age+20s" />
+        <do_if value="this.ship.defencenpc.exists and event.object? and event.object.isclass.ship and event.object.owner != this.ship.trueowner"> 
+          <signal_objects object="this.ship.defencenpc" param="'attack'" param2="event.object" param3="[true, true]" delay="1ms"/>
+        </do_if>
+      </actions>
+    </handler>
+    <handler>
+      <conditions>
+        <event_object_signalled object="this.ship" param="'DO.Refuel.athome'"/>
+        <check_value value="this.ship.isclass.[class.ship_xl, class.ship_l]"/>
+        <check_value value="not this.ship.isplayerowned or this.$config_autorefuel? and this.$config_autorefuel"/>
+        <check_value value="this.ship.cargo.{ware.fuelcells}.count lt this.ship.cargo.{ware.fuelcells}.max*0.8f"/>
+        <check_value value="$commander.exists and $commander.products.list.indexof.{ware.fuelcells}"/>
+      </conditions>
+      <actions>
+        <run_interrupt_script name="'lib.refuel.athome'" abortscripts="true" resume="find trade run" />
+      </actions>
+    </handler>
+    <handler>
+      <conditions>
+        <event_object_signalled object="this.ship" param="'DO.go.athome'"/>
+        <check_value value="$commander.exists"/>
+      </conditions>
+      <actions>
+        <debug_text text="'%1 %2[%3] go.home'.[this.ship.knownname, this.typename, this.combinedskill]" filter="scripts_verbose" chance="0" />
+        <run_interrupt_script name="'move.dockat'" abortscripts="true" resume="find trade run" >
+          <param name="destination" value="$commander" />
+        </run_interrupt_script>
+      </actions>
+    </handler>
+  </interrupts>
+  <init>
+    <set_value name="$commander" exact="this.ship.commander" />
+    <do_if value="$commander">
+      <set_command command="command.trade" param="$commander" />
+    </do_if>
+    <do_else>
+      <set_command command="command.freetrade" />
+    </do_else>
+    <!-- Main action for waiting times -->
+    <set_command_action commandaction="commandaction.searchingtrades" />
+  </init>
+  <attention min="unknown">
+    <actions>
+
+      <set_value name="$traderunscript" exact="null" />
+
+      <!-- set up initial state for trade runs -->
+      <label name="start" />
+
+      <set_value name="$buyoffer" exact="null" />
+      <set_value name="$selloffer" exact="null" />
+
+      <set_value name="$idletime" min="10s" max="30s" />
+      <wait chance="0" />
+      <run_script name="'move.idle'" >
+        <param name="TimeOut" value="$idletime" />
+      </run_script>
+
+      <do_if value="not this.ship.commander and $commander and not ($commander.exists and $commander.isoperational and $commander.trueowner != faction.ownerless)">
+        <set_value name="$commander" exact="null" />
+      </do_if>
+
+      <!-- TODO: we should check for things like broken jump drive, so we can go in for repairs instead of endlessly trying to jump to a trade -->
+
+      <set_value name="$sellrange" exact="null"/>
+      <set_value name="$buyrange" exact="null"/>
+      <do_if value="not @$range.isclass.space">
+        <do_if value="@this.ship.commanderentity.$config_subordinate_range">
+          <set_value name="$range" exact="this.ship.commanderentity.$config_subordinate_range" />
+        </do_if>
+        <do_elseif value="$range" exact="'zone'">
+          <set_value name="$range" exact="this.ship.zone" />
+        </do_elseif>
+        <do_elseif value="$range" exact="'sector'">
+          <set_value name="$range" exact="this.ship.sector" />
+        </do_elseif>
+        <do_elseif value="$range" exact="'cluster'">
+          <set_value name="$range" exact="this.ship.cluster" />
+        </do_elseif>
+        <do_elseif value="$range" exact="'ranged'">
+          <set_value name="$range" exact="this.ship.cluster" />
+          <set_value name="$sellrange" exact="[$additionalparams.{1}, $additionalparams.{2}]"/>
+          <set_value name="$buyrange" exact="[$additionalparams.{3}, $additionalparams.{4}]"/>
+
+          <do_if value="this.$traderange_sellclusters?">
+            <remove_value name="this.$traderange_nexttime"/>
+            <remove_value name="this.$traderange_sellclusters"/>
+          </do_if>
+        </do_elseif>
+        <do_else>
+          <do_if value="this.ship.isclass.ship_l or this.ship.isclass.ship_xl">
+            <set_value name="$range" exact="this.ship.cluster" />
+          </do_if>
+          <do_else>
+            <set_value name="$range" exact="this.ship.sector" />
+          </do_else>
+        </do_else>
+      </do_if>
+
+      <!-- use ware basket unless it has been overridden by parameter -->
+      <do_if value="$warelist == null">
+        <set_value name="$warelist" exact="this.ship.warebasket.list" />
+      </do_if>
+
+
+      <label name="re init job"/>
+
+      <do_if value="@$commander or $docustomerbase">
+        <do_if value="$docustomerbase and global.$factionCEOs.{'$' + this.ship.trueowner.id}? and global.$factionCEOs.{'$' + this.ship.trueowner.id}.$stationbasics? and global.$factionCEOs.{'$' + this.ship.trueowner.id}.$stationbasics.count" chance="if not this.$nextTWLcheck? or this.$nextTWLcheck lt player.age then 100 else 0">
+          <set_value name="$tmp" exact="global.$factionCEOs.{'$' + this.ship.trueowner.id}.$stationbasics" />
+          <!-- remove old commander from list -->
+          <do_if value="$commander.exists">
+            <do_if value="$tmp.indexof.{$commander}">
+              <remove_value name="$tmp.{$tmp.indexof.{$commander}}" />
+            </do_if>
+            <do_if value="$commander.tradenpc.$tempsubordinates? and $commander.tradenpc.$tempsubordinates.indexof.{this.ship}">
+              <remove_value name="$commander.tradenpc.$tempsubordinates.{$commander.tradenpc.$tempsubordinates.indexof.{this.ship}}" />
+            </do_if>
+          </do_if>
+          <do_all exact="$tmp.count" counter="$a">
+            <do_if value="$tmp.count lt 1">
+              <break />
+            </do_if>
+            <set_value name="$tempCom" exact="$tmp.random" />
+            <!-- limit TempTradeShips at 4 -->
+            <!-- TODO: fallback for other reagions -->
+            <do_if value="$tempCom.cluster == this.ship.cluster and $tempCom.tradenpc and $tempCom.resources.list.count and @$commander.tradenpc.$tempsubordinates.count lt 4">
+              <!-- prepare warelist -->
+              <create_list name="$wareCheck" />
+              <do_all exact="3" counter="$count">
+                <do_if value="$count" exact="1">
+                  <set_value name="$resourcesCheck" exact="$tempCom.resources.list" />
+                  <set_value name="$todo" exact="$resourcesCheck" />
+                </do_if>
+                <do_elseif value="$count" exact="2">
+                  <set_value name="$productsCheck" exact="$tempCom.products.list" />
+                  <set_value name="$todo" exact="$productsCheck" />
+                </do_elseif>
+                <do_elseif value="$count" exact="3">
+                  <set_value name="$todo" exact="$tempCom.tradewares.list" />
+                </do_elseif>
+                <do_all exact="$todo.count" counter="$c">
+                  <do_if value="$wareCheck.indexof.{$todo.{$c}}" negate="true">
+                    <append_to_list name="$wareCheck" exact="$todo.{$c}" />
+                  </do_if>
+                </do_all>
+                <remove_value name="$todo" />
+              </do_all>
+              <!-- check warelist match and requirements -->
+              <do_all exact="$wareCheck.count" counter="$c">
+                <do_if value="this.ship.cargo.{$wareCheck.{$c}}.max and $tempCom.cargo.{$wareCheck.{$c}}.target">
+                  <do_if value="$resourcesCheck.indexof.{$wareCheck.{$c}} and ( $tempCom.cargo.{$wareCheck.{$c}}.count / $tempCom.cargo.{$wareCheck.{$c}}.target lt 0.5f )">
+                    <set_value name="$commander" exact="$tempCom" />
+                    <break />
+                  </do_if>
+                  <do_elseif value="$productsCheck.indexof.{$wareCheck.{$c}} and ( $tempCom.cargo.{$wareCheck.{$c}}.count / $tempCom.cargo.{$wareCheck.{$c}}.target gt 0.7f )">
+                    <set_value name="$commander" exact="$tempCom" />
+                    <break />
+                  </do_elseif>
+                  <do_else>
+                    <set_value name="$commander" exact="$tempCom" />
+                  </do_else>
+                </do_if>
+              </do_all>
+              <remove_value name="$productsCheck" />
+              <remove_value name="$resourcesCheck" />
+              <remove_value name="$wareCheck" />
+            </do_if>
+            <do_else>
+              <remove_value name="$tmp.{$tmp.indexof.{$tempCom}}" />
+            </do_else>
+            <wait min="player.timewarp.factor" max="player.timewarp.factor*3" />
+          </do_all>
+          <remove_value name="$tmp" />
+          <remove_value name="$tempCom" />
+          <set_value name="this.$nextTWLcheck" exact="player.age + 2h" />
+          <!-- add ship as temp subordinate -->
+          <do_if value="$commander.exists and $commander.tradenpc">
+            <do_if value="$commander.tradenpc.$tempsubordinates?">
+              <append_to_list name="$commander.tradenpc.$tempsubordinates" exact="this.ship" />
+            </do_if>
+            <do_else>
+              <set_value name="$commander.tradenpc.$tempsubordinates" exact="[this.ship]" />
+            </do_else>
+          </do_if>
+        </do_if>
+        <do_elseif value="$commander == null or ($commander.exists and $commander.isoperational and $commander.trueowner != faction.ownerless)" negate="true">
+          <do_if value="this.$whatido?" negate="true" chance="if this.ship.isplayerowned then 0 else 100">
+            <set_value name="this.ship.pilot.$end_of_work" exact="player.age - 10s" />
+            <set_value name="$buyoffer" exact="null" />
+            <set_value name="$selloffer" exact="null" />
+            <set_value name="$commander" exact="null" />
+            <remove_object_commander object="this.ship" />
+            <resume label="perform trade run"/>
+          </do_if>
+          <do_elseif value="this.$whatido?" negate="true" chance="if this.ship.isplayerowned then 0 else 0">
+            <do_if value="$commander == this.ship.commander">
+              <remove_object_commander object="this.ship" />
+            </do_if>
+          </do_elseif>
+          <do_else>
+            <remove_value name="this.$nextTWLcheck" />
+            <do_if value="not $docustomerbase and global.$factionCEOs.{'$' + this.ship.trueowner.id}? and global.$factionCEOs.{'$' + this.ship.trueowner.id}.$stationbasics?">
+              <set_value name="$docustomerbase" exact="true" />
+            </do_if>
+            <do_if value="$commander == this.ship.commander">
+              <remove_object_commander object="this.ship" />
+            </do_if>
+            <resume label="start"/>
+          </do_else>
+        </do_elseif>
+      </do_if>
+
+      <do_if value="$simple and $commander">
+        <set_value name="$simple" exact="null"/>
+      </do_if>
+      <do_if value="$sellrange and $commander and this.ship.isclass.[class.ship_m, class.ship_s]">
+        <set_value name="$sellrange" exact="null"/>
+        <set_value name="$buyrange" exact="null"/>
+        <set_value name="$simple" exact="null"/>
+      </do_if>
+
+      <do_if value="$commander">
+        <set_command command="command.trade" param="$commander" />
+      </do_if>
+      <do_else>
+        <set_command command="command.freetrade" />
+      </do_else>
+
+      <do_if value="$warelist == null">
+        <set_value name="$warelist" exact="this.ship.warebasket.list" />
+      </do_if>
+
+      <do_if value="$simple != null">
+        <set_value name="$traderunscript" exact="'trade.findsimpletraderun.nf'" />
+      </do_if>
+      <do_else>
+        <do_if value="$commander">
+          <set_value name="$traderunscript" exact="'trade.findtraderun.nf'" />
+          <!-- remove wares that might otherwise block cargo space forever because our homebase does not trade with them -->
+          <do_if value="this.ship.owner" exact="faction.player" negate="true">
+            <set_value name="$keepwares" exact="[ware.fuelcells]" />
+            <append_to_list name="$keepwares" exact="$commander.products.list" />
+            <append_to_list name="$keepwares" exact="$commander.resources.list" />
+            <append_to_list name="$keepwares" exact="$commander.tradewares.list" />
+            <set_value name="$cargowares" exact="this.ship.cargo.list" />
+            <do_all exact="$cargowares.count" counter="$c">
+              <set_value name="$currentware" exact="$cargowares.{$c}"/>
+              <do_if value="$keepwares.indexof.{$currentware} == 0">
+                <remove_cargo object="this.ship" ware="$currentware" exact="this.ship.cargo.{$currentware}.count"/>
+              </do_if>
+            </do_all>
+            <remove_value name="$cargowares" />
+            <remove_value name="$keepwares" />
+          </do_if>
+        </do_if>
+        <do_else>
+          <set_value name="$traderunscript" exact="'trade.findfreetraderun.nf'" />
+        </do_else>
+      </do_else>
+
+      <do_if value="['trade.findsimpletraderun.nf', 'trade.findfreetraderun.nf'].indexof.{$traderunscript}" chance="if not this.$nextTWLcheck? or this.$nextTWLcheck lt player.age then 100 else 0">
+        <do_if value="global.$factionCEOs.{'$' + this.ship.trueowner.id}? and global.$factionCEOs.{'$' + this.ship.trueowner.id}.$overallwarelist? and global.$factionCEOs.{'$' + this.ship.trueowner.id}.$overallwarelist.count">
+          <set_value name="$tmp" exact="global.$factionCEOs.{'$' + this.ship.trueowner.id}.$overallwarelist" />
+          <do_all exact="$tmp.count" counter="$zj">
+            <do_if value="$warelist.indexof.{$tmp.{$zj}} == 0 and this.ship.cargo.{$tmp.{$zj}}.max">
+              <append_to_list name="$warelist" exact="$tmp.{$zj}" />
+              <debug_text text="'%1 %2[%3] ware added'.[this.ship.knownname, @this.$nextTWLcheck, $tmp.{$zj}]" filter="scripts_verbose" chance="100" />
+            </do_if>
+          </do_all>
+          <remove_value name="$tmp" />
+        </do_if>
+        <set_value name="this.$nextTWLcheck" exact="player.age + 1h" />
+      </do_if>
+
+      <do_if value="not this.$nextTWLcheck? or this.$nextTWLcheck lt player.age">
+        <set_value name="this.$nextTWLcheck" exact="player.age + 1h" />
+      </do_if>
+
+      <wait min="1s" max="3s" />
+
+
+      <label name="find trade run"/>
+
+      <do_if value="this.$doRefuelnext?">
+        <signal_objects object="this.ship" param="'DO.Refuel.athome'" delay="1s"/>
+        <remove_value name="this.$doRefuelnext" />
+      </do_if>
+
+      <do_if value="$commander and not ($commander.exists and $commander.isoperational and $commander.trueowner != faction.ownerless)">
+        <resume label="re init job"/>
+      </do_if>
+      <do_elseif value="not this.$nextTWLcheck? or this.$nextTWLcheck lt player.age" chance="if this.ship.isjobship or ($commander and $commander == this.ship.commander and $traderunscript == 'trade.findtraderun.nf') then 0 else 100">
+        <resume label="re init job"/>
+      </do_elseif>
+
+      <do_if value="@this.ship.dockslot.component.external">
+        <!-- make sure we clear the docking area asap -->
+        <run_script name="'move.undock'" />
+        <set_value name="$idletime" min="10s" max="30s" />
+        <run_script name="'move.idle'">
+          <param name="TimeOut" value="$idletime" />
+        </run_script>
+      </do_if>
+      <do_else>
+        <wait min="10s" max="30s" />
+      </do_else>
+
+      <run_script name="$traderunscript">
+        <param name="warelist" value="$warelist" />
+        <param name="range" value="$range" />
+        <param name="commander" value="$commander"/>
+        <param name="sellrange" value="$sellrange"/>
+        <param name="buyrange" value="$buyrange"/>
+        <param name="lasttrade" value="@$lasttrade"/>
+        <param name="debugchance" value="$debugchance"/>
+        <param name="debugchance2" value="$debugchance2"/>
+        <save_retval name="selloffer" variable="$selloffer" />
+        <save_retval name="buyoffer" variable="$buyoffer" />
+      </run_script>
+
+      <do_if value="$simple and $commander">
+        <set_value name="$simple" exact="null"/>
+      </do_if>
+
+      <do_if value="$sellrange != null and $traderunscript == 'trade.findtraderun.nf' and this.ship.isclass.[class.ship_m, class.ship_s]">
+        <set_value name="$sellrange" exact="null"/>
+        <set_value name="$buyrange" exact="null"/>
+        <set_value name="$simple" exact="null"/>
+      </do_if>
+
+      <!--If no trade was found then at least fly back to the buy area before checking again-->
+      <do_if value="not $selloffer.available and not $buyoffer.available">
+        <set_value name="this.$trade_failedfindruns" operation="add"/>
+        <!--If the buyclusters are saved to the blackboard, fly to one of them-->
+        <do_if value="this.$traderange_buyclusters?">
+          <set_value name="$moveto" exact="true"/>
+          <do_if value="this.$traderange_buyclusters.count">
+            <!--Check if we are already in the buy area-->
+            <do_all exact="this.$traderange_buyclusters.count" counter="$Counter">
+              <do_if value="this.ship.hascontext.{this.$traderange_buyclusters.{$Counter}}">
+                <set_value name="$moveto" exact="false"/>
+                <break/>
+              </do_if>
+            </do_all>
+            <do_if value="$moveto">
+              <debug_text text="'No trade was found and we are outside of the buy range. Flying back to buy range.'" chance="$debugchance"/>
+              <run_script name="'move.generic'">
+                <param name="destination" value="this.$traderange_buyclusters.random" />
+                <param name="endintargetzone" value="true" />
+              </run_script>
+            </do_if>
+            <remove_value name="$moveto"/>
+          </do_if>
+        </do_if>
+
+        <do_if value="$tmpIdle?" negate="true">
+          <set_value name="$findrun" exact="if this.$trade_failedfindruns? and this.$trade_failedfindruns gt 7 then 8 else if not this.$trade_failedfindruns? or this.$trade_failedfindruns lt 1 then 1 else this.$trade_failedfindruns"/>
+          <do_if value="$range.isclass.zone">
+            <set_value name="$rangemulti" exact="1" />
+          </do_if>
+          <do_elseif value="$range.isclass.sector">
+            <set_value name="$rangemulti" exact="2" />
+          </do_elseif>
+          <do_elseif value="$range.isclass.cluster">
+            <set_value name="$rangemulti" exact="3" />
+          </do_elseif>
+          <do_else>
+            <set_value name="$rangemulti" exact="5" />
+          </do_else>
+          <set_value name="$tmpIdle" min="[30s, 10s*$findrun*$rangemulti].max" max="[90s, 20s*$findrun*$rangemulti, [player.timewarp.factor*70, 480s].min].max"/>
+          <remove_value name="$rangemulti" />
+          <remove_value name="$findrun" />
+        </do_if>
+
+        <wait exact="$tmpIdle"/>
+        <remove_value name="$tmpIdle" />
+
+        <resume label="find trade run"/>
+      </do_if>
+
+
+      <label name="perform trade run"/>
+
+      <set_value name="this.$trade_failedfindruns" exact="0"/>
+      <do_while value="$selloffer.available or $buyoffer.available">
+        <run_script name="'trade.performtraderun'">
+          <param name="selloffer" value="$selloffer" />
+          <param name="buyoffer" value="$buyoffer" />
+          <param name="debugchance" value="$debugchance" />
+          <save_retval name="success" variable="$success" />
+          <save_retval name="lasttrade" variable="$lasttrade" />
+        </run_script>
+        <do_if value="not $success">
+          <set_value name="$selloffer" exact="null" />
+          <set_value name="$buyoffer" exact="null" />
+        </do_if>
+      </do_while>
+
+      <set_value name="$buyoffer" exact="null" />
+      <set_value name="$selloffer" exact="null" />
+
+      <do_if value="this.ship.jobexpired or (this.ship.pilot.$end_of_work? and this.ship.pilot.$end_of_work lt player.age)">
+        <debug_text text="'%1 doing job %2 has expired, die!'.[this.ship.knownname, this.ship.job]" chance="$debugchance" />
+        <write_to_logbook category="general" text="'EOL: %1 [%2 / %3]'.[this.ship.knownname, @this.ship.pilot.$end_of_work, player.age]" chance="this.ship.isplayerowned *100"/>
+        <set_value name="$bigship" exact="this.ship.isclass.ship_l or this.ship.isclass.ship_xl" />
+        <run_script name="'move.die'">
+          <param name="byjump" value="$bigship" />
+          <param name="byhighway" value="not $bigship" />
+          <param name="bydock" value="not $bigship" />
+          <param name="byidle" value="true" />
+        </run_script>
+      </do_if>
+
+      <resume label="find trade run" />
+
+      <debug_text text="player.age + ' END OF SCRIPT!'" chance="$debugchance" />
+
+    </actions>
+  </attention>
+  <on_abort>
+    <do_if value="$commander and $commander.tradenpc and $commander.tradenpc.$tempsubordinates? and $commander.tradenpc.$tempsubordinates.indexof.{this.ship}">
+      <remove_value name="$commander.tradenpc.$tempsubordinates.{$commander.tradenpc.$tempsubordinates.indexof.{this.ship}}" />
+    </do_if>
+    <remove_value name="this.$doRefuelnext" />
+    <remove_value name="this.$homespace" />
+    <remove_value name="this.$nextTWLcheck" />
+    <remove_value name="this.$traderange_clusters"/>
+    <remove_value name="this.$traderange_sellclusters"/>
+    <remove_value name="this.$traderange_buyclusters"/>
+    <remove_value name="this.$tgr_min_sell"/>
+    <remove_value name="this.$tgr_max_sell"/>
+    <remove_value name="this.$tgr_min_buy"/>
+    <remove_value name="this.$tgr_max_buy"/>
+  </on_abort>
+</aiscript>

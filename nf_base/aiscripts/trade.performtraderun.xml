@@ -139,4 +139,6 @@
 			</handler>
 		</interrupts>	
 	</add>
+	<replace sel="//on_abort/do_if[@value='(@$buyer_reserved != $targetobject) and @$targetobject.exists']/@value">@$targetobject.exists and (@$buyer_reserved != $targetobject)</replace>
+	<replace sel="//do_if[@value='(@$buyer_reserved != $targetobject) and @$targetobject.exists']/@value">@$targetobject.exists and (@$buyer_reserved != $targetobject)</replace>
 </diff>

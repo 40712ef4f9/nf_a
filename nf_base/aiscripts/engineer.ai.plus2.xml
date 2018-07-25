@@ -29,7 +29,7 @@
     <handler comment="Destruct object">
       <conditions>
         <event_object_signalled object="this.object" param="'engineer.destruct.this'" />
-        <check_value value="this.defensible.tradenpc or this.defensible.defencenpc" negate="true"/>
+        <check_value value="this.defensible.tradenpc" negate="true"/>
       </conditions>
       <actions>
         <set_value name="$Defensible" exact="this.defensible" />

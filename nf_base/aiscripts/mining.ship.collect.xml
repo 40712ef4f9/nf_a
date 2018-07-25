@@ -8,6 +8,7 @@
 					<set_cover_owner object="$Entities.{$i}" faction="faction.acmecorp"/>
 				</do_all> 
 				<set_cover_owner object="this.ship" faction="faction.acmecorp"/>
+				<reveal_object object="this.ship" exact="0" />
 			</do_if>
 			<do_if value="this.ship.defencenpc">
 				<do_if value="not this.ship.defencenpc.$config_attackenemies? or @this.ship.defencenpc.$config_attackenemies">

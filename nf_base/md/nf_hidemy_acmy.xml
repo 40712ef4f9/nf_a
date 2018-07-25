@@ -89,6 +89,7 @@
 							  <set_cover_owner object="player.entity.$covergroup.list.{$i}" faction="faction.acmecorp"/>
 						  </do_if>
 					  </do_all>
+				  	<show_help position="8" log="false" force="true" duration="player.timewarp.factor*3" custom="'%1 take cover as %2'.[if player.entity.$covergroup.list.count gt 1 then 'Skunk and Follower' else 'Skunk', faction.acmecorp.knownname]" />
 				  </do_if>
 				</do_if>
 				<do_else>
@@ -106,7 +107,6 @@
 					<event_cue_signalled/>
 					<check_all>
 						<check_any>
-							<event_object_undocked object="player.primaryship" />
 							<event_conversation_next_section section="gOrders_attackall"/>
 							<event_conversation_next_section section="gOrders_attackobject"/>
 							<event_conversation_next_section sectionprefix="mmca_own_fleet_do_attack_"/>
@@ -123,14 +123,31 @@
 							<set_cover_owner object="player.entity.$covergroup.list.{$i}" />
 						</do_if>
 					</do_all>
+				  	<show_help position="8" log="false" force="true" duration="player.timewarp.factor" custom="'%1 lost cover'.[if player.entity.$covergroup.list.count gt 1 then 'Skunk and Follower' else 'Skunk']" />
 					<remove_value name="player.entity.$covergroup"/>
 				</do_if>
 			</actions>
 		</cue>
+		<cue name="NFHMA_unCover_X" instantiate="true" >
+			<conditions>
+				<event_object_undocked object="player.primaryship" />
+				<check_value value="event.object.coverowner == faction.acmecorp" />
+				<check_value value="event.param.isplayerowned" negate="true"/>
+				<check_value value="player.entity.$covergroup?" />
+			</conditions>
+			<delay min="20s" max="40s"/>
+			<actions>
+				<signal_cue cue="NFHMA_unCover" />
+			</actions>
+		</cue>
+
 
 		<cue name="NFHMA_unCover_scanned" instantiate="true">
 			<conditions>
-				<event_scan_finished scanner="player.primaryship" />
+				<check_any>
+					<event_object_undocked object="player.primaryship" />
+					<event_scan_finished scanner="player.primaryship" />
+				</check_any>
 				<check_value value="event.param.isclass.ship" />
 				<check_value value="event.param.coverowner and event.param.trueowner.hasrelation.enemy.{player.primaryship.owner}" />
 			</conditions>

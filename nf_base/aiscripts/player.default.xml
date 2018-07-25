@@ -6,6 +6,7 @@
 	<add sel="//handler/conditions/check_any/event_object_signalled[@param=&quot;'withdraw battle'&quot;]" pos="after" >
           <event_object_signalled object="this.ship" param="'collect ship'" />
           <event_object_signalled object="this.ship" param="'collect ship restore'" />
+          <event_object_signalled object="this.ship" param="'recycle ship'" />
           <event_object_signalled object="this.ship" param="'tender action'" />
 	</add>
 	<add sel="//handler/actions/do_elseif[@value=&quot;event.param == 'attack enemies'&quot;]" pos="after" >
@@ -21,6 +22,12 @@
             <param name="dockingslot" value="if event.param3? and event.param3 then event.param3 else null" />
             <param name="restore" value="true" />
             <param name="pickup" value="if event.param3? and event.param3 then true else false" />
+          </run_interrupt_script>
+        </do_elseif>
+        <do_elseif value="event.param == 'recycle ship'">
+          <run_interrupt_script name="'command.collect.ship'" abortscripts="true" resume="init">
+            <param name="target" value="event.param2" />
+            <param name="recycle" value="event.param3" />
           </run_interrupt_script>
         </do_elseif>
         <do_elseif value="event.param == 'tender action'">

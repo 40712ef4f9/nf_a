@@ -157,7 +157,7 @@
 				<set_faction_known faction="faction.xenon" known="true"/>
 				<set_faction_known faction="faction.reivers" known="true"/>
 				<set_faction_known faction="faction.canteran" known="true"/>
-				<!-- Relations -->							
+				<!-- Relations @ nf_mapmaster
 				<set_faction_relation faction="faction.player" otherfaction="faction.hereticvanguards" value="30"/>
 				<set_faction_relation faction="faction.player" otherfaction="faction.plutarch" value="faction.player.relation.kill.max"/> 
 				<set_faction_relation faction="faction.player" otherfaction="faction.argongovernment" value="faction.player.relation.kill.max"/> 
@@ -167,6 +167,7 @@
 				<do_if value="md.$FieldsOfOpportunity? and md.$FieldsOfOpportunity" comment="dlc compatibility">
 					<set_faction_relation faction="faction.player" otherfaction="faction.{['teladi'].{1}}" value="faction.player.relation.kill.max"/> 
 				</do_if>
+				-->
 				<!-- Startspace -->							
 				<find_zone name="$startzone" macro="macro.tzonecluster_a_sector01_zone95_macro" />
 				<!-- Starting belongings -->							
@@ -262,9 +263,10 @@
 					<remove_value name="$todo_2"/>
 				</do_all>
 				<remove_value name="$todo"/>
-				<!-- Relations -->							
+				<!-- Relations @ nf_mapmaster
 				<set_faction_relation faction="faction.player" otherfaction="faction.hereticvanguards" value="0"/>
 				<set_faction_relation faction="faction.player" otherfaction="faction.familyryak" value="0"/> 
+				-->
 				<!-- Startspace -->							
 				<find_zone name="$startzone" macro="macro.tzonecluster_a_sector02_zone105_macro" />
 				<!-- Starting belongings -->							
@@ -327,10 +329,11 @@
 				<set_faction_known faction="faction.canteran" known="true"/>
 				<set_faction_known faction="faction.plutarch" known="true"/>
 				<set_faction_known faction="faction.jonferson" known="true"/>
-				<!-- Relations -->							
+				<!-- Relations @ nf_mapmaster
 				<set_faction_relation faction="faction.player" otherfaction="faction.plutarch" value="20"/>
 				<set_faction_relation faction="faction.player" otherfaction="faction.heartofalbion" value="-20"/> 
 				<set_faction_relation faction="faction.player" otherfaction="faction.canteran" value="-20"/> 
+				-->
 				<!-- Startspace -->							
 				<find_zone name="$startzone" macro="macro.tzonecluster_b_sector05_zone19_macro" />
 				<!-- Starting belongings -->							
@@ -391,10 +394,11 @@
 				<set_faction_known faction="faction.canteran" known="true"/>
 				<set_faction_known faction="faction.plutarch" known="true"/>
 				<set_faction_known faction="faction.jonferson" known="true"/>
-				<!-- Relations -->							
+				<!-- Relations @ nf_mapmaster
 				<set_faction_relation faction="faction.player" otherfaction="faction.plutarch" value="-20"/>
 				<set_faction_relation faction="faction.player" otherfaction="faction.heartofalbion" value="20"/> 
 				<set_faction_relation faction="faction.player" otherfaction="faction.canteran" value="20"/> 
+				-->
 				<!-- Startspace -->							
 				<find_zone name="$startzone" macro="macro.tzoneCluster_B_Sector04_Zone32_macro" />
 				<!-- Starting belongings -->							
@@ -446,10 +450,11 @@
 				<set_faction_known faction="faction.canteran" known="true"/>
 				<set_faction_known faction="faction.plutarch" known="true"/>
 				<set_faction_known faction="faction.jonferson" known="true"/>
-				<!-- Relations -->							
+				<!-- Relations @ nf_mapmaster
 				<set_faction_relation faction="faction.player" otherfaction="faction.hereticvanguards" value="-20"/>
 				<set_faction_relation faction="faction.player" otherfaction="faction.argongovernment" value="20"/> 
 				<set_faction_relation faction="faction.player" otherfaction="faction.plutarch" value="-10"/> 
+				-->
 				<!-- Startspace -->							
 				<find_zone name="$startzone" macro="macro.tzoneCluster_C_Sector08_Zone92_macro" />
 				<!-- Starting belongings -->							
@@ -513,7 +518,7 @@
 				<set_faction_known faction="faction.familyryak" known="true"/>
 				<set_faction_known faction="faction.hereticvanguards" known="true"/>
 				<set_faction_known faction="faction.xenon" known="true"/>
-				<!-- Relations -->							
+				<!-- Relations @ nf_mapmaster
 				<set_faction_relation faction="faction.player" otherfaction="faction.xenon" value="30"/>
 				<set_faction_relation faction="faction.player" otherfaction="faction.hereticvanguards" value="faction.player.relation.kill.max"/>
 				<set_faction_relation faction="faction.player" otherfaction="faction.plutarch" value="faction.player.relation.kill.max"/> 
@@ -525,6 +530,7 @@
 					<set_faction_relation faction="faction.player" otherfaction="faction.{['teladi'].{1}}" value="faction.player.relation.kill.max"/> 
 					<set_faction_relation faction="faction.{['teladi'].{1}}" otherfaction="faction.player" value="faction.{['teladi'].{1}}.relation.kill.max"/>
 				</do_if>
+				-->
 				<!-- Startspace -->							
 				<find_zone name="$startzone" macro="macro.tzonecluster_a_sector03_zone111_macro" />
 				<!-- Starting belongings -->							
