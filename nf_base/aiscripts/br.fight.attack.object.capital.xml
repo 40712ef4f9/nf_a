@@ -874,7 +874,13 @@
 
       <!-- ok, we have found enemies, let's do something about them -->
       <set_value name="$attacktime" min="player.age + 30s" max="player.age + 40s" />
-      <set_value name="$attacktime" exact="player.timewarp.factor*10" operation="add" chance="player.timewarp.active*100"/>
+      <do_if value="player.timewarp.active">
+        <set_value name="$attacktime" exact="player.timewarp.factor*10" operation="add" />
+        <remove_value name="$noTW" />
+      </do_if>
+      <do_else>
+        <set_value name="$noTW" />
+      </do_else>
       <!-- Fight -->
       <do_if value="$enemies.count" min="1">
         <!-- Simulate the attack -->
@@ -906,7 +912,7 @@
             <do_if value="$enemies.{$y}.isclass.[class.ship_l, class.ship_xl] and (not $temp or this.ship.distanceto.{$enemies.{$y}} lt this.ship.distanceto.{$temp})" chance="if $temp and $temp.isclass.station then 0 else 100">
               <set_value name="$temp" exact="$enemies.{$y}"/>
             </do_if>
-            <do_elseif value="$enemies.{$y}.isclass.station and (not $temp or this.ship.distanceto.{$enemies.{$i}} lt this.ship.distanceto.{$temp}) and this.ship.distanceto.{$enemies.{$y}} lt $FiringRange">
+            <do_elseif value="$enemies.{$y}.isclass.station and (not $temp or this.ship.distanceto.{$enemies.{$y}} lt this.ship.distanceto.{$temp}) and this.ship.distanceto.{$enemies.{$y}} lt $FiringRange">
               <set_value name="$temp" exact="$enemies.{$y}"/>
               <break />
             </do_elseif>
@@ -1053,6 +1059,10 @@
         </do_all>
         <wait exact="player.timewarp.factor/5" sinceversion="2" />
         <!-- Avoid an infite loop-->
+        <do_if value="player.timewarp.active and $noTW?">
+          <set_value name="$attacktime" exact="player.timewarp.factor*10" operation="add" />
+          <remove_value name="$noTW" />
+        </do_if>
         <do_if value="player.age" min="$attacktime">
           <break/>
         </do_if>

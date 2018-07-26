@@ -54,6 +54,9 @@
 				</do_if> 
 				<do_if value="$stations.{$Counter}.name == $stations.{$Counter}.knownname" negate="true">
 					<set_known object="$stations.{$Counter}" known="true" />
+					<set_value name="$toProcess" exact="3" operation="subtract"/>
+				</do_if> 
+				<do_if value="$stations.{$Counter}.revealedpercentage lt 100">
 					<reveal_object object="$stations.{$Counter}" exact="100"/>
 					<set_value name="$toProcess" exact="3" operation="subtract"/>
 				</do_if> 

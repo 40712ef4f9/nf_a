@@ -22,7 +22,7 @@
   </add>
   <replace sel="/aiscript/attention[@min='unknown']/actions/do_elseif[@value='this.station.macro.ismacro.struct_bt_alb_warehouse_macro']" >
       <do_elseif value="this.station.macro.ismacro.struct_bt_alb_warehouse_macro">
-        <do_if value="this.station.cluster.macro.id" list="['cluster_b_macro','cluster_a_macro']">
+        <do_if value="this.station.cluster.macro.id" list="['cluster_c_macro','cluster_a_macro']">
           <add_tradeware ware="ware.bioelectricneurongel" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
           <add_tradeware ware="ware.bofu" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>
           <add_tradeware ware="ware.plankton" object="this.station" allowbuy="true" allowsell="true" lockavgprice="true"/>

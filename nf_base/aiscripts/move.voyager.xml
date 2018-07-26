@@ -35,7 +35,6 @@
 							<set_cover_owner object="$Entities.{$h}" faction="if this.ship.zone.owner == faction.player then faction.acmecorp else this.ship.zone.owner"/>
 						</do_all> 
 						<set_cover_owner object="this.ship" faction="if this.ship.zone.owner == faction.player then faction.acmecorp else this.ship.zone.owner"/>
-						<reveal_object object="this.ship" exact="0" />
 						<remove_value name="$Entities"/>
 						<do_all exact="this.ship.subordinates.count" counter="$g">
 							<get_control_entities groupname="$Entities" object="this.ship.subordinates.{$g}"/>
@@ -43,7 +42,6 @@
 								<set_cover_owner object="$Entities.{$h}" faction="if this.ship.zone.owner == faction.player then faction.acmecorp else this.ship.zone.owner"/>
 							</do_all> 
 							<set_cover_owner object="this.ship.subordinates.{$g}" faction="if this.ship.zone.owner == faction.player then faction.acmecorp else this.ship.zone.owner"/>
-							<reveal_object object="this.ship.subordinates.{$g}" exact="0" />
 							<do_if value="this.ship.subordinates.{$g}.defencenpc">
 								<do_if value="not this.ship.subordinates.{$g}.defencenpc.$config_attackenemies? or @this.ship.subordinates.{$g}.defencenpc.$config_attackenemies">
 									<set_value name="this.ship.subordinates.{$g}.defencenpc.$config_attackenemies" exact="0"/>

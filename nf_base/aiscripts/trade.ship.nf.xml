@@ -477,6 +477,8 @@
         </run_script>
       </do_if>
 
+      <wait exact="player.timewarp.factor"/>
+
       <resume label="find trade run" />
 
       <debug_text text="player.age + ' END OF SCRIPT!'" chance="$debugchance" />

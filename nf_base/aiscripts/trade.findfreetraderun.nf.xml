@@ -130,7 +130,7 @@
           <!-- own CV -->
           <find_buy_offer tradepartner="this.ship" space="$checkrange" result="$buyoffer" wares="$currentcargo">
             <match_buyer owner="$customerfaction">
-              <match negate="true" class="class.ship_xl" />
+              <match class="class.ship_xl" />
             </match_buyer>
           </find_buy_offer>
           <!-- default -->
@@ -148,7 +148,7 @@
           <create_list name="$buyoffers" />
           <set_value name="$stocklevel" exact="0.1f" comment="0.1f to 0.5f"/>
           <do_all exact="3" chance="if @this.$trade_failedfindruns le 1 then 100 else 0">
-            <do_if value="['acmecorp', 'deepwater'].indexof.{$customerfaction}">
+            <do_if value="['acmecorp', 'deepwater'].indexof.{$customerfaction.id}">
               <find_buy_offer tradepartner="this.ship" space="$checkrange" result="$buyoffers" wares="$currentcargo" multiple="true">
                 <match_buyer>
                   <match negate="true" owner="faction.acmecorp" />
@@ -175,6 +175,8 @@
           <find_buy_offer tradepartner="this.ship" space="$checkrange" result="$buyoffers" wares="$currentcargo" multiple="true" chance="if $buyoffers.count then 0 else 100">
             <match_buyer>
               <match negate="true" class="class.ship_xl" />
+              <match negate="true" owner="faction.acmecorp" />
+              <match negate="true" owner="faction.deepwater" />
             </match_buyer>
           </find_buy_offer>
           <debug_text text="player.age + ' found ' + $buyoffers.count + ' buyoffers for selling cargo in ' + $checkrange.knownname" chance="$debugchance" />
@@ -328,7 +330,7 @@
         <!-- experimental: find builder ships in need and prefer buying what they need -->
         <do_if value="@$buildership_check">
           <create_list name="$buildoffers" />
-          <do_if value="['acmecorp', 'deepwater'].indexof.{$customerfaction}">
+          <do_if value="['acmecorp', 'deepwater'].indexof.{$customerfaction.id}">
             <find_buy_offer tradepartner="this.ship" space="$checkrange" result="$buildoffers" multiple="true" chance="100 - (@this.$trade_failedfindruns ge 2)*100">
               <match_buyer class="class.ship_xl" />
             </find_buy_offer>
@@ -380,7 +382,7 @@
           <do_if value="$selltobuildership?">
             <create_list name="$selloffers" />
             <!-- own -->
-            <do_if value="['acmecorp', 'deepwater'].indexof.{$customerfaction}">
+            <do_if value="['acmecorp', 'deepwater'].indexof.{$customerfaction.id}">
               <find_sell_offer tradepartner="this.ship" space="$checkrange" result="$selloffers" wares="$filteredwarelist" multiple="true" chance="100 - (@this.$trade_failedfindruns ge 2)*100">
                 <match_seller>
                   <match negate="true" owner="faction.acmecorp" />
@@ -394,17 +396,17 @@
                 <match_seller owner="$customerfaction" />
                 <totalvolume min="$minvolume" comment="we check minvolume even for the buildership trades to give smaller (faster) ships an advantage" />
               </find_sell_offer>
+              <!-- all -->
+              <find_sell_offer tradepartner="this.ship" space="$checkrange" result="$selloffers" wares="$filteredwarelist" multiple="true" chance="100 - ($selloffers.count gt 0)*100">
+                <totalvolume min="$minvolume" comment="we check minvolume even for the buildership trades to give smaller (faster) ships an advantage" />
+              </find_sell_offer>
             </do_else>
-            <!-- all -->
-            <find_sell_offer tradepartner="this.ship" space="$checkrange" result="$selloffers" wares="$filteredwarelist" multiple="true" chance="100 - ($selloffers.count gt 0)*100">
-              <totalvolume min="$minvolume" comment="we check minvolume even for the buildership trades to give smaller (faster) ships an advantage" />
-            </find_sell_offer>
             <debug_text text="player.age + ' found %1 selloffers for buildership check'.[$selloffers.count]" chance="$debugchance" />
           </do_if>
           <do_else>
             <create_list name="$selloffers" />
             <!-- own -->
-            <do_if value="['acmecorp', 'deepwater'].indexof.{$customerfaction}">
+            <do_if value="['acmecorp', 'deepwater'].indexof.{$customerfaction.id}">
               <find_sell_offer tradepartner="this.ship" space="$checkrange" result="$selloffers" wares="$filteredwarelist" multiple="true" chance="100 - (@this.$trade_failedfindruns ge 2)*100">
                 <match_seller>
                   <match negate="true" owner="faction.acmecorp" />
@@ -413,6 +415,14 @@
                 <totalvolume min="$minvolume" />
                 <relativeprice max="1.1f" comment="filter trades out that are unlikely to yield profitable trade runs by ignoring anything above average price" />
               </find_sell_offer>
+              <!-- all -->
+              <find_sell_offer tradepartner="this.ship" space="$checkrange" result="$selloffers" wares="$filteredwarelist" multiple="true" chance="100 - ($selloffers.count gt 0)*100">
+                <match_seller>
+                  <match negate="true" owner="faction.acmecorp" />
+                  <match negate="true" owner="faction.deepwater" />
+                </match_seller>
+                <totalvolume min="$minvolume" />
+              </find_sell_offer>
             </do_if>
             <do_else>
               <find_sell_offer tradepartner="this.ship" space="$checkrange" result="$selloffers" wares="$filteredwarelist" multiple="true" chance="100 - (@this.$trade_failedfindruns ge 2)*100">
@@ -420,12 +430,12 @@
                 <relativeprice max="1.1f" comment="filter trades out that are unlikely to yield profitable trade runs by ignoring anything above average price" />
                 <match_seller owner="$customerfaction" />
               </find_sell_offer>
+              <!-- all -->
+              <find_sell_offer tradepartner="this.ship" space="$checkrange" result="$selloffers" wares="$filteredwarelist" multiple="true" chance="100 - ($selloffers.count gt 0)*100">
+                <totalvolume min="$minvolume" />
+                <relativeprice max="1.1f" comment="filter trades out that are unlikely to yield profitable trade runs by ignoring anything above average price" />
+              </find_sell_offer>
             </do_else>
-            <!-- all -->
-            <find_sell_offer tradepartner="this.ship" space="$checkrange" result="$selloffers" wares="$filteredwarelist" multiple="true" chance="100 - ($selloffers.count gt 0)*100">
-              <totalvolume min="$minvolume" />
-              <relativeprice max="1.1f" comment="filter trades out that are unlikely to yield profitable trade runs by ignoring anything above average price" />
-            </find_sell_offer>
             <debug_text text="player.age + ' found %1 selloffers for regular check'.[$selloffers.count]" chance="$debugchance" />
           </do_else>
         </do_if>
@@ -453,12 +463,20 @@
             <do_all exact="$sellclusters.count" counter="$Counter">
               <create_list name="$buyoffers" />
               <!-- own -->
-              <do_if value="['acmecorp', 'deepwater'].indexof.{$customerfaction}">
+              <do_if value="['acmecorp', 'deepwater'].indexof.{$customerfaction.id}">
                 <find_buy_offer tradepartner="this.ship" wares="$soldwares" space="$sellclusters.{$Counter}" result="$buyoffers" multiple="true" chance="100 - (@this.$trade_failedfindruns ge 1)*100">
                   <match_buyer>
                     <match negate="true" owner="faction.acmecorp" />
                     <match negate="true" owner="faction.deepwater" />
                     <match negate="true" class="class.ship_xl" />
+                  </match_buyer>
+                  <totalvolume min="$minvolume" />
+                </find_buy_offer>
+                <!-- all -->
+                <find_buy_offer tradepartner="this.ship" wares="$soldwares" space="$sellclusters.{$Counter}" result="$buyoffers" multiple="true" chance="100 - ($buyoffers.count gt 0)*100">
+                  <match_buyer>
+                    <match negate="true" owner="faction.acmecorp" />
+                    <match negate="true" owner="faction.deepwater" />
                   </match_buyer>
                   <totalvolume min="$minvolume" />
                 </find_buy_offer>
@@ -470,11 +488,11 @@
                   </match_buyer>
                   <totalvolume min="$minvolume" />
                 </find_buy_offer>
+                <!-- all -->
+                <find_buy_offer tradepartner="this.ship" wares="$soldwares" space="$sellclusters.{$Counter}" result="$buyoffers" multiple="true" chance="100 - ($buyoffers.count gt 0)*100">
+                  <totalvolume min="$minvolume" />
+                </find_buy_offer>
               </do_else>
-              <!-- all -->
-              <find_buy_offer tradepartner="this.ship" wares="$soldwares" space="$sellclusters.{$Counter}" result="$buyoffers" multiple="true" chance="100 - ($buyoffers.count gt 0)*100">
-                <totalvolume min="$minvolume" />
-              </find_buy_offer>
               <sort_trades name="$buyoffers" tradelist="$buyoffers" sorter="relativeprice"/>
               <do_all exact="$buyoffers.count" counter="$Counter2" reverse="true">
                 <do_if value="@$lasttrade and (not $lasttrade.{1}) and $lasttrade.{2} == $buyoffers.{$Counter2}.ware and $lasttrade.{3} == $buyoffers.{$Counter2}.buyer">
@@ -499,15 +517,35 @@
           <do_else>
             <debug_text text="'soldwares: %1, range: %2, class: %3, minvolume: %4, tradeablewares: %5'.[$soldwares, $range.knownname, $range.class, $minvolume, $tradablewares]" chance="$debugchance2" />
             <create_list name="$buyoffers" />
-            <!-- own -->
-            <find_buy_offer tradepartner="this.ship" wares="$soldwares" space="$range" result="$buyoffers" multiple="true" chance="100 - (@this.$trade_failedfindruns ge 1)*100">
-              <match_buyer owner="$customerfaction" />
-              <totalvolume min="$minvolume" />
-            </find_buy_offer>
-            <!-- all -->
-            <find_buy_offer tradepartner="this.ship" wares="$soldwares" space="$range" result="$buyoffers" multiple="true" chance="100 - ($buyoffers.count gt 0)*100">
-              <totalvolume min="$minvolume" />
-            </find_buy_offer>
+            <do_if value="['acmecorp', 'deepwater'].indexof.{$customerfaction.id}">
+              <find_buy_offer tradepartner="this.ship" wares="$soldwares" space="$range" result="$buyoffers" multiple="true" chance="100 - (@this.$trade_failedfindruns ge 1)*100">
+                <match_buyer>
+                  <match negate="true" owner="faction.acmecorp" />
+                  <match negate="true" owner="faction.deepwater" />
+                  <match negate="true" class="class.ship_xl" />
+                </match_buyer>
+                <totalvolume min="$minvolume" />
+              </find_buy_offer>
+              <!-- all -->
+              <find_buy_offer tradepartner="this.ship" wares="$soldwares" space="$range" result="$buyoffers" multiple="true" chance="100 - ($buyoffers.count gt 0)*100">
+                <match_buyer>
+                  <match negate="true" owner="faction.acmecorp" />
+                  <match negate="true" owner="faction.deepwater" />
+                </match_buyer>
+                <totalvolume min="$minvolume" />
+              </find_buy_offer>
+            </do_if>
+            <do_else>
+              <!-- own -->
+              <find_buy_offer tradepartner="this.ship" wares="$soldwares" space="$range" result="$buyoffers" multiple="true" chance="100 - (@this.$trade_failedfindruns ge 1)*100">
+                <match_buyer owner="$customerfaction" />
+                <totalvolume min="$minvolume" />
+              </find_buy_offer>
+              <!-- all -->
+              <find_buy_offer tradepartner="this.ship" wares="$soldwares" space="$range" result="$buyoffers" multiple="true" chance="100 - ($buyoffers.count gt 0)*100">
+                <totalvolume min="$minvolume" />
+              </find_buy_offer>
+            </do_else>
             <!-- we prefer to use offers where selling above agerage price is possible, try those first but use a random one -->
             <create_list name="$preferredoffers" />
             <do_all exact="$buyoffers.count" counter="$Counter" reverse="true">

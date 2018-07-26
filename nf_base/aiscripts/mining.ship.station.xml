@@ -6,7 +6,7 @@
 	<replace sel="//do_if[@value='not $iswarehouse and $resourceoffers.count == 0']/@value">$resourceoffers.count == 0</replace>
 
 	<add sel="//label[@name='loop']" pos="after">
-      <do_if value="$homebase.exists and $homebase.isoperational and $homebase.trueowner != faction.ownerless" negate="true">
+      <do_if value="@$homebase.exists and $homebase.isoperational and $homebase.trueowner != faction.ownerless" negate="true">
         <do_if value="this.$whatido?">
           <set_value name="this.$whatido" exact="'mining.ship.free'" />
         </do_if>

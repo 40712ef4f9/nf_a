@@ -3585,7 +3585,7 @@
 <set_value name="$text2" exact="'* Ships: n:%1 u:%2 b:%3 t:%4 m:%5 p:%6 pl:%7 e:%8 StS:%9 - '.[$shipNothingTodo.count, $shipDoUnknown.count, $shipDoBuild.count, $shipDoTrade.count, $shipDoMine.count, $shipDoPatrol.count, $shipDoPlunder.count, $shipDoEscort.count, $shipDoStationSupport.count]" operation="add" />
 
 				<!-- send scouts -->
-				<do_if value="$_CEO.$style == 'domination' and $tmpConfig.$scouts">
+				<do_if value="$_CEO.$style == 'domination' and $tmpConfig.$scouts and $validZonesCore?">
 				
 					<include_actions ref="md.MM_Corps__Data.MMCData_doworker_include_scouts" />
 
@@ -7676,7 +7676,7 @@
 					
 					<share_actor_account actor="$pilot" otherobject="$_CEO"/>
 					
-					<do_if value="$cost and $temp_shipyard.tradenpc and $_CEO.owner != $temp_shipyard.tradenpc.owner">
+					<do_if value="$cost and $temp_shipyard.exists and $temp_shipyard.tradenpc.exists and $_CEO.owner != $temp_shipyard.tradenpc.owner">
 						<transfer_money from="$_CEO" to="$temp_shipyard.tradenpc" amount="$cost"/>
 					</do_if>
 	
