@@ -113,7 +113,7 @@
 						md.$NF_ArchiSpMacros.indexof.{macro.xenon_asteroid_01_base_01b_macro} and
 						md.$NF_ArchiSpMacros.indexof.{macro.xenon_asteroid_01_base_01_macro}
 					">
-						<append_to_list name="md.$todo_stations_moddlc" exact="macro.struct_at_xen_xenon_complex_macro"/>
+						<append_to_list name="md.$NF_ArchiSpMacros" exact="macro.struct_at_xen_xenon_complex_macro"/>
 						<add_encyclopedia_entry type="stationtypes" item="'struct_at_xen_xenon_complex_macro'" />
 						<show_help position="8" log="true" force="true" duration="15s" custom="'Your research make %1 available at station-blueprints'.[macro.struct_at_xen_xenon_complex_macro.name]" />
 					</do_if>

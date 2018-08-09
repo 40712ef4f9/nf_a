@@ -598,9 +598,12 @@
                 </do_elseif>
               </do_if>
             </do_all>
-            <do_if value="$tmp_MainTarget?">
-              <set_value name="$MainTarget" exact="$tmp_MainTarget" />
+            <do_if value="this.ship.pilot.$priotarget? and this.ship.pilot.$priotarget.exists and not this.ship.pilot.$priotarget.iswreck and $targets.indexof.{this.ship.pilot.$priotarget}">
+              <set_value name="$MainTarget" exact="this.ship.pilot.$priotarget" />
             </do_if>
+            <do_elseif value="$tmp_MainTarget?">
+              <set_value name="$MainTarget" exact="$tmp_MainTarget" />
+            </do_elseif>
             <remove_value name="$tmp_dist" />
             <remove_value name="$tmp_MainTarget_dist" />
             <remove_value name="$tmp_MainTarget" />
@@ -609,33 +612,42 @@
             <remove_value name="$targetsInSight_chance" />
           </do_if>
           <do_if value="$MainTarget.exists and not $MainTarget.iswreck" negate="true">
-            <do_if value="$targetsInSight.count and $validbigguntarget.count">
+            <set_value name="$MainTarget" exact="null"/>
+            <do_if value="this.ship.pilot.$priotarget? and this.ship.pilot.$priotarget.exists and not this.ship.pilot.$priotarget.iswreck and $targets.indexof.{this.ship.pilot.$priotarget}">
+              <set_value name="$MainTarget" exact="this.ship.pilot.$priotarget" />
+            </do_if>
+            <do_elseif value="$targetsInSight.count and $validbigguntarget.count">
               <do_all exact="$validbigguntarget.list.count" counter="$j">
                 <do_if value="$targetsInSight.list.indexof.{$validbigguntarget.list.{$j}}">
                   <set_value name="$MainTarget" exact="$validbigguntarget.list.{$j}" />
                   <break />
                 </do_if>
               </do_all>
-            </do_if>
+            </do_elseif>
             <do_elseif value="$validbigguntarget.count">
               <set_value name="$MainTarget" exact="$validbigguntarget.list.random"/>
             </do_elseif>
           </do_if>
           <!-- primary_slot-->
-          <do_if value="not $boardingFlag and $validbigguntarget.count and $target.isoperational">
-            <shoot_at object="this.ship" slot="tag.primary_slot" tolerance="10.0deg" target="if $MainTarget.exists and not $MainTarget.iswreck then $MainTarget else $target" weapontype="combat" /> <!-- additional_targets="$validbigguntarget.list" -->
+          <set_value name="$priotargetSet" exact="100"/>
+          <do_if value="not $boardingFlag and $MainTarget.exists and not $MainTarget.iswreck and not $MainTarget.isclass.[class.ship_xs, class.ship_s, class.ship_m]">
+            <shoot_at object="this.ship" slot="tag.primary_slot" tolerance="10.0deg" target="$MainTarget" weapontype="combat" />
             <do_if value="$LRShip">
               <set_value name="this.ship.pilot.$priotarget" exact="$MainTarget"/>
             </do_if>
           </do_if>
-          <do_elseif value="$MainTarget and not $boardingFlag and $validbigguntarget.count and not $MainTarget.isclass.[class.ship_xs, class.ship_s, class.ship_m]">
-            <set_value name="this.ship.pilot.$priotarget" exact="$MainTarget"/>
-            <shoot_at object="this.ship" slot="tag.primary_slot" tolerance="10.0deg" target="$MainTarget" weapontype="combat" /><!-- additional_targets="$validbigguntarget.list" -->
+          <do_elseif value="not $boardingFlag and $target.exists and not $target.iswreck and not $target.isclass.[class.ship_xs, class.ship_s, class.ship_m]">
+            <shoot_at object="this.ship" slot="tag.primary_slot" tolerance="10.0deg" target="$target" weapontype="combat" /> <!-- additional_targets="$validbigguntarget.list" -->
+            <do_if value="$LRShip">
+              <set_value name="this.ship.pilot.$priotarget" exact="$target"/>
+              <set_value name="$priotargetSet" exact="0"/>
+            </do_if>
           </do_elseif>
           <do_else>
             <stop_shooting object="this.ship" slot="tag.primary_slot"/>
             <do_if value="this.ship.pilot.$priotarget?">
               <remove_value name="this.ship.pilot.$priotarget" />
+              <set_value name="$priotargetSet" exact="0"/>
             </do_if>
           </do_else>
           <!-- secondary_slot-->
@@ -647,28 +659,26 @@
             <set_value name="$tmpDeg" exact="240.0deg"/>
           </do_elseif>
 
-          <do_if value="$LRShip and not $boardingFlag" chance="if $target and $target.isclass.station then 100 else 0">
-            <set_value name="this.ship.pilot.$priotarget" exact="$MainTarget"/>
-            <shoot_at object="this.ship" slot="tag.secondary_slot" tolerance="$tmpDeg" target="$MainTarget" weapontype="combat" /><!-- additional_targets="if $validbigguntarget.list.count then $validbigguntarget.list else $targetsInSight.list" -->
-          </do_if>
-          <do_elseif value="$MainTarget.exists and not $boardingFlag">
-            <do_if value="$LRShip" chance="if $MainTarget.isclass.[class.ship_xs, class.ship_s, class.ship_m] then 0 else 100">
-              <shoot_at object="this.ship" slot="tag.secondary_slot" tolerance="$tmpDeg" target="$MainTarget" locktarget="true" weapontype="combat" />
+          <do_if value="not $boardingFlag and $MainTarget.exists and not $MainTarget.iswreck and not $MainTarget.isclass.[class.ship_xs, class.ship_s, class.ship_m] and ($thiscombinedskill le 70 or $targetsInSight.indexof.{$MainTarget})">
+            <shoot_at object="this.ship" slot="tag.secondary_slot" tolerance="$tmpDeg" target="$MainTarget" weapontype="combat" />
+            <do_if value="$LRShip">
+              <set_value name="this.ship.pilot.$priotarget" exact="$MainTarget"/>
             </do_if>
-            <do_elseif value="$LRShip" negate="true">
-              <shoot_at object="this.ship" slot="tag.secondary_slot" tolerance="$tmpDeg" target="$MainTarget" locktarget="true" weapontype="combat" /><!-- additional_targets="if $targetsInSight.list.count then $targetsInSight.list else $validbigguntarget.list" -->
-            </do_elseif>
-            <do_else>
-              <stop_shooting object="this.ship" slot="tag.secondary_slot" chance="50"/>
-            </do_else>
-          </do_elseif>
-          <do_elseif value="not $boardingFlag and $validbigguntarget.count and ($targetsInSight.indexof.{$validbigguntarget.{1}} or $thiscombinedskill le 70)">
-            <shoot_at object="this.ship" target="$validbigguntarget.{1}" slot="tag.secondary_slot" tolerance="$tmpDeg" weapontype="combat" /><!-- additional_targets="$validbigguntarget.list" -->
+          </do_if>
+          <do_elseif value="not $boardingFlag and $target.exists and not $target.iswreck and not $target.isclass.[class.ship_xs, class.ship_s, class.ship_m]">
+            <shoot_at object="this.ship" slot="tag.secondary_slot" tolerance="$tmpDeg" target="$target" weapontype="combat" /> <!-- additional_targets="$validbigguntarget.list" -->
+            <do_if value="$LRShip">
+              <set_value name="this.ship.pilot.$priotarget" exact="$target"/>
+            </do_if>
           </do_elseif>
           <do_else>
             <stop_shooting object="this.ship" slot="tag.secondary_slot"/>
+            <do_if value="this.ship.pilot.$priotarget?" chance="$priotargetSet">
+              <remove_value name="this.ship.pilot.$priotarget" />
+            </do_if>
           </do_else>
           <remove_value name="$tmpDeg" />
+          <remove_value name="$priotargetSet" />
           <!-- turrets -->
           <do_if value="$MainTarget and not $boardingFlag" chance="if $target and $target.isclass.station then 100 else 0">
             <set_turret_targets object="this.ship" preferredtarget="$MainTarget" target="if $validbigguntarget.list.count gt 5 then $validbigguntarget.list else $targets.list"  />
@@ -687,7 +697,6 @@
             <set_object_hull object="$MainTarget" exact="$MainTarget.hullpercentage - $damage" chance="44"/>
             <remove_value name="$damage" />
           </do_if>
-
           <!-- v0.19 test to make stations more destructible IZ-->
 
         </do_if>

@@ -6078,6 +6078,9 @@
 					<do_if value="not $shipDoEscort.{$x}.commander or not $shipDoEscort.{$x}.commander.exists">
 						<append_to_list name="$checkForNewJob" exact="$shipDoEscort.{$x}"/>
 					</do_if>
+					<do_elseif value="$shipDoEscort.{$x}.cargo.capacity gt 71000">
+						<append_to_list name="$checkForNewJob" exact="$shipDoEscort.{$x}"/>
+					</do_elseif>
 					<do_elseif value="$shipDoEscort.indexof.{$shipDoEscort.{$x}.commander} and $shipDoEscort.{$x}.isclass.[class.ship_l, class.ship_xl]">
 						<append_to_list name="$checkForNewJob" exact="$shipDoEscort.{$x}"/>
 					</do_elseif>
@@ -7676,7 +7679,7 @@
 					
 					<share_actor_account actor="$pilot" otherobject="$_CEO"/>
 					
-					<do_if value="$cost and $temp_shipyard.exists and $temp_shipyard.tradenpc.exists and $_CEO.owner != $temp_shipyard.tradenpc.owner">
+					<do_if value="$cost and $temp_shipyard.exists and $temp_shipyard.tradenpc and $temp_shipyard.tradenpc.exists and $_CEO.owner != $temp_shipyard.tradenpc.owner">
 						<transfer_money from="$_CEO" to="$temp_shipyard.tradenpc" amount="$cost"/>
 					</do_if>
 	
@@ -7782,7 +7785,7 @@
 									<match_relation faction="$_CEO.owner" comparison="gt" relation="enemy" />
 								</find_station>
 								<do_all exact="$ShipYards.count" counter="$x" reverse="true">
-									<do_if value="$ShipYards.{$x}.exists and $ShipYards.{$x}.isoperational and $ShipYards.{$x}.canproduceships" negate="true">
+									<do_if value="$ShipYards.{$x}.exists and $ShipYards.{$x}.isoperational and $ShipYards.{$x}.canproduceships and $ShipYards.{$x}.tradenpc" negate="true">
 										<remove_value name="$ShipYards.{$x}"/>
 									</do_if>
 								</do_all>
@@ -7903,7 +7906,7 @@
 						</do_if>
 					</do_else>
 
-					<do_if value="$costShip and $temp_shipyard.owner != $_CEO.owner">
+					<do_if value="$costShip and $temp_shipyard.tradenpc and $temp_shipyard.owner != $_CEO.owner">
 						<transfer_money from="$_CEO" to="$temp_shipyard.tradenpc" amount="$costShip"/>
 					</do_if>
 				</do_if>

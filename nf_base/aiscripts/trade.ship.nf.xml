@@ -305,9 +305,17 @@
           <!-- remove wares that might otherwise block cargo space forever because our homebase does not trade with them -->
           <do_if value="this.ship.owner" exact="faction.player" negate="true">
             <set_value name="$keepwares" exact="[ware.fuelcells]" />
-            <append_to_list name="$keepwares" exact="$commander.products.list" />
-            <append_to_list name="$keepwares" exact="$commander.resources.list" />
-            <append_to_list name="$keepwares" exact="$commander.tradewares.list" />
+            <do_all exact="3" counter="$count">
+              <set_value name="$todo" exact="$commander.resources.list" chance="if $count == 1 then 100 else 0"/>
+              <set_value name="$todo" exact="$commander.products.list" chance="if $count == 2 then 100 else 0"/>
+              <set_value name="$todo" exact="$commander.tradewares.list" chance="if $count == 3 then 100 else 0"/>
+              <do_all exact="$todo.count" counter="$i">
+                <do_if value="$keepwares.indexof.{$todo.{$i}} == 0">
+                  <append_to_list name="$keepwares" exact="$todo.{$i}" />
+                </do_if>
+              </do_all>
+              <remove_value name="$todo" />
+            </do_all>
             <set_value name="$cargowares" exact="this.ship.cargo.list" />
             <do_all exact="$cargowares.count" counter="$c">
               <set_value name="$currentware" exact="$cargowares.{$c}"/>

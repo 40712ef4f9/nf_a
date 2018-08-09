@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<add sel="//production/@wares"> shippartcomp</add>   
+		<add sel="//queue"> 	
+			<item ware="shippartcomp" method="universalparts2" />
+		</add>   
+</diff>

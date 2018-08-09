@@ -20,10 +20,13 @@
 		<macro ref="units_size_l_cs_omicron_ship_03_sa_macro" />
 		<macro ref="units_size_l_player_fury_macro" />
 		<macro ref="units_size_l_player_harpy_macro" />
+		<macro ref="units_size_l_cs_omicron_ship_02_mk6_macro" />  
+		<macro ref="units_size_l_cs_omicron_ship_02_mk6a_macro" />  
 	</add>  
 	<add sel="//connection[@ref='connection_dock_xl01']/macro/properties/builder"> 	
 		<macro ref="units_size_xl_fort_macro" />
 		<macro ref="units_size_xl_van_destroyer_macro" />
+		<macro ref="units_size_xl_van_destroyer_mk2_macro" />
 		<macro ref="units_size_xl_player_hades_macro" />
 		<macro ref="units_size_xl_player_chimera_macro" />
 		<macro ref="units_size_xl_player_behemoth_macro" />
@@ -31,6 +34,7 @@
 		<macro ref="units_size_xl_cs_omicron_ship_02_5_macro" />  
 		<macro ref="units_size_xl_cs_omicron_ship_02_mk2_macro" />  
 		<macro ref="units_size_xl_cs_omicron_ship_02_mk5_macro" />  
+		<macro ref="units_size_xl_cs_omicron_ship_02_mk6_macro" />  
 		<macro ref="units_size_xl_cs_omicron_ship_02_pir_macro" />  
 		<macro ref="units_size_xl_cs_omicron_ship_03_mk2_macro" />
 		<macro ref="units_size_xl_cs_omicron_ship_02_dc_macro" />  
@@ -39,11 +43,15 @@
 		<macro ref="units_size_xl_cs_omicron_ship_02_x_macro" />  
 		<macro ref="units_size_xl_cs_omicron_ship_02_xc_macro" />  
 		<macro ref="units_size_xl_cs_omicron_ship_04_mk2_macro" />
+		<macro ref="units_size_xl_cs_omicron_ship_04_mk3_macro" />
+		<macro ref="units_size_xl_cs_omicron_ship_04_dw_macro" />
 		<macro ref="units_size_xl_capital_destroyer_1_mk2_macro" />  
+		<macro ref="units_size_xl_capital_destroyer_2_cargo_macro" />  
 		<macro ref="units_size_xl_capital_destroyer_2_mk2_macro" />  
 		<macro ref="units_size_l_kit_repairship_macro" />
 		<macro ref="units_size_xl_kit_destroyer_01_macro" />  
 		<macro ref="units_size_xl_kit_cargo_01_macro" />
+		<macro ref="units_size_xl_kit_pirate_10_macro" />
 	</add>  
 <!--
 	<replace sel="//connection[@ref='ConnectionFor_struct_econ_prod_ship_sm_macro']/macro/properties/production">

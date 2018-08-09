@@ -2,6 +2,8 @@
 <diff>
 	<add sel="//wares/production">
 		<method id="universalparts" />
+		<method id="universalparts2" />
+		<method id="universalparts2xen" />
 	</add>
 	<add sel="/wares">
 		<ware id="shippart" name="{2802,2051}" description="{2802,2052}" group="shiptech" transport="container" size="extralarge" specialist="specialistpowersupply" volume="2000" tags="container economy">
@@ -49,6 +51,37 @@
 				</secondary>
 				<effects>
 					<effect type="secondaryresource" product="0.15" />
+					<effect type="specialist" product="0.1" />
+					<effect type="manager" product="0.03" />
+					<effect type="engineer" product="0.03" />
+					<effect type="defencecontrol" product="0.03" />
+				</effects>
+			</production>
+			<production time="20" amount="1" method="universalparts2" name="Assemble">
+				<primary>
+					<ware ware="shippartcomp" amount="10" />
+				</primary>
+				<secondary>
+					<ware ware="medicalsupplies" amount="2" />
+					<ware ware="spacefuel" amount="1" />
+				</secondary>
+				<effects>
+					<effect type="secondaryresource" product="0.25" />
+					<effect type="specialist" product="0.1" />
+					<effect type="manager" product="0.03" />
+					<effect type="engineer" product="0.03" />
+					<effect type="defencecontrol" product="0.03" />
+				</effects>
+			</production>
+			<production time="20" amount="10" method="universalparts2xen" name="AssembleXen">
+				<primary>
+					<ware ware="shippartcomp" amount="100" />
+				</primary>
+				<secondary>
+					<ware ware="energycells" amount="20000" />
+				</secondary>
+				<effects>
+					<effect type="secondaryresource" product="0.25" />
 					<effect type="specialist" product="0.1" />
 					<effect type="manager" product="0.03" />
 					<effect type="engineer" product="0.03" />
@@ -116,6 +149,25 @@
 				</secondary>
 				<effects>
 					<effect type="secondaryresource" product="0.15" />
+					<effect type="specialist" product="0.1" />
+					<effect type="manager" product="0.03" />
+					<effect type="engineer" product="0.03" />
+					<effect type="defencecontrol" product="0.03" />
+				</effects>
+			</production>
+			<production time="1820" amount="520" method="universalparts2" name="Assemble">
+				<primary>
+					<ware ware="shotgunturret" amount="60" /><!-- 1 -->
+					<ware ware="laserturret" amount="30" /><!-- 10 -->
+					<ware ware="swarmturret" amount="10" /><!-- 16 -->
+				</primary>
+				<secondary>
+					<ware ware="machinegunturret" amount="72" /><!-- 1 -->
+					<ware ware="dumbfireturret" amount="20" /><!-- 6 -->
+					<ware ware="plasmaturret" amount="60" /><!-- 1 -->
+				</secondary>
+				<effects>
+					<effect type="secondaryresource" product="0.5" />
 					<effect type="specialist" product="0.1" />
 					<effect type="manager" product="0.03" />
 					<effect type="engineer" product="0.03" />
@@ -885,13 +937,6 @@
 		<production time="254" amount="1" method="universalparts" name="Uniparts">
 			<primary>
 				<ware ware="shippart" amount="16" />
-			</primary>
-		</production>
-	</add>
-	<add sel="//wares/ware[@id='shp_l_xenon_01']/production[@method='default']" pos="after" >
-		<production time="476" amount="1" method="universalparts" name="Uniparts">
-			<primary>
-				<ware ware="shippart" amount="56" />
 			</primary>
 		</production>
 	</add>
@@ -1913,6 +1958,62 @@
 		</production>
 	</add>
 	<!-- //Some Ships Pack -->
+	<add silent="1" sel="//wares/ware[@id='shp_m_pmc_xen_02']/production[@method='default']" pos="after" >
+		<production time="124" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="6" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_s_pmc_xen_02s']/production[@method='default']" pos="after" >
+		<production time="208" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="2" />
+				<ware ware="shippartcomp" amount="4" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_s_pmc_xen_sat']/production[@method='default']" pos="after" >
+		<production time="208" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="2" />
+				<ware ware="shippartcomp" amount="4" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_m_unicargoship']/production[@method='default']" pos="after" >
+		<production time="208" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="2" />
+				<ware ware="shippartcomp" amount="4" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_m_boardingship']/production[@method='default']" pos="after" >
+		<production time="208" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="2" />
+				<ware ware="shippartcomp" amount="4" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_m_torpedo_01_xen']/production[@method='default']" pos="after" >
+		<production time="208" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="2" />
+				<ware ware="shippartcomp" amount="4" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_m_torpedo_01b_xen']/production[@method='default']" pos="after" >
+		<production time="208" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="2" />
+				<ware ware="shippartcomp" amount="4" />
+			</primary>
+		</production>
+	</add>
+
 	<!-- LostSectors -->
 	<add silent="1" sel="//wares/ware[@id='shp_l_split_hydrogen_collector']/production[@method='default']" pos="after" >
 		<production time="212" amount="1" method="universalparts" name="Uniparts">
@@ -2451,4 +2552,113 @@
 			</effects>
 		</production>
 	</add>
+
+	<add sel="//wares/ware[@id='shp_s_canteran_01']/production[@method='default']" pos="after" >
+		<production time="48" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="1" />
+			</primary>
+		</production>
+	</add>
+	<add sel="//wares/ware[@id='shp_s_torpedo_01']/production[@method='default']" pos="after" >
+		<production time="208" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="2" />
+				<ware ware="shippartcomp" amount="6" />
+			</primary>
+		</production>
+	</add>
+	<add sel="//wares/ware[@id='shp_m_canteran_01']/production[@method='default']" pos="after" >
+		<production time="106" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="8" />
+			</primary>
+		</production>
+	</add>
+	<add sel="//wares/ware[@id='shp_m_canteran_02']/production[@method='default']" pos="after" >
+		<production time="98" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="6" />
+			</primary>
+		</production>
+	</add>
+	<add sel="//wares/ware[@id='shp_m_dv_bulk_transporter']/production[@method='default']" pos="after" >
+		<production time="66" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="3" />
+			</primary>
+		</production>
+	</add>
+	<add sel="//wares/ware[@id='shp_m_dv_container_transporter']/production[@method='default']" pos="after" >
+		<production time="86" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="6" />
+			</primary>
+		</production>
+	</add>
+	<add sel="//wares/ware[@id='shp_m_dv_liquid_transporter']/production[@method='default']" pos="after" >
+		<production time="64" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="3" />
+			</primary>
+		</production>
+	</add>
+	<add sel="//wares/ware[@id='shp_m_dv_energy_transporter']/production[@method='default']" pos="after" >
+		<production time="66" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="3" />
+			</primary>
+		</production>
+	</add>
+	<add sel="//wares/ware[@id='shp_m_plasma_collector']/production[@method='default']" pos="after" >
+		<production time="88" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="6" />
+			</primary>
+		</production>
+	</add>
+	<add sel="//wares/ware[@id='shp_m_nividium_collector']/production[@method='default']" pos="after" >
+		<production time="86" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="5" />
+			</primary>
+		</production>
+	</add>
+	<add sel="//wares/ware[@id='shp_m_ice_collector']/production[@method='default']" pos="after" >
+		<production time="86" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="6" />
+			</primary>
+		</production>
+	</add>
+	<add sel="//wares/ware[@id='shp_m_hydrogen_collector']/production[@method='default']" pos="after" >
+		<production time="90" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="6" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_m_xenon_fighter_01']/production[@method='default']" pos="after" >
+		<production time="142" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="1" />
+				<ware ware="shippartcomp" amount="4" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_s_xenon_01']/production[@method='default']" pos="after" >
+		<production time="62" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="5" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_s_xenon_02']/production[@method='default']" pos="after" >
+		<production time="56" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="5" />
+			</primary>
+		</production>
+	</add>
+
 </diff>

@@ -15,7 +15,7 @@
       <production wares="shippartcomp shippart">
         <queue>
           <item ware="shippartcomp" />
-          <item ware="shippart" />
+          <item ware="shippart" method="universalparts2" />
         </queue>
       </production>
     </properties>

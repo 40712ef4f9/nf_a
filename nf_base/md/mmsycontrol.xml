@@ -11,7 +11,7 @@
 					<event_conversation_next_section section="gMain_propertyResult" />
 					<event_conversation_returned_to_section section="gMain_propertyResult" />
 				</check_any>
-				<check_value value="event.param2.owner" exact="faction.player" />
+				<check_value value="@event.param2.owner" exact="faction.player" />
 				<check_value value="event.param2.tradenpc" />
 				<check_any>
 					<check_value value="event.param2.canbuildships" />
