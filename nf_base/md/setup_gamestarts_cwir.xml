@@ -382,6 +382,9 @@
 				<event_cue_signalled cue="md.Setup.GameStart"/>
 			</conditions>
 			<actions>
+				<create_list name="$todo_stations" />
+				<create_list name="$todo_ships" />
+				<!-- UNIVERSE -->
 				<signal_cue cue="md.Setup.Open_Jumpgates_Lib"/> 
 				<signal_cue cue="md.Setup.WeaponTraderBasket3"/>
 				<signal_cue cue="md.Setup.EquipmentTraderBasket2"/>
