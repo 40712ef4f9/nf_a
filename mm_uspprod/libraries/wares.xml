@@ -59,11 +59,11 @@
 			</production>
 			<production time="20" amount="1" method="universalparts2" name="Assemble">
 				<primary>
-					<ware ware="shippartcomp" amount="10" />
+					<ware ware="energycells" amount="138" />
+					<ware ware="plasmaflowregulator" amount="5" />
 				</primary>
 				<secondary>
-					<ware ware="medicalsupplies" amount="2" />
-					<ware ware="spacefuel" amount="1" />
+					<ware ware="shippartcomp" amount="2" />
 				</secondary>
 				<effects>
 					<effect type="secondaryresource" product="0.25" />
@@ -75,13 +75,17 @@
 			</production>
 			<production time="20" amount="10" method="universalparts2xen" name="AssembleXen">
 				<primary>
-					<ware ware="shippartcomp" amount="100" />
+					<ware ware="crystals" amount="250" />
+					<ware ware="ice" amount="500" />
+					<ware ware="nividium" amount="250" />
+					<ware ware="ore" amount="750" />
+					<ware ware="silicon" amount="750" />
 				</primary>
 				<secondary>
-					<ware ware="energycells" amount="20000" />
+					<ware ware="shippartcomp" amount="4" />
 				</secondary>
 				<effects>
-					<effect type="secondaryresource" product="0.25" />
+					<effect type="secondaryresource" product="0.04" />
 					<effect type="specialist" product="0.1" />
 					<effect type="manager" product="0.03" />
 					<effect type="engineer" product="0.03" />
@@ -134,7 +138,7 @@
 
 		<ware id="shippartcomp" name="{2802,2055}" description="{2802,2056}" group="shiptech" transport="container" size="extralarge" specialist="specialistsurfacesystems" volume="100" tags="container economy">
 			<price min="30467" average="37469" max="45143" />
-			<production time="90" amount="3" method="default" name="{20206,101}">
+			<production time="90" amount="4" method="default" name="{20206,101}">
 				<primary>
 					<ware ware="bioopticwiring" amount="2" />
 					<ware ware="energycells" amount="5" />
@@ -157,14 +161,14 @@
 			</production>
 			<production time="1820" amount="520" method="universalparts2" name="Assemble">
 				<primary>
-					<ware ware="shotgunturret" amount="60" /><!-- 1 -->
-					<ware ware="laserturret" amount="30" /><!-- 10 -->
-					<ware ware="swarmturret" amount="10" /><!-- 16 -->
+					<ware ware="shotgunturret" amount="59" /><!-- 1 -->
+					<ware ware="laserturret" amount="29" /><!-- 10 -->
+					<ware ware="swarmturret" amount="9" /><!-- 16 -->
 				</primary>
 				<secondary>
 					<ware ware="machinegunturret" amount="72" /><!-- 1 -->
-					<ware ware="dumbfireturret" amount="20" /><!-- 6 -->
-					<ware ware="plasmaturret" amount="60" /><!-- 1 -->
+					<ware ware="dumbfireturret" amount="15" /><!-- 6 -->
+					<ware ware="plasmaturret" amount="50" /><!-- 1 -->
 				</secondary>
 				<effects>
 					<effect type="secondaryresource" product="0.5" />
