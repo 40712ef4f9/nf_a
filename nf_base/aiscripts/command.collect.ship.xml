@@ -101,10 +101,13 @@
           <wait exact="1s" />
         </do_else>
 
-        <do_if value="this.ship.distanceto.{$target} gt 2km + this.ship.size and not $secondTry?">
+        <do_if value="$target.exists and this.ship.distanceto.{$target} gt 2km + this.ship.size and not $secondTry?">
           <set_value name="$secondTry" />
           <resume label="move" />
         </do_if>
+        <do_elseif value="not $target.exists and not $target.iswreck">
+          <return />
+        </do_elseif>
       </do_if>
 
       <stop_moving object="this.ship" />
@@ -274,7 +277,7 @@
 
 
       <label name="restore" />
-      <do_if value="$restore">
+      <do_if value="$restore and $target.exists">
         <set_command command="command.scan" />
         <set_command_action commandaction="commandaction.repairchecking" />
         <signal_objects object="player.computer" param="'Care.DO.restore'" param2="[$target, this.ship, $pickup]" delay="2s" />
@@ -283,7 +286,7 @@
 
 
       <label name="recycle" />
-      <do_if value="$recycle and typeof $recycle == datatype.list and $recycle.count">
+      <do_if value="$recycle and typeof $recycle == datatype.list and $recycle.count and $target.exists">
         <set_command command="command.scan" />
         <set_command_action commandaction="commandaction.repairchecking" />
         <signal_objects object="player.computer" param="'Care.DO.restore'" param2="[$target, this.ship, false, true]" delay="2s" />

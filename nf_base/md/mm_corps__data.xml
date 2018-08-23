@@ -651,13 +651,19 @@
 						<append_to_list name="$temp_build" exact="macro.struct_bt_alb_hightec_construction_macro"/>
 					</do_if>
 					<do_if value="'ship'" list="$build">
-						<append_to_list name="$temp_build" exact="macro.struct_bt_alb_weaponry_complex_macro"/>
-						<append_to_list name="$temp_build" exact="macro.struct_bt_alb_weaponry_production_macro"/>
+						<do_if value="'shippart'" list="$build" chance="md.$shipparts? * 100">
+							<append_to_list name="$temp_build" exact="macro.{['struct_bt_alb_weaponry_complex_usp_macro'].random}"/>
+							<append_to_list name="$temp_build" exact="macro.{['struct_bt_alb_weaponry_production_usp_macro'].random}"/>
+						</do_if>
+						<do_else>
+							<append_to_list name="$temp_build" exact="macro.struct_bt_alb_weaponry_complex_macro"/>
+							<append_to_list name="$temp_build" exact="macro.struct_bt_alb_weaponry_production_macro"/>
+						</do_else>
 						<append_to_list name="$temp_build" exact="macro.struct_bt_alb_drone_complex_macro"/>
 						<append_to_list name="$temp_build" exact="macro.struct_bt_alb_drone_factory_macro"/>
 					</do_if>
 					<do_if value="'shippart'" list="$build" chance="md.$shipparts? * 100">
-						<append_to_list name="$temp_build" exact="macro.{['struct_bt_alb_shippart_production_macro'].{1}}"/>
+						<append_to_list name="$temp_build" exact="macro.{['struct_bt_alb_shippart_production_macro'].random}"/>
 					</do_if>
 					<do_if value="'outpost'" list="$build" comment="outpost">
 						<append_to_list name="$temp_build" exact="macro.struct_econ_weapon_ar_defence_pl_macro"/><!-- struct_econ_weapon_ar_defence_macro -->
@@ -696,13 +702,19 @@
 						<append_to_list name="$temp_build" exact="macro.struct_bt_ol_construction_material_macro"/>
 					</do_if>
 					<do_if value="'ship'" list="$build">
-						<append_to_list name="$temp_build" exact="macro.struct_bt_ol_weaponrycomplex_macro"/>
-						<append_to_list name="$temp_build" exact="macro.struct_bt_ol_weaponryproduction_macro"/>
+						<do_if value="'shippart'" list="$build" chance="md.$shipparts? * 100">
+							<append_to_list name="$temp_build" exact="macro.{['struct_bt_ol_weaponryproduction_usp_macro'].random}"/>
+							<append_to_list name="$temp_build" exact="macro.{['struct_bt_ol_weaponrycomplex_usp_macro'].random}"/>
+						</do_if>
+						<do_else>
+							<append_to_list name="$temp_build" exact="macro.struct_bt_ol_weaponrycomplex_macro"/>
+							<append_to_list name="$temp_build" exact="macro.struct_bt_ol_weaponryproduction_macro"/>
+						</do_else>
 						<append_to_list name="$temp_build" exact="macro.struct_bt_ol_drone_complex_macro"/>
 						<append_to_list name="$temp_build" exact="macro.struct_bt_ol_drone_factory_macro"/>
 					</do_if>
 					<do_if value="'shippart'" list="$build" chance="md.$shipparts? * 100">
-						<append_to_list name="$temp_build" exact="macro.{['struct_bt_ol_shippartproduction_macro'].{1}}"/>
+						<append_to_list name="$temp_build" exact="macro.{['struct_bt_ol_shippartproduction_macro'].random}"/>
 					</do_if>
 					<do_if value="'outpost'" list="$build" comment="outpost">
 						<append_to_list name="$temp_build" exact="macro.struct_econ_weapon_ar_defence_pl_macro"/><!-- struct_econ_weapon_ar_defence_macro -->
@@ -3824,6 +3836,13 @@
 				<do_else>
 					<remove_value name="$noBelongings"/>
 				</do_else>
+
+				<do_if value="md.$nfFactions_Main.indexof.{$_CEO.owner.id} and ['domination', 'pirate'].indexof.{$_CEO.$style} == 0">
+					<remove_value name="md.$nfFactions_Main.{md.$nfFactions_Main.indexof.{$_CEO.owner.id}}"/>
+				</do_if>
+				<do_elseif value="['domination', 'pirate'].indexof.{$_CEO.$style} and md.$nfFactions_Main.indexof.{$_CEO.owner.id} == 0">
+					<append_to_list name="md.$nfFactions_Main" exact="$_CEO.owner.id" />
+				</do_elseif>
 
 <set_value name="$text2" exact="if $text3 then $text3 else ''" operation="add" />
 <debug_text text="'\n#############\n# CEO: %1 Cr [%2] \n'.[$_CEO.money.formatted.default, $_CEO.$style] + $text2 + '\n#\n#############'" filter="scripts_verbose" chance="0" />

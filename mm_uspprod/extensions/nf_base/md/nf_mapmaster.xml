@@ -36,4 +36,37 @@
 			<append_to_list name="$foobar" exact="[macro.tzonecluster_b_sector05_zone19_macro, macro.struct_bt_alb_shippart_production_macro, faction.plutarch]"/>
 			<append_to_list name="$foobar" exact="[macro.tzonecluster_d_sector19_zone42_macro, macro.struct_bt_alb_shippart_production_macro, faction.reivers]"/>
 	</add>
+
+	<add sel="(//library[@name='NFMM_Worker']/actions/do_all/do_if/do_all/do_if/include_actions[@ref='md.MM_Corps__Data.MMCData_create_station'])[1]" pos="before">
+			<do_if value="['struct_bt_alb_weaponry_complex_macro','struct_bt_alb_weaponry_production_macro','struct_bt_ol_weaponryproduction_macro','struct_bt_ol_weaponrycomplex_macro'].indexof.{$Macro.id} and $BuildZone and ['cluster_a_macro','cluster_b_macro','cluster_c_macro','cluster_d_macro','cluster_m_macro','cluster_t_macro'].indexof.{$BuildZone.cluster.macro.id}">
+				<do_if value="$Macro" exact="macro.struct_bt_alb_weaponry_complex_macro">
+					<set_value name="$Macro" exact="macro.struct_bt_alb_weaponry_complex_usp_macro"/>
+				</do_if>
+				<do_elseif value="$Macro" exact="macro.struct_bt_alb_weaponry_production_macro">
+					<set_value name="$Macro" exact="macro.struct_bt_alb_weaponry_production_usp_macro"/>
+				</do_elseif>
+				<do_elseif value="$Macro" exact="macro.struct_bt_ol_weaponryproduction_macro">
+					<set_value name="$Macro" exact="macro.struct_bt_ol_weaponryproduction_usp_macro"/>
+				</do_elseif>
+				<do_elseif value="$Macro" exact="macro.struct_bt_ol_weaponrycomplex_macro">
+					<set_value name="$Macro" exact="macro.struct_bt_ol_weaponrycomplex_usp_macro"/>
+				</do_elseif>
+			</do_if>
+	</add>
+	<add sel="(//library[@name='NFMM_Worker']/actions/do_all/do_if/do_all/do_if/include_actions[@ref='md.MM_Corps__Data.MMCData_create_station'])[2]" pos="before">
+			<do_if value="['struct_bt_alb_weaponry_complex_macro','struct_bt_alb_weaponry_production_macro','struct_bt_ol_weaponryproduction_macro','struct_bt_ol_weaponrycomplex_macro'].indexof.{$Macro.id} and $BuildZone and ['cluster_a_macro','cluster_b_macro','cluster_c_macro','cluster_d_macro','cluster_m_macro','cluster_t_macro'].indexof.{$BuildZone.cluster.macro.id}">
+				<do_if value="$Macro" exact="macro.struct_bt_alb_weaponry_complex_macro">
+					<set_value name="$Macro" exact="macro.struct_bt_alb_weaponry_complex_usp_macro"/>
+				</do_if>
+				<do_elseif value="$Macro" exact="macro.struct_bt_alb_weaponry_production_macro">
+					<set_value name="$Macro" exact="macro.struct_bt_alb_weaponry_production_usp_macro"/>
+				</do_elseif>
+				<do_elseif value="$Macro" exact="macro.struct_bt_ol_weaponryproduction_macro">
+					<set_value name="$Macro" exact="macro.struct_bt_ol_weaponryproduction_usp_macro"/>
+				</do_elseif>
+				<do_elseif value="$Macro" exact="macro.struct_bt_ol_weaponrycomplex_macro">
+					<set_value name="$Macro" exact="macro.struct_bt_ol_weaponrycomplex_usp_macro"/>
+				</do_elseif>
+			</do_if>
+	</add>
 </diff>

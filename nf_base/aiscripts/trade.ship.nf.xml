@@ -92,6 +92,18 @@
         </run_interrupt_script>
       </actions>
     </handler>
+    <handler>
+      <conditions>
+        <event_object_signalled object="this.ship" param="'recycle ship'"/>
+        <check_value value="event.param2.exists"/>
+      </conditions>
+      <actions>
+        <run_interrupt_script name="'command.collect.ship'" abortscripts="true" resume="find trade run" >
+          <param name="target" value="event.param2" />
+          <param name="recycle" value="event.param3" />
+        </run_interrupt_script>
+      </actions>
+    </handler>
   </interrupts>
   <init>
     <set_value name="$commander" exact="this.ship.commander" />
@@ -339,6 +351,7 @@
             <do_if value="$warelist.indexof.{$tmp.{$zj}} == 0 and this.ship.cargo.{$tmp.{$zj}}.max">
               <append_to_list name="$warelist" exact="$tmp.{$zj}" />
               <debug_text text="'%1 %2[%3] ware added'.[this.ship.knownname, @this.$nextTWLcheck, $tmp.{$zj}]" filter="scripts_verbose" chance="100" />
+              <remove_value name="$mayRecycle" />
             </do_if>
           </do_all>
           <remove_value name="$tmp" />
@@ -366,6 +379,25 @@
       <do_elseif value="not this.$nextTWLcheck? or this.$nextTWLcheck lt player.age" chance="if this.ship.isjobship or ($commander and $commander == this.ship.commander and $traderunscript == 'trade.findtraderun.nf') then 0 else 100">
         <resume label="re init job"/>
       </do_elseif>
+
+      <do_if value="$mayRecycle?" negate="true">
+        <set_value name="$mayRecycle" exact="false"/>
+        <set_value name="$todo" exact="[ware.reinforcedmetalplating, ware.scanningarray, ware.microchips, ware.plasmaflowregulator, ware.bioopticwiring, ware.bioelectricneurongel, ware.holtzmanfieldgenerator, ware.plasmapumps, ware.fusionreactor]"/>
+        <do_all exact="$todo.count" counter="$i" chance="if this.ship.isclass.[class.ship_xl, class.ship_l] then 100 else 0">
+          <do_if value="$warelist.indexof.{$todo.{$i}}">
+            <set_value name="$mayRecycle" exact="true"/>
+            <break />
+          </do_if>
+        </do_all>
+        <remove_value name="$todo"/>
+      </do_if>
+      <do_if value="$mayRecycle and this.ship.units.{unitcategory.welder}.count" chance="if this.ship.isplayerowned then 0 else this.combinedskill">
+        <find_gravidar_contact name="$target" object="this.ship" restorable="true" multiple="false">
+          <match_distance object="this.ship" max="this.ship.maxradarrange"/>
+        </find_gravidar_contact>
+        <signal_objects object="player.galaxy" param="'Care.DO.recycle'" param2="$target" param3="this.ship" />
+        <remove_value name="$target"/>
+      </do_if>
 
       <do_if value="@this.ship.dockslot.component.external">
         <!-- make sure we clear the docking area asap -->

@@ -13,7 +13,9 @@
       </effects>
       <secrecy level="5" />
       <production wares="shippart">
-        <queue ware="shippart" method="omicron" />
+        <queue>
+          <item ware="shippart" method="omicron" />
+        </queue>
       </production>
     </properties>
     <connections>

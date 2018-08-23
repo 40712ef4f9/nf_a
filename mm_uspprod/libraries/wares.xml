@@ -4,6 +4,8 @@
 		<method id="universalparts" />
 		<method id="universalparts2" />
 		<method id="universalparts2xen" />
+		<method id="albion2" />
+		<method id="omicron2" />
 	</add>
 	<add sel="/wares">
 		<ware id="shippart" name="{2802,2051}" description="{2802,2052}" group="shiptech" transport="container" size="extralarge" specialist="specialistpowersupply" volume="2000" tags="container economy">
@@ -2662,6 +2664,199 @@
 			<primary>
 				<ware ware="shippartcomp" amount="5" />
 			</primary>
+		</production>
+	</add>
+
+	<add sel="//wares/ware[@id='machinegunturret']/production[@method='default']" pos="after" >
+		<production time="900" amount="8" method="albion2" name="{20206,101}">
+			<primary>
+				<ware ware="bioopticwiring" amount="9" />
+				<ware ware="energycells" amount="18" />
+				<ware ware="fusionreactor" amount="2" />
+				<ware ware="reinforcedmetalplating" amount="12" />
+			</primary>
+			<effects>
+				<effect type="secondaryresource" product="0.15" />
+				<effect type="specialist" product="0.1" />
+				<effect type="manager" product="0.03" />
+				<effect type="engineer" product="0.03" />
+				<effect type="defencecontrol" product="0.03" />
+			</effects>
+		</production>
+		<production time="900" amount="8" method="omicron2" name="{20206,301}">
+			<primary>
+				<ware ware="energycells" amount="18" />
+				<ware ware="fusionreactor" amount="2" />
+				<ware ware="plasmapumps" amount="7" />
+				<ware ware="reinforcedmetalplating" amount="12" />
+			</primary>
+			<effects>
+				<effect type="secondaryresource" product="0.15" />
+				<effect type="specialist" product="0.1" />
+				<effect type="manager" product="0.03" />
+				<effect type="engineer" product="0.03" />
+				<effect type="defencecontrol" product="0.03" />
+			</effects>
+		</production>
+	</add>
+	<add sel="//wares/ware[@id='plasmaturret']/production[@method='default']" pos="after" >
+		<production time="1800" amount="6" method="albion2" name="{20206,101}">
+			<primary>
+				<ware ware="bioopticwiring" amount="36" />
+				<ware ware="energycells" amount="48" />
+				<ware ware="fusionreactor" amount="8" />
+				<ware ware="reinforcedmetalplating" amount="42" />
+			</primary>
+			<effects>
+				<effect type="secondaryresource" product="0.15" />
+				<effect type="specialist" product="0.1" />
+				<effect type="manager" product="0.03" />
+				<effect type="engineer" product="0.03" />
+				<effect type="defencecontrol" product="0.03" />
+			</effects>
+		</production>
+		<production time="1800" amount="6" method="omicron2" name="{20206,301}">
+			<primary>
+				<ware ware="energycells" amount="48" />
+				<ware ware="fusionreactor" amount="8" />
+				<ware ware="plasmapumps" amount="27" />
+				<ware ware="reinforcedmetalplating" amount="42" />
+			</primary>
+			<effects>
+				<effect type="secondaryresource" product="0.15" />
+				<effect type="specialist" product="0.1" />
+				<effect type="manager" product="0.03" />
+				<effect type="engineer" product="0.03" />
+				<effect type="defencecontrol" product="0.03" />
+			</effects>
+		</production>
+	</add>
+	<add sel="//wares/ware[@id='dumbfireturret']/production[@method='default']" pos="after" >
+		<production time="1800" amount="2" method="albion2" name="{20206,101}">
+			<primary>
+				<ware ware="bioopticwiring" amount="18" />
+				<ware ware="energycells" amount="32" />
+				<ware ware="fusionreactor" amount="4" />
+				<ware ware="reinforcedmetalplating" amount="22" />
+			</primary>
+			<effects>
+				<effect type="secondaryresource" product="0.15" />
+				<effect type="specialist" product="0.1" />
+				<effect type="manager" product="0.03" />
+				<effect type="engineer" product="0.03" />
+				<effect type="defencecontrol" product="0.03" />
+			</effects>
+		</production>
+		<production time="1800" amount="2" method="omicron2" name="{20206,301}">
+			<primary>
+				<ware ware="energycells" amount="32" />
+				<ware ware="fusionreactor" amount="4" />
+				<ware ware="plasmapumps" amount="14" />
+				<ware ware="reinforcedmetalplating" amount="22" />
+			</primary>
+			<effects>
+				<effect type="secondaryresource" product="0.15" />
+				<effect type="specialist" product="0.1" />
+				<effect type="manager" product="0.03" />
+				<effect type="engineer" product="0.03" />
+				<effect type="defencecontrol" product="0.03" />
+			</effects>
+		</production>
+	</add>
+	<add sel="//wares/ware[@id='shotgunturret']/production[@method='default']" pos="after" >
+		<production time="1200" amount="3" method="albion2" name="{20206,101}">
+			<primary>
+				<ware ware="bioopticwiring" amount="7" />
+				<ware ware="energycells" amount="11" />
+				<ware ware="fusionreactor" amount="1" />
+				<ware ware="reinforcedmetalplating" amount="6" />
+			</primary>
+			<effects>
+				<effect type="secondaryresource" product="0.15" />
+				<effect type="specialist" product="0.1" />
+				<effect type="manager" product="0.03" />
+				<effect type="engineer" product="0.03" />
+				<effect type="defencecontrol" product="0.03" />
+			</effects>
+		</production>
+		<production time="1200" amount="3" method="omicron2" name="{20206,301}">
+			<primary>
+				<ware ware="energycells" amount="11" />
+				<ware ware="fusionreactor" amount="1" />
+				<ware ware="plasmapumps" amount="5" />
+				<ware ware="reinforcedmetalplating" amount="6" />
+			</primary>
+			<effects>
+				<effect type="secondaryresource" product="0.15" />
+				<effect type="specialist" product="0.1" />
+				<effect type="manager" product="0.03" />
+				<effect type="engineer" product="0.03" />
+				<effect type="defencecontrol" product="0.03" />
+			</effects>
+		</production>
+	</add>
+	<add sel="//wares/ware[@id='laserturret']/production[@method='default']" pos="after" >
+		<production time="2400" amount="1" method="albion2" name="{20206,101}">
+			<primary>
+				<ware ware="bioopticwiring" amount="16" />
+				<ware ware="energycells" amount="14" />
+				<ware ware="fusionreactor" amount="4" />
+				<ware ware="reinforcedmetalplating" amount="12" />
+			</primary>
+			<effects>
+				<effect type="secondaryresource" product="0.15" />
+				<effect type="specialist" product="0.1" />
+				<effect type="manager" product="0.03" />
+				<effect type="engineer" product="0.03" />
+				<effect type="defencecontrol" product="0.03" />
+			</effects>
+		</production>
+		<production time="2400" amount="1" method="omicron2" name="{20206,301}">
+			<primary>
+				<ware ware="energycells" amount="16" />
+				<ware ware="fusionreactor" amount="4" />
+				<ware ware="plasmapumps" amount="12" />
+				<ware ware="reinforcedmetalplating" amount="12" />
+			</primary>
+			<effects>
+				<effect type="secondaryresource" product="0.15" />
+				<effect type="specialist" product="0.1" />
+				<effect type="manager" product="0.03" />
+				<effect type="engineer" product="0.03" />
+				<effect type="defencecontrol" product="0.03" />
+			</effects>
+		</production>
+	</add>
+	<add sel="//wares/ware[@id='swarmturret']/production[@method='default']" pos="after" >
+		<production time="2400" amount="1" method="albion2" name="{20206,101}">
+			<primary>
+				<ware ware="bioopticwiring" amount="22" />
+				<ware ware="energycells" amount="38" />
+				<ware ware="fusionreactor" amount="6" />
+				<ware ware="reinforcedmetalplating" amount="24" />
+			</primary>
+			<effects>
+				<effect type="secondaryresource" product="0.15" />
+				<effect type="specialist" product="0.1" />
+				<effect type="manager" product="0.03" />
+				<effect type="engineer" product="0.03" />
+				<effect type="defencecontrol" product="0.03" />
+			</effects>
+		</production>
+		<production time="2400" amount="1" method="omicron2" name="{20206,301}">
+			<primary>
+				<ware ware="energycells" amount="38" />
+				<ware ware="fusionreactor" amount="6" />
+				<ware ware="plasmapumps" amount="16" />
+				<ware ware="reinforcedmetalplating" amount="24" />
+			</primary>
+			<effects>
+				<effect type="secondaryresource" product="0.15" />
+				<effect type="specialist" product="0.1" />
+				<effect type="manager" product="0.03" />
+				<effect type="engineer" product="0.03" />
+				<effect type="defencecontrol" product="0.03" />
+			</effects>
 		</production>
 	</add>
 

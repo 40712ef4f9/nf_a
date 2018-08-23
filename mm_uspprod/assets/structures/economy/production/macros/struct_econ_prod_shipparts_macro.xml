@@ -11,8 +11,13 @@
         <explosion ref="explosion_station_01" />
         <sefx_hack_disabled ref="hack_deactivated_m" />
       </effects>
-      <secrecy level="4" />
-      <production wares="shippart" />
+      <secrecy level="5" />
+      <production wares="shippart">
+        <queue>
+          <item ware="shippart" />
+          <item ware="shippart" method="universalparts2" />
+        </queue>
+      </production>
     </properties>
     <connections>
       <connection ref="connection_shieldgenerator01">

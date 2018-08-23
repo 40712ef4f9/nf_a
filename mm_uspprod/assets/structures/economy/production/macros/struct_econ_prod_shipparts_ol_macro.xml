@@ -11,9 +11,12 @@
         <explosion ref="explosion_station_01" />
         <sefx_hack_disabled ref="hack_deactivated_m" />
       </effects>
-      <secrecy level="4" />
+      <secrecy level="5" />
       <production wares="shippart">
-        <queue ware="shippart" method="omicron" />
+        <queue>
+          <item ware="shippart" method="omicron" />
+          <item ware="shippart" method="universalparts2" />
+        </queue>
       </production>
     </properties>
     <connections>

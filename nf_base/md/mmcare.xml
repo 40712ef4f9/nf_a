@@ -91,33 +91,7 @@
 						</do_all>
 					</do_if>
 					<do_if value="$canCarry">
-						<set_value name="$targetCap" exact="if event.param2.macro.class == class.ship_xl then true else false"/>
-						<do_if value="md.$shipparts?" chance="0">
-						</do_if>
-						<do_else>
-							<set_value name="$profile" exact="if $sum gt 75 then 'increasing' else if $sum gt 40 then 'bell' else 'flat'"/>
-							<set_value name="$todo" exact="[
-									[ware.reinforcedmetalplating, if $targetCap then 64 else 42],
-									[ware.scanningarray, if $targetCap then 3 else 2],
-									[ware.microchips, if $targetCap then 34 else 23],
-									[ware.plasmaflowregulator, if $targetCap then 2 else 1],
-									[ware.bioopticwiring, if $targetCap then 23 else 16],
-									[ware.bioelectricneurongel, if $targetCap then 33 else 25],
-									[ware.holtzmanfieldgenerator, if $targetCap then 6 else 3],
-									[ware.plasmapumps, if $targetCap then 8 else 4],
-									[ware.fusionreactor, if $targetCap then 3 else 2]
-								]"/>
-							<do_all exact="$todo.count" counter="$i">
-								<set_value name="$tmp" min="$todo.{$i}.{2}*0.5f" max="$todo.{$i}.{2}"  profile="$profile"/>
-								<do_if value="($tmp)i ge 1">
-									<append_to_list name="$recycleLoot" exact="[$todo.{$i}.{1}, ($tmp)i]" />
-								</do_if>
-								<remove_value name="$tmp"/>
-							</do_all>
-						</do_else>
-						<remove_value name="$todo"/>
-						<remove_value name="$profile"/>
-						<remove_value name="$targetCap"/>
+						<include_actions ref="md.MM_Care.MM_Care_recycle_wreck" />
 					</do_if>
 
 					<add_player_choice text="{2802,8200}" position="top_left" section="mmca_salvage_restore" choiceparam="[null, null, event.param2, true, 'engineer.ai.plus2']" comment="Restore and Dock Ship" selectable="$docks.count and md.$mmcareWrecks.indexof.{event.param2} == 0" />
@@ -215,7 +189,27 @@
 			</actions>
 		</cue>
 		<!--
-			<signal_objects object="player.galaxy" param="'learned.something'" param2="[this, ware.inv_virtualseminarnavigation]" />
+			<signal_objects object="player.galaxy" param="'Care.DO.recycle'" param2="$target" param3="$object" />
+		-->
+		<cue name="MM_Care_recycle" instantiate="true" namespace="this">
+			<conditions>
+				<event_object_signalled object="player.galaxy" param="'Care.DO.recycle'" />
+				<check_value value="event.param2? and event.param2.exists and event.param2.iswreck" />
+			</conditions>
+			<actions>
+				<create_list name="$recycleLoot" />
+				<set_value name="$sum" exact="[event.param3.units.{unitcategory.welder}.count + event.param3.units.{unitcategory.marine}.count, 41].max"/>
+				<include_actions ref="md.MM_Care.MM_Care_recycle_wreck" />
+
+				<do_if value="$recycleLoot.count">
+					<signal_objects object="event.param3" param="'recycle ship'" param2="event.param2" param3="$recycleLoot" delay="100ms" />
+				</do_if>
+				<remove_value name="$recycleLoot" />
+				<remove_value name="$sum" />
+			</actions>
+		</cue>
+		<!--
+			<signal_objects object="player.computer" param="'Care.DO.restore'" param2="$target" />
 		-->
 		<cue name="MM_Care_restore" instantiate="true" namespace="this">
 			<conditions>
@@ -261,8 +255,11 @@
 					<do_if value="md.$mmcareWrecks.indexof.{$oldShip}" negate="true">
 						<append_to_list name="md.$mmcareWrecks" exact="$oldShip" />
 					</do_if>
-					<do_elseif value="md.$mmcareWrecks.indexof.{$oldShip}" chance="75">
+					<do_elseif value="md.$mmcareWrecks.indexof.{$oldShip}" chance="if $theShip.isplayerowned then 75 else 0">
 						<destroy_object object="$oldShip" explosion="false" />
+					</do_elseif>
+					<do_elseif value="$theShip.isplayerowned" negate="true">
+						<!-- nothing -->
 					</do_elseif>
 					<do_else>
 						<signal_objects object="$theShip" param="'stop order'" delay="3s"/>
@@ -718,6 +715,42 @@
 				<remove_value name="$Zone" />
 				<remove_value name="$breakupChance" />
 				<remove_value name="$oldShip" />
+			</actions>
+		</library>
+		<!--
+		<create_list name="$recycleLoot" />
+		<set_value name="$sum" exact="$theShip.units.{unitcategory.welder}.count + $theShip.units.{unitcategory.marine}.count"/>
+		<include_actions ref="md.MM_Care.MM_Care_recycle_wreck" />
+		-->
+		<library name="MM_Care_recycle_wreck">
+			<actions>
+				<set_value name="$targetCap" exact="if event.param2.macro.class == class.ship_xl then true else false"/>
+				<do_if value="md.$shipparts?" chance="0">
+				</do_if>
+				<do_else>
+					<set_value name="$profile" exact="if $sum gt 75 then 'increasing' else if $sum gt 40 then 'bell' else 'flat'"/>
+					<set_value name="$todo" exact="[
+							[ware.reinforcedmetalplating, if $targetCap then 64 else 42],
+							[ware.scanningarray, if $targetCap then 3 else 2],
+							[ware.microchips, if $targetCap then 34 else 23],
+							[ware.plasmaflowregulator, if $targetCap then 2 else 1],
+							[ware.bioopticwiring, if $targetCap then 23 else 16],
+							[ware.bioelectricneurongel, if $targetCap then 33 else 25],
+							[ware.holtzmanfieldgenerator, if $targetCap then 6 else 3],
+							[ware.plasmapumps, if $targetCap then 8 else 4],
+							[ware.fusionreactor, if $targetCap then 3 else 2]
+						]"/>
+					<do_all exact="$todo.count" counter="$i">
+						<set_value name="$tmp" min="$todo.{$i}.{2}*0.5f" max="$todo.{$i}.{2}"  profile="$profile"/>
+						<do_if value="($tmp)i ge 1">
+							<append_to_list name="$recycleLoot" exact="[$todo.{$i}.{1}, ($tmp)i]" />
+						</do_if>
+						<remove_value name="$tmp"/>
+					</do_all>
+				</do_else>
+				<remove_value name="$todo"/>
+				<remove_value name="$profile"/>
+				<remove_value name="$targetCap"/>
 			</actions>
 		</library>
 	</cues>

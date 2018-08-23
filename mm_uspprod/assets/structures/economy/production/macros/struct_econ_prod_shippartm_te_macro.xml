@@ -13,7 +13,9 @@
       </effects>
       <secrecy level="5" />
       <production wares="shippart">
-        <queue ware="shippart" method="fieldsofop" />
+        <queue>
+          <item ware="shippart" method="fieldsofop" />
+        </queue>
       </production>
     </properties>
     <connections>
