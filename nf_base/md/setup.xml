@@ -3,7 +3,7 @@
 	<add sel="//cue[@name='Start']/actions">
 		<do_if value="true">
 			<include_actions ref="md.NF_MapMaster.NFMM_Worker" />
-			<include_actions ref="md.MM_Corps__Data.MMCData_disable_jobs" chance="if player.module == 'ep1' then 0 else 100"/>
+			<include_actions ref="md.MM_Corps__Data.MMCData_disable_jobs" /><!-- chance="if player.module == 'ep1' then 0 else 100" -->
 		</do_if>
 	</add>
 	<add sel="//cue[@name='PostChapter3Jobs']/actions">

@@ -68,7 +68,7 @@
 	<add sel="/aiscript/attention/actions/label[@name='start']" pos="after">
 		<do_if value="true">
 			<do_if value="$destination.exists and $destination.relationto.{this.ship} le $destination.owner.relation.enemy.max">
-				<set_value name="$negrelation" exact="if destination.relationto.{this.ship} lt $destination.owner.relation.neutral.min then $destination.relationto.{this.ship} else null" />
+				<set_value name="$negrelation" exact="if $destination.relationto.{this.ship} lt $destination.owner.relation.neutral.min then $destination.relationto.{this.ship} else null" />
 				<do_if value="$negrelation">
 				  <add_relation_boost object="$destination" otherobject="this.ship" value="$destination.owner.relation.neutral.mid - $negrelation" decay="1" delay="30min" silent="true" />
 				</do_if>

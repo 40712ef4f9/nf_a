@@ -1470,113 +1470,115 @@
 		-->
 		<library name="MMCData_disable_jobs">
 			<actions>
-				<set_value name="$temp_jobIDs" exact="[
-					'albion_collector_ions_large',
-					'albion_collector_plasma_large',
-					'albion_miner_ice_large',
-					'albion_miner_mineral_large_01',
-					'albion_miner_mineral_large_02',
-					'albion_miner_mineral_large_03',
-					'albion_miner_mineral_large_04',
-					'albion_trader_agricultural_large',
-					'albion_trader_energy_large_01',
-					'albion_trader_energy_large_02',
-					'albion_trader_energy_large_03',
-					'albion_trader_food_large',
-					'albion_trader_hightech_large_01',
-					'albion_trader_hightech_large_02',
-					'albion_trader_water_large',
-					'albion_trader_pharmaceutical_large',
-					'albion_trader_refined_large_01',
-					'albion_trader_refined_large_02',
-					'albion_trader_shiptech_large_01',
-					'albion_trader_shiptech_large_02',
-					'albion_trader_weapontech_large_01',
-					'albion_trader_weapontech_large_02',
-					'led_special_construction_trader',
-					'albion_trader_guest_arg_large',
-					'albion_trader_guest_canteran_large_01',
-					'albion_trader_guest_canteran_large_02',
-					'hoa_fighter_recon_cluster',
-					'hoa_fighter_patrol_sector04',
-					'hoa_carrier_sector04',
-					'hoa_frigate_sector04',
-					'pmc_fighter_patrol_cluster',
-					'pmc_carrier_cluster',
-					'pmc_destroyer_cluster',
-					'sov_xl_destroyer_hq',
-					'sos_fighter_patrol_cluster',
-					'sos_fighter_heavy_raid_leader',
-					'sov_trade_l',
-					'sov_plunder_large',
-					'sov_plunder',
-					'sos_bomber_patrol_cluster',
-					'can_chapter2_light_patrol_sector18',
-					'can_chapter2_light_frigate_sector18',
-					'can_chapter2_light_destroyer_sector18',
-					'can_chapter2_light_trader_energy_medium_sector18',
-					'can_chapter2_light_trader_water_medium_sector18',
-					'can_chapter2_medium_trader_agricultural_medium_sector18',
-					'can_chapter2_medium_trader_energy_medium_sector18',
-					'can_chapter2_medium_trader_water_medium_sector18',
-					'can_chapter2_medium_trader_agricultural_large_sector18',
-					'can_chapter2_medium_trader_energy_large_sector18',
-					'can_chapter2_medium_trader_food_large_sector18',
-					'can_chapter2_medium_trader_water_large_sector18',
-					'devries_miner_ice_large',
-					'hoa_chapter2_light_patrol_sector18',
-					'hoa_chapter2_light_frigate_sector18',
-					'hoa_chapter2_light_carrier_sector18',
-					'hoa_chapter2_medium_patrol_sector18',
-					'hoa_chapter2_medium_frigate_sector18',
-					'hoa_chapter2_medium_carrier_sector18',
-					'hoa_chapter2_medium_patrol_escort',
-					'pmc_chapter2_medium_patrol_sector17',
-					'pmc_chapter2_medium_carrier_sector17',
-					'pmc_chapter2_medium_destroyer_sector17',
-					'pmc_chapter2_heavy_patrol_sector17',
-					'pmc_chapter2_heavy_carrier_sector17',
-					'pmc_chapter2_heavy_destroyer_sector17',
-					'pmc_chapter2_heavy_patrol_escort',
-					'rei_chapter2_light_patrol_sector17',
-					'rei_chapter2_light_patrol_sector18',
-					'rei_chapter2_light_patrol_sector19',
-					'rei_chapter2_light_patrol_sector20',
-					'rei_chapter2_medium_patrol_sector19',
-					'rei_trade_l',
-					'rei_trade_m',
-					'rei_patrol_sector19_baseship',
-					'omicron_collector_hydrogen_large',
-					'omicron_collector_ions_large',
-					'omicron_collector_plasma_large',
-					'omicron_miner_ice_large_01',
-					'omicron_miner_ice_large_02',
-					'omicron_miner_mineral_large_01',
-					'omicron_miner_mineral_large_02',
-					'omicron_miner_mineral_large_03',
-					'omicron_trader_agricultural_large',
-					'omicron_trader_energy_large_01',
-					'omicron_trader_energy_large_02',
-					'omicron_trader_food_large',
-					'omicron_trader_hightech_large',
-					'omicron_trader_water_large',
-					'omicron_trader_pharmaceutical_large',
-					'omicron_trader_refined_large',
-					'omicron_trader_shiptech_large',
-					'omicron_trader_weapontech_large',
-					'jss_special_construction_trader',
-					'omicron_trader_guest_pmc_large',
-					'omicron_trader_guest_canteran_large_01',
-					'omicron_trader_guest_canteran_large_02',
-					'arg_destroyer_cluster',
-					'hev_xl_destroyer_hq',
-					'hev_trade_l',
-					'hev_plunder_large',
-					'hev_plunder',
-					'hev_bomber_patrol_cluster',
-					'rya_destroyer_sector02',
-					'rya_destroyer_sector02_hq'
-				]" chance="(not $faction?)*100" />
+				<do_if value="not $faction?">
+					<set_value name="$temp_jobIDs" exact="[
+						'albion_collector_ions_large',
+						'albion_collector_plasma_large',
+						'albion_miner_ice_large',
+						'albion_miner_mineral_large_01',
+						'albion_miner_mineral_large_02',
+						'albion_miner_mineral_large_03',
+						'albion_miner_mineral_large_04',
+						'albion_trader_agricultural_large',
+						'albion_trader_energy_large_01',
+						'albion_trader_energy_large_02',
+						'albion_trader_energy_large_03',
+						'albion_trader_food_large',
+						'albion_trader_hightech_large_01',
+						'albion_trader_hightech_large_02',
+						'albion_trader_water_large',
+						'albion_trader_pharmaceutical_large',
+						'albion_trader_refined_large_01',
+						'albion_trader_refined_large_02',
+						'albion_trader_shiptech_large_01',
+						'albion_trader_shiptech_large_02',
+						'albion_trader_weapontech_large_01',
+						'albion_trader_weapontech_large_02',
+						'led_special_construction_trader',
+						'albion_trader_guest_arg_large',
+						'albion_trader_guest_canteran_large_01',
+						'albion_trader_guest_canteran_large_02',
+						'hoa_fighter_recon_cluster',
+						'hoa_fighter_patrol_sector04',
+						'hoa_carrier_sector04',
+						'hoa_frigate_sector04',
+						'pmc_fighter_patrol_cluster',
+						'pmc_carrier_cluster',
+						'pmc_destroyer_cluster',
+						'sov_xl_destroyer_hq',
+						'sos_fighter_patrol_cluster',
+						'sos_fighter_heavy_raid_leader',
+						'sov_trade_l',
+						'sov_plunder_large',
+						'sov_plunder',
+						'sos_bomber_patrol_cluster',
+						'can_chapter2_light_patrol_sector18',
+						'can_chapter2_light_frigate_sector18',
+						'can_chapter2_light_destroyer_sector18',
+						'can_chapter2_light_trader_energy_medium_sector18',
+						'can_chapter2_light_trader_water_medium_sector18',
+						'can_chapter2_medium_trader_agricultural_medium_sector18',
+						'can_chapter2_medium_trader_energy_medium_sector18',
+						'can_chapter2_medium_trader_water_medium_sector18',
+						'can_chapter2_medium_trader_agricultural_large_sector18',
+						'can_chapter2_medium_trader_energy_large_sector18',
+						'can_chapter2_medium_trader_food_large_sector18',
+						'can_chapter2_medium_trader_water_large_sector18',
+						'devries_miner_ice_large',
+						'hoa_chapter2_light_patrol_sector18',
+						'hoa_chapter2_light_frigate_sector18',
+						'hoa_chapter2_light_carrier_sector18',
+						'hoa_chapter2_medium_patrol_sector18',
+						'hoa_chapter2_medium_frigate_sector18',
+						'hoa_chapter2_medium_carrier_sector18',
+						'hoa_chapter2_medium_patrol_escort',
+						'pmc_chapter2_medium_patrol_sector17',
+						'pmc_chapter2_medium_carrier_sector17',
+						'pmc_chapter2_medium_destroyer_sector17',
+						'pmc_chapter2_heavy_patrol_sector17',
+						'pmc_chapter2_heavy_carrier_sector17',
+						'pmc_chapter2_heavy_destroyer_sector17',
+						'pmc_chapter2_heavy_patrol_escort',
+						'rei_chapter2_light_patrol_sector17',
+						'rei_chapter2_light_patrol_sector18',
+						'rei_chapter2_light_patrol_sector19',
+						'rei_chapter2_light_patrol_sector20',
+						'rei_chapter2_medium_patrol_sector19',
+						'rei_trade_l',
+						'rei_trade_m',
+						'rei_patrol_sector19_baseship',
+						'omicron_collector_hydrogen_large',
+						'omicron_collector_ions_large',
+						'omicron_collector_plasma_large',
+						'omicron_miner_ice_large_01',
+						'omicron_miner_ice_large_02',
+						'omicron_miner_mineral_large_01',
+						'omicron_miner_mineral_large_02',
+						'omicron_miner_mineral_large_03',
+						'omicron_trader_agricultural_large',
+						'omicron_trader_energy_large_01',
+						'omicron_trader_energy_large_02',
+						'omicron_trader_food_large',
+						'omicron_trader_hightech_large',
+						'omicron_trader_water_large',
+						'omicron_trader_pharmaceutical_large',
+						'omicron_trader_refined_large',
+						'omicron_trader_shiptech_large',
+						'omicron_trader_weapontech_large',
+						'jss_special_construction_trader',
+						'omicron_trader_guest_pmc_large',
+						'omicron_trader_guest_canteran_large_01',
+						'omicron_trader_guest_canteran_large_02',
+						'arg_destroyer_cluster',
+						'hev_xl_destroyer_hq',
+						'hev_trade_l',
+						'hev_plunder_large',
+						'hev_plunder',
+						'hev_bomber_patrol_cluster',
+						'rya_destroyer_sector02',
+						'rya_destroyer_sector02_hq'
+					]" />
+				</do_if>
 
 				<do_if value="$faction?">
 					<create_list name="$temp_jobIDs" chance="( not $temp_jobIDs? )*100"/>
@@ -2586,7 +2588,7 @@
 		<library name="MMCData_ship_job">
 			<actions>
 				<set_value name="$pirat" exact="if $plunder? and $plunder then true else false" />
-				<do_if value="not ($Station? and $Station.exists) and $Object.commander.exists and ($Object.commander.resources.list.count or $Object.commander.tradewares.list.count)">
+				<do_if value="not (@$Station and $Station.exists) and $Object.commander.exists and ($Object.commander.resources.list.count or $Object.commander.tradewares.list.count)">
 					<set_value name="$Station" exact="if $plunder? and $plunder then true else false" />
 				</do_if>
 				<do_elseif value="$Object.commander.exists and $Object.commander.isclass.ship and @$Station != $Object.commander">
@@ -2617,7 +2619,7 @@
 							</do_if>
 						</do_all>
 					</do_if>
-					<do_elseif value="$Station? and $Station.exists">
+					<do_elseif value="@$Station and $Station.exists">
 						<set_value name="$warebasket" exact="$Station.resources.list" />
 						<do_all exact="$warebasket.count" counter="$xj" reverse="true">
 							<do_if value="$Object.cargo.{$warebasket.{$xj}}.max gt 0" negate="true">
@@ -2731,7 +2733,7 @@
 							</do_if>
 						</do_all>
 					</do_if>
-					<do_elseif value="$Station? and $Station.exists">
+					<do_elseif value="@$Station and $Station.exists">
 						<set_value name="$warebasket" exact="$Station.resources.list" />
 						<do_all exact="$warebasket.count" counter="$xj" reverse="true">
 							<do_if value="$Object.cargo.{$warebasket.{$xj}}.max gt 0" negate="true">
@@ -2763,7 +2765,7 @@
 						<set_value name="$script" exact="'trade.ship'"/>
 						<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_runscript" />
 					</do_if>
-					<do_elseif value="$Object.cargo.{ware.fuelcells}.max and $Object.isclass.[class.ship_l, class.ship_xl]" chance="if not global.$nfconfig.$plotSafe? then 25 else 0">
+					<do_elseif value="$Object.cargo.{ware.fuelcells}.max and $Object.isclass.[class.ship_l, class.ship_xl]" chance="25"><!-- chance="if not global.$nfconfig.$plotSafe? then 25 else 0" -->
 						<set_value name="$param" exact="[['warelist', $warebasket], ['minbuy', 0], ['maxbuy', 4], ['minsell', 0], ['maxsell', 2]]"/>
 						<set_value name="$destination" exact="$sectors.random" chance="if $destination? and $destination.exists then 0 else 100"/>
 						<set_value name="$script" exact="'trade.ship.ranged'"/>
@@ -3469,6 +3471,35 @@
 								<remove_value name="$ShipYardOfTrust_Multi.{$y}"/>
 							</do_if>
 						</do_all>
+						<!-- use friend+member SY -->
+						<do_if value="$validCluster?" negate="true">
+							<set_value name="$faction" exact="$_faction"/>
+							<include_actions ref="md.MM_Corps__Data.MMCData_find_space" />
+						</do_if>
+						<do_if value="$validCluster? and $validCluster.count">
+							<find_station name="$temp_Multi" space="player.galaxy" functional="true" multiple="true">
+								<match_content class="class.buildmodule" />
+								<match owner="$_faction" negate="true"/>
+								<match_relation faction="$_faction" relation="friend" comparison="ge"/>
+							</find_station>
+<set_value name="$text3" exact="'\n** multiSY+ %1 add:'.[$temp_Multi.count]" operation="add" />
+							<do_all exact="$temp_Multi.count" counter="$y" >
+								<do_if value="$temp_Multi.{$y} and 
+												$ShipYardOfTrust_Multi.indexof.{$temp_Multi.{$y}} == 0 and 
+												$validCluster.indexof.{$temp_Multi.{$y}.cluster} and 
+												$temp_Multi.{$y}.tradenpc.exists and 
+												not $temp_Multi.{$y}.tradenpc.$denyBuildRandomNPC? and 
+												$temp_Multi.{$y}.tradenpc.$orders? and $temp_Multi.{$y}.tradenpc.$orders.count lt 5 and 
+												$temp_Multi.{$y}.units.{unitcategory.welder}.count gt 10 and 
+												$temp_Multi.{$y}.owner.relationto.{$_faction} ge $temp_Multi.{$y}.owner.relation.{if $temp_Multi.{$y}.tradenpc.$ordersMin? then $temp_Multi.{$y}.tradenpc.$ordersMin else 'neutral'}.min">
+									<append_to_list name="$ShipYardOfTrust_Multi" exact="$temp_Multi.{$y}"/>
+<set_value name="$text3" exact="' *'" operation="add" />
+								</do_if>
+							</do_all>
+<set_value name="$text3" exact="' #\n'" operation="add" />
+							<remove_value name="$temp_Multi"/>
+						</do_if>
+						<!-- / use friend+member SY -->
 					</do_if>
 					<do_else>
 						<create_list name="$ShipYardOfTrust_Multi"/>
@@ -3496,7 +3527,7 @@
 								<include_actions ref="md.MM_Corps__Data.MMCData_do_orderships" />
 								<set_value name="$requiredUnits_count" operation="subtract"/>
 							</do_if>
-							<do_elseif value="not $_CEO.$jobsdisabled? and $requiredUnits_count == 0" chance="(not global.$nfconfig.$plotSafe?) *100">
+							<do_elseif value="not $_CEO.$jobsdisabled? and $requiredUnits_count == 0" chance="(not global.$nfconfig.$plotSafe? or ['heartofalbion', 'plutarch', 'canteran', 'argongovernment', 'xenon', 'familyryak', 'reivers', 'sovereignsyndicate'].indexof.{$_faction.id} == 0) *100">
 								<set_value name="$faction" exact="$_faction" />
 								<include_actions ref="md.MM_Corps__Data.MMCData_disable_jobs" />
 								<set_value name="$_CEO.$jobsdisabled" />
@@ -3525,7 +3556,7 @@
 						<do_if value="$requiredUnits.count">
 							<include_actions ref="md.MM_Corps__Data.MMCData_do_orderships" />
 						</do_if>
-						<do_elseif value="not $_CEO.$jobsdisabled? and $requiredUnits.count == 0" chance="(not global.$nfconfig.$plotSafe?) *100">
+						<do_elseif value="not $_CEO.$jobsdisabled? and $requiredUnits.count == 0" chance="(not global.$nfconfig.$plotSafe? or ['heartofalbion', 'plutarch', 'canteran', 'argongovernment', 'xenon', 'familyryak', 'reivers', 'sovereignsyndicate'].indexof.{$_faction.id} == 0) *100">
 							<set_value name="$faction" exact="$_faction" />
 							<include_actions ref="md.MM_Corps__Data.MMCData_disable_jobs" />
 							<set_value name="$_CEO.$jobsdisabled" />
@@ -6782,7 +6813,7 @@
 					<set_value name="$raceTag" exact="if $faction? and ['xenon','khaak'].indexof.{$faction.id} then race.{$faction.id} else [race.argon, race.split, race.terran, race.teladi].random"/>
 				</do_if>
 
-				<do_if value="$dockObject? and $dockObject and player.primaryship.zone != $spawnZone">
+				<do_if value="$dockObject? and $dockObject and @player.primaryship.zone != $spawnZone">
 					<set_value name="$dockObject" exact="null"/>
 				</do_if>
 		
@@ -7032,6 +7063,9 @@
 <set_value name="$text2" exact="'* Support Stations: %1'.[$temp_stations.count]" operation="add" />
 				<do_all exact="$temp_stations.count" counter="$x">
 					<do_if value="$temp_stations.{$x}.exists" negate="true">
+						<continue />
+					</do_if>
+					<do_if value="$temp_stations.{$x}.macro.id" list="['landmarks_unique_aqueduct_macro', 'struct_econ_cw_generic_ar_water_l_macro', 'struct_econ_cw_generic_ar_water_xl_macro', 'struct_econ_cw_ar_water_macro', 'struct_econ_cw_generic_ar_water_m_macro', 'struct_econ_ref_ar_pmc_north_macro', 'struct_bt_dv_canteran_outpost_01_macro', 'struct_bt_dv_canteran_outpost_02_macro', 'struct_bt_dv_canteran_outpost_03_macro', 'struct_bt_dv_reivers_outpost_01_macro', 'struct_bt_dv_reivers_outpost_02_macro', 'struct_bt_dv_reivers_outpost_03_macro', 'struct_bt_te_pirate_outpost_01_macro', 'struct_bt_te_pirate_outpost_02_macro', 'struct_bt_te_pirate_outpost_03_macro', 'struct_bt_te_pirate_outpost_04_macro']">
 						<continue />
 					</do_if>
 					<do_if value="$temp_stations.{$x}.canproduceships">

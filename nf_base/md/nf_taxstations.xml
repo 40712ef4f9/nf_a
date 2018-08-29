@@ -78,7 +78,12 @@
 			</do_all>
 			<remove_value name="$Stations"/>
 			<!--< small ships: pilots only >-->
-			<find_ship name="$PlayerSmallShips" functional="true" space="player.galaxy" class="[class.ship_s, class.ship_m]" owner="faction.player" multiple="true"/>
+			<find_ship name="$PlayerSmallShips" functional="true" space="player.galaxy" class="[class.ship_s, class.ship_m]" owner="faction.player" multiple="true">
+				<match macro="macro.unit_player_ship_macro" negate="true"/>
+				<match macro="macro.unit_player_ship_a_macro" negate="true"/>
+				<match macro="macro.unit_player_ship_b_macro" negate="true"/>
+				<match macro="macro.unit_player_ship_c_macro" negate="true"/>
+			</find_ship>	
 			<set_value name="$Salary" exact="$PlayerSmallShips.count * 3000Cr" operation="add"/>
 			<remove_value name="$PlayerSmallShips"/>
 			<!--< capships: commander, defence, engineer, architect(CV) >-->		

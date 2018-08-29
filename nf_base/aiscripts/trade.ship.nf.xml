@@ -98,6 +98,7 @@
         <check_value value="event.param2.exists"/>
       </conditions>
       <actions>
+        <set_value name="$nextRecycle" exact="player.age + 10min" />
         <run_interrupt_script name="'command.collect.ship'" abortscripts="true" resume="find trade run" >
           <param name="target" value="event.param2" />
           <param name="recycle" value="event.param3" />
@@ -391,7 +392,7 @@
         </do_all>
         <remove_value name="$todo"/>
       </do_if>
-      <do_if value="$mayRecycle and this.ship.units.{unitcategory.welder}.count" chance="if this.ship.isplayerowned then 0 else this.combinedskill">
+      <do_if value="$mayRecycle and this.ship.units.{unitcategory.welder}.count and (not $nextRecycle? or $nextRecycle lt player.age)" chance="if this.ship.isplayerowned then 0 else this.combinedskill">
         <find_gravidar_contact name="$target" object="this.ship" restorable="true" multiple="false">
           <match_distance object="this.ship" max="this.ship.maxradarrange"/>
         </find_gravidar_contact>
@@ -415,8 +416,8 @@
         <param name="warelist" value="$warelist" />
         <param name="range" value="$range" />
         <param name="commander" value="$commander"/>
-        <param name="sellrange" value="$sellrange"/>
-        <param name="buyrange" value="$buyrange"/>
+        <param name="sellrange" value="if global.$nfconfig.$plotSafe? then null else $sellrange"/>
+        <param name="buyrange" value="if global.$nfconfig.$plotSafe? then null else $buyrange"/>
         <param name="lasttrade" value="@$lasttrade"/>
         <param name="debugchance" value="$debugchance"/>
         <param name="debugchance2" value="$debugchance2"/>

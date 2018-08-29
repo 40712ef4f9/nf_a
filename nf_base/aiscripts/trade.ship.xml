@@ -178,6 +178,8 @@
   <replace sel="//set_value[@exact=&quot;'trade.findsimpletraderun'&quot;]/@exact">'trade.findsimpletraderun.nf'</replace>
   <replace sel="//set_value[@exact=&quot;'trade.findfreetraderun'&quot;]/@exact">'trade.findfreetraderun.nf'</replace>
   <replace sel="//set_value[@exact=&quot;'trade.findtraderun'&quot;]/@exact">'trade.findtraderun.nf'</replace>
+  <replace sel="//run_script/param[@name='sellrange']/@value">if global.$nfconfig.$plotSafe? then null else $sellrange</replace>
+  <replace sel="//run_script/param[@name='buyrange']/@value">if global.$nfconfig.$plotSafe? then null else $buyrange</replace>
   <add sel="//label[@name='find trade run']" pos="after">
     <do_if value="this.$doRefuelnext?">
       <signal_objects object="this.ship" param="'DO.Refuel.athome'" delay="1s"/>
@@ -219,5 +221,10 @@
       <remove_value name="this.$tgr_min_buy"/>
       <remove_value name="this.$tgr_max_buy"/>
     </on_abort>
+  </add>
+  <add sel="/aiscript/attention/actions/run_script[@name='$traderunscript']" pos="after">
+    <do_if value="this.$whatido?">
+      <signal_objects object="this.ship" param="'CM REBOOT'" delay="10ms"/>
+    </do_if>
   </add>
 </diff>

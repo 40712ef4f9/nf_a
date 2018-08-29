@@ -16,7 +16,7 @@
 	</add>
 
 
-	<add sel="//library[@name='MMCData_disable_jobs']/actions/set_value[@name='$temp_jobIDs']" pos="after">
+	<add sel="//library[@name='MMCData_disable_jobs']/actions/do_if/set_value[@name='$temp_jobIDs']" pos="after">
 			<do_if value="not $faction?">
 				<!-- vanilla Jobs Xen Related -->
 				<append_to_list name="$temp_jobIDs" exact="'xen_destroyer_cluster'"/>

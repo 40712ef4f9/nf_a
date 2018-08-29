@@ -10,4 +10,27 @@
 	    <signal_objects group="this.$escortgroup" param="'MICT_Go'" param2="$destination" delay="1ms"/>
 	  </do_if>
 	</add>
+
+	<add sel="//do_else/get_jump_path" pos="after">
+	  <do_if value="not $warped? and @$destination.cluster and $destination.cluster != this.ship.cluster and not ($jumppath and $jumppath.count)"><!-- global.$nfconfig.$plotSafe? or -->
+		<warp object="this.ship" zone="$targetzone">
+		  <safepos value="$position"/>
+		</warp>
+		<set_value name="$warped" />
+		<resume label="check" />
+	  </do_if>
+	</add>
+	<add sel="//do_if/do_else/move_to[@destination='$destination']" pos="before">
+	  <do_if value="not $warped? and @$destination.cluster and $destination.cluster != this.ship.cluster">
+        <get_jump_path start="this.sector" end="$targetzone.sector" component="$jumppath" multiple="true" />
+		<do_if value="not ($jumppath and $jumppath.count)"><!-- global.$nfconfig.$plotSafe? or -->
+		  <warp object="this.ship" zone="$targetzone">
+			<safepos value="$position"/>
+		  </warp>
+		  <set_value name="$warped" />
+		</do_if>
+		<remove_value name="$jumppath"/>
+		<resume label="check" />
+	  </do_if>
+	</add>
 </diff>

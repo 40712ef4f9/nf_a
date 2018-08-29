@@ -22,7 +22,7 @@
 			</actions>
 			<cues>
 				<cue name="INIT_property">
-					<delay min="20s" max="90s"/>
+					<delay min="20s" max="50s"/>
 					<actions>
 						<!-- create additional startstuff -->
 						<include_actions ref="md.MM_Corps__Data.MMCData_CEO_PROPERTY_INIT" />

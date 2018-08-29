@@ -9,7 +9,7 @@
 			<conditions>
 				<event_object_signalled object="this.ship" param="'help requested'" />
 				<check_value value="not $nextReaction? or $nextReaction lt player.age" />
-				<check_value value="this.ship.sector == event.param2.sector" />
+				<check_value value="event.param2? and event.param2.exists and this.ship.sector == event.param2.sector" />
 				<check_value value="this.command.value == command.patrol" />
 				<check_any>
 					<check_value value="this.ship.trueowner == event.param2.owner" chance="this.combinedskill"/>

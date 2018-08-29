@@ -120,10 +120,17 @@
 			<!-- move to targetarea first -->
 			<debug_text text="'move: %1 [%2] %3'.[this.ship.knownname, this.ship.pilot.$whatido, this.ship.zone.name]" filter="error" chance="0" />
 			<do_if value="$destination.exists and (($destination.isclass.zone and $destination != this.zone) or (not $destination.isclass.zone and $destination.zone.exists and $destination.zone != this.zone))">
-				<run_script name="'move.generic'" >
-					<param name="destination" value="$destination" />
-					<param name="endintargetzone" value="true" />
-				</run_script>
+				<do_if value="global.$nfconfig.$plotSafe? and $destination.cluster != this.ship.cluster">
+					<warp object="this.ship" zone="if $destination.isclass.zone then $destination else $destination.zone">
+						<safepos y="-1km"/>
+					</warp>
+				</do_if>
+				<do_else>
+					<run_script name="'move.generic'" >
+						<param name="destination" value="$destination" />
+						<param name="endintargetzone" value="true" />
+					</run_script>
+				</do_else>
 			</do_if>
 			<remove_value name="$destination"/>
 			<do_if value="this.$params.$sfo?">

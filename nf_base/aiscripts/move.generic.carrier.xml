@@ -205,6 +205,13 @@
           <do_else>
             <!--Move through gate  -->
             <get_jump_path start="this.sector" end="$targetzone.sector" component="$jumppath" multiple="true" />
+            <do_if value="not $warped? and @$destination.cluster and $destination.cluster != this.ship.cluster and not ($jumppath and $jumppath.count)"><!-- global.$nfconfig.$plotSafe? or -->
+              <warp object="this.ship" zone="$targetzone">
+                <safepos value="$position"/>
+              </warp>
+              <set_value name="$warped" />
+              <resume label="check" />
+            </do_if>
             <do_if value="$jumppath.{1}? and $jumppath.{1} == this.sector and $jumppath.{2}.isclass.gate and $movethroughgates">
 
               <run_script name="'move.jumpgate'" sinceversion="3">
@@ -238,6 +245,17 @@
           </do_else>
         </do_if>
         <do_else>
+          <do_if value="not $warped? and @$destination.cluster and $destination.cluster != this.ship.cluster">
+            <get_jump_path start="this.sector" end="$targetzone.sector" component="$jumppath" multiple="true" />
+            <do_if value="not ($jumppath and $jumppath.count)"><!-- global.$nfconfig.$plotSafe? or -->
+              <warp object="this.ship" zone="$targetzone">
+                <safepos value="$position"/>
+              </warp>
+              <set_value name="$warped" />
+            </do_if>
+            <remove_value name="$jumppath"/>
+            <resume label="check" />
+          </do_if>
           <debug_text text="'Long distance trip. Using highways...'" chance="$debugchance" />
           <move_to object="this.ship" destination="$destination" usehighways="true" abortpath="$abortpath" forcesteering="$forcesteering" forceposition="false">
             <position value="$position" />

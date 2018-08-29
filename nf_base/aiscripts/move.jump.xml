@@ -142,4 +142,12 @@
       <remove_value name="$officialFaction"/>
     </do_if>
   </add>
+
+  <add sel="//set_value[@exact=&quot;'ERR_NO_JUMPPATH_FOUND'&quot;]" pos="after">
+    <do_if value="@$destination.exists and @$destination.cluster and $destination.cluster != this.ship.cluster">
+      <warp object="this.ship" zone="if $destination.isclass.zone then $destination else $destination.zone">
+        <safepos y="-1km"/>
+      </warp>
+    </do_if>
+  </add>
 </diff>

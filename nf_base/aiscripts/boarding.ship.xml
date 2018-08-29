@@ -354,12 +354,14 @@
         <interrupt>
           <conditions>
             <event_gravidar_has_scanned object="this.ship" />
-            <count_gravidar_contacts result="$targets" object="this.ship" class="[class.ship_l, class.ship_xl, class.ship_s, class.ship_m]" mayattack="this.ship" min="1">
+            <count_gravidar_contacts result="$targets2" object="this.ship" class="[class.ship_l, class.ship_xl, class.ship_s, class.ship_m]" mayattack="this.ship" min="1">
               <match_distance object="this.ship" max="this.ship.maxradarrange*0.5f"/>
             </count_gravidar_contacts>
           </conditions>
           <actions>
             <do_if value="event.name" exact="'event_gravidar_has_scanned'">
+              <add_to_group groupname="$targets" list="$targets2"/>
+              <remove_value name="$targets2" />
               <do_if value="$target.exists and this.ship.units.{unitcategory.marine}.count">
                 <resume label="withdraw"/>
               </do_if>

@@ -10,6 +10,7 @@
           <event_object_attacked_object object="this.defensible"/>
           <check_value value="event.param.exists" />
           <check_value value="event.param.isclass.{class.station}" />
+          <check_value value="global.$nfconfig? and not global.$nfconfig.$plotSafe?" />
           <check_value value="not global.$nextDScheck? or (global.$nextDScheck? and global.$nextDScheck lt player.age)" />
           <check_value value="[faction.enemy, faction.criminal, faction.smuggler, faction.neutral, faction.friend, faction.ownerless].indexof.{event.param.owner}" negate="true"/>
           <check_value value="event.param.boarder" negate="true" />
