@@ -252,9 +252,10 @@
                 <safepos value="$position"/>
               </warp>
               <set_value name="$warped" />
+              <remove_value name="$jumppath"/>
+              <resume label="check" />
             </do_if>
             <remove_value name="$jumppath"/>
-            <resume label="check" />
           </do_if>
           <debug_text text="'Long distance trip. Using highways...'" chance="$debugchance" />
           <move_to object="this.ship" destination="$destination" usehighways="true" abortpath="$abortpath" forcesteering="$forcesteering" forceposition="false">
