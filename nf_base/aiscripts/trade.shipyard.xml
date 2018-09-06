@@ -18,14 +18,14 @@
   <add sel="/aiscript/interrupts/handler/actions/do_all/do_if/do_if/do_if[@value='this.station.cluster.macro.ismacro.cluster_b_macro']" type="@chance" >if this.station.isplayerowned then 0 else 0</add>
   <add sel="/aiscript/interrupts/handler/actions/do_all/do_if/do_if/do_elseif[@value='this.station.cluster.macro.ismacro.cluster_d_macro']" type="@chance" >if this.station.isplayerowned then 0 else 0</add>
   <add sel="/aiscript/interrupts/handler/actions/do_all/do_if/do_if/do_if[@value='this.station.cluster.macro.ismacro.cluster_b_macro']" pos="after" >
-    <do_elseif value="this.station.cargo.free gt this.station.cargo.capacity/2" chance="if this.station.isplayerowned then 100 else 100">
+    <!--do_elseif value="this.station.cargo.free gt this.station.cargo.capacity/2" chance="if this.station.isplayerowned then 100 else 100">
       <set_value name="this.$stop_trading" min="60min" max="120min" operation="add" />
       <debug_text text="'longer break: %1 [%2] %3'.[this.station.cargo.free, this.station.cargo.capacity/2, this.station.knownname]" filter="error" chance="$debugchance" />
     </do_elseif>
     <do_elseif value="this.station.cargo.free lt this.station.cargo.capacity/5" chance="if this.station.isplayerowned then 100 else 100">
       <set_value name="this.$stop_trading" min="3min" max="6min" operation="add" />
       <debug_text text="'rise production: %1 [%2] %3'.[this.station.cargo.free, this.station.cargo.capacity/5, this.station.knownname]" filter="error" chance="$debugchance" />
-    </do_elseif>
+    </do_elseif-->
   </add>
   <replace sel="//construct_ship/@faction" >$customer_faction</replace>
   <add sel="//construct_ship" pos="after" >
@@ -35,15 +35,6 @@
     <set_value name="$customer_faction" exact="this.station.owner" />
     <do_if value="this.station.isplayerowned">
       <get_build_slot_price object="this.station" macro="$selected_macro" buildplan="$build_plan" buildmodule="$buildmodule" sequence="''" stage ="0"  price ="$buildcost"/>
-      <set_value name="this.$invoice_g" exact="0" />
-      <do_if value="$selected_macro.ware and @$selected_macro.ware.maxprice">
-        <set_value name="this.$invoice_g" exact="[$buildcost*1.5f, $selected_macro.ware.maxprice].max" operation="add"/>
-      </do_if>
-      <do_else>
-        <debug_text text="'no_macro.ware: [%1] %2 - %3 %4 [%5]'.[$selected_macro, $selected_macro.name, @$selected_macro.ware, @$selected_macro.ware.name, $buildcost]" filter="error" chance="100" />
-        <set_value name="this.$invoice_g" exact="$buildcost*2f" operation="add"/>
-      </do_else>
-      <set_value name="this.$invoice_txt" exact="{2802,2100}.[this.station.knownname]" />
 
       <create_list name="$customerfactions" />
       <find_station name="$otherstations" space="this.station.sector" multiple="true">
@@ -91,7 +82,6 @@
         </do_all>
         <remove_value name="$customerfactions_x" />
       </do_if>
-
       <do_if value="$customerfactions.count">
         <set_value name="$customer_faction" exact="$customerfactions.random" />
       </do_if>
@@ -99,6 +89,23 @@
         <set_value name="$customer_faction" exact="faction.friend" />
       </do_else>
       <remove_value name="$customerfactions" />
+
+      <set_value name="this.$invoice_g" exact="0" />
+      <do_if value="$selected_macro.ware and @$selected_macro.ware.minprice and this.relationto.{$customer_faction} ge this.station.owner.relation.member.min">
+        <set_value name="this.$invoice_g" exact="[$buildcost, $selected_macro.ware.minprice].max" operation="add"/>
+      </do_if>
+      <do_elseif value="$selected_macro.ware and @$selected_macro.ware.averageprice and this.relationto.{$customer_faction} ge this.station.owner.relation.friend.min">
+        <set_value name="this.$invoice_g" exact="[(($buildcost)i*1.1f)ct, $selected_macro.ware.averageprice].max" operation="add"/>
+      </do_elseif>
+      <do_elseif value="$selected_macro.ware and @$selected_macro.ware.maxprice">
+        <set_value name="this.$invoice_g" exact="[(($buildcost)i*1.25f)ct, $selected_macro.ware.maxprice].max" operation="add"/>
+      </do_elseif>
+      <do_else>
+        <debug_text text="'no_macro.ware: [%1] %2 - %3 %4 [%5]'.[$selected_macro, $selected_macro.name, @$selected_macro.ware, @$selected_macro.ware.name, $buildcost]" filter="error" chance="100" />
+        <set_value name="this.$invoice_g" exact="(($buildcost)i*1.4f)ct" operation="add"/>
+      </do_else>
+      <set_value name="this.$invoice_txt" exact="{2802,2100}.[this.station.knownname]" />
+
 
       <set_value name="this.$invoice_txt" exact="{2802,2101}.[this.station.cluster.knownname, this.station.sector.knownname, this.station.zone.knownname, $customer_faction]" operation="add"/>
       <set_value name="this.$invoice_txt" exact="{2802,2102}.[$selected_macro.name, this.$invoice_g.formatted.default]" operation="add"/>
@@ -639,14 +646,17 @@
     <remove_value name="$customer_faction" />
     <get_build_slot_price object="this.station" macro="$selected_macro" buildplan="$build_plan" buildmodule="$buildmodule" sequence="''" stage ="0"  price ="$buildcost"/>
     <set_value name="this.$invoice" exact="0" />
-    <do_if value="$selected_macro.ware and @$selected_macro.ware.maxprice and this.$order? and this.relationto.{this.$order} ge this.station.owner.relation.friend.min">
-      <set_value name="this.$invoice" exact="[$buildcost*1.1f, $selected_macro.ware.averageprice].max" operation="add"/>
+    <do_if value="$selected_macro.ware and @$selected_macro.ware.minprice and this.$order? and this.relationto.{this.$order} ge this.station.owner.relation.member.min">
+      <set_value name="this.$invoice" exact="[$buildcost, $selected_macro.ware.minprice].max" operation="add"/>
     </do_if>
+    <do_elseif value="$selected_macro.ware and @$selected_macro.ware.maxprice and this.$order? and this.relationto.{this.$order} ge this.station.owner.relation.friend.min">
+      <set_value name="this.$invoice" exact="[(($buildcost)i*1.1f)ct, $selected_macro.ware.averageprice].max" operation="add"/>
+    </do_elseif>
     <do_elseif value="$selected_macro.ware and @$selected_macro.ware.maxprice">
-      <set_value name="this.$invoice" exact="[$buildcost*1.5f, $selected_macro.ware.maxprice].max" operation="add"/>
+      <set_value name="this.$invoice" exact="[(($buildcost)i*1.25f)ct, $selected_macro.ware.maxprice].max" operation="add"/>
     </do_elseif>
     <do_else>
-      <set_value name="this.$invoice" exact="$buildcost*2f" operation="add"/>
+      <set_value name="this.$invoice" exact="(($buildcost)i*1.4f)ct" operation="add"/>
     </do_else>
   </add>
 </diff>

@@ -883,6 +883,50 @@
 			<component ref="units_size_xl_capital_destroyer_2_mk2_macro" amount="1" />
 			<icon video="units_size_xl_capital_destroyer_2_mk2_macro" />
 		</ware>
+		<ware id="shp_xl_capital_destroyer_2_mk3_care" name="{20101,4231}" description="{20101,4202}" transport="ship" size="ship" volume="1" tags="ship">
+			<price min="22634423" average="30179230" max="37724038" />
+			<production time="518" amount="1" method="default" name="{20206,101}">
+				<primary>
+					<ware ware="bioopticwiring" amount="332" />
+					<ware ware="energycells" amount="1580" />
+					<ware ware="foodrations" amount="710" />
+					<ware ware="fusionreactor" amount="64" />
+					<ware ware="holtzmanfieldgenerator" amount="152" />
+					<ware ware="microchips" amount="314" />
+					<ware ware="plasmaflowregulator" amount="92" />
+					<ware ware="reinforcedmetalplating" amount="258" />
+					<ware ware="scanningarray" amount="198" />
+				</primary>
+			</production>
+			<production time="518" amount="1" method="omicron" name="{20206,301}">
+				<primary>
+					<ware ware="bioelectricneurongel" amount="296" />
+					<ware ware="bofu" amount="360" />
+					<ware ware="emspectrometer" amount="198" />
+					<ware ware="energycells" amount="1580" />
+					<ware ware="fusionreactor" amount="64" />
+					<ware ware="holtzmanfieldgenerator" amount="152" />
+					<ware ware="plasmaflowregulator" amount="92" />
+					<ware ware="plasmapumps" amount="316" />
+					<ware ware="reinforcedmetalplating" amount="258" />
+				</primary>
+			</production>
+			<production time="518" amount="1" method="fieldsofop" name="{20206,601}">
+				<primary>
+					<ware ware="bioopticwiring" amount="432" />
+					<ware ware="energycells" amount="4226" />
+					<ware ware="foodrations" amount="1353" />
+					<ware ware="fusionreactor" amount="118" />
+					<ware ware="holtzmanfieldgenerator" amount="78" />
+					<ware ware="microchips" amount="510" />
+					<ware ware="plasmaflowregulator" amount="118" />
+					<ware ware="scanningarray" amount="157" />
+					<ware ware="teladianium" amount="1217" />
+				</primary>
+			</production>
+			<component ref="units_size_xl_capital_destroyer_2_care_macro" amount="1" />
+			<icon video="units_size_xl_capital_destroyer_2_care_macro" />
+		</ware>
 		<ware id="shp_xl_capital_destroyer_2_mk2_cargo" name="{20101,4221}" description="{20101,4202}" transport="ship" size="ship" volume="1" tags="ship">
 			<price min="22634423" average="30179230" max="37724038" />
 			<production time="518" amount="1" method="default" name="{20206,101}">
@@ -3646,7 +3690,7 @@
 		</ware>
 
 		<ware id="shp_xl_xen_newi" name="{20101,13801} {20106, 201}" description="{20101,13802}" transport="ship" size="ship" volume="1" tags="ship">
-			<price min="0" average="0" max="0"/>
+			<price min="59287351" average="79246412" max="89530680" />
 			<production time="716" amount="1" method="albion" name="{20206,101}">
 				<primary>
 					<ware ware="bioopticwiring" amount="848" />
@@ -4474,7 +4518,7 @@
 		</ware>
 
 		<ware id="shp_xl_xen_i_01" name="{20101,13801}" description="{20101,13802}" transport="ship" size="ship" volume="1" tags="ship">
-			<price min="0" average="0" max="0" />
+			<price min="59287351" average="79246412" max="89530680" />
 			<production time="716" amount="1" method="albion" name="{20206,101}">
 				<primary>
 					<ware ware="bioopticwiring" amount="848" />
@@ -4546,7 +4590,7 @@
 			<icon video="units_size_xl_xenon_01_macro" />
 		</ware>
 		<ware id="shp_xl_xen_i_c_01" name="{20101,13801} {20106, 301}" description="{20101,13802}" transport="ship" size="ship" volume="1" tags="ship">
-			<price min="0" average="0" max="0" />
+			<price min="59287351" average="79246412" max="89530680" />
 			<production time="716" amount="1" method="albion" name="{20206,101}">
 				<primary>
 					<ware ware="bioopticwiring" amount="848" />

@@ -33,7 +33,7 @@
 		</ship>
 
 		<ship id="nf_dummy_al_xl" group="nf_albion_xl">
-			<category tags="[albion, military]" faction="[heartofalbion, canteran, plutarch, wholesomefoods, beryll, nolimits, leddaindustrial, albionenergy, sovereignsyndicate, reivers]" size="ship_xl"/>
+			<category tags="[albion, military]" faction="[plutarch, wholesomefoods, beryll, nolimits, leddaindustrial, albionenergy, sovereignsyndicate]" size="ship_xl"/>
 			<pilot ref="fighter_albion_random"/>
 			<defence ref="fighter_albion_random"/>
 			<engineer ref="engineer_albion_random"/>
@@ -45,7 +45,7 @@
 			<drop ref="ship_large_military"/>
 		</ship>
 		<ship id="nf_dummy_al_l" group="nf_albion_l">
-			<category tags="[albion, military]" faction="[heartofalbion, canteran, plutarch, wholesomefoods, beryll, nolimits, leddaindustrial, albionenergy, sovereignsyndicate, reivers]" size="ship_l"/>
+			<category tags="[albion, military]" faction="[plutarch, wholesomefoods, beryll, nolimits, leddaindustrial, albionenergy, sovereignsyndicate]" size="ship_l"/>
 			<pilot ref="fighter_albion_random"/>
 			<defence ref="fighter_albion_random"/>
 			<engineer ref="engineer_albion_random"/>
@@ -56,6 +56,56 @@
 			</units>
 			<drop ref="ship_large_military"/>
 		</ship>
+		<ship id="nf_dummy_alhoa_xl" group="nf_albionhoa_xl">
+			<category tags="[albion, military]" faction="[heartofalbion, wholesomefoods, beryll, nolimits, leddaindustrial, albionenergy, sovereignsyndicate]" size="ship_xl"/>
+			<pilot ref="fighter_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<units>
+				<unit category="defence" mk="1" min="50" max="70"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+				<unit category="transport" mk="1" min="10" max="20"/>
+			</units>
+			<drop ref="ship_large_military"/>
+		</ship>
+		<ship id="nf_dummy_alhoa_l" group="nf_albionhoa_l">
+			<category tags="[albion, military]" faction="[heartofalbion, wholesomefoods, beryll, nolimits, leddaindustrial, albionenergy, sovereignsyndicate]" size="ship_l"/>
+			<pilot ref="fighter_albion_random"/>
+			<defence ref="fighter_albion_random"/>
+			<engineer ref="engineer_albion_random"/>
+			<units>
+				<unit category="defence" mk="1" min="50" max="70"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+				<unit category="transport" mk="1" min="10" max="20"/>
+			</units>
+			<drop ref="ship_large_military"/>
+		</ship>
+
+		<ship id="nf_dummy_dv_xl" group="nf_devries_xl">
+			<category tags="[devries, military]" faction="[canteran, reivers]" size="ship_xl"/>
+			<pilot ref="canteran_trader"/>
+			<defence ref="canteran_fighter"/>
+			<engineer ref="canteran_engineer"/>
+			<units>
+				<unit category="defence" mk="1" min="50" max="70"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+				<unit category="transport" mk="1" min="10" max="20"/>
+			</units>
+			<drop ref="ship_large_military"/>
+		</ship>
+		<ship id="nf_dummy_dv_l" group="nf_devries_l">
+			<category tags="[devries, military]" faction="[canteran, reivers]" size="ship_l"/>
+			<pilot ref="canteran_trader"/>
+			<defence ref="canteran_fighter"/>
+			<engineer ref="canteran_engineer"/>
+			<units>
+				<unit category="defence" mk="1" min="50" max="70"/>
+				<unit category="welder" mk="1" min="10" max="20"/>
+				<unit category="transport" mk="1" min="10" max="20"/>
+			</units>
+			<drop ref="ship_large_military"/>
+		</ship>
+
 		<ship id="nf_dummy_m" macro="units_size_m_pmc_xen_02_macro">
 			<category tags="[fighter, military]" faction="[heartofalbion, canteran, plutarch, wholesomefoods, beryll, nolimits, leddaindustrial, albionenergy, sovereignsyndicate, reivers, argongovernment, sonraenergy, aquarius, jonferson, frantonpharma, chow, familyryak, hereticvanguards]" size="ship_m"/>
 			<pilot ref="fighter_albion_random"/>

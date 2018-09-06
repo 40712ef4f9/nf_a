@@ -41,56 +41,59 @@
 			</conditions>
 			<actions>
 				<do_if value="event.param2.{2}? and event.param2.{2}">
-				  <set_value name="$dropped" exact="event.param2.{1}"/>
-				  <do_all exact="$dropped.count" counter="$i">
-					<destroy_object object="$dropped.{$i}" explosion="false"/>
-				  </do_all>
-				  <remove_value name="$dropped"/>
-
-				  <create_group groupname="$subordinate_overall_list"/>
-				  <!-- get all followers -->
-				  <add_to_group groupname="$subordinate_overall_list" list="player.primaryship.subordinates" />
-				  <set_value name="$do_while_i" exact="0" />
-				  <do_while value="$do_while_i le $subordinate_overall_list.list.count" >
-					  <set_value name="$do_while_i" operation="add"  exact="1" />
-					  <do_if value="$subordinate_overall_list.list.{$do_while_i}?">
-						  <add_to_group groupname="$subordinate_overall_list" list="$subordinate_overall_list.list.{$do_while_i}.subordinates" />
-					  </do_if>
-				  </do_while>
-				  <remove_value name="$do_while_i"/>
-				  <!-- make group -->
-				  <do_if value="player.entity.$covergroup?" negate="true">
-					  <create_group groupname="player.entity.$covergroup"/>
-					  <add_to_group groupname="player.entity.$covergroup" object="player.entity" />
-					  <add_to_group groupname="player.entity.$covergroup" object="player.primaryship" />
-				  </do_if>
-				  <do_if value="$subordinate_overall_list.list.count" min="1">
-					  <do_all exact="$subordinate_overall_list.list.count" counter="$i" reverse="true">
-						  <do_if value="$subordinate_overall_list.list.{$i}.isclass.[class.ship_s, class.ship_m, class.ship_l, class.ship_xl] and $subordinate_overall_list.list.{$i}.zone == player.zone">
-							  <get_control_entities groupname="$Entities" object="$subordinate_overall_list.list.{$i}"/>
-							  <do_if value="$Entities?">
-								  <do_all exact="$Entities.count" counter="$j" >
-									  <add_to_group groupname="player.entity.$covergroup" object="$Entities.{$j}" chance="if player.entity.$covergroup.list.indexof.{$Entities.{$j}} == 0 then 100 else 0"/>
-								  </do_all>
-							  </do_if>
-							  <remove_value name="$Entities"/>
-							  <add_to_group groupname="player.entity.$covergroup" object="$subordinate_overall_list.list.{$i}" chance="if player.entity.$covergroup.list.indexof.{$subordinate_overall_list.list.{$i}} == 0 then 100 else 0"/>
-						  </do_if>
-						  <do_else>
-							  <remove_from_group group="$subordinate_overall_list" object="$subordinate_overall_list.list.{$i}" />
-						  </do_else>
-					  </do_all>
-				  </do_if>
-				  <remove_value name="$subordinate_overall_list"/>
-				  <!-- cover all followers with entities, Me, Myself and I -->
-				  <do_if value="player.entity.$covergroup?">
-					  <do_all exact="player.entity.$covergroup.list.count" counter="$i" >
-						  <do_if value="player.entity.$covergroup.list.{$i}.exists">
-							  <set_cover_owner object="player.entity.$covergroup.list.{$i}" faction="faction.acmecorp"/>
-						  </do_if>
-					  </do_all>
-				  	<show_help position="8" log="false" force="true" duration="player.timewarp.factor*3" custom="'%1 take cover as %2'.[if player.entity.$covergroup.list.count gt 1 then 'Skunk and Follower' else 'Skunk', faction.acmecorp.knownname]" />
-				  </do_if>
+					<set_value name="$dropped" exact="event.param2.{1}"/>
+					<do_all exact="$dropped.count" counter="$i">
+					  <destroy_object object="$dropped.{$i}" explosion="false"/>
+					</do_all>
+					<remove_value name="$dropped"/>
+  
+					<create_group groupname="$subordinate_overall_list"/>
+					<!-- get all followers -->
+					<add_to_group groupname="$subordinate_overall_list" list="player.primaryship.subordinates" />
+					<set_value name="$do_while_i" exact="0" />
+					<do_while value="$do_while_i le $subordinate_overall_list.list.count" >
+						<set_value name="$do_while_i" operation="add"  exact="1" />
+						<do_if value="$subordinate_overall_list.list.{$do_while_i}?">
+							<add_to_group groupname="$subordinate_overall_list" list="$subordinate_overall_list.list.{$do_while_i}.subordinates" />
+						</do_if>
+					</do_while>
+					<remove_value name="$do_while_i"/>
+					<!-- make group -->
+					<do_if value="player.entity.$covergroup?" negate="true">
+						<create_group groupname="player.entity.$covergroup"/>
+						<add_to_group groupname="player.entity.$covergroup" object="player.entity" />
+						<add_to_group groupname="player.entity.$covergroup" object="player.primaryship" />
+						<do_if value="player.primaryship.drones.count">
+							<add_to_group groupname="player.entity.$covergroup" list="player.primaryship.drones" />
+						</do_if>
+					</do_if>
+					<do_if value="$subordinate_overall_list.list.count" min="1">
+						<do_all exact="$subordinate_overall_list.list.count" counter="$i" reverse="true">
+							<do_if value="$subordinate_overall_list.list.{$i}.isclass.[class.ship_s, class.ship_m, class.ship_l, class.ship_xl] and $subordinate_overall_list.list.{$i}.zone == player.zone">
+								<get_control_entities groupname="$Entities" object="$subordinate_overall_list.list.{$i}"/>
+								<do_if value="$Entities?">
+									<do_all exact="$Entities.count" counter="$j" >
+										<add_to_group groupname="player.entity.$covergroup" object="$Entities.{$j}" chance="if player.entity.$covergroup.list.indexof.{$Entities.{$j}} == 0 then 100 else 0"/>
+									</do_all>
+								</do_if>
+								<remove_value name="$Entities"/>
+								<add_to_group groupname="player.entity.$covergroup" object="$subordinate_overall_list.list.{$i}" chance="if player.entity.$covergroup.list.indexof.{$subordinate_overall_list.list.{$i}} == 0 then 100 else 0"/>
+							</do_if>
+							<do_else>
+								<remove_from_group group="$subordinate_overall_list" object="$subordinate_overall_list.list.{$i}" />
+							</do_else>
+						</do_all>
+					</do_if>
+					<remove_value name="$subordinate_overall_list"/>
+					<!-- cover all followers with entities, Me, Myself and I -->
+					<do_if value="player.entity.$covergroup?">
+						<do_all exact="player.entity.$covergroup.list.count" counter="$i" >
+							<do_if value="player.entity.$covergroup.list.{$i}.exists">
+								<set_cover_owner object="player.entity.$covergroup.list.{$i}" faction="faction.acmecorp"/>
+							</do_if>
+						</do_all>
+						<show_help position="8" log="false" force="true" duration="player.timewarp.factor*3" custom="'%1 take cover as %2'.[if player.entity.$covergroup.list.count gt 1 then 'Skunk and Follower' else 'Skunk', faction.acmecorp.knownname]" />
+					</do_if>
 				</do_if>
 				<do_else>
 				  <set_value name="$openConv" exact="event.param2.{1}"/>

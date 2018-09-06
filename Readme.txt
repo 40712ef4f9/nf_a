@@ -26,8 +26,8 @@ Will NOT WORK together with CWIR-mod or an CWIR-based-Savegame!!
 For some Mods are compatibility patch-mods includet (but that Mods not directly required, also official DLC are optional too)
 - LostSectors [1.30] :: https://forum.egosoft.com/viewtopic.php?t=392085
 - Herschels Gift [1.10] :: https://forum.egosoft.com/viewtopic.php?t=395381
-|-- Vacana Ltd. Ships [1.1] :: https://forum.egosoft.com/viewtopic.php?t=399151
-|-- Paladin Destroyer [1.01] :: https://forum.egosoft.com/viewtopic.php?t=399009
+|__ Vacana Ltd. Ships [1.1] :: https://forum.egosoft.com/viewtopic.php?t=399151
+|__ Paladin Destroyer [1.01] :: https://forum.egosoft.com/viewtopic.php?t=399009
 - Extinguished Hope [1.01] :: https://forum.egosoft.com/viewtopic.php?t=398765
 - Prosper Devries [2.10] :: https://steamcommunity.com/sharedfiles/filedetails/?id=795568195
 
@@ -55,6 +55,7 @@ This mod based on CWIR from BlackRain&Rubini so special thanks to all people who
  Unitrader 
  Reaperx
  alexalsp
+ Vectorial1024
 
 #####
 # Random Information
@@ -105,3 +106,6 @@ you can configure jumpbehavior of ships in the mod-setting, there are the levels
 * Diplomatics
   - you can adjust your reputation, or trade zones/stations by call a NPC-Station-DefenceOfficer and use Diplomatics
   - this is also available at Mercenary-Plunder-Ships at call them, based on your Firepower you can offer Money, or force them to not do anything stupid - this will effect the behavior (from called ship) ~12-24h
+  
+* deconstruct station
+you can call engineer and have the option to destroy (fully remove) a single storage/production or whole buildsteps in case you have removed the manager

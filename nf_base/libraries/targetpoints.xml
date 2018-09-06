@@ -474,6 +474,14 @@
 			<point x="-110" y="50" z="1000" r="100"/>
 			<point x="-30" y="35" z="850" r="100"/>
 		</pointlist>
+		<pointlist macro="units_size_xl_capital_destroyer_2_care_macro" stage="0" tags="ship_xs launchpath">
+			<point x="30" y="35" z="850" r="100"/>
+			<point x="-110" y="50" z="1000" r="100"/>
+		</pointlist>
+		<pointlist macro="units_size_xl_capital_destroyer_2_care_macro" stage="0" tags="ship_xs dockpath">
+			<point x="-110" y="50" z="1000" r="100"/>
+			<point x="-30" y="35" z="850" r="100"/>
+		</pointlist>
 
 		<!-- -->
 		<pointlist macro="units_size_xl_capital_destroyer_1_mk2_macro" stage="0" tags="ship_xs hack">
@@ -529,6 +537,24 @@
 			<point x="153.353" y="-31.813" z="29.482" r="100" special="1" comment="shield generator"/>
 		</pointlist>
 		<pointlist macro="units_size_xl_capital_destroyer_2_cargo_macro" stage="0" tags="ship_xs scan">
+			<point y="-70.195" z="-423.567" r="100"/>
+			<point x="-111.121" y="-45.058" z="-655.141" r="100"/>
+			<point x="-72.749" y="-60.064" z="-569.08" r="100"/>
+			<point x="72.749" y="-60.064" z="-569.08" r="100"/>
+			<point y="-7.389" z="-537.732" r="100"/>
+			<point y="63.998" z="-654.688" r="100"/>
+			<point x="-35.595" y="64.094" z="-718.047" r="100"/>
+			<point x="35.595" y="64.094" z="-718.047" r="100"/>
+		</pointlist>
+		<pointlist macro="units_size_xl_capital_destroyer_2_care_macro" stage="0" tags="ship_xs hack">
+			<point x="18.27" y="-80.524" z="4.948" r="100" special="1" comment="jumpdrive"/>
+			<point x="-0.0257" y="62.724" z="615.284" r="100" comment="shield generator"/>
+			<point x="0.9727" y="92.245" z="285.93" r="100" special="1" comment="shield generator"/>
+			<point x="0.3287" y="-127.855" z="-458.661" r="100" comment="shield generator"/>
+			<point x="-151.753" y="-32.088" z="32.764" r="100" comment="shield generator"/>
+			<point x="153.353" y="-31.813" z="29.482" r="100" special="1" comment="shield generator"/>
+		</pointlist>
+		<pointlist macro="units_size_xl_capital_destroyer_2_care_macro" stage="0" tags="ship_xs scan">
 			<point y="-70.195" z="-423.567" r="100"/>
 			<point x="-111.121" y="-45.058" z="-655.141" r="100"/>
 			<point x="-72.749" y="-60.064" z="-569.08" r="100"/>
@@ -2624,6 +2650,2460 @@
 			<point x="-93.364" y="54.638" z="-47.534" r="100" comment="surface good"/>
 			<point x="41.798" y="75.259" z="152.931" r="100" special="1" comment="surface good"/>
 			<point x="-23.503" y="66.133" z="344.641" r="100" special="1" comment="surface good"/>
+		</pointlist>
+
+
+
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" stage="0" tags="ship_xs hack">
+			<point x="1.782" y="-615.406" z="-1128.38" r="100" special="1" comment="shield good"/>
+			<point x="37.088" y="-610.5" z="-1256.47" r="100" comment="turret good"/>
+			<point x="-40.088" y="-611.896" z="-1257.54" r="100" comment="turret good"/>
+			<point x="39.958" y="-612.344" z="-1174.8" r="100" comment="turret good"/>
+			<point x="-32.176" y="-609.907" z="-1174.06" r="100" special="1" comment="turret good"/>
+			<point x="38.724" y="-612.283" z="-1087.29" r="100" comment="turret good"/>
+			<point x="-35.225" y="-610.936" z="-1082.9" r="100" comment="turret good"/>
+			<point x="-39.228" y="-612.097" z="-997.36" r="100" comment="turret good"/>
+			<point x="39.233" y="-611.328" z="-1001.47" r="100" special="1" comment="turret good"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" stage="0" tags="ship_xs scan">
+			<point x="1513.34" y="117.255" z="-61.741" r="100"/>
+			<point x="533.864" y="109.414" z="-44.871" r="100"/>
+			<point x="-3.731" y="269.851" z="-251.456" r="100"/>
+			<point x="-7.702" y="255.547" z="-482.701" r="100"/>
+			<point x="-197.217" y="173.253" z="-694.28" r="100"/>
+			<point x="-662.582" y="173.957" z="-697.707" r="100"/>
+			<point x="-761.652" y="180.482" z="-2.047" r="100"/>
+			<point x="533.864" y="127.973" z="71.436" r="100"/>
+			<point x="1402.05" y="-11.291" z="128.304" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="a" stage="1" tags="ship_xs scan">
+			<point x="-739.239" y="-1017.341" z="792.615" r="100"/>
+			<point x="-668.129" y="-1018.997" z="584.877" r="100"/>
+			<point x="-418.487" y="-1023.765" z="583.956" r="100"/>
+			<point x="-234.311" y="-1026.265" z="584.92" r="100"/>
+			<point x="-9.957" y="-1021.353" z="584.89" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="a" stage="1" tags="ship_xs hack">
+			<point x="-312.535" y="-482.208" z="523.542" r="100"/>
+			<point x="-145.291" y="-514.881" z="508.793" r="100"/>
+			<point x="31.854" y="-481.64" z="523.542" r="100"/>
+			<point x="233.312" y="-580.665" z="575.34" r="100"/>
+			<point x="230.823" y="-584.86" z="888.553" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="b" stage="1" tags="ship_xs scan">
+			<point x="3627.749" y="138.338" z="1826.16" r="100"/>
+			<point x="3110.029" y="138.338" z="1801.942" r="100"/>
+			<point x="2495.022" y="138.338" z="1802.137" r="100"/>
+			<point x="1723.753" y="166.309" z="2029.475" r="100"/>
+			<point x="1424.621" y="198.552" z="2103.26" r="100"/>
+			<point x="1223.661" y="198.552" z="2093.542" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="b" stage="1" tags="ship_xs hack">
+			<point x="803.686" y="217.389" z="2082.845" r="100"/>
+			<point x="987.256" y="193.699" z="2093.859" r="100"/>
+			<point x="1145.896" y="193.699" z="2094.158" r="100"/>
+			<point x="1328.681" y="197.209" z="2114.488" r="100"/>
+			<point x="2125.074" y="202.43" z="1926.724" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="c" stage="1" tags="ship_xs scan">
+			<point x="-3800.893" y="85.015" z="2.43" r="100"/>
+			<point x="-4370.401" y="71.021" z="-41.292" r="100"/>
+			<point x="-5039.644" y="85.135" z="-430.023" r="100"/>
+			<point x="-5676.541" y="105.106" z="-689.203" r="100"/>
+			<point x="-6261.775" y="107.515" z="-1028.113" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="c" stage="1" tags="ship_xs hack">
+			<point x="-6990.252" y="-117.519" z="-1206.683" r="100"/>
+			<point x="-6990.252" y="-115.193" z="-1429.182" r="100"/>
+			<point x="-7548.73" y="169.12" z="-1320.35" r="100"/>
+			<point x="-7807.263" y="171.104" z="-1325.187" r="100"/>
+			<point x="-8493.396" y="175.736" z="-1321.413" r="100"/>
+			<point x="-9371.031" y="56.82" z="-1324.135" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="d" stage="1" tags="ship_xs scan">
+			<point x="667.261" y="-738.994" z="-2511.379" r="100"/>
+			<point x="587.159" y="-734.122" z="-2712.518" r="100"/>
+			<point x="487.031" y="-774.833" z="-2919.117" r="100"/>
+			<point x="399.343" y="-722.489" z="-3153.273" r="100"/>
+			<point x="395.262" y="-723.301" z="-3545.308" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="d" stage="1" tags="ship_xs hack">
+			<point x="-391.581" y="-735.769" z="-3540.815" r="100"/>
+			<point x="-326.512" y="-872.367" z="-3511.779" r="100"/>
+			<point x="-365.536" y="-836.689" z="-3351.801" r="100"/>
+			<point x="-334.883" y="-869.007" z="-3129.969" r="100"/>
+			<point x="-391.356" y="-737.293" z="-3221.194" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="d" stage="2" tags="ship_xs scan">
+			<point x="242.563" y="-1977.787" z="-2798.945" r="100"/>
+			<point x="242.654" y="-1976.422" z="-2672.757" r="100"/>
+			<point x="-257.098" y="-1980.714" z="-2671.437" r="100"/>
+			<point x="-263.144" y="-1981.064" z="-2804.234" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="d" stage="2" tags="ship_xs hack">
+			<point x="-247.299" y="-1938.29" z="-2795.939" r="100"/>
+			<point x="-245.416" y="-1935.556" z="-2677.032" r="100"/>
+			<point x="230.28" y="-1935.556" z="-2674.798" r="100"/>
+			<point x="234.767" y="-1938.29" z="-2798.089" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="e" stage="1" tags="ship_xs scan">
+			<point x="1482.322" y="-249.191" z="388.572" r="100"/>
+			<point x="1478.58" y="-496.561" z="817.03" r="100"/>
+			<point x="1503.601" y="-791.721" z="1400.88" r="100"/>
+			<point x="2078.429" y="-878.593" z="1572.763" r="100"/>
+			<point x="2922.579" y="-880.56" z="1578.811" r="100"/>
+			<point x="3986.882" y="-884.286" z="1492.477" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="e" stage="1" tags="ship_xs hack">
+			<point x="1495.619" y="-1154.056" z="1497.578" r="100"/>
+			<point x="885.356" y="-1149.424" z="1493.461" r="100"/>
+			<point x="566.593" y="-1147.439" z="1489.065" r="100"/>
+			<point x="-56.698" y="-1269.329" z="1487.859" r="100"/>
+			<point x="-485.595" y="-1282.086" z="1498.29" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="e" stage="2" tags="ship_xs scan">
+			<point x="-1784.806" y="-1423.111" z="2161.707" r="100"/>
+			<point x="-1425.528" y="-1465.283" z="2105.187" r="100"/>
+			<point x="-1540.26" y="-1424.459" z="2584.199" r="100"/>
+			<point x="-1904.633" y="-1465.177" z="2585.617" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="e" stage="2" tags="ship_xs hack">
+			<point x="-1891.542" y="-1487.386" z="2235.293" r="100"/>
+			<point x="-1799.693" y="-1487.594" z="2143.407" r="100"/>
+			<point x="-1428.764" y="-1484.63" z="2508.553" r="100"/>
+			<point x="-1520.45" y="-1485.85" z="2602.696" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="f" stage="1" tags="ship_xs scan">
+			<point x="3623.226" y="256.023" z="-30.163" r="100"/>
+			<point x="3922.813" y="256.948" z="-34.888" r="100"/>
+			<point x="4255.644" y="256.948" z="-25.141" r="100"/>
+			<point x="4664.734" y="256.948" z="-32.922" r="100"/>
+			<point x="4942.549" y="256.023" z="-35.185" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="f" stage="1" tags="ship_xs hack">
+			<point x="6171.061" y="522.839" z="-74.37" r="100"/>
+			<point x="6293.707" y="522.891" z="-76.095" r="100"/>
+			<point x="6295.682" y="522.931" z="65.753" r="100"/>
+			<point x="6167.713" y="522.905" z="64.759" r="100"/>
+			<point x="6039.36" y="224.657" z="-114.04" r="100"/>
+			<point x="6043.122" y="224.673" z="106.923" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="f" stage="2" tags="ship_xs scan">
+			<point x="6605.286" y="-324.973" z="695.884" r="100"/>
+			<point x="6569.901" y="-335.242" z="1022.96" r="100"/>
+			<point x="6257.423" y="-333.375" z="1002.804" r="100"/>
+			<point x="6232.382" y="-335.68" z="712.065" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="f" stage="2" tags="ship_xs hack">
+			<point x="6246.689" y="-326.186" z="692.958" r="100"/>
+			<point x="6595.106" y="-333.838" z="684.159" r="100"/>
+			<point x="6617.418" y="-332.146" z="971.341" r="100"/>
+			<point x="6241.243" y="-332.972" z="984.004" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="g" stage="1" tags="ship_xs scan">
+			<point x="-657.448" y="779.173" z="1987.419" r="100"/>
+			<point x="-655.864" y="763.024" z="1390.63" r="100"/>
+			<point x="-169.051" y="768.447" z="1397.333" r="100"/>
+			<point x="653.562" y="777.521" z="1414.151" r="100"/>
+			<point x="632.705" y="784.057" z="1924.598" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="g" stage="1" tags="ship_xs hack">
+			<point x="799.486" y="505.241" z="2628.406" r="100"/>
+			<point x="656.699" y="328.929" z="2911.686" r="100"/>
+			<point x="231.013" y="258.091" z="2931.402" r="100"/>
+			<point x="-0.7581" y="298.921" z="2752.612" r="100"/>
+			<point x="-458.309" y="-447.814" z="2616.933" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="g" stage="2" tags="ship_xs scan">
+			<point x="1397.579" y="-281.286" z="2743.116" r="100"/>
+			<point x="1392.551" y="-301.365" z="2853.854" r="100"/>
+			<point x="1393.579" y="-301.364" z="3000.386" r="100"/>
+			<point x="1399.082" y="-286.17" z="3115.072" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="g" stage="2" tags="ship_xs hack">
+			<point x="1636.919" y="-302.367" z="2870.59" r="100"/>
+			<point x="1632.192" y="-304.089" z="2988.134" r="100"/>
+			<point x="1162.672" y="-302.367" z="2990.022" r="100"/>
+			<point x="1164.64" y="-302.367" z="2865.88" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="h" stage="1" tags="ship_xs scan">
+			<point x="2231.497" y="-603.409" z="-637.602" r="100"/>
+			<point x="2231.151" y="-603.409" z="-870.154" r="100"/>
+			<point x="2508.477" y="-603.784" z="-878.714" r="100"/>
+			<point x="2509.339" y="-604.517" z="-659.53" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="h" stage="1" tags="ship_xs hack">
+			<point x="2524.815" y="-603.409" z="-658.557" r="100"/>
+			<point x="2236.937" y="-603.409" z="-632.774" r="100"/>
+			<point x="2215.093" y="-603.409" z="-860.851" r="100"/>
+			<point x="2532.117" y="-603.409" z="-881.659" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="i" stage="1" tags="ship_xs scan">
+			<point x="-423.92" y="436.551" z="813.116" r="100"/>
+			<point x="-188.308" y="432.483" z="981.821" r="100"/>
+			<point x="113.687" y="436.155" z="938.351" r="100"/>
+			<point x="273.026" y="436.551" z="718.974" r="100"/>
+			<point x="198.339" y="436.551" z="338.625" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_pmc_macro" sequence="i" stage="1" tags="ship_xs hack">
+			<point x="59.479" y="463.085" z="485.052" r="100"/>
+			<point x="41.946" y="482.634" z="349.729" r="100"/>
+			<point x="-98.882" y="476.904" z="355.459" r="100"/>
+			<point x="-238.531" y="478.264" z="351.186" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" stage="0" tags="ship_xs hack">
+			<point x="1.782" y="-615.406" z="-1128.38" r="100" special="1" comment="shield good"/>
+			<point x="37.088" y="-610.5" z="-1256.47" r="100" comment="turret good"/>
+			<point x="-40.088" y="-611.896" z="-1257.54" r="100" comment="turret good"/>
+			<point x="39.958" y="-612.344" z="-1174.8" r="100" comment="turret good"/>
+			<point x="-32.176" y="-609.907" z="-1174.06" r="100" special="1" comment="turret good"/>
+			<point x="38.724" y="-612.283" z="-1087.29" r="100" comment="turret good"/>
+			<point x="-35.225" y="-610.936" z="-1082.9" r="100" comment="turret good"/>
+			<point x="-39.228" y="-612.097" z="-997.36" r="100" comment="turret good"/>
+			<point x="39.233" y="-611.328" z="-1001.47" r="100" special="1" comment="turret good"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" stage="0" tags="ship_xs scan">
+			<point x="1513.34" y="117.255" z="-61.741" r="100"/>
+			<point x="533.864" y="109.414" z="-44.871" r="100"/>
+			<point x="-3.731" y="269.851" z="-251.456" r="100"/>
+			<point x="-7.702" y="255.547" z="-482.701" r="100"/>
+			<point x="-197.217" y="173.253" z="-694.28" r="100"/>
+			<point x="-662.582" y="173.957" z="-697.707" r="100"/>
+			<point x="-761.652" y="180.482" z="-2.047" r="100"/>
+			<point x="533.864" y="127.973" z="71.436" r="100"/>
+			<point x="1402.05" y="-11.291" z="128.304" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="a" stage="1" tags="ship_xs scan">
+			<point x="-739.239" y="-1017.341" z="792.615" r="100"/>
+			<point x="-668.129" y="-1018.997" z="584.877" r="100"/>
+			<point x="-418.487" y="-1023.765" z="583.956" r="100"/>
+			<point x="-234.311" y="-1026.265" z="584.92" r="100"/>
+			<point x="-9.957" y="-1021.353" z="584.89" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="a" stage="1" tags="ship_xs hack">
+			<point x="-312.535" y="-482.208" z="523.542" r="100"/>
+			<point x="-145.291" y="-514.881" z="508.793" r="100"/>
+			<point x="31.854" y="-481.64" z="523.542" r="100"/>
+			<point x="233.312" y="-580.665" z="575.34" r="100"/>
+			<point x="230.823" y="-584.86" z="888.553" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="b" stage="1" tags="ship_xs scan">
+			<point x="3627.749" y="138.338" z="1826.16" r="100"/>
+			<point x="3110.029" y="138.338" z="1801.942" r="100"/>
+			<point x="2495.022" y="138.338" z="1802.137" r="100"/>
+			<point x="1723.753" y="166.309" z="2029.475" r="100"/>
+			<point x="1424.621" y="198.552" z="2103.26" r="100"/>
+			<point x="1223.661" y="198.552" z="2093.542" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="b" stage="1" tags="ship_xs hack">
+			<point x="803.686" y="217.389" z="2082.845" r="100"/>
+			<point x="987.256" y="193.699" z="2093.859" r="100"/>
+			<point x="1145.896" y="193.699" z="2094.158" r="100"/>
+			<point x="1328.681" y="197.209" z="2114.488" r="100"/>
+			<point x="2125.074" y="202.43" z="1926.724" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="c" stage="1" tags="ship_xs scan">
+			<point x="-3800.893" y="85.015" z="2.43" r="100"/>
+			<point x="-4370.401" y="71.021" z="-41.292" r="100"/>
+			<point x="-5039.644" y="85.135" z="-430.023" r="100"/>
+			<point x="-5676.541" y="105.106" z="-689.203" r="100"/>
+			<point x="-6261.775" y="107.515" z="-1028.113" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="c" stage="1" tags="ship_xs hack">
+			<point x="-6990.252" y="-117.519" z="-1206.683" r="100"/>
+			<point x="-6990.252" y="-115.193" z="-1429.182" r="100"/>
+			<point x="-7548.73" y="169.12" z="-1320.35" r="100"/>
+			<point x="-7807.263" y="171.104" z="-1325.187" r="100"/>
+			<point x="-8493.396" y="175.736" z="-1321.413" r="100"/>
+			<point x="-9371.031" y="56.82" z="-1324.135" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="d" stage="1" tags="ship_xs scan">
+			<point x="667.261" y="-738.994" z="-2511.379" r="100"/>
+			<point x="587.159" y="-734.122" z="-2712.518" r="100"/>
+			<point x="487.031" y="-774.833" z="-2919.117" r="100"/>
+			<point x="399.343" y="-722.489" z="-3153.273" r="100"/>
+			<point x="395.262" y="-723.301" z="-3545.308" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="d" stage="1" tags="ship_xs hack">
+			<point x="-391.581" y="-735.769" z="-3540.815" r="100"/>
+			<point x="-326.512" y="-872.367" z="-3511.779" r="100"/>
+			<point x="-365.536" y="-836.689" z="-3351.801" r="100"/>
+			<point x="-334.883" y="-869.007" z="-3129.969" r="100"/>
+			<point x="-391.356" y="-737.293" z="-3221.194" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="d" stage="2" tags="ship_xs scan">
+			<point x="242.563" y="-1977.787" z="-2798.945" r="100"/>
+			<point x="242.654" y="-1976.422" z="-2672.757" r="100"/>
+			<point x="-257.098" y="-1980.714" z="-2671.437" r="100"/>
+			<point x="-263.144" y="-1981.064" z="-2804.234" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="d" stage="2" tags="ship_xs hack">
+			<point x="-247.299" y="-1938.29" z="-2795.939" r="100"/>
+			<point x="-245.416" y="-1935.556" z="-2677.032" r="100"/>
+			<point x="230.28" y="-1935.556" z="-2674.798" r="100"/>
+			<point x="234.767" y="-1938.29" z="-2798.089" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="e" stage="1" tags="ship_xs scan">
+			<point x="1482.322" y="-249.191" z="388.572" r="100"/>
+			<point x="1478.58" y="-496.561" z="817.03" r="100"/>
+			<point x="1503.601" y="-791.721" z="1400.88" r="100"/>
+			<point x="2078.429" y="-878.593" z="1572.763" r="100"/>
+			<point x="2922.579" y="-880.56" z="1578.811" r="100"/>
+			<point x="3986.882" y="-884.286" z="1492.477" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="e" stage="1" tags="ship_xs hack">
+			<point x="1495.619" y="-1154.056" z="1497.578" r="100"/>
+			<point x="885.356" y="-1149.424" z="1493.461" r="100"/>
+			<point x="566.593" y="-1147.439" z="1489.065" r="100"/>
+			<point x="-56.698" y="-1269.329" z="1487.859" r="100"/>
+			<point x="-485.595" y="-1282.086" z="1498.29" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="e" stage="2" tags="ship_xs scan">
+			<point x="-1784.806" y="-1423.111" z="2161.707" r="100"/>
+			<point x="-1425.528" y="-1465.283" z="2105.187" r="100"/>
+			<point x="-1540.26" y="-1424.459" z="2584.199" r="100"/>
+			<point x="-1904.633" y="-1465.177" z="2585.617" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="e" stage="2" tags="ship_xs hack">
+			<point x="-1891.542" y="-1487.386" z="2235.293" r="100"/>
+			<point x="-1799.693" y="-1487.594" z="2143.407" r="100"/>
+			<point x="-1428.764" y="-1484.63" z="2508.553" r="100"/>
+			<point x="-1520.45" y="-1485.85" z="2602.696" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="f" stage="1" tags="ship_xs scan">
+			<point x="3623.226" y="256.023" z="-30.163" r="100"/>
+			<point x="3922.813" y="256.948" z="-34.888" r="100"/>
+			<point x="4255.644" y="256.948" z="-25.141" r="100"/>
+			<point x="4664.734" y="256.948" z="-32.922" r="100"/>
+			<point x="4942.549" y="256.023" z="-35.185" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="f" stage="1" tags="ship_xs hack">
+			<point x="6171.061" y="522.839" z="-74.37" r="100"/>
+			<point x="6293.707" y="522.891" z="-76.095" r="100"/>
+			<point x="6295.682" y="522.931" z="65.753" r="100"/>
+			<point x="6167.713" y="522.905" z="64.759" r="100"/>
+			<point x="6039.36" y="224.657" z="-114.04" r="100"/>
+			<point x="6043.122" y="224.673" z="106.923" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="f" stage="2" tags="ship_xs scan">
+			<point x="6605.286" y="-324.973" z="695.884" r="100"/>
+			<point x="6569.901" y="-335.242" z="1022.96" r="100"/>
+			<point x="6257.423" y="-333.375" z="1002.804" r="100"/>
+			<point x="6232.382" y="-335.68" z="712.065" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="f" stage="2" tags="ship_xs hack">
+			<point x="6246.689" y="-326.186" z="692.958" r="100"/>
+			<point x="6595.106" y="-333.838" z="684.159" r="100"/>
+			<point x="6617.418" y="-332.146" z="971.341" r="100"/>
+			<point x="6241.243" y="-332.972" z="984.004" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="g" stage="1" tags="ship_xs scan">
+			<point x="-657.448" y="779.173" z="1987.419" r="100"/>
+			<point x="-655.864" y="763.024" z="1390.63" r="100"/>
+			<point x="-169.051" y="768.447" z="1397.333" r="100"/>
+			<point x="653.562" y="777.521" z="1414.151" r="100"/>
+			<point x="632.705" y="784.057" z="1924.598" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="g" stage="1" tags="ship_xs hack">
+			<point x="799.486" y="505.241" z="2628.406" r="100"/>
+			<point x="656.699" y="328.929" z="2911.686" r="100"/>
+			<point x="231.013" y="258.091" z="2931.402" r="100"/>
+			<point x="-0.7581" y="298.921" z="2752.612" r="100"/>
+			<point x="-458.309" y="-447.814" z="2616.933" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="g" stage="2" tags="ship_xs scan">
+			<point x="1397.579" y="-281.286" z="2743.116" r="100"/>
+			<point x="1392.551" y="-301.365" z="2853.854" r="100"/>
+			<point x="1393.579" y="-301.364" z="3000.386" r="100"/>
+			<point x="1399.082" y="-286.17" z="3115.072" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="g" stage="2" tags="ship_xs hack">
+			<point x="1636.919" y="-302.367" z="2870.59" r="100"/>
+			<point x="1632.192" y="-304.089" z="2988.134" r="100"/>
+			<point x="1162.672" y="-302.367" z="2990.022" r="100"/>
+			<point x="1164.64" y="-302.367" z="2865.88" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="h" stage="1" tags="ship_xs scan">
+			<point x="2231.497" y="-603.409" z="-637.602" r="100"/>
+			<point x="2231.151" y="-603.409" z="-870.154" r="100"/>
+			<point x="2508.477" y="-603.784" z="-878.714" r="100"/>
+			<point x="2509.339" y="-604.517" z="-659.53" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="h" stage="1" tags="ship_xs hack">
+			<point x="2524.815" y="-603.409" z="-658.557" r="100"/>
+			<point x="2236.937" y="-603.409" z="-632.774" r="100"/>
+			<point x="2215.093" y="-603.409" z="-860.851" r="100"/>
+			<point x="2532.117" y="-603.409" z="-881.659" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="i" stage="1" tags="ship_xs scan">
+			<point x="-423.92" y="436.551" z="813.116" r="100"/>
+			<point x="-188.308" y="432.483" z="981.821" r="100"/>
+			<point x="113.687" y="436.155" z="938.351" r="100"/>
+			<point x="273.026" y="436.551" z="718.974" r="100"/>
+			<point x="198.339" y="436.551" z="338.625" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_small_ships_complex_hoa_macro" sequence="i" stage="1" tags="ship_xs hack">
+			<point x="59.479" y="463.085" z="485.052" r="100"/>
+			<point x="41.946" y="482.634" z="349.729" r="100"/>
+			<point x="-98.882" y="476.904" z="355.459" r="100"/>
+			<point x="-238.531" y="478.264" z="351.186" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" stage="0" tags="ship_xs hack">
+			<point x="1.782" y="-615.406" z="-1128.38" r="100" special="1" comment="shield good"/>
+			<point x="37.088" y="-610.5" z="-1256.47" r="100" comment="turret good"/>
+			<point x="-40.088" y="-611.896" z="-1257.54" r="100" comment="turret good"/>
+			<point x="39.958" y="-612.344" z="-1174.8" r="100" comment="turret good"/>
+			<point x="-32.176" y="-609.907" z="-1174.06" r="100" special="1" comment="turret good"/>
+			<point x="38.724" y="-612.283" z="-1087.29" r="100" comment="turret good"/>
+			<point x="-35.225" y="-610.936" z="-1082.9" r="100" comment="turret good"/>
+			<point x="-39.228" y="-612.097" z="-997.36" r="100" comment="turret good"/>
+			<point x="39.233" y="-611.328" z="-1001.47" r="100" special="1" comment="turret good"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" stage="0" tags="ship_xs scan">
+			<point x="1513.34" y="117.255" z="-61.741" r="100"/>
+			<point x="533.864" y="109.414" z="-44.871" r="100"/>
+			<point x="-3.731" y="269.851" z="-251.456" r="100"/>
+			<point x="-7.702" y="255.547" z="-482.701" r="100"/>
+			<point x="-197.217" y="173.253" z="-694.28" r="100"/>
+			<point x="-662.582" y="173.957" z="-697.707" r="100"/>
+			<point x="-761.652" y="180.482" z="-2.047" r="100"/>
+			<point x="533.864" y="127.973" z="71.436" r="100"/>
+			<point x="1402.05" y="-11.291" z="128.304" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="a" stage="1" tags="ship_xs scan">
+			<point x="-739.239" y="-1017.341" z="792.615" r="100"/>
+			<point x="-668.129" y="-1018.997" z="584.877" r="100"/>
+			<point x="-418.487" y="-1023.765" z="583.956" r="100"/>
+			<point x="-234.311" y="-1026.265" z="584.92" r="100"/>
+			<point x="-9.957" y="-1021.353" z="584.89" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="a" stage="1" tags="ship_xs hack">
+			<point x="-312.535" y="-482.208" z="523.542" r="100"/>
+			<point x="-145.291" y="-514.881" z="508.793" r="100"/>
+			<point x="31.854" y="-481.64" z="523.542" r="100"/>
+			<point x="233.312" y="-580.665" z="575.34" r="100"/>
+			<point x="230.823" y="-584.86" z="888.553" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="b" stage="1" tags="ship_xs scan">
+			<point x="3627.749" y="138.338" z="1826.16" r="100"/>
+			<point x="3110.029" y="138.338" z="1801.942" r="100"/>
+			<point x="2495.022" y="138.338" z="1802.137" r="100"/>
+			<point x="1723.753" y="166.309" z="2029.475" r="100"/>
+			<point x="1424.621" y="198.552" z="2103.26" r="100"/>
+			<point x="1223.661" y="198.552" z="2093.542" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="b" stage="1" tags="ship_xs hack">
+			<point x="803.686" y="217.389" z="2082.845" r="100"/>
+			<point x="987.256" y="193.699" z="2093.859" r="100"/>
+			<point x="1145.896" y="193.699" z="2094.158" r="100"/>
+			<point x="1328.681" y="197.209" z="2114.488" r="100"/>
+			<point x="2125.074" y="202.43" z="1926.724" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="c" stage="1" tags="ship_xs scan">
+			<point x="-3800.893" y="85.015" z="2.43" r="100"/>
+			<point x="-4370.401" y="71.021" z="-41.292" r="100"/>
+			<point x="-5039.644" y="85.135" z="-430.023" r="100"/>
+			<point x="-5676.541" y="105.106" z="-689.203" r="100"/>
+			<point x="-6261.775" y="107.515" z="-1028.113" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="c" stage="1" tags="ship_xs hack">
+			<point x="-6990.252" y="-117.519" z="-1206.683" r="100"/>
+			<point x="-6990.252" y="-115.193" z="-1429.182" r="100"/>
+			<point x="-7548.73" y="169.12" z="-1320.35" r="100"/>
+			<point x="-7807.263" y="171.104" z="-1325.187" r="100"/>
+			<point x="-8493.396" y="175.736" z="-1321.413" r="100"/>
+			<point x="-9371.031" y="56.82" z="-1324.135" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="d" stage="1" tags="ship_xs scan">
+			<point x="667.261" y="-738.994" z="-2511.379" r="100"/>
+			<point x="587.159" y="-734.122" z="-2712.518" r="100"/>
+			<point x="487.031" y="-774.833" z="-2919.117" r="100"/>
+			<point x="399.343" y="-722.489" z="-3153.273" r="100"/>
+			<point x="395.262" y="-723.301" z="-3545.308" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="d" stage="1" tags="ship_xs hack">
+			<point x="-391.581" y="-735.769" z="-3540.815" r="100"/>
+			<point x="-326.512" y="-872.367" z="-3511.779" r="100"/>
+			<point x="-365.536" y="-836.689" z="-3351.801" r="100"/>
+			<point x="-334.883" y="-869.007" z="-3129.969" r="100"/>
+			<point x="-391.356" y="-737.293" z="-3221.194" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="d" stage="2" tags="ship_xs scan">
+			<point x="242.563" y="-1977.787" z="-2798.945" r="100"/>
+			<point x="242.654" y="-1976.422" z="-2672.757" r="100"/>
+			<point x="-257.098" y="-1980.714" z="-2671.437" r="100"/>
+			<point x="-263.144" y="-1981.064" z="-2804.234" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="d" stage="2" tags="ship_xs hack">
+			<point x="-247.299" y="-1938.29" z="-2795.939" r="100"/>
+			<point x="-245.416" y="-1935.556" z="-2677.032" r="100"/>
+			<point x="230.28" y="-1935.556" z="-2674.798" r="100"/>
+			<point x="234.767" y="-1938.29" z="-2798.089" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="e" stage="1" tags="ship_xs scan">
+			<point x="1482.322" y="-249.191" z="388.572" r="100"/>
+			<point x="1478.58" y="-496.561" z="817.03" r="100"/>
+			<point x="1503.601" y="-791.721" z="1400.88" r="100"/>
+			<point x="2078.429" y="-878.593" z="1572.763" r="100"/>
+			<point x="2922.579" y="-880.56" z="1578.811" r="100"/>
+			<point x="3986.882" y="-884.286" z="1492.477" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="e" stage="1" tags="ship_xs hack">
+			<point x="1495.619" y="-1154.056" z="1497.578" r="100"/>
+			<point x="885.356" y="-1149.424" z="1493.461" r="100"/>
+			<point x="566.593" y="-1147.439" z="1489.065" r="100"/>
+			<point x="-56.698" y="-1269.329" z="1487.859" r="100"/>
+			<point x="-485.595" y="-1282.086" z="1498.29" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="e" stage="2" tags="ship_xs scan">
+			<point x="-1784.806" y="-1423.111" z="2161.707" r="100"/>
+			<point x="-1425.528" y="-1465.283" z="2105.187" r="100"/>
+			<point x="-1540.26" y="-1424.459" z="2584.199" r="100"/>
+			<point x="-1904.633" y="-1465.177" z="2585.617" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="e" stage="2" tags="ship_xs hack">
+			<point x="-1891.542" y="-1487.386" z="2235.293" r="100"/>
+			<point x="-1799.693" y="-1487.594" z="2143.407" r="100"/>
+			<point x="-1428.764" y="-1484.63" z="2508.553" r="100"/>
+			<point x="-1520.45" y="-1485.85" z="2602.696" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="f" stage="1" tags="ship_xs scan">
+			<point x="3623.226" y="256.023" z="-30.163" r="100"/>
+			<point x="3922.813" y="256.948" z="-34.888" r="100"/>
+			<point x="4255.644" y="256.948" z="-25.141" r="100"/>
+			<point x="4664.734" y="256.948" z="-32.922" r="100"/>
+			<point x="4942.549" y="256.023" z="-35.185" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="f" stage="1" tags="ship_xs hack">
+			<point x="6171.061" y="522.839" z="-74.37" r="100"/>
+			<point x="6293.707" y="522.891" z="-76.095" r="100"/>
+			<point x="6295.682" y="522.931" z="65.753" r="100"/>
+			<point x="6167.713" y="522.905" z="64.759" r="100"/>
+			<point x="6039.36" y="224.657" z="-114.04" r="100"/>
+			<point x="6043.122" y="224.673" z="106.923" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="f" stage="2" tags="ship_xs scan">
+			<point x="6605.286" y="-324.973" z="695.884" r="100"/>
+			<point x="6569.901" y="-335.242" z="1022.96" r="100"/>
+			<point x="6257.423" y="-333.375" z="1002.804" r="100"/>
+			<point x="6232.382" y="-335.68" z="712.065" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="f" stage="2" tags="ship_xs hack">
+			<point x="6246.689" y="-326.186" z="692.958" r="100"/>
+			<point x="6595.106" y="-333.838" z="684.159" r="100"/>
+			<point x="6617.418" y="-332.146" z="971.341" r="100"/>
+			<point x="6241.243" y="-332.972" z="984.004" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="g" stage="1" tags="ship_xs scan">
+			<point x="-657.448" y="779.173" z="1987.419" r="100"/>
+			<point x="-655.864" y="763.024" z="1390.63" r="100"/>
+			<point x="-169.051" y="768.447" z="1397.333" r="100"/>
+			<point x="653.562" y="777.521" z="1414.151" r="100"/>
+			<point x="632.705" y="784.057" z="1924.598" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="g" stage="1" tags="ship_xs hack">
+			<point x="799.486" y="505.241" z="2628.406" r="100"/>
+			<point x="656.699" y="328.929" z="2911.686" r="100"/>
+			<point x="231.013" y="258.091" z="2931.402" r="100"/>
+			<point x="-0.7581" y="298.921" z="2752.612" r="100"/>
+			<point x="-458.309" y="-447.814" z="2616.933" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="g" stage="2" tags="ship_xs scan">
+			<point x="1397.579" y="-281.286" z="2743.116" r="100"/>
+			<point x="1392.551" y="-301.365" z="2853.854" r="100"/>
+			<point x="1393.579" y="-301.364" z="3000.386" r="100"/>
+			<point x="1399.082" y="-286.17" z="3115.072" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="g" stage="2" tags="ship_xs hack">
+			<point x="1636.919" y="-302.367" z="2870.59" r="100"/>
+			<point x="1632.192" y="-304.089" z="2988.134" r="100"/>
+			<point x="1162.672" y="-302.367" z="2990.022" r="100"/>
+			<point x="1164.64" y="-302.367" z="2865.88" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="h" stage="1" tags="ship_xs scan">
+			<point x="2231.497" y="-603.409" z="-637.602" r="100"/>
+			<point x="2231.151" y="-603.409" z="-870.154" r="100"/>
+			<point x="2508.477" y="-603.784" z="-878.714" r="100"/>
+			<point x="2509.339" y="-604.517" z="-659.53" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="h" stage="1" tags="ship_xs hack">
+			<point x="2524.815" y="-603.409" z="-658.557" r="100"/>
+			<point x="2236.937" y="-603.409" z="-632.774" r="100"/>
+			<point x="2215.093" y="-603.409" z="-860.851" r="100"/>
+			<point x="2532.117" y="-603.409" z="-881.659" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="i" stage="1" tags="ship_xs scan">
+			<point x="-423.92" y="436.551" z="813.116" r="100"/>
+			<point x="-188.308" y="432.483" z="981.821" r="100"/>
+			<point x="113.687" y="436.155" z="938.351" r="100"/>
+			<point x="273.026" y="436.551" z="718.974" r="100"/>
+			<point x="198.339" y="436.551" z="338.625" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_dv_small_ships_complex_macro" sequence="i" stage="1" tags="ship_xs hack">
+			<point x="59.479" y="463.085" z="485.052" r="100"/>
+			<point x="41.946" y="482.634" z="349.729" r="100"/>
+			<point x="-98.882" y="476.904" z="355.459" r="100"/>
+			<point x="-238.531" y="478.264" z="351.186" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" stage="0" tags="ship_xs hack">
+			<point x="1.782" y="-615.406" z="-1128.38" r="100" special="1" comment="shield good"/>
+			<point x="37.088" y="-610.5" z="-1256.47" r="100" comment="turret good"/>
+			<point x="-40.088" y="-611.896" z="-1257.54" r="100" comment="turret good"/>
+			<point x="39.958" y="-612.344" z="-1174.8" r="100" comment="turret good"/>
+			<point x="-32.176" y="-609.907" z="-1174.06" r="100" special="1" comment="turret good"/>
+			<point x="38.724" y="-612.283" z="-1087.29" r="100" comment="turret good"/>
+			<point x="-35.225" y="-610.936" z="-1082.9" r="100" comment="turret good"/>
+			<point x="-39.228" y="-612.097" z="-997.36" r="100" comment="turret good"/>
+			<point x="39.233" y="-611.328" z="-1001.47" r="100" special="1" comment="turret good"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" stage="0" tags="ship_xs scan">
+			<point x="1513.34" y="117.255" z="-61.741" r="100"/>
+			<point x="533.864" y="109.414" z="-44.871" r="100"/>
+			<point x="-3.731" y="269.851" z="-251.456" r="100"/>
+			<point x="-7.702" y="255.547" z="-482.701" r="100"/>
+			<point x="-197.217" y="173.253" z="-694.28" r="100"/>
+			<point x="-662.582" y="173.957" z="-697.707" r="100"/>
+			<point x="-761.652" y="180.482" z="-2.047" r="100"/>
+			<point x="533.864" y="127.973" z="71.436" r="100"/>
+			<point x="1402.05" y="-11.291" z="128.304" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="a" stage="1" tags="ship_xs scan">
+			<point x="-739.239" y="-1017.341" z="792.615" r="100"/>
+			<point x="-668.129" y="-1018.997" z="584.877" r="100"/>
+			<point x="-418.487" y="-1023.765" z="583.956" r="100"/>
+			<point x="-234.311" y="-1026.265" z="584.92" r="100"/>
+			<point x="-9.957" y="-1021.353" z="584.89" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="a" stage="1" tags="ship_xs hack">
+			<point x="-312.535" y="-482.208" z="523.542" r="100"/>
+			<point x="-145.291" y="-514.881" z="508.793" r="100"/>
+			<point x="31.854" y="-481.64" z="523.542" r="100"/>
+			<point x="233.312" y="-580.665" z="575.34" r="100"/>
+			<point x="230.823" y="-584.86" z="888.553" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="b" stage="1" tags="ship_xs scan">
+			<point x="3627.749" y="138.338" z="1826.16" r="100"/>
+			<point x="3110.029" y="138.338" z="1801.942" r="100"/>
+			<point x="2495.022" y="138.338" z="1802.137" r="100"/>
+			<point x="1723.753" y="166.309" z="2029.475" r="100"/>
+			<point x="1424.621" y="198.552" z="2103.26" r="100"/>
+			<point x="1223.661" y="198.552" z="2093.542" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="b" stage="1" tags="ship_xs hack">
+			<point x="803.686" y="217.389" z="2082.845" r="100"/>
+			<point x="987.256" y="193.699" z="2093.859" r="100"/>
+			<point x="1145.896" y="193.699" z="2094.158" r="100"/>
+			<point x="1328.681" y="197.209" z="2114.488" r="100"/>
+			<point x="2125.074" y="202.43" z="1926.724" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="c" stage="1" tags="ship_xs scan">
+			<point x="-3800.893" y="85.015" z="2.43" r="100"/>
+			<point x="-4370.401" y="71.021" z="-41.292" r="100"/>
+			<point x="-5039.644" y="85.135" z="-430.023" r="100"/>
+			<point x="-5676.541" y="105.106" z="-689.203" r="100"/>
+			<point x="-6261.775" y="107.515" z="-1028.113" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="c" stage="1" tags="ship_xs hack">
+			<point x="-6990.252" y="-117.519" z="-1206.683" r="100"/>
+			<point x="-6990.252" y="-115.193" z="-1429.182" r="100"/>
+			<point x="-7548.73" y="169.12" z="-1320.35" r="100"/>
+			<point x="-7807.263" y="171.104" z="-1325.187" r="100"/>
+			<point x="-8493.396" y="175.736" z="-1321.413" r="100"/>
+			<point x="-9371.031" y="56.82" z="-1324.135" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="d" stage="1" tags="ship_xs scan">
+			<point x="667.261" y="-738.994" z="-2511.379" r="100"/>
+			<point x="587.159" y="-734.122" z="-2712.518" r="100"/>
+			<point x="487.031" y="-774.833" z="-2919.117" r="100"/>
+			<point x="399.343" y="-722.489" z="-3153.273" r="100"/>
+			<point x="395.262" y="-723.301" z="-3545.308" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="d" stage="1" tags="ship_xs hack">
+			<point x="-391.581" y="-735.769" z="-3540.815" r="100"/>
+			<point x="-326.512" y="-872.367" z="-3511.779" r="100"/>
+			<point x="-365.536" y="-836.689" z="-3351.801" r="100"/>
+			<point x="-334.883" y="-869.007" z="-3129.969" r="100"/>
+			<point x="-391.356" y="-737.293" z="-3221.194" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="d" stage="2" tags="ship_xs scan">
+			<point x="242.563" y="-1977.787" z="-2798.945" r="100"/>
+			<point x="242.654" y="-1976.422" z="-2672.757" r="100"/>
+			<point x="-257.098" y="-1980.714" z="-2671.437" r="100"/>
+			<point x="-263.144" y="-1981.064" z="-2804.234" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="d" stage="2" tags="ship_xs hack">
+			<point x="-247.299" y="-1938.29" z="-2795.939" r="100"/>
+			<point x="-245.416" y="-1935.556" z="-2677.032" r="100"/>
+			<point x="230.28" y="-1935.556" z="-2674.798" r="100"/>
+			<point x="234.767" y="-1938.29" z="-2798.089" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="e" stage="1" tags="ship_xs scan">
+			<point x="1482.322" y="-249.191" z="388.572" r="100"/>
+			<point x="1478.58" y="-496.561" z="817.03" r="100"/>
+			<point x="1503.601" y="-791.721" z="1400.88" r="100"/>
+			<point x="2078.429" y="-878.593" z="1572.763" r="100"/>
+			<point x="2922.579" y="-880.56" z="1578.811" r="100"/>
+			<point x="3986.882" y="-884.286" z="1492.477" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="e" stage="1" tags="ship_xs hack">
+			<point x="1495.619" y="-1154.056" z="1497.578" r="100"/>
+			<point x="885.356" y="-1149.424" z="1493.461" r="100"/>
+			<point x="566.593" y="-1147.439" z="1489.065" r="100"/>
+			<point x="-56.698" y="-1269.329" z="1487.859" r="100"/>
+			<point x="-485.595" y="-1282.086" z="1498.29" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="e" stage="2" tags="ship_xs scan">
+			<point x="-1784.806" y="-1423.111" z="2161.707" r="100"/>
+			<point x="-1425.528" y="-1465.283" z="2105.187" r="100"/>
+			<point x="-1540.26" y="-1424.459" z="2584.199" r="100"/>
+			<point x="-1904.633" y="-1465.177" z="2585.617" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="e" stage="2" tags="ship_xs hack">
+			<point x="-1891.542" y="-1487.386" z="2235.293" r="100"/>
+			<point x="-1799.693" y="-1487.594" z="2143.407" r="100"/>
+			<point x="-1428.764" y="-1484.63" z="2508.553" r="100"/>
+			<point x="-1520.45" y="-1485.85" z="2602.696" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="f" stage="1" tags="ship_xs scan">
+			<point x="3623.226" y="256.023" z="-30.163" r="100"/>
+			<point x="3922.813" y="256.948" z="-34.888" r="100"/>
+			<point x="4255.644" y="256.948" z="-25.141" r="100"/>
+			<point x="4664.734" y="256.948" z="-32.922" r="100"/>
+			<point x="4942.549" y="256.023" z="-35.185" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="f" stage="1" tags="ship_xs hack">
+			<point x="6171.061" y="522.839" z="-74.37" r="100"/>
+			<point x="6293.707" y="522.891" z="-76.095" r="100"/>
+			<point x="6295.682" y="522.931" z="65.753" r="100"/>
+			<point x="6167.713" y="522.905" z="64.759" r="100"/>
+			<point x="6039.36" y="224.657" z="-114.04" r="100"/>
+			<point x="6043.122" y="224.673" z="106.923" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="f" stage="2" tags="ship_xs scan">
+			<point x="6605.286" y="-324.973" z="695.884" r="100"/>
+			<point x="6569.901" y="-335.242" z="1022.96" r="100"/>
+			<point x="6257.423" y="-333.375" z="1002.804" r="100"/>
+			<point x="6232.382" y="-335.68" z="712.065" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="f" stage="2" tags="ship_xs hack">
+			<point x="6246.689" y="-326.186" z="692.958" r="100"/>
+			<point x="6595.106" y="-333.838" z="684.159" r="100"/>
+			<point x="6617.418" y="-332.146" z="971.341" r="100"/>
+			<point x="6241.243" y="-332.972" z="984.004" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="g" stage="1" tags="ship_xs scan">
+			<point x="-657.448" y="779.173" z="1987.419" r="100"/>
+			<point x="-655.864" y="763.024" z="1390.63" r="100"/>
+			<point x="-169.051" y="768.447" z="1397.333" r="100"/>
+			<point x="653.562" y="777.521" z="1414.151" r="100"/>
+			<point x="632.705" y="784.057" z="1924.598" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="g" stage="1" tags="ship_xs hack">
+			<point x="799.486" y="505.241" z="2628.406" r="100"/>
+			<point x="656.699" y="328.929" z="2911.686" r="100"/>
+			<point x="231.013" y="258.091" z="2931.402" r="100"/>
+			<point x="-0.7581" y="298.921" z="2752.612" r="100"/>
+			<point x="-458.309" y="-447.814" z="2616.933" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="g" stage="2" tags="ship_xs scan">
+			<point x="1397.579" y="-281.286" z="2743.116" r="100"/>
+			<point x="1392.551" y="-301.365" z="2853.854" r="100"/>
+			<point x="1393.579" y="-301.364" z="3000.386" r="100"/>
+			<point x="1399.082" y="-286.17" z="3115.072" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="g" stage="2" tags="ship_xs hack">
+			<point x="1636.919" y="-302.367" z="2870.59" r="100"/>
+			<point x="1632.192" y="-304.089" z="2988.134" r="100"/>
+			<point x="1162.672" y="-302.367" z="2990.022" r="100"/>
+			<point x="1164.64" y="-302.367" z="2865.88" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="h" stage="1" tags="ship_xs scan">
+			<point x="2231.497" y="-603.409" z="-637.602" r="100"/>
+			<point x="2231.151" y="-603.409" z="-870.154" r="100"/>
+			<point x="2508.477" y="-603.784" z="-878.714" r="100"/>
+			<point x="2509.339" y="-604.517" z="-659.53" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="h" stage="1" tags="ship_xs hack">
+			<point x="2524.815" y="-603.409" z="-658.557" r="100"/>
+			<point x="2236.937" y="-603.409" z="-632.774" r="100"/>
+			<point x="2215.093" y="-603.409" z="-860.851" r="100"/>
+			<point x="2532.117" y="-603.409" z="-881.659" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="i" stage="1" tags="ship_xs scan">
+			<point x="-423.92" y="436.551" z="813.116" r="100"/>
+			<point x="-188.308" y="432.483" z="981.821" r="100"/>
+			<point x="113.687" y="436.155" z="938.351" r="100"/>
+			<point x="273.026" y="436.551" z="718.974" r="100"/>
+			<point x="198.339" y="436.551" z="338.625" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_small_ships_complex_macro" sequence="i" stage="1" tags="ship_xs hack">
+			<point x="59.479" y="463.085" z="485.052" r="100"/>
+			<point x="41.946" y="482.634" z="349.729" r="100"/>
+			<point x="-98.882" y="476.904" z="355.459" r="100"/>
+			<point x="-238.531" y="478.264" z="351.186" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" stage="0" tags="ship_xs hack">
+			<point x="1478.35" y="-46.258" z="-3344.57" r="100" comment="surface test"/>
+			<point x="83.569" y="-26.518" z="-1296.55" r="100" comment="surface test"/>
+			<point x="-163.946" y="122.534" z="-719.787" r="100" comment="surface test"/>
+			<point x="-305.491" y="69.702" z="-393.626" r="100" comment="surface test"/>
+			<point x="-589.655" y="95.603" z="-400.284" r="100" comment="surface test"/>
+			<point x="-196.022" y="223.968" z="-10.146" r="100" special="1" comment="surface test"/>
+			<point x="174.695" y="-173.724" z="120.938" r="100" comment="surface test"/>
+			<point x="258.87" y="-43.051" z="-1975.85" r="100" comment="surface test"/>
+			<point x="218.265" y="-82.269" z="-4020.88" r="100" special="1" comment="surface test"/>
+			<point x="150.152" y="1282.68" z="-127.539" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" stage="0" tags="ship_xs scan">
+			<point x="-120.576" y="89.259" z="44.147" r="100"/>
+			<point x="217.233" y="8.65" z="106.522" r="100"/>
+			<point x="-21.492" y="97.151" z="-292.018" r="100"/>
+			<point x="246.77" y="52.683" z="-689.518" r="100"/>
+			<point x="246.77" y="-62.179" z="-689.518" r="100"/>
+			<point x="224.039" y="-11.995" z="-1114.45" r="100"/>
+			<point x="309.627" y="85.156" z="-2154.01" r="100"/>
+			<point x="1340" y="-211.068" z="-2153.3" r="100"/>
+			<point x="1340" y="-211.068" z="-2552.23" r="100"/>
+			<point x="1340" y="-211.068" z="-2956.02" r="100"/>
+			<point x="1340" y="-211.068" z="-3355.05" r="100"/>
+			<point x="-120.576" y="89.259" z="44.147" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="a" stage="1" tags="ship_xs hack">
+			<point x="-717.093" y="-281.009" z="-3399.82" r="100" comment="surface test"/>
+			<point x="-631.197" y="-363.179" z="-2931.98" r="100" special="1" comment="surface test"/>
+			<point x="-2503.08" y="-784.552" z="-507.928" r="100" special="1" comment="shield test"/>
+			<point x="-2576.89" y="-775.877" z="-461.024" r="100" comment="turret test"/>
+			<point x="-2557.28" y="-775.809" z="-474.704" r="100" comment="turret test"/>
+			<point x="-2536.08" y="-768.208" z="-405.007" r="100" comment="turret test"/>
+			<point x="-2470.74" y="-769.388" z="-443.075" r="100" comment="turret test"/>
+			<point x="-2420.69" y="-769.496" z="-477.968" r="100" comment="turret test"/>
+			<point x="-2459.61" y="-776.505" z="-527.888" r="100" comment="turret test"/>
+			<point x="-2436.33" y="-776.599" z="-543.168" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="a" stage="1" tags="ship_xs scan">
+			<point x="-717.093" y="-281.009" z="-3399.82" r="100" comment="surface test"/>
+			<point x="-631.197" y="-363.179" z="-2931.98" r="100" comment="surface test"/>
+			<point x="-1787.88" y="-694.1" z="-4825.1" r="100" comment="surface test"/>
+			<point x="-1825.37" y="-729.677" z="-3311.59" r="100" comment="surface test"/>
+			<point x="-1821.5" y="-732.097" z="-2690.49" r="100" comment="surface test"/>
+			<point x="-1791.3" y="-692.046" z="-1027.65" r="100" comment="surface test"/>
+			<point x="-1978.31" y="-951.752" z="-127.122" r="100" comment="surface test"/>
+			<point x="-2092.54" y="-2491.62" z="-206.398" r="100" comment="surface test"/>
+			<point x="-2401.84" y="-765.002" z="-351.187" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="a" stage="2" tags="ship_xs hack">
+			<point x="-2340.62" y="-944.599" z="-4225.18" r="100" comment="shield test"/>
+			<point x="-2446.09" y="-873.116" z="-4219.96" r="100" comment="shield test"/>
+			<point x="-2228.73" y="-872.983" z="-4224.82" r="100" special="1" comment="shield test"/>
+			<point x="-2291.13" y="-872.974" z="-4052.31" r="100" comment="turret test"/>
+			<point x="-2386.31" y="-872.959" z="-4049.91" r="100" comment="turret test"/>
+			<point x="-2385.2" y="-872.973" z="-4402.01" r="100" comment="turret test"/>
+			<point x="-2288.34" y="-872.991" z="-4395.35" r="100" comment="turret test"/>
+			<point x="-2294.1" y="-930.318" z="-4393.88" r="100" comment="turret test"/>
+			<point x="-2390.62" y="-930.27" z="-4395" r="100" special="1" comment="turret test"/>
+			<point x="-2488.95" y="-926.317" z="-4220.74" r="100" comment="turret test"/>
+			<point x="-2298.39" y="-928.402" z="-4050.6" r="100" comment="turret test"/>
+			<point x="-2393.64" y="-928.122" z="-4044.12" r="100" comment="turret test"/>
+			<point x="-2200.17" y="-923.063" z="-4217.49" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="a" stage="2" tags="ship_xs scan">
+			<point x="-2340.62" y="-944.599" z="-4225.18" r="100" comment="shield test"/>
+			<point x="-2446.09" y="-873.116" z="-4219.96" r="100" comment="shield test"/>
+			<point x="-2228.73" y="-872.983" z="-4224.82" r="100" comment="shield test"/>
+			<point x="-2291.13" y="-872.974" z="-4052.31" r="100" comment="turret test"/>
+			<point x="-2386.31" y="-872.959" z="-4049.91" r="100" comment="turret test"/>
+			<point x="-2385.2" y="-872.973" z="-4402.01" r="100" comment="turret test"/>
+			<point x="-2288.34" y="-872.991" z="-4395.35" r="100" comment="turret test"/>
+			<point x="-2294.1" y="-930.318" z="-4393.88" r="100" comment="turret test"/>
+			<point x="-2390.62" y="-930.27" z="-4395" r="100" comment="turret test"/>
+			<point x="-2488.95" y="-926.317" z="-4220.74" r="100" comment="turret test"/>
+			<point x="-2298.39" y="-928.402" z="-4050.6" r="100" comment="turret test"/>
+			<point x="-2393.64" y="-928.122" z="-4044.12" r="100" comment="turret test"/>
+			<point x="-2200.17" y="-923.063" z="-4217.49" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="b" stage="1" tags="ship_xs hack">
+			<point x="-5263.91" y="25.177" z="-2323.11" r="100" comment="surface test"/>
+			<point x="-5255.57" y="23.663" z="-1687.74" r="100" special="1" comment="surface test"/>
+			<point x="-5367.05" y="190.051" z="-890.069" r="100" comment="surface test"/>
+			<point x="-5416.81" y="153.079" z="-269.214" r="100" comment="shield test"/>
+			<point x="-5500.77" y="149.988" z="-247.166" r="100" comment="turret test"/>
+			<point x="-5595.8" y="119.773" z="-173.573" r="100" comment="turret test"/>
+			<point x="-5588.32" y="118.506" z="-208.827" r="100" comment="turret test"/>
+			<point x="-5332.92" y="166.417" z="373.437" r="100" special="1" comment="shield test"/>
+			<point x="-5264.39" y="159.422" z="330.498" r="100" comment="turret test"/>
+			<point x="-5264.58" y="160.821" z="453.105" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="b" stage="1" tags="ship_xs scan">
+			<point x="-5263.91" y="25.177" z="-2323.11" r="100" comment="surface test"/>
+			<point x="-5255.57" y="23.663" z="-1687.74" r="100" comment="surface test"/>
+			<point x="-5367.05" y="190.051" z="-890.069" r="100" comment="surface test"/>
+			<point x="-5416.81" y="153.079" z="-269.214" r="100" comment="shield test"/>
+			<point x="-5500.77" y="149.988" z="-247.166" r="100" comment="turret test"/>
+			<point x="-5595.8" y="119.773" z="-173.573" r="100" comment="turret test"/>
+			<point x="-5588.32" y="118.506" z="-208.827" r="100" comment="turret test"/>
+			<point x="-5332.92" y="166.417" z="373.437" r="100" comment="shield test"/>
+			<point x="-5264.39" y="159.422" z="330.498" r="100" comment="turret test"/>
+			<point x="-5264.58" y="160.821" z="453.105" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="b" stage="2" tags="ship_xs hack">
+			<point x="-1445.94" y="-429.747" z="5710.88" r="100" comment="shield test"/>
+			<point x="-1335.89" y="-360.58" z="5704.32" r="100" comment="shield test"/>
+			<point x="-1551.27" y="-358.388" z="5711.27" r="100" special="1" comment="shield test"/>
+			<point x="-1396.69" y="-361.194" z="5885.24" r="100" comment="turret test"/>
+			<point x="-1491.29" y="-361.687" z="5884.36" r="100" comment="turret test"/>
+			<point x="-1494.06" y="-361.002" z="5540.31" r="100" comment="turret test"/>
+			<point x="-1398.14" y="-359.51" z="5538.56" r="100" special="1" comment="turret test"/>
+			<point x="-1398.52" y="-418.277" z="5543.99" r="100" comment="turret test"/>
+			<point x="-1491.41" y="-415.994" z="5541.82" r="100" comment="turret test"/>
+			<point x="-1590.21" y="-412.38" z="5716.41" r="100" comment="turret test"/>
+			<point x="-1496.89" y="-418.174" z="5889.97" r="100" comment="turret test"/>
+			<point x="-1399.16" y="-418.183" z="5889.9" r="100" comment="turret test"/>
+			<point x="-1304.49" y="-410.935" z="5720.38" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="b" stage="2" tags="ship_xs scan">
+			<point x="-1445.94" y="-429.747" z="5710.88" r="100" comment="shield test"/>
+			<point x="-1335.89" y="-360.58" z="5704.32" r="100" comment="shield test"/>
+			<point x="-1551.27" y="-358.388" z="5711.27" r="100" comment="shield test"/>
+			<point x="-1396.69" y="-361.194" z="5885.24" r="100" comment="turret test"/>
+			<point x="-1491.29" y="-361.687" z="5884.36" r="100" comment="turret test"/>
+			<point x="-1494.06" y="-361.002" z="5540.31" r="100" comment="turret test"/>
+			<point x="-1398.14" y="-359.51" z="5538.56" r="100" comment="turret test"/>
+			<point x="-1398.52" y="-418.277" z="5543.99" r="100" comment="turret test"/>
+			<point x="-1491.41" y="-415.994" z="5541.82" r="100" comment="turret test"/>
+			<point x="-1590.21" y="-412.38" z="5716.41" r="100" comment="turret test"/>
+			<point x="-1496.89" y="-418.174" z="5889.97" r="100" comment="turret test"/>
+			<point x="-1399.16" y="-418.183" z="5889.9" r="100" comment="turret test"/>
+			<point x="-1304.49" y="-410.935" z="5720.38" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="c" stage="1" tags="ship_xs hack">
+			<point x="-30.234" y="-322.706" z="-824.021" r="100" comment="shield test"/>
+			<point x="53.306" y="-313.968" z="-912.211" r="100" special="1" comment="turret test"/>
+			<point x="4.493" y="-315.234" z="-876.801" r="100" comment="turret test"/>
+			<point x="-88.996" y="-311.336" z="-805.742" r="100" comment="turret test"/>
+			<point x="-149.287" y="-313.86" z="-797.361" r="100" comment="turret test"/>
+			<point x="37.792" y="-154.717" z="-848.488" r="100" comment="turret test"/>
+			<point x="-2.864" y="-153.516" z="-831.756" r="100" comment="turret test"/>
+			<point x="-30.667" y="-153.629" z="-805.358" r="100" special="1" comment="turret test"/>
+			<point x="-55.566" y="-154.607" z="-788.899" r="100" comment="turret test"/>
+			<point x="-91.389" y="-151.952" z="-774.409" r="100" comment="turret test"/>
+			<point x="-124.594" y="-154.54" z="-752.972" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="c" stage="1" tags="ship_xs scan">
+			<point x="-30.234" y="-322.706" z="-824.021" r="100" comment="shield test"/>
+			<point x="53.306" y="-313.968" z="-912.211" r="100" comment="turret test"/>
+			<point x="4.493" y="-315.234" z="-876.801" r="100" comment="turret test"/>
+			<point x="-88.996" y="-311.336" z="-805.742" r="100" comment="turret test"/>
+			<point x="-149.287" y="-313.86" z="-797.361" r="100" comment="turret test"/>
+			<point x="37.792" y="-154.717" z="-848.488" r="100" comment="turret test"/>
+			<point x="-2.864" y="-153.516" z="-831.756" r="100" comment="turret test"/>
+			<point x="-30.667" y="-153.629" z="-805.358" r="100" comment="turret test"/>
+			<point x="-55.566" y="-154.607" z="-788.899" r="100" comment="turret test"/>
+			<point x="-91.389" y="-151.952" z="-774.409" r="100" comment="turret test"/>
+			<point x="-124.594" y="-154.54" z="-752.972" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="c" stage="2" tags="ship_xs hack">
+			<point x="281.3" y="-560.857" z="-660.518" r="100" comment="shield test"/>
+			<point x="253.862" y="-552.758" z="-716.803" r="100" special="1" comment="turret test"/>
+			<point x="244.169" y="-554.201" z="-774.328" r="100" comment="turret test"/>
+			<point x="268.784" y="-556.023" z="-594.825" r="100" comment="turret test"/>
+			<point x="242.018" y="-553.005" z="-536.878" r="100" special="1" comment="turret test"/>
+			<point x="323.114" y="-425.553" z="-704.244" r="100" comment="surface test"/>
+			<point x="388.854" y="-434.604" z="-1235.17" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="c" stage="2" tags="ship_xs scan">
+			<point x="281.3" y="-560.857" z="-660.518" r="100" comment="shield test"/>
+			<point x="253.862" y="-552.758" z="-716.803" r="100" comment="turret test"/>
+			<point x="244.169" y="-554.201" z="-774.328" r="100" comment="turret test"/>
+			<point x="268.784" y="-556.023" z="-594.825" r="100" comment="turret test"/>
+			<point x="242.018" y="-553.005" z="-536.878" r="100" comment="turret test"/>
+			<point x="323.114" y="-425.553" z="-704.244" r="100" comment="surface test"/>
+			<point x="388.854" y="-434.604" z="-1235.17" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="c" stage="3" tags="ship_xs scan">
+			<point x="325.189" y="-738.87" z="-874.856" r="100"/>
+			<point x="272.702" y="-635.784" z="-644.363" r="100"/>
+			<point x="76.09" y="-726.717" z="-453.962" r="100"/>
+			<point x="255.198" y="-790.634" z="-654.636" r="100"/>
+			<point x="194.855" y="-771.319" z="-1257.056" r="100"/>
+			<point x="270.324" y="-622.491" z="-1140.188" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="c" stage="3" tags="ship_xs hack">
+			<point x="76.085" y="-649.051" z="-840.24" r="100"/>
+			<point x="273.113" y="-802.755" z="-658.419" r="100"/>
+			<point x="263.792" y="-715.456" z="-413.544" r="100"/>
+			<point x="266.365" y="-627.664" z="-647.688" r="100"/>
+			<point x="343.153" y="-738.977" z="-812.617" r="100"/>
+			<point x="267.076" y="-624.275" z="-1119.54" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="d" stage="1" tags="ship_xs hack">
+			<point x="2069.06" y="-45.107" z="-3134.73" r="100" comment="shield test"/>
+			<point x="2141.16" y="25.888" z="-3060.01" r="100" comment="shield test"/>
+			<point x="1991.44" y="30.237" z="-3215.83" r="100" special="1" comment="shield test"/>
+			<point x="1980.71" y="25.097" z="-2979.92" r="100" comment="turret test"/>
+			<point x="1910.2" y="26.09" z="-3044.07" r="100" comment="turret test"/>
+			<point x="2217.99" y="22.708" z="-3226.7" r="100" comment="turret test"/>
+			<point x="2150.85" y="24.123" z="-3291.79" r="100" comment="turret test"/>
+			<point x="1912.67" y="-32.11" z="-3046.22" r="100" comment="turret test"/>
+			<point x="1977.66" y="-32.382" z="-2976.14" r="100" comment="turret test"/>
+			<point x="2164.64" y="-27.408" z="-3026.52" r="100" special="1" comment="turret test"/>
+			<point x="1970.66" y="-31.472" z="-3226.54" r="100" comment="turret test"/>
+			<point x="2221.59" y="-32.576" z="-3221.48" r="100" comment="turret test"/>
+			<point x="2154.13" y="-32.644" z="-3289.09" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="d" stage="1" tags="ship_xs scan">
+			<point x="2069.06" y="-45.107" z="-3134.73" r="100" comment="shield test"/>
+			<point x="2141.16" y="25.888" z="-3060.01" r="100" comment="shield test"/>
+			<point x="1991.44" y="30.237" z="-3215.83" r="100" comment="shield test"/>
+			<point x="1980.71" y="25.097" z="-2979.92" r="100" comment="turret test"/>
+			<point x="1910.2" y="26.09" z="-3044.07" r="100" comment="turret test"/>
+			<point x="2217.99" y="22.708" z="-3226.7" r="100" comment="turret test"/>
+			<point x="2150.85" y="24.123" z="-3291.79" r="100" comment="turret test"/>
+			<point x="1912.67" y="-32.11" z="-3046.22" r="100" comment="turret test"/>
+			<point x="1977.66" y="-32.382" z="-2976.14" r="100" comment="turret test"/>
+			<point x="2164.64" y="-27.408" z="-3026.52" r="100" comment="turret test"/>
+			<point x="1970.66" y="-31.472" z="-3226.54" r="100" comment="turret test"/>
+			<point x="2221.59" y="-32.576" z="-3221.48" r="100" comment="turret test"/>
+			<point x="2154.13" y="-32.644" z="-3289.09" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="e" stage="1" tags="ship_xs hack">
+			<point x="2882.37" y="211.717" z="-833.755" r="100" comment="shield test"/>
+			<point x="2890.74" y="218.277" z="-873.628" r="100" comment="turret test"/>
+			<point x="2831.09" y="220.208" z="-828.667" r="100" special="1" comment="turret test"/>
+			<point x="2833.97" y="220.37" z="-863.708" r="100" comment="turret test"/>
+			<point x="2849.7" y="388.001" z="-566.366" r="100" comment="shield test"/>
+			<point x="2790.59" y="374.207" z="-553.448" r="100" comment="turret test"/>
+			<point x="2871.98" y="745.26" z="-587.799" r="100" special="1" comment="radar dish test"/>
+			<point x="2034.78" y="-14.525" z="-604.047" r="100" comment="surface test"/>
+			<point x="1625.73" y="-20.526" z="-604.638" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_2_macro" sequence="e" stage="1" tags="ship_xs scan">
+			<point x="2882.37" y="211.717" z="-833.755" r="100" comment="shield test"/>
+			<point x="2890.74" y="218.277" z="-873.628" r="100" comment="turret test"/>
+			<point x="2831.09" y="220.208" z="-828.667" r="100" comment="turret test"/>
+			<point x="2833.97" y="220.37" z="-863.708" r="100" comment="turret test"/>
+			<point x="2849.7" y="388.001" z="-566.366" r="100" comment="shield test"/>
+			<point x="2790.59" y="374.207" z="-553.448" r="100" comment="turret test"/>
+			<point x="2871.98" y="745.26" z="-587.799" r="100" comment="radar dish test"/>
+			<point x="2034.78" y="-14.525" z="-604.047" r="100" comment="surface test"/>
+			<point x="1625.73" y="-20.526" z="-604.638" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" stage="0" tags="ship_xs hack">
+			<point x="1478.35" y="-46.258" z="-3344.57" r="100" comment="surface test"/>
+			<point x="83.569" y="-26.518" z="-1296.55" r="100" comment="surface test"/>
+			<point x="-163.946" y="122.534" z="-719.787" r="100" comment="surface test"/>
+			<point x="-305.491" y="69.702" z="-393.626" r="100" comment="surface test"/>
+			<point x="-589.655" y="95.603" z="-400.284" r="100" comment="surface test"/>
+			<point x="-196.022" y="223.968" z="-10.146" r="100" special="1" comment="surface test"/>
+			<point x="174.695" y="-173.724" z="120.938" r="100" comment="surface test"/>
+			<point x="258.87" y="-43.051" z="-1975.85" r="100" comment="surface test"/>
+			<point x="218.265" y="-82.269" z="-4020.88" r="100" special="1" comment="surface test"/>
+			<point x="150.152" y="1282.68" z="-127.539" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" stage="0" tags="ship_xs scan">
+			<point x="-120.576" y="89.259" z="44.147" r="100"/>
+			<point x="217.233" y="8.65" z="106.522" r="100"/>
+			<point x="-21.492" y="97.151" z="-292.018" r="100"/>
+			<point x="246.77" y="52.683" z="-689.518" r="100"/>
+			<point x="246.77" y="-62.179" z="-689.518" r="100"/>
+			<point x="224.039" y="-11.995" z="-1114.45" r="100"/>
+			<point x="309.627" y="85.156" z="-2154.01" r="100"/>
+			<point x="1340" y="-211.068" z="-2153.3" r="100"/>
+			<point x="1340" y="-211.068" z="-2552.23" r="100"/>
+			<point x="1340" y="-211.068" z="-2956.02" r="100"/>
+			<point x="1340" y="-211.068" z="-3355.05" r="100"/>
+			<point x="-120.576" y="89.259" z="44.147" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="a" stage="1" tags="ship_xs hack">
+			<point x="-717.093" y="-281.009" z="-3399.82" r="100" comment="surface test"/>
+			<point x="-631.197" y="-363.179" z="-2931.98" r="100" special="1" comment="surface test"/>
+			<point x="-2503.08" y="-784.552" z="-507.928" r="100" special="1" comment="shield test"/>
+			<point x="-2576.89" y="-775.877" z="-461.024" r="100" comment="turret test"/>
+			<point x="-2557.28" y="-775.809" z="-474.704" r="100" comment="turret test"/>
+			<point x="-2536.08" y="-768.208" z="-405.007" r="100" comment="turret test"/>
+			<point x="-2470.74" y="-769.388" z="-443.075" r="100" comment="turret test"/>
+			<point x="-2420.69" y="-769.496" z="-477.968" r="100" comment="turret test"/>
+			<point x="-2459.61" y="-776.505" z="-527.888" r="100" comment="turret test"/>
+			<point x="-2436.33" y="-776.599" z="-543.168" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="a" stage="1" tags="ship_xs scan">
+			<point x="-717.093" y="-281.009" z="-3399.82" r="100" comment="surface test"/>
+			<point x="-631.197" y="-363.179" z="-2931.98" r="100" comment="surface test"/>
+			<point x="-1787.88" y="-694.1" z="-4825.1" r="100" comment="surface test"/>
+			<point x="-1825.37" y="-729.677" z="-3311.59" r="100" comment="surface test"/>
+			<point x="-1821.5" y="-732.097" z="-2690.49" r="100" comment="surface test"/>
+			<point x="-1791.3" y="-692.046" z="-1027.65" r="100" comment="surface test"/>
+			<point x="-1978.31" y="-951.752" z="-127.122" r="100" comment="surface test"/>
+			<point x="-2092.54" y="-2491.62" z="-206.398" r="100" comment="surface test"/>
+			<point x="-2401.84" y="-765.002" z="-351.187" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="a" stage="2" tags="ship_xs hack">
+			<point x="-2340.62" y="-944.599" z="-4225.18" r="100" comment="shield test"/>
+			<point x="-2446.09" y="-873.116" z="-4219.96" r="100" comment="shield test"/>
+			<point x="-2228.73" y="-872.983" z="-4224.82" r="100" special="1" comment="shield test"/>
+			<point x="-2291.13" y="-872.974" z="-4052.31" r="100" comment="turret test"/>
+			<point x="-2386.31" y="-872.959" z="-4049.91" r="100" comment="turret test"/>
+			<point x="-2385.2" y="-872.973" z="-4402.01" r="100" comment="turret test"/>
+			<point x="-2288.34" y="-872.991" z="-4395.35" r="100" comment="turret test"/>
+			<point x="-2294.1" y="-930.318" z="-4393.88" r="100" comment="turret test"/>
+			<point x="-2390.62" y="-930.27" z="-4395" r="100" special="1" comment="turret test"/>
+			<point x="-2488.95" y="-926.317" z="-4220.74" r="100" comment="turret test"/>
+			<point x="-2298.39" y="-928.402" z="-4050.6" r="100" comment="turret test"/>
+			<point x="-2393.64" y="-928.122" z="-4044.12" r="100" comment="turret test"/>
+			<point x="-2200.17" y="-923.063" z="-4217.49" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="a" stage="2" tags="ship_xs scan">
+			<point x="-2340.62" y="-944.599" z="-4225.18" r="100" comment="shield test"/>
+			<point x="-2446.09" y="-873.116" z="-4219.96" r="100" comment="shield test"/>
+			<point x="-2228.73" y="-872.983" z="-4224.82" r="100" comment="shield test"/>
+			<point x="-2291.13" y="-872.974" z="-4052.31" r="100" comment="turret test"/>
+			<point x="-2386.31" y="-872.959" z="-4049.91" r="100" comment="turret test"/>
+			<point x="-2385.2" y="-872.973" z="-4402.01" r="100" comment="turret test"/>
+			<point x="-2288.34" y="-872.991" z="-4395.35" r="100" comment="turret test"/>
+			<point x="-2294.1" y="-930.318" z="-4393.88" r="100" comment="turret test"/>
+			<point x="-2390.62" y="-930.27" z="-4395" r="100" comment="turret test"/>
+			<point x="-2488.95" y="-926.317" z="-4220.74" r="100" comment="turret test"/>
+			<point x="-2298.39" y="-928.402" z="-4050.6" r="100" comment="turret test"/>
+			<point x="-2393.64" y="-928.122" z="-4044.12" r="100" comment="turret test"/>
+			<point x="-2200.17" y="-923.063" z="-4217.49" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="b" stage="1" tags="ship_xs hack">
+			<point x="-5263.91" y="25.177" z="-2323.11" r="100" comment="surface test"/>
+			<point x="-5255.57" y="23.663" z="-1687.74" r="100" special="1" comment="surface test"/>
+			<point x="-5367.05" y="190.051" z="-890.069" r="100" comment="surface test"/>
+			<point x="-5416.81" y="153.079" z="-269.214" r="100" comment="shield test"/>
+			<point x="-5500.77" y="149.988" z="-247.166" r="100" comment="turret test"/>
+			<point x="-5595.8" y="119.773" z="-173.573" r="100" comment="turret test"/>
+			<point x="-5588.32" y="118.506" z="-208.827" r="100" comment="turret test"/>
+			<point x="-5332.92" y="166.417" z="373.437" r="100" special="1" comment="shield test"/>
+			<point x="-5264.39" y="159.422" z="330.498" r="100" comment="turret test"/>
+			<point x="-5264.58" y="160.821" z="453.105" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="b" stage="1" tags="ship_xs scan">
+			<point x="-5263.91" y="25.177" z="-2323.11" r="100" comment="surface test"/>
+			<point x="-5255.57" y="23.663" z="-1687.74" r="100" comment="surface test"/>
+			<point x="-5367.05" y="190.051" z="-890.069" r="100" comment="surface test"/>
+			<point x="-5416.81" y="153.079" z="-269.214" r="100" comment="shield test"/>
+			<point x="-5500.77" y="149.988" z="-247.166" r="100" comment="turret test"/>
+			<point x="-5595.8" y="119.773" z="-173.573" r="100" comment="turret test"/>
+			<point x="-5588.32" y="118.506" z="-208.827" r="100" comment="turret test"/>
+			<point x="-5332.92" y="166.417" z="373.437" r="100" comment="shield test"/>
+			<point x="-5264.39" y="159.422" z="330.498" r="100" comment="turret test"/>
+			<point x="-5264.58" y="160.821" z="453.105" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="b" stage="2" tags="ship_xs hack">
+			<point x="-1445.94" y="-429.747" z="5710.88" r="100" comment="shield test"/>
+			<point x="-1335.89" y="-360.58" z="5704.32" r="100" comment="shield test"/>
+			<point x="-1551.27" y="-358.388" z="5711.27" r="100" special="1" comment="shield test"/>
+			<point x="-1396.69" y="-361.194" z="5885.24" r="100" comment="turret test"/>
+			<point x="-1491.29" y="-361.687" z="5884.36" r="100" comment="turret test"/>
+			<point x="-1494.06" y="-361.002" z="5540.31" r="100" comment="turret test"/>
+			<point x="-1398.14" y="-359.51" z="5538.56" r="100" special="1" comment="turret test"/>
+			<point x="-1398.52" y="-418.277" z="5543.99" r="100" comment="turret test"/>
+			<point x="-1491.41" y="-415.994" z="5541.82" r="100" comment="turret test"/>
+			<point x="-1590.21" y="-412.38" z="5716.41" r="100" comment="turret test"/>
+			<point x="-1496.89" y="-418.174" z="5889.97" r="100" comment="turret test"/>
+			<point x="-1399.16" y="-418.183" z="5889.9" r="100" comment="turret test"/>
+			<point x="-1304.49" y="-410.935" z="5720.38" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="b" stage="2" tags="ship_xs scan">
+			<point x="-1445.94" y="-429.747" z="5710.88" r="100" comment="shield test"/>
+			<point x="-1335.89" y="-360.58" z="5704.32" r="100" comment="shield test"/>
+			<point x="-1551.27" y="-358.388" z="5711.27" r="100" comment="shield test"/>
+			<point x="-1396.69" y="-361.194" z="5885.24" r="100" comment="turret test"/>
+			<point x="-1491.29" y="-361.687" z="5884.36" r="100" comment="turret test"/>
+			<point x="-1494.06" y="-361.002" z="5540.31" r="100" comment="turret test"/>
+			<point x="-1398.14" y="-359.51" z="5538.56" r="100" comment="turret test"/>
+			<point x="-1398.52" y="-418.277" z="5543.99" r="100" comment="turret test"/>
+			<point x="-1491.41" y="-415.994" z="5541.82" r="100" comment="turret test"/>
+			<point x="-1590.21" y="-412.38" z="5716.41" r="100" comment="turret test"/>
+			<point x="-1496.89" y="-418.174" z="5889.97" r="100" comment="turret test"/>
+			<point x="-1399.16" y="-418.183" z="5889.9" r="100" comment="turret test"/>
+			<point x="-1304.49" y="-410.935" z="5720.38" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="c" stage="1" tags="ship_xs hack">
+			<point x="-30.234" y="-322.706" z="-824.021" r="100" comment="shield test"/>
+			<point x="53.306" y="-313.968" z="-912.211" r="100" special="1" comment="turret test"/>
+			<point x="4.493" y="-315.234" z="-876.801" r="100" comment="turret test"/>
+			<point x="-88.996" y="-311.336" z="-805.742" r="100" comment="turret test"/>
+			<point x="-149.287" y="-313.86" z="-797.361" r="100" comment="turret test"/>
+			<point x="37.792" y="-154.717" z="-848.488" r="100" comment="turret test"/>
+			<point x="-2.864" y="-153.516" z="-831.756" r="100" comment="turret test"/>
+			<point x="-30.667" y="-153.629" z="-805.358" r="100" special="1" comment="turret test"/>
+			<point x="-55.566" y="-154.607" z="-788.899" r="100" comment="turret test"/>
+			<point x="-91.389" y="-151.952" z="-774.409" r="100" comment="turret test"/>
+			<point x="-124.594" y="-154.54" z="-752.972" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="c" stage="1" tags="ship_xs scan">
+			<point x="-30.234" y="-322.706" z="-824.021" r="100" comment="shield test"/>
+			<point x="53.306" y="-313.968" z="-912.211" r="100" comment="turret test"/>
+			<point x="4.493" y="-315.234" z="-876.801" r="100" comment="turret test"/>
+			<point x="-88.996" y="-311.336" z="-805.742" r="100" comment="turret test"/>
+			<point x="-149.287" y="-313.86" z="-797.361" r="100" comment="turret test"/>
+			<point x="37.792" y="-154.717" z="-848.488" r="100" comment="turret test"/>
+			<point x="-2.864" y="-153.516" z="-831.756" r="100" comment="turret test"/>
+			<point x="-30.667" y="-153.629" z="-805.358" r="100" comment="turret test"/>
+			<point x="-55.566" y="-154.607" z="-788.899" r="100" comment="turret test"/>
+			<point x="-91.389" y="-151.952" z="-774.409" r="100" comment="turret test"/>
+			<point x="-124.594" y="-154.54" z="-752.972" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="c" stage="2" tags="ship_xs hack">
+			<point x="281.3" y="-560.857" z="-660.518" r="100" comment="shield test"/>
+			<point x="253.862" y="-552.758" z="-716.803" r="100" special="1" comment="turret test"/>
+			<point x="244.169" y="-554.201" z="-774.328" r="100" comment="turret test"/>
+			<point x="268.784" y="-556.023" z="-594.825" r="100" comment="turret test"/>
+			<point x="242.018" y="-553.005" z="-536.878" r="100" special="1" comment="turret test"/>
+			<point x="323.114" y="-425.553" z="-704.244" r="100" comment="surface test"/>
+			<point x="388.854" y="-434.604" z="-1235.17" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="c" stage="2" tags="ship_xs scan">
+			<point x="281.3" y="-560.857" z="-660.518" r="100" comment="shield test"/>
+			<point x="253.862" y="-552.758" z="-716.803" r="100" comment="turret test"/>
+			<point x="244.169" y="-554.201" z="-774.328" r="100" comment="turret test"/>
+			<point x="268.784" y="-556.023" z="-594.825" r="100" comment="turret test"/>
+			<point x="242.018" y="-553.005" z="-536.878" r="100" comment="turret test"/>
+			<point x="323.114" y="-425.553" z="-704.244" r="100" comment="surface test"/>
+			<point x="388.854" y="-434.604" z="-1235.17" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="c" stage="3" tags="ship_xs scan">
+			<point x="325.189" y="-738.87" z="-874.856" r="100"/>
+			<point x="272.702" y="-635.784" z="-644.363" r="100"/>
+			<point x="76.09" y="-726.717" z="-453.962" r="100"/>
+			<point x="255.198" y="-790.634" z="-654.636" r="100"/>
+			<point x="194.855" y="-771.319" z="-1257.056" r="100"/>
+			<point x="270.324" y="-622.491" z="-1140.188" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="c" stage="3" tags="ship_xs hack">
+			<point x="76.085" y="-649.051" z="-840.24" r="100"/>
+			<point x="273.113" y="-802.755" z="-658.419" r="100"/>
+			<point x="263.792" y="-715.456" z="-413.544" r="100"/>
+			<point x="266.365" y="-627.664" z="-647.688" r="100"/>
+			<point x="343.153" y="-738.977" z="-812.617" r="100"/>
+			<point x="267.076" y="-624.275" z="-1119.54" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="d" stage="1" tags="ship_xs hack">
+			<point x="2069.06" y="-45.107" z="-3134.73" r="100" comment="shield test"/>
+			<point x="2141.16" y="25.888" z="-3060.01" r="100" comment="shield test"/>
+			<point x="1991.44" y="30.237" z="-3215.83" r="100" special="1" comment="shield test"/>
+			<point x="1980.71" y="25.097" z="-2979.92" r="100" comment="turret test"/>
+			<point x="1910.2" y="26.09" z="-3044.07" r="100" comment="turret test"/>
+			<point x="2217.99" y="22.708" z="-3226.7" r="100" comment="turret test"/>
+			<point x="2150.85" y="24.123" z="-3291.79" r="100" comment="turret test"/>
+			<point x="1912.67" y="-32.11" z="-3046.22" r="100" comment="turret test"/>
+			<point x="1977.66" y="-32.382" z="-2976.14" r="100" comment="turret test"/>
+			<point x="2164.64" y="-27.408" z="-3026.52" r="100" special="1" comment="turret test"/>
+			<point x="1970.66" y="-31.472" z="-3226.54" r="100" comment="turret test"/>
+			<point x="2221.59" y="-32.576" z="-3221.48" r="100" comment="turret test"/>
+			<point x="2154.13" y="-32.644" z="-3289.09" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="d" stage="1" tags="ship_xs scan">
+			<point x="2069.06" y="-45.107" z="-3134.73" r="100" comment="shield test"/>
+			<point x="2141.16" y="25.888" z="-3060.01" r="100" comment="shield test"/>
+			<point x="1991.44" y="30.237" z="-3215.83" r="100" comment="shield test"/>
+			<point x="1980.71" y="25.097" z="-2979.92" r="100" comment="turret test"/>
+			<point x="1910.2" y="26.09" z="-3044.07" r="100" comment="turret test"/>
+			<point x="2217.99" y="22.708" z="-3226.7" r="100" comment="turret test"/>
+			<point x="2150.85" y="24.123" z="-3291.79" r="100" comment="turret test"/>
+			<point x="1912.67" y="-32.11" z="-3046.22" r="100" comment="turret test"/>
+			<point x="1977.66" y="-32.382" z="-2976.14" r="100" comment="turret test"/>
+			<point x="2164.64" y="-27.408" z="-3026.52" r="100" comment="turret test"/>
+			<point x="1970.66" y="-31.472" z="-3226.54" r="100" comment="turret test"/>
+			<point x="2221.59" y="-32.576" z="-3221.48" r="100" comment="turret test"/>
+			<point x="2154.13" y="-32.644" z="-3289.09" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="e" stage="1" tags="ship_xs hack">
+			<point x="2882.37" y="211.717" z="-833.755" r="100" comment="shield test"/>
+			<point x="2890.74" y="218.277" z="-873.628" r="100" comment="turret test"/>
+			<point x="2831.09" y="220.208" z="-828.667" r="100" special="1" comment="turret test"/>
+			<point x="2833.97" y="220.37" z="-863.708" r="100" comment="turret test"/>
+			<point x="2849.7" y="388.001" z="-566.366" r="100" comment="shield test"/>
+			<point x="2790.59" y="374.207" z="-553.448" r="100" comment="turret test"/>
+			<point x="2871.98" y="745.26" z="-587.799" r="100" special="1" comment="radar dish test"/>
+			<point x="2034.78" y="-14.525" z="-604.047" r="100" comment="surface test"/>
+			<point x="1625.73" y="-20.526" z="-604.638" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_alb_shipyard_3_macro" sequence="e" stage="1" tags="ship_xs scan">
+			<point x="2882.37" y="211.717" z="-833.755" r="100" comment="shield test"/>
+			<point x="2890.74" y="218.277" z="-873.628" r="100" comment="turret test"/>
+			<point x="2831.09" y="220.208" z="-828.667" r="100" comment="turret test"/>
+			<point x="2833.97" y="220.37" z="-863.708" r="100" comment="turret test"/>
+			<point x="2849.7" y="388.001" z="-566.366" r="100" comment="shield test"/>
+			<point x="2790.59" y="374.207" z="-553.448" r="100" comment="turret test"/>
+			<point x="2871.98" y="745.26" z="-587.799" r="100" comment="radar dish test"/>
+			<point x="2034.78" y="-14.525" z="-604.047" r="100" comment="surface test"/>
+			<point x="1625.73" y="-20.526" z="-604.638" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" stage="0" tags="ship_xs hack">
+			<point x="1478.35" y="-46.258" z="-3344.57" r="100" comment="surface test"/>
+			<point x="83.569" y="-26.518" z="-1296.55" r="100" comment="surface test"/>
+			<point x="-163.946" y="122.534" z="-719.787" r="100" comment="surface test"/>
+			<point x="-305.491" y="69.702" z="-393.626" r="100" comment="surface test"/>
+			<point x="-589.655" y="95.603" z="-400.284" r="100" comment="surface test"/>
+			<point x="-196.022" y="223.968" z="-10.146" r="100" special="1" comment="surface test"/>
+			<point x="174.695" y="-173.724" z="120.938" r="100" comment="surface test"/>
+			<point x="258.87" y="-43.051" z="-1975.85" r="100" comment="surface test"/>
+			<point x="218.265" y="-82.269" z="-4020.88" r="100" special="1" comment="surface test"/>
+			<point x="150.152" y="1282.68" z="-127.539" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" stage="0" tags="ship_xs scan">
+			<point x="-120.576" y="89.259" z="44.147" r="100"/>
+			<point x="217.233" y="8.65" z="106.522" r="100"/>
+			<point x="-21.492" y="97.151" z="-292.018" r="100"/>
+			<point x="246.77" y="52.683" z="-689.518" r="100"/>
+			<point x="246.77" y="-62.179" z="-689.518" r="100"/>
+			<point x="224.039" y="-11.995" z="-1114.45" r="100"/>
+			<point x="309.627" y="85.156" z="-2154.01" r="100"/>
+			<point x="1340" y="-211.068" z="-2153.3" r="100"/>
+			<point x="1340" y="-211.068" z="-2552.23" r="100"/>
+			<point x="1340" y="-211.068" z="-2956.02" r="100"/>
+			<point x="1340" y="-211.068" z="-3355.05" r="100"/>
+			<point x="-120.576" y="89.259" z="44.147" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="a" stage="1" tags="ship_xs hack">
+			<point x="-717.093" y="-281.009" z="-3399.82" r="100" comment="surface test"/>
+			<point x="-631.197" y="-363.179" z="-2931.98" r="100" special="1" comment="surface test"/>
+			<point x="-2503.08" y="-784.552" z="-507.928" r="100" special="1" comment="shield test"/>
+			<point x="-2576.89" y="-775.877" z="-461.024" r="100" comment="turret test"/>
+			<point x="-2557.28" y="-775.809" z="-474.704" r="100" comment="turret test"/>
+			<point x="-2536.08" y="-768.208" z="-405.007" r="100" comment="turret test"/>
+			<point x="-2470.74" y="-769.388" z="-443.075" r="100" comment="turret test"/>
+			<point x="-2420.69" y="-769.496" z="-477.968" r="100" comment="turret test"/>
+			<point x="-2459.61" y="-776.505" z="-527.888" r="100" comment="turret test"/>
+			<point x="-2436.33" y="-776.599" z="-543.168" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="a" stage="1" tags="ship_xs scan">
+			<point x="-717.093" y="-281.009" z="-3399.82" r="100" comment="surface test"/>
+			<point x="-631.197" y="-363.179" z="-2931.98" r="100" comment="surface test"/>
+			<point x="-1787.88" y="-694.1" z="-4825.1" r="100" comment="surface test"/>
+			<point x="-1825.37" y="-729.677" z="-3311.59" r="100" comment="surface test"/>
+			<point x="-1821.5" y="-732.097" z="-2690.49" r="100" comment="surface test"/>
+			<point x="-1791.3" y="-692.046" z="-1027.65" r="100" comment="surface test"/>
+			<point x="-1978.31" y="-951.752" z="-127.122" r="100" comment="surface test"/>
+			<point x="-2092.54" y="-2491.62" z="-206.398" r="100" comment="surface test"/>
+			<point x="-2401.84" y="-765.002" z="-351.187" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="a" stage="2" tags="ship_xs hack">
+			<point x="-2340.62" y="-944.599" z="-4225.18" r="100" comment="shield test"/>
+			<point x="-2446.09" y="-873.116" z="-4219.96" r="100" comment="shield test"/>
+			<point x="-2228.73" y="-872.983" z="-4224.82" r="100" special="1" comment="shield test"/>
+			<point x="-2291.13" y="-872.974" z="-4052.31" r="100" comment="turret test"/>
+			<point x="-2386.31" y="-872.959" z="-4049.91" r="100" comment="turret test"/>
+			<point x="-2385.2" y="-872.973" z="-4402.01" r="100" comment="turret test"/>
+			<point x="-2288.34" y="-872.991" z="-4395.35" r="100" comment="turret test"/>
+			<point x="-2294.1" y="-930.318" z="-4393.88" r="100" comment="turret test"/>
+			<point x="-2390.62" y="-930.27" z="-4395" r="100" special="1" comment="turret test"/>
+			<point x="-2488.95" y="-926.317" z="-4220.74" r="100" comment="turret test"/>
+			<point x="-2298.39" y="-928.402" z="-4050.6" r="100" comment="turret test"/>
+			<point x="-2393.64" y="-928.122" z="-4044.12" r="100" comment="turret test"/>
+			<point x="-2200.17" y="-923.063" z="-4217.49" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="a" stage="2" tags="ship_xs scan">
+			<point x="-2340.62" y="-944.599" z="-4225.18" r="100" comment="shield test"/>
+			<point x="-2446.09" y="-873.116" z="-4219.96" r="100" comment="shield test"/>
+			<point x="-2228.73" y="-872.983" z="-4224.82" r="100" comment="shield test"/>
+			<point x="-2291.13" y="-872.974" z="-4052.31" r="100" comment="turret test"/>
+			<point x="-2386.31" y="-872.959" z="-4049.91" r="100" comment="turret test"/>
+			<point x="-2385.2" y="-872.973" z="-4402.01" r="100" comment="turret test"/>
+			<point x="-2288.34" y="-872.991" z="-4395.35" r="100" comment="turret test"/>
+			<point x="-2294.1" y="-930.318" z="-4393.88" r="100" comment="turret test"/>
+			<point x="-2390.62" y="-930.27" z="-4395" r="100" comment="turret test"/>
+			<point x="-2488.95" y="-926.317" z="-4220.74" r="100" comment="turret test"/>
+			<point x="-2298.39" y="-928.402" z="-4050.6" r="100" comment="turret test"/>
+			<point x="-2393.64" y="-928.122" z="-4044.12" r="100" comment="turret test"/>
+			<point x="-2200.17" y="-923.063" z="-4217.49" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="b" stage="1" tags="ship_xs hack">
+			<point x="-5263.91" y="25.177" z="-2323.11" r="100" comment="surface test"/>
+			<point x="-5255.57" y="23.663" z="-1687.74" r="100" special="1" comment="surface test"/>
+			<point x="-5367.05" y="190.051" z="-890.069" r="100" comment="surface test"/>
+			<point x="-5416.81" y="153.079" z="-269.214" r="100" comment="shield test"/>
+			<point x="-5500.77" y="149.988" z="-247.166" r="100" comment="turret test"/>
+			<point x="-5595.8" y="119.773" z="-173.573" r="100" comment="turret test"/>
+			<point x="-5588.32" y="118.506" z="-208.827" r="100" comment="turret test"/>
+			<point x="-5332.92" y="166.417" z="373.437" r="100" special="1" comment="shield test"/>
+			<point x="-5264.39" y="159.422" z="330.498" r="100" comment="turret test"/>
+			<point x="-5264.58" y="160.821" z="453.105" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="b" stage="1" tags="ship_xs scan">
+			<point x="-5263.91" y="25.177" z="-2323.11" r="100" comment="surface test"/>
+			<point x="-5255.57" y="23.663" z="-1687.74" r="100" comment="surface test"/>
+			<point x="-5367.05" y="190.051" z="-890.069" r="100" comment="surface test"/>
+			<point x="-5416.81" y="153.079" z="-269.214" r="100" comment="shield test"/>
+			<point x="-5500.77" y="149.988" z="-247.166" r="100" comment="turret test"/>
+			<point x="-5595.8" y="119.773" z="-173.573" r="100" comment="turret test"/>
+			<point x="-5588.32" y="118.506" z="-208.827" r="100" comment="turret test"/>
+			<point x="-5332.92" y="166.417" z="373.437" r="100" comment="shield test"/>
+			<point x="-5264.39" y="159.422" z="330.498" r="100" comment="turret test"/>
+			<point x="-5264.58" y="160.821" z="453.105" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="b" stage="2" tags="ship_xs hack">
+			<point x="-1445.94" y="-429.747" z="5710.88" r="100" comment="shield test"/>
+			<point x="-1335.89" y="-360.58" z="5704.32" r="100" comment="shield test"/>
+			<point x="-1551.27" y="-358.388" z="5711.27" r="100" special="1" comment="shield test"/>
+			<point x="-1396.69" y="-361.194" z="5885.24" r="100" comment="turret test"/>
+			<point x="-1491.29" y="-361.687" z="5884.36" r="100" comment="turret test"/>
+			<point x="-1494.06" y="-361.002" z="5540.31" r="100" comment="turret test"/>
+			<point x="-1398.14" y="-359.51" z="5538.56" r="100" special="1" comment="turret test"/>
+			<point x="-1398.52" y="-418.277" z="5543.99" r="100" comment="turret test"/>
+			<point x="-1491.41" y="-415.994" z="5541.82" r="100" comment="turret test"/>
+			<point x="-1590.21" y="-412.38" z="5716.41" r="100" comment="turret test"/>
+			<point x="-1496.89" y="-418.174" z="5889.97" r="100" comment="turret test"/>
+			<point x="-1399.16" y="-418.183" z="5889.9" r="100" comment="turret test"/>
+			<point x="-1304.49" y="-410.935" z="5720.38" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="b" stage="2" tags="ship_xs scan">
+			<point x="-1445.94" y="-429.747" z="5710.88" r="100" comment="shield test"/>
+			<point x="-1335.89" y="-360.58" z="5704.32" r="100" comment="shield test"/>
+			<point x="-1551.27" y="-358.388" z="5711.27" r="100" comment="shield test"/>
+			<point x="-1396.69" y="-361.194" z="5885.24" r="100" comment="turret test"/>
+			<point x="-1491.29" y="-361.687" z="5884.36" r="100" comment="turret test"/>
+			<point x="-1494.06" y="-361.002" z="5540.31" r="100" comment="turret test"/>
+			<point x="-1398.14" y="-359.51" z="5538.56" r="100" comment="turret test"/>
+			<point x="-1398.52" y="-418.277" z="5543.99" r="100" comment="turret test"/>
+			<point x="-1491.41" y="-415.994" z="5541.82" r="100" comment="turret test"/>
+			<point x="-1590.21" y="-412.38" z="5716.41" r="100" comment="turret test"/>
+			<point x="-1496.89" y="-418.174" z="5889.97" r="100" comment="turret test"/>
+			<point x="-1399.16" y="-418.183" z="5889.9" r="100" comment="turret test"/>
+			<point x="-1304.49" y="-410.935" z="5720.38" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="c" stage="1" tags="ship_xs hack">
+			<point x="-30.234" y="-322.706" z="-824.021" r="100" comment="shield test"/>
+			<point x="53.306" y="-313.968" z="-912.211" r="100" special="1" comment="turret test"/>
+			<point x="4.493" y="-315.234" z="-876.801" r="100" comment="turret test"/>
+			<point x="-88.996" y="-311.336" z="-805.742" r="100" comment="turret test"/>
+			<point x="-149.287" y="-313.86" z="-797.361" r="100" comment="turret test"/>
+			<point x="37.792" y="-154.717" z="-848.488" r="100" comment="turret test"/>
+			<point x="-2.864" y="-153.516" z="-831.756" r="100" comment="turret test"/>
+			<point x="-30.667" y="-153.629" z="-805.358" r="100" special="1" comment="turret test"/>
+			<point x="-55.566" y="-154.607" z="-788.899" r="100" comment="turret test"/>
+			<point x="-91.389" y="-151.952" z="-774.409" r="100" comment="turret test"/>
+			<point x="-124.594" y="-154.54" z="-752.972" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="c" stage="1" tags="ship_xs scan">
+			<point x="-30.234" y="-322.706" z="-824.021" r="100" comment="shield test"/>
+			<point x="53.306" y="-313.968" z="-912.211" r="100" comment="turret test"/>
+			<point x="4.493" y="-315.234" z="-876.801" r="100" comment="turret test"/>
+			<point x="-88.996" y="-311.336" z="-805.742" r="100" comment="turret test"/>
+			<point x="-149.287" y="-313.86" z="-797.361" r="100" comment="turret test"/>
+			<point x="37.792" y="-154.717" z="-848.488" r="100" comment="turret test"/>
+			<point x="-2.864" y="-153.516" z="-831.756" r="100" comment="turret test"/>
+			<point x="-30.667" y="-153.629" z="-805.358" r="100" comment="turret test"/>
+			<point x="-55.566" y="-154.607" z="-788.899" r="100" comment="turret test"/>
+			<point x="-91.389" y="-151.952" z="-774.409" r="100" comment="turret test"/>
+			<point x="-124.594" y="-154.54" z="-752.972" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="c" stage="2" tags="ship_xs hack">
+			<point x="281.3" y="-560.857" z="-660.518" r="100" comment="shield test"/>
+			<point x="253.862" y="-552.758" z="-716.803" r="100" special="1" comment="turret test"/>
+			<point x="244.169" y="-554.201" z="-774.328" r="100" comment="turret test"/>
+			<point x="268.784" y="-556.023" z="-594.825" r="100" comment="turret test"/>
+			<point x="242.018" y="-553.005" z="-536.878" r="100" special="1" comment="turret test"/>
+			<point x="323.114" y="-425.553" z="-704.244" r="100" comment="surface test"/>
+			<point x="388.854" y="-434.604" z="-1235.17" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="c" stage="2" tags="ship_xs scan">
+			<point x="281.3" y="-560.857" z="-660.518" r="100" comment="shield test"/>
+			<point x="253.862" y="-552.758" z="-716.803" r="100" comment="turret test"/>
+			<point x="244.169" y="-554.201" z="-774.328" r="100" comment="turret test"/>
+			<point x="268.784" y="-556.023" z="-594.825" r="100" comment="turret test"/>
+			<point x="242.018" y="-553.005" z="-536.878" r="100" comment="turret test"/>
+			<point x="323.114" y="-425.553" z="-704.244" r="100" comment="surface test"/>
+			<point x="388.854" y="-434.604" z="-1235.17" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="c" stage="3" tags="ship_xs scan">
+			<point x="325.189" y="-738.87" z="-874.856" r="100"/>
+			<point x="272.702" y="-635.784" z="-644.363" r="100"/>
+			<point x="76.09" y="-726.717" z="-453.962" r="100"/>
+			<point x="255.198" y="-790.634" z="-654.636" r="100"/>
+			<point x="194.855" y="-771.319" z="-1257.056" r="100"/>
+			<point x="270.324" y="-622.491" z="-1140.188" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="c" stage="3" tags="ship_xs hack">
+			<point x="76.085" y="-649.051" z="-840.24" r="100"/>
+			<point x="273.113" y="-802.755" z="-658.419" r="100"/>
+			<point x="263.792" y="-715.456" z="-413.544" r="100"/>
+			<point x="266.365" y="-627.664" z="-647.688" r="100"/>
+			<point x="343.153" y="-738.977" z="-812.617" r="100"/>
+			<point x="267.076" y="-624.275" z="-1119.54" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="d" stage="1" tags="ship_xs hack">
+			<point x="2069.06" y="-45.107" z="-3134.73" r="100" comment="shield test"/>
+			<point x="2141.16" y="25.888" z="-3060.01" r="100" comment="shield test"/>
+			<point x="1991.44" y="30.237" z="-3215.83" r="100" special="1" comment="shield test"/>
+			<point x="1980.71" y="25.097" z="-2979.92" r="100" comment="turret test"/>
+			<point x="1910.2" y="26.09" z="-3044.07" r="100" comment="turret test"/>
+			<point x="2217.99" y="22.708" z="-3226.7" r="100" comment="turret test"/>
+			<point x="2150.85" y="24.123" z="-3291.79" r="100" comment="turret test"/>
+			<point x="1912.67" y="-32.11" z="-3046.22" r="100" comment="turret test"/>
+			<point x="1977.66" y="-32.382" z="-2976.14" r="100" comment="turret test"/>
+			<point x="2164.64" y="-27.408" z="-3026.52" r="100" special="1" comment="turret test"/>
+			<point x="1970.66" y="-31.472" z="-3226.54" r="100" comment="turret test"/>
+			<point x="2221.59" y="-32.576" z="-3221.48" r="100" comment="turret test"/>
+			<point x="2154.13" y="-32.644" z="-3289.09" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="d" stage="1" tags="ship_xs scan">
+			<point x="2069.06" y="-45.107" z="-3134.73" r="100" comment="shield test"/>
+			<point x="2141.16" y="25.888" z="-3060.01" r="100" comment="shield test"/>
+			<point x="1991.44" y="30.237" z="-3215.83" r="100" comment="shield test"/>
+			<point x="1980.71" y="25.097" z="-2979.92" r="100" comment="turret test"/>
+			<point x="1910.2" y="26.09" z="-3044.07" r="100" comment="turret test"/>
+			<point x="2217.99" y="22.708" z="-3226.7" r="100" comment="turret test"/>
+			<point x="2150.85" y="24.123" z="-3291.79" r="100" comment="turret test"/>
+			<point x="1912.67" y="-32.11" z="-3046.22" r="100" comment="turret test"/>
+			<point x="1977.66" y="-32.382" z="-2976.14" r="100" comment="turret test"/>
+			<point x="2164.64" y="-27.408" z="-3026.52" r="100" comment="turret test"/>
+			<point x="1970.66" y="-31.472" z="-3226.54" r="100" comment="turret test"/>
+			<point x="2221.59" y="-32.576" z="-3221.48" r="100" comment="turret test"/>
+			<point x="2154.13" y="-32.644" z="-3289.09" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="e" stage="1" tags="ship_xs hack">
+			<point x="2882.37" y="211.717" z="-833.755" r="100" comment="shield test"/>
+			<point x="2890.74" y="218.277" z="-873.628" r="100" comment="turret test"/>
+			<point x="2831.09" y="220.208" z="-828.667" r="100" special="1" comment="turret test"/>
+			<point x="2833.97" y="220.37" z="-863.708" r="100" comment="turret test"/>
+			<point x="2849.7" y="388.001" z="-566.366" r="100" comment="shield test"/>
+			<point x="2790.59" y="374.207" z="-553.448" r="100" comment="turret test"/>
+			<point x="2871.98" y="745.26" z="-587.799" r="100" special="1" comment="radar dish test"/>
+			<point x="2034.78" y="-14.525" z="-604.047" r="100" comment="surface test"/>
+			<point x="1625.73" y="-20.526" z="-604.638" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_2_macro" sequence="e" stage="1" tags="ship_xs scan">
+			<point x="2882.37" y="211.717" z="-833.755" r="100" comment="shield test"/>
+			<point x="2890.74" y="218.277" z="-873.628" r="100" comment="turret test"/>
+			<point x="2831.09" y="220.208" z="-828.667" r="100" comment="turret test"/>
+			<point x="2833.97" y="220.37" z="-863.708" r="100" comment="turret test"/>
+			<point x="2849.7" y="388.001" z="-566.366" r="100" comment="shield test"/>
+			<point x="2790.59" y="374.207" z="-553.448" r="100" comment="turret test"/>
+			<point x="2871.98" y="745.26" z="-587.799" r="100" comment="radar dish test"/>
+			<point x="2034.78" y="-14.525" z="-604.047" r="100" comment="surface test"/>
+			<point x="1625.73" y="-20.526" z="-604.638" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" stage="0" tags="ship_xs hack">
+			<point x="1478.35" y="-46.258" z="-3344.57" r="100" comment="surface test"/>
+			<point x="83.569" y="-26.518" z="-1296.55" r="100" comment="surface test"/>
+			<point x="-163.946" y="122.534" z="-719.787" r="100" comment="surface test"/>
+			<point x="-305.491" y="69.702" z="-393.626" r="100" comment="surface test"/>
+			<point x="-589.655" y="95.603" z="-400.284" r="100" comment="surface test"/>
+			<point x="-196.022" y="223.968" z="-10.146" r="100" special="1" comment="surface test"/>
+			<point x="174.695" y="-173.724" z="120.938" r="100" comment="surface test"/>
+			<point x="258.87" y="-43.051" z="-1975.85" r="100" comment="surface test"/>
+			<point x="218.265" y="-82.269" z="-4020.88" r="100" special="1" comment="surface test"/>
+			<point x="150.152" y="1282.68" z="-127.539" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" stage="0" tags="ship_xs scan">
+			<point x="-120.576" y="89.259" z="44.147" r="100"/>
+			<point x="217.233" y="8.65" z="106.522" r="100"/>
+			<point x="-21.492" y="97.151" z="-292.018" r="100"/>
+			<point x="246.77" y="52.683" z="-689.518" r="100"/>
+			<point x="246.77" y="-62.179" z="-689.518" r="100"/>
+			<point x="224.039" y="-11.995" z="-1114.45" r="100"/>
+			<point x="309.627" y="85.156" z="-2154.01" r="100"/>
+			<point x="1340" y="-211.068" z="-2153.3" r="100"/>
+			<point x="1340" y="-211.068" z="-2552.23" r="100"/>
+			<point x="1340" y="-211.068" z="-2956.02" r="100"/>
+			<point x="1340" y="-211.068" z="-3355.05" r="100"/>
+			<point x="-120.576" y="89.259" z="44.147" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="a" stage="1" tags="ship_xs hack">
+			<point x="-717.093" y="-281.009" z="-3399.82" r="100" comment="surface test"/>
+			<point x="-631.197" y="-363.179" z="-2931.98" r="100" special="1" comment="surface test"/>
+			<point x="-2503.08" y="-784.552" z="-507.928" r="100" special="1" comment="shield test"/>
+			<point x="-2576.89" y="-775.877" z="-461.024" r="100" comment="turret test"/>
+			<point x="-2557.28" y="-775.809" z="-474.704" r="100" comment="turret test"/>
+			<point x="-2536.08" y="-768.208" z="-405.007" r="100" comment="turret test"/>
+			<point x="-2470.74" y="-769.388" z="-443.075" r="100" comment="turret test"/>
+			<point x="-2420.69" y="-769.496" z="-477.968" r="100" comment="turret test"/>
+			<point x="-2459.61" y="-776.505" z="-527.888" r="100" comment="turret test"/>
+			<point x="-2436.33" y="-776.599" z="-543.168" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="a" stage="1" tags="ship_xs scan">
+			<point x="-717.093" y="-281.009" z="-3399.82" r="100" comment="surface test"/>
+			<point x="-631.197" y="-363.179" z="-2931.98" r="100" comment="surface test"/>
+			<point x="-1787.88" y="-694.1" z="-4825.1" r="100" comment="surface test"/>
+			<point x="-1825.37" y="-729.677" z="-3311.59" r="100" comment="surface test"/>
+			<point x="-1821.5" y="-732.097" z="-2690.49" r="100" comment="surface test"/>
+			<point x="-1791.3" y="-692.046" z="-1027.65" r="100" comment="surface test"/>
+			<point x="-1978.31" y="-951.752" z="-127.122" r="100" comment="surface test"/>
+			<point x="-2092.54" y="-2491.62" z="-206.398" r="100" comment="surface test"/>
+			<point x="-2401.84" y="-765.002" z="-351.187" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="a" stage="2" tags="ship_xs hack">
+			<point x="-2340.62" y="-944.599" z="-4225.18" r="100" comment="shield test"/>
+			<point x="-2446.09" y="-873.116" z="-4219.96" r="100" comment="shield test"/>
+			<point x="-2228.73" y="-872.983" z="-4224.82" r="100" special="1" comment="shield test"/>
+			<point x="-2291.13" y="-872.974" z="-4052.31" r="100" comment="turret test"/>
+			<point x="-2386.31" y="-872.959" z="-4049.91" r="100" comment="turret test"/>
+			<point x="-2385.2" y="-872.973" z="-4402.01" r="100" comment="turret test"/>
+			<point x="-2288.34" y="-872.991" z="-4395.35" r="100" comment="turret test"/>
+			<point x="-2294.1" y="-930.318" z="-4393.88" r="100" comment="turret test"/>
+			<point x="-2390.62" y="-930.27" z="-4395" r="100" special="1" comment="turret test"/>
+			<point x="-2488.95" y="-926.317" z="-4220.74" r="100" comment="turret test"/>
+			<point x="-2298.39" y="-928.402" z="-4050.6" r="100" comment="turret test"/>
+			<point x="-2393.64" y="-928.122" z="-4044.12" r="100" comment="turret test"/>
+			<point x="-2200.17" y="-923.063" z="-4217.49" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="a" stage="2" tags="ship_xs scan">
+			<point x="-2340.62" y="-944.599" z="-4225.18" r="100" comment="shield test"/>
+			<point x="-2446.09" y="-873.116" z="-4219.96" r="100" comment="shield test"/>
+			<point x="-2228.73" y="-872.983" z="-4224.82" r="100" comment="shield test"/>
+			<point x="-2291.13" y="-872.974" z="-4052.31" r="100" comment="turret test"/>
+			<point x="-2386.31" y="-872.959" z="-4049.91" r="100" comment="turret test"/>
+			<point x="-2385.2" y="-872.973" z="-4402.01" r="100" comment="turret test"/>
+			<point x="-2288.34" y="-872.991" z="-4395.35" r="100" comment="turret test"/>
+			<point x="-2294.1" y="-930.318" z="-4393.88" r="100" comment="turret test"/>
+			<point x="-2390.62" y="-930.27" z="-4395" r="100" comment="turret test"/>
+			<point x="-2488.95" y="-926.317" z="-4220.74" r="100" comment="turret test"/>
+			<point x="-2298.39" y="-928.402" z="-4050.6" r="100" comment="turret test"/>
+			<point x="-2393.64" y="-928.122" z="-4044.12" r="100" comment="turret test"/>
+			<point x="-2200.17" y="-923.063" z="-4217.49" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="b" stage="1" tags="ship_xs hack">
+			<point x="-5263.91" y="25.177" z="-2323.11" r="100" comment="surface test"/>
+			<point x="-5255.57" y="23.663" z="-1687.74" r="100" special="1" comment="surface test"/>
+			<point x="-5367.05" y="190.051" z="-890.069" r="100" comment="surface test"/>
+			<point x="-5416.81" y="153.079" z="-269.214" r="100" comment="shield test"/>
+			<point x="-5500.77" y="149.988" z="-247.166" r="100" comment="turret test"/>
+			<point x="-5595.8" y="119.773" z="-173.573" r="100" comment="turret test"/>
+			<point x="-5588.32" y="118.506" z="-208.827" r="100" comment="turret test"/>
+			<point x="-5332.92" y="166.417" z="373.437" r="100" special="1" comment="shield test"/>
+			<point x="-5264.39" y="159.422" z="330.498" r="100" comment="turret test"/>
+			<point x="-5264.58" y="160.821" z="453.105" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="b" stage="1" tags="ship_xs scan">
+			<point x="-5263.91" y="25.177" z="-2323.11" r="100" comment="surface test"/>
+			<point x="-5255.57" y="23.663" z="-1687.74" r="100" comment="surface test"/>
+			<point x="-5367.05" y="190.051" z="-890.069" r="100" comment="surface test"/>
+			<point x="-5416.81" y="153.079" z="-269.214" r="100" comment="shield test"/>
+			<point x="-5500.77" y="149.988" z="-247.166" r="100" comment="turret test"/>
+			<point x="-5595.8" y="119.773" z="-173.573" r="100" comment="turret test"/>
+			<point x="-5588.32" y="118.506" z="-208.827" r="100" comment="turret test"/>
+			<point x="-5332.92" y="166.417" z="373.437" r="100" comment="shield test"/>
+			<point x="-5264.39" y="159.422" z="330.498" r="100" comment="turret test"/>
+			<point x="-5264.58" y="160.821" z="453.105" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="b" stage="2" tags="ship_xs hack">
+			<point x="-1445.94" y="-429.747" z="5710.88" r="100" comment="shield test"/>
+			<point x="-1335.89" y="-360.58" z="5704.32" r="100" comment="shield test"/>
+			<point x="-1551.27" y="-358.388" z="5711.27" r="100" special="1" comment="shield test"/>
+			<point x="-1396.69" y="-361.194" z="5885.24" r="100" comment="turret test"/>
+			<point x="-1491.29" y="-361.687" z="5884.36" r="100" comment="turret test"/>
+			<point x="-1494.06" y="-361.002" z="5540.31" r="100" comment="turret test"/>
+			<point x="-1398.14" y="-359.51" z="5538.56" r="100" special="1" comment="turret test"/>
+			<point x="-1398.52" y="-418.277" z="5543.99" r="100" comment="turret test"/>
+			<point x="-1491.41" y="-415.994" z="5541.82" r="100" comment="turret test"/>
+			<point x="-1590.21" y="-412.38" z="5716.41" r="100" comment="turret test"/>
+			<point x="-1496.89" y="-418.174" z="5889.97" r="100" comment="turret test"/>
+			<point x="-1399.16" y="-418.183" z="5889.9" r="100" comment="turret test"/>
+			<point x="-1304.49" y="-410.935" z="5720.38" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="b" stage="2" tags="ship_xs scan">
+			<point x="-1445.94" y="-429.747" z="5710.88" r="100" comment="shield test"/>
+			<point x="-1335.89" y="-360.58" z="5704.32" r="100" comment="shield test"/>
+			<point x="-1551.27" y="-358.388" z="5711.27" r="100" comment="shield test"/>
+			<point x="-1396.69" y="-361.194" z="5885.24" r="100" comment="turret test"/>
+			<point x="-1491.29" y="-361.687" z="5884.36" r="100" comment="turret test"/>
+			<point x="-1494.06" y="-361.002" z="5540.31" r="100" comment="turret test"/>
+			<point x="-1398.14" y="-359.51" z="5538.56" r="100" comment="turret test"/>
+			<point x="-1398.52" y="-418.277" z="5543.99" r="100" comment="turret test"/>
+			<point x="-1491.41" y="-415.994" z="5541.82" r="100" comment="turret test"/>
+			<point x="-1590.21" y="-412.38" z="5716.41" r="100" comment="turret test"/>
+			<point x="-1496.89" y="-418.174" z="5889.97" r="100" comment="turret test"/>
+			<point x="-1399.16" y="-418.183" z="5889.9" r="100" comment="turret test"/>
+			<point x="-1304.49" y="-410.935" z="5720.38" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="c" stage="1" tags="ship_xs hack">
+			<point x="-30.234" y="-322.706" z="-824.021" r="100" comment="shield test"/>
+			<point x="53.306" y="-313.968" z="-912.211" r="100" special="1" comment="turret test"/>
+			<point x="4.493" y="-315.234" z="-876.801" r="100" comment="turret test"/>
+			<point x="-88.996" y="-311.336" z="-805.742" r="100" comment="turret test"/>
+			<point x="-149.287" y="-313.86" z="-797.361" r="100" comment="turret test"/>
+			<point x="37.792" y="-154.717" z="-848.488" r="100" comment="turret test"/>
+			<point x="-2.864" y="-153.516" z="-831.756" r="100" comment="turret test"/>
+			<point x="-30.667" y="-153.629" z="-805.358" r="100" special="1" comment="turret test"/>
+			<point x="-55.566" y="-154.607" z="-788.899" r="100" comment="turret test"/>
+			<point x="-91.389" y="-151.952" z="-774.409" r="100" comment="turret test"/>
+			<point x="-124.594" y="-154.54" z="-752.972" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="c" stage="1" tags="ship_xs scan">
+			<point x="-30.234" y="-322.706" z="-824.021" r="100" comment="shield test"/>
+			<point x="53.306" y="-313.968" z="-912.211" r="100" comment="turret test"/>
+			<point x="4.493" y="-315.234" z="-876.801" r="100" comment="turret test"/>
+			<point x="-88.996" y="-311.336" z="-805.742" r="100" comment="turret test"/>
+			<point x="-149.287" y="-313.86" z="-797.361" r="100" comment="turret test"/>
+			<point x="37.792" y="-154.717" z="-848.488" r="100" comment="turret test"/>
+			<point x="-2.864" y="-153.516" z="-831.756" r="100" comment="turret test"/>
+			<point x="-30.667" y="-153.629" z="-805.358" r="100" comment="turret test"/>
+			<point x="-55.566" y="-154.607" z="-788.899" r="100" comment="turret test"/>
+			<point x="-91.389" y="-151.952" z="-774.409" r="100" comment="turret test"/>
+			<point x="-124.594" y="-154.54" z="-752.972" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="c" stage="2" tags="ship_xs hack">
+			<point x="281.3" y="-560.857" z="-660.518" r="100" comment="shield test"/>
+			<point x="253.862" y="-552.758" z="-716.803" r="100" special="1" comment="turret test"/>
+			<point x="244.169" y="-554.201" z="-774.328" r="100" comment="turret test"/>
+			<point x="268.784" y="-556.023" z="-594.825" r="100" comment="turret test"/>
+			<point x="242.018" y="-553.005" z="-536.878" r="100" special="1" comment="turret test"/>
+			<point x="323.114" y="-425.553" z="-704.244" r="100" comment="surface test"/>
+			<point x="388.854" y="-434.604" z="-1235.17" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="c" stage="2" tags="ship_xs scan">
+			<point x="281.3" y="-560.857" z="-660.518" r="100" comment="shield test"/>
+			<point x="253.862" y="-552.758" z="-716.803" r="100" comment="turret test"/>
+			<point x="244.169" y="-554.201" z="-774.328" r="100" comment="turret test"/>
+			<point x="268.784" y="-556.023" z="-594.825" r="100" comment="turret test"/>
+			<point x="242.018" y="-553.005" z="-536.878" r="100" comment="turret test"/>
+			<point x="323.114" y="-425.553" z="-704.244" r="100" comment="surface test"/>
+			<point x="388.854" y="-434.604" z="-1235.17" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="c" stage="3" tags="ship_xs scan">
+			<point x="325.189" y="-738.87" z="-874.856" r="100"/>
+			<point x="272.702" y="-635.784" z="-644.363" r="100"/>
+			<point x="76.09" y="-726.717" z="-453.962" r="100"/>
+			<point x="255.198" y="-790.634" z="-654.636" r="100"/>
+			<point x="194.855" y="-771.319" z="-1257.056" r="100"/>
+			<point x="270.324" y="-622.491" z="-1140.188" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="c" stage="3" tags="ship_xs hack">
+			<point x="76.085" y="-649.051" z="-840.24" r="100"/>
+			<point x="273.113" y="-802.755" z="-658.419" r="100"/>
+			<point x="263.792" y="-715.456" z="-413.544" r="100"/>
+			<point x="266.365" y="-627.664" z="-647.688" r="100"/>
+			<point x="343.153" y="-738.977" z="-812.617" r="100"/>
+			<point x="267.076" y="-624.275" z="-1119.54" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="d" stage="1" tags="ship_xs hack">
+			<point x="2069.06" y="-45.107" z="-3134.73" r="100" comment="shield test"/>
+			<point x="2141.16" y="25.888" z="-3060.01" r="100" comment="shield test"/>
+			<point x="1991.44" y="30.237" z="-3215.83" r="100" special="1" comment="shield test"/>
+			<point x="1980.71" y="25.097" z="-2979.92" r="100" comment="turret test"/>
+			<point x="1910.2" y="26.09" z="-3044.07" r="100" comment="turret test"/>
+			<point x="2217.99" y="22.708" z="-3226.7" r="100" comment="turret test"/>
+			<point x="2150.85" y="24.123" z="-3291.79" r="100" comment="turret test"/>
+			<point x="1912.67" y="-32.11" z="-3046.22" r="100" comment="turret test"/>
+			<point x="1977.66" y="-32.382" z="-2976.14" r="100" comment="turret test"/>
+			<point x="2164.64" y="-27.408" z="-3026.52" r="100" special="1" comment="turret test"/>
+			<point x="1970.66" y="-31.472" z="-3226.54" r="100" comment="turret test"/>
+			<point x="2221.59" y="-32.576" z="-3221.48" r="100" comment="turret test"/>
+			<point x="2154.13" y="-32.644" z="-3289.09" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="d" stage="1" tags="ship_xs scan">
+			<point x="2069.06" y="-45.107" z="-3134.73" r="100" comment="shield test"/>
+			<point x="2141.16" y="25.888" z="-3060.01" r="100" comment="shield test"/>
+			<point x="1991.44" y="30.237" z="-3215.83" r="100" comment="shield test"/>
+			<point x="1980.71" y="25.097" z="-2979.92" r="100" comment="turret test"/>
+			<point x="1910.2" y="26.09" z="-3044.07" r="100" comment="turret test"/>
+			<point x="2217.99" y="22.708" z="-3226.7" r="100" comment="turret test"/>
+			<point x="2150.85" y="24.123" z="-3291.79" r="100" comment="turret test"/>
+			<point x="1912.67" y="-32.11" z="-3046.22" r="100" comment="turret test"/>
+			<point x="1977.66" y="-32.382" z="-2976.14" r="100" comment="turret test"/>
+			<point x="2164.64" y="-27.408" z="-3026.52" r="100" comment="turret test"/>
+			<point x="1970.66" y="-31.472" z="-3226.54" r="100" comment="turret test"/>
+			<point x="2221.59" y="-32.576" z="-3221.48" r="100" comment="turret test"/>
+			<point x="2154.13" y="-32.644" z="-3289.09" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="e" stage="1" tags="ship_xs hack">
+			<point x="2882.37" y="211.717" z="-833.755" r="100" comment="shield test"/>
+			<point x="2890.74" y="218.277" z="-873.628" r="100" comment="turret test"/>
+			<point x="2831.09" y="220.208" z="-828.667" r="100" special="1" comment="turret test"/>
+			<point x="2833.97" y="220.37" z="-863.708" r="100" comment="turret test"/>
+			<point x="2849.7" y="388.001" z="-566.366" r="100" comment="shield test"/>
+			<point x="2790.59" y="374.207" z="-553.448" r="100" comment="turret test"/>
+			<point x="2871.98" y="745.26" z="-587.799" r="100" special="1" comment="radar dish test"/>
+			<point x="2034.78" y="-14.525" z="-604.047" r="100" comment="surface test"/>
+			<point x="1625.73" y="-20.526" z="-604.638" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pir_shipyard_3_macro" sequence="e" stage="1" tags="ship_xs scan">
+			<point x="2882.37" y="211.717" z="-833.755" r="100" comment="shield test"/>
+			<point x="2890.74" y="218.277" z="-873.628" r="100" comment="turret test"/>
+			<point x="2831.09" y="220.208" z="-828.667" r="100" comment="turret test"/>
+			<point x="2833.97" y="220.37" z="-863.708" r="100" comment="turret test"/>
+			<point x="2849.7" y="388.001" z="-566.366" r="100" comment="shield test"/>
+			<point x="2790.59" y="374.207" z="-553.448" r="100" comment="turret test"/>
+			<point x="2871.98" y="745.26" z="-587.799" r="100" comment="radar dish test"/>
+			<point x="2034.78" y="-14.525" z="-604.047" r="100" comment="surface test"/>
+			<point x="1625.73" y="-20.526" z="-604.638" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" stage="0" tags="ship_xs hack">
+			<point x="1478.35" y="-46.258" z="-3344.57" r="100" comment="surface test"/>
+			<point x="83.569" y="-26.518" z="-1296.55" r="100" comment="surface test"/>
+			<point x="-163.946" y="122.534" z="-719.787" r="100" comment="surface test"/>
+			<point x="-305.491" y="69.702" z="-393.626" r="100" comment="surface test"/>
+			<point x="-589.655" y="95.603" z="-400.284" r="100" comment="surface test"/>
+			<point x="-196.022" y="223.968" z="-10.146" r="100" special="1" comment="surface test"/>
+			<point x="174.695" y="-173.724" z="120.938" r="100" comment="surface test"/>
+			<point x="258.87" y="-43.051" z="-1975.85" r="100" comment="surface test"/>
+			<point x="218.265" y="-82.269" z="-4020.88" r="100" special="1" comment="surface test"/>
+			<point x="150.152" y="1282.68" z="-127.539" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" stage="0" tags="ship_xs scan">
+			<point x="-120.576" y="89.259" z="44.147" r="100"/>
+			<point x="217.233" y="8.65" z="106.522" r="100"/>
+			<point x="-21.492" y="97.151" z="-292.018" r="100"/>
+			<point x="246.77" y="52.683" z="-689.518" r="100"/>
+			<point x="246.77" y="-62.179" z="-689.518" r="100"/>
+			<point x="224.039" y="-11.995" z="-1114.45" r="100"/>
+			<point x="309.627" y="85.156" z="-2154.01" r="100"/>
+			<point x="1340" y="-211.068" z="-2153.3" r="100"/>
+			<point x="1340" y="-211.068" z="-2552.23" r="100"/>
+			<point x="1340" y="-211.068" z="-2956.02" r="100"/>
+			<point x="1340" y="-211.068" z="-3355.05" r="100"/>
+			<point x="-120.576" y="89.259" z="44.147" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="a" stage="1" tags="ship_xs hack">
+			<point x="-717.093" y="-281.009" z="-3399.82" r="100" comment="surface test"/>
+			<point x="-631.197" y="-363.179" z="-2931.98" r="100" special="1" comment="surface test"/>
+			<point x="-2503.08" y="-784.552" z="-507.928" r="100" special="1" comment="shield test"/>
+			<point x="-2576.89" y="-775.877" z="-461.024" r="100" comment="turret test"/>
+			<point x="-2557.28" y="-775.809" z="-474.704" r="100" comment="turret test"/>
+			<point x="-2536.08" y="-768.208" z="-405.007" r="100" comment="turret test"/>
+			<point x="-2470.74" y="-769.388" z="-443.075" r="100" comment="turret test"/>
+			<point x="-2420.69" y="-769.496" z="-477.968" r="100" comment="turret test"/>
+			<point x="-2459.61" y="-776.505" z="-527.888" r="100" comment="turret test"/>
+			<point x="-2436.33" y="-776.599" z="-543.168" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="a" stage="1" tags="ship_xs scan">
+			<point x="-717.093" y="-281.009" z="-3399.82" r="100" comment="surface test"/>
+			<point x="-631.197" y="-363.179" z="-2931.98" r="100" comment="surface test"/>
+			<point x="-1787.88" y="-694.1" z="-4825.1" r="100" comment="surface test"/>
+			<point x="-1825.37" y="-729.677" z="-3311.59" r="100" comment="surface test"/>
+			<point x="-1821.5" y="-732.097" z="-2690.49" r="100" comment="surface test"/>
+			<point x="-1791.3" y="-692.046" z="-1027.65" r="100" comment="surface test"/>
+			<point x="-1978.31" y="-951.752" z="-127.122" r="100" comment="surface test"/>
+			<point x="-2092.54" y="-2491.62" z="-206.398" r="100" comment="surface test"/>
+			<point x="-2401.84" y="-765.002" z="-351.187" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="a" stage="2" tags="ship_xs hack">
+			<point x="-2340.62" y="-944.599" z="-4225.18" r="100" comment="shield test"/>
+			<point x="-2446.09" y="-873.116" z="-4219.96" r="100" comment="shield test"/>
+			<point x="-2228.73" y="-872.983" z="-4224.82" r="100" special="1" comment="shield test"/>
+			<point x="-2291.13" y="-872.974" z="-4052.31" r="100" comment="turret test"/>
+			<point x="-2386.31" y="-872.959" z="-4049.91" r="100" comment="turret test"/>
+			<point x="-2385.2" y="-872.973" z="-4402.01" r="100" comment="turret test"/>
+			<point x="-2288.34" y="-872.991" z="-4395.35" r="100" comment="turret test"/>
+			<point x="-2294.1" y="-930.318" z="-4393.88" r="100" comment="turret test"/>
+			<point x="-2390.62" y="-930.27" z="-4395" r="100" special="1" comment="turret test"/>
+			<point x="-2488.95" y="-926.317" z="-4220.74" r="100" comment="turret test"/>
+			<point x="-2298.39" y="-928.402" z="-4050.6" r="100" comment="turret test"/>
+			<point x="-2393.64" y="-928.122" z="-4044.12" r="100" comment="turret test"/>
+			<point x="-2200.17" y="-923.063" z="-4217.49" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="a" stage="2" tags="ship_xs scan">
+			<point x="-2340.62" y="-944.599" z="-4225.18" r="100" comment="shield test"/>
+			<point x="-2446.09" y="-873.116" z="-4219.96" r="100" comment="shield test"/>
+			<point x="-2228.73" y="-872.983" z="-4224.82" r="100" comment="shield test"/>
+			<point x="-2291.13" y="-872.974" z="-4052.31" r="100" comment="turret test"/>
+			<point x="-2386.31" y="-872.959" z="-4049.91" r="100" comment="turret test"/>
+			<point x="-2385.2" y="-872.973" z="-4402.01" r="100" comment="turret test"/>
+			<point x="-2288.34" y="-872.991" z="-4395.35" r="100" comment="turret test"/>
+			<point x="-2294.1" y="-930.318" z="-4393.88" r="100" comment="turret test"/>
+			<point x="-2390.62" y="-930.27" z="-4395" r="100" comment="turret test"/>
+			<point x="-2488.95" y="-926.317" z="-4220.74" r="100" comment="turret test"/>
+			<point x="-2298.39" y="-928.402" z="-4050.6" r="100" comment="turret test"/>
+			<point x="-2393.64" y="-928.122" z="-4044.12" r="100" comment="turret test"/>
+			<point x="-2200.17" y="-923.063" z="-4217.49" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="b" stage="1" tags="ship_xs hack">
+			<point x="-5263.91" y="25.177" z="-2323.11" r="100" comment="surface test"/>
+			<point x="-5255.57" y="23.663" z="-1687.74" r="100" special="1" comment="surface test"/>
+			<point x="-5367.05" y="190.051" z="-890.069" r="100" comment="surface test"/>
+			<point x="-5416.81" y="153.079" z="-269.214" r="100" comment="shield test"/>
+			<point x="-5500.77" y="149.988" z="-247.166" r="100" comment="turret test"/>
+			<point x="-5595.8" y="119.773" z="-173.573" r="100" comment="turret test"/>
+			<point x="-5588.32" y="118.506" z="-208.827" r="100" comment="turret test"/>
+			<point x="-5332.92" y="166.417" z="373.437" r="100" special="1" comment="shield test"/>
+			<point x="-5264.39" y="159.422" z="330.498" r="100" comment="turret test"/>
+			<point x="-5264.58" y="160.821" z="453.105" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="b" stage="1" tags="ship_xs scan">
+			<point x="-5263.91" y="25.177" z="-2323.11" r="100" comment="surface test"/>
+			<point x="-5255.57" y="23.663" z="-1687.74" r="100" comment="surface test"/>
+			<point x="-5367.05" y="190.051" z="-890.069" r="100" comment="surface test"/>
+			<point x="-5416.81" y="153.079" z="-269.214" r="100" comment="shield test"/>
+			<point x="-5500.77" y="149.988" z="-247.166" r="100" comment="turret test"/>
+			<point x="-5595.8" y="119.773" z="-173.573" r="100" comment="turret test"/>
+			<point x="-5588.32" y="118.506" z="-208.827" r="100" comment="turret test"/>
+			<point x="-5332.92" y="166.417" z="373.437" r="100" comment="shield test"/>
+			<point x="-5264.39" y="159.422" z="330.498" r="100" comment="turret test"/>
+			<point x="-5264.58" y="160.821" z="453.105" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="b" stage="2" tags="ship_xs hack">
+			<point x="-1445.94" y="-429.747" z="5710.88" r="100" comment="shield test"/>
+			<point x="-1335.89" y="-360.58" z="5704.32" r="100" comment="shield test"/>
+			<point x="-1551.27" y="-358.388" z="5711.27" r="100" special="1" comment="shield test"/>
+			<point x="-1396.69" y="-361.194" z="5885.24" r="100" comment="turret test"/>
+			<point x="-1491.29" y="-361.687" z="5884.36" r="100" comment="turret test"/>
+			<point x="-1494.06" y="-361.002" z="5540.31" r="100" comment="turret test"/>
+			<point x="-1398.14" y="-359.51" z="5538.56" r="100" special="1" comment="turret test"/>
+			<point x="-1398.52" y="-418.277" z="5543.99" r="100" comment="turret test"/>
+			<point x="-1491.41" y="-415.994" z="5541.82" r="100" comment="turret test"/>
+			<point x="-1590.21" y="-412.38" z="5716.41" r="100" comment="turret test"/>
+			<point x="-1496.89" y="-418.174" z="5889.97" r="100" comment="turret test"/>
+			<point x="-1399.16" y="-418.183" z="5889.9" r="100" comment="turret test"/>
+			<point x="-1304.49" y="-410.935" z="5720.38" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="b" stage="2" tags="ship_xs scan">
+			<point x="-1445.94" y="-429.747" z="5710.88" r="100" comment="shield test"/>
+			<point x="-1335.89" y="-360.58" z="5704.32" r="100" comment="shield test"/>
+			<point x="-1551.27" y="-358.388" z="5711.27" r="100" comment="shield test"/>
+			<point x="-1396.69" y="-361.194" z="5885.24" r="100" comment="turret test"/>
+			<point x="-1491.29" y="-361.687" z="5884.36" r="100" comment="turret test"/>
+			<point x="-1494.06" y="-361.002" z="5540.31" r="100" comment="turret test"/>
+			<point x="-1398.14" y="-359.51" z="5538.56" r="100" comment="turret test"/>
+			<point x="-1398.52" y="-418.277" z="5543.99" r="100" comment="turret test"/>
+			<point x="-1491.41" y="-415.994" z="5541.82" r="100" comment="turret test"/>
+			<point x="-1590.21" y="-412.38" z="5716.41" r="100" comment="turret test"/>
+			<point x="-1496.89" y="-418.174" z="5889.97" r="100" comment="turret test"/>
+			<point x="-1399.16" y="-418.183" z="5889.9" r="100" comment="turret test"/>
+			<point x="-1304.49" y="-410.935" z="5720.38" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="c" stage="1" tags="ship_xs hack">
+			<point x="-30.234" y="-322.706" z="-824.021" r="100" comment="shield test"/>
+			<point x="53.306" y="-313.968" z="-912.211" r="100" special="1" comment="turret test"/>
+			<point x="4.493" y="-315.234" z="-876.801" r="100" comment="turret test"/>
+			<point x="-88.996" y="-311.336" z="-805.742" r="100" comment="turret test"/>
+			<point x="-149.287" y="-313.86" z="-797.361" r="100" comment="turret test"/>
+			<point x="37.792" y="-154.717" z="-848.488" r="100" comment="turret test"/>
+			<point x="-2.864" y="-153.516" z="-831.756" r="100" comment="turret test"/>
+			<point x="-30.667" y="-153.629" z="-805.358" r="100" special="1" comment="turret test"/>
+			<point x="-55.566" y="-154.607" z="-788.899" r="100" comment="turret test"/>
+			<point x="-91.389" y="-151.952" z="-774.409" r="100" comment="turret test"/>
+			<point x="-124.594" y="-154.54" z="-752.972" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="c" stage="1" tags="ship_xs scan">
+			<point x="-30.234" y="-322.706" z="-824.021" r="100" comment="shield test"/>
+			<point x="53.306" y="-313.968" z="-912.211" r="100" comment="turret test"/>
+			<point x="4.493" y="-315.234" z="-876.801" r="100" comment="turret test"/>
+			<point x="-88.996" y="-311.336" z="-805.742" r="100" comment="turret test"/>
+			<point x="-149.287" y="-313.86" z="-797.361" r="100" comment="turret test"/>
+			<point x="37.792" y="-154.717" z="-848.488" r="100" comment="turret test"/>
+			<point x="-2.864" y="-153.516" z="-831.756" r="100" comment="turret test"/>
+			<point x="-30.667" y="-153.629" z="-805.358" r="100" comment="turret test"/>
+			<point x="-55.566" y="-154.607" z="-788.899" r="100" comment="turret test"/>
+			<point x="-91.389" y="-151.952" z="-774.409" r="100" comment="turret test"/>
+			<point x="-124.594" y="-154.54" z="-752.972" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="c" stage="2" tags="ship_xs hack">
+			<point x="281.3" y="-560.857" z="-660.518" r="100" comment="shield test"/>
+			<point x="253.862" y="-552.758" z="-716.803" r="100" special="1" comment="turret test"/>
+			<point x="244.169" y="-554.201" z="-774.328" r="100" comment="turret test"/>
+			<point x="268.784" y="-556.023" z="-594.825" r="100" comment="turret test"/>
+			<point x="242.018" y="-553.005" z="-536.878" r="100" special="1" comment="turret test"/>
+			<point x="323.114" y="-425.553" z="-704.244" r="100" comment="surface test"/>
+			<point x="388.854" y="-434.604" z="-1235.17" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="c" stage="2" tags="ship_xs scan">
+			<point x="281.3" y="-560.857" z="-660.518" r="100" comment="shield test"/>
+			<point x="253.862" y="-552.758" z="-716.803" r="100" comment="turret test"/>
+			<point x="244.169" y="-554.201" z="-774.328" r="100" comment="turret test"/>
+			<point x="268.784" y="-556.023" z="-594.825" r="100" comment="turret test"/>
+			<point x="242.018" y="-553.005" z="-536.878" r="100" comment="turret test"/>
+			<point x="323.114" y="-425.553" z="-704.244" r="100" comment="surface test"/>
+			<point x="388.854" y="-434.604" z="-1235.17" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="c" stage="3" tags="ship_xs scan">
+			<point x="325.189" y="-738.87" z="-874.856" r="100"/>
+			<point x="272.702" y="-635.784" z="-644.363" r="100"/>
+			<point x="76.09" y="-726.717" z="-453.962" r="100"/>
+			<point x="255.198" y="-790.634" z="-654.636" r="100"/>
+			<point x="194.855" y="-771.319" z="-1257.056" r="100"/>
+			<point x="270.324" y="-622.491" z="-1140.188" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="c" stage="3" tags="ship_xs hack">
+			<point x="76.085" y="-649.051" z="-840.24" r="100"/>
+			<point x="273.113" y="-802.755" z="-658.419" r="100"/>
+			<point x="263.792" y="-715.456" z="-413.544" r="100"/>
+			<point x="266.365" y="-627.664" z="-647.688" r="100"/>
+			<point x="343.153" y="-738.977" z="-812.617" r="100"/>
+			<point x="267.076" y="-624.275" z="-1119.54" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="d" stage="1" tags="ship_xs hack">
+			<point x="2069.06" y="-45.107" z="-3134.73" r="100" comment="shield test"/>
+			<point x="2141.16" y="25.888" z="-3060.01" r="100" comment="shield test"/>
+			<point x="1991.44" y="30.237" z="-3215.83" r="100" special="1" comment="shield test"/>
+			<point x="1980.71" y="25.097" z="-2979.92" r="100" comment="turret test"/>
+			<point x="1910.2" y="26.09" z="-3044.07" r="100" comment="turret test"/>
+			<point x="2217.99" y="22.708" z="-3226.7" r="100" comment="turret test"/>
+			<point x="2150.85" y="24.123" z="-3291.79" r="100" comment="turret test"/>
+			<point x="1912.67" y="-32.11" z="-3046.22" r="100" comment="turret test"/>
+			<point x="1977.66" y="-32.382" z="-2976.14" r="100" comment="turret test"/>
+			<point x="2164.64" y="-27.408" z="-3026.52" r="100" special="1" comment="turret test"/>
+			<point x="1970.66" y="-31.472" z="-3226.54" r="100" comment="turret test"/>
+			<point x="2221.59" y="-32.576" z="-3221.48" r="100" comment="turret test"/>
+			<point x="2154.13" y="-32.644" z="-3289.09" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="d" stage="1" tags="ship_xs scan">
+			<point x="2069.06" y="-45.107" z="-3134.73" r="100" comment="shield test"/>
+			<point x="2141.16" y="25.888" z="-3060.01" r="100" comment="shield test"/>
+			<point x="1991.44" y="30.237" z="-3215.83" r="100" comment="shield test"/>
+			<point x="1980.71" y="25.097" z="-2979.92" r="100" comment="turret test"/>
+			<point x="1910.2" y="26.09" z="-3044.07" r="100" comment="turret test"/>
+			<point x="2217.99" y="22.708" z="-3226.7" r="100" comment="turret test"/>
+			<point x="2150.85" y="24.123" z="-3291.79" r="100" comment="turret test"/>
+			<point x="1912.67" y="-32.11" z="-3046.22" r="100" comment="turret test"/>
+			<point x="1977.66" y="-32.382" z="-2976.14" r="100" comment="turret test"/>
+			<point x="2164.64" y="-27.408" z="-3026.52" r="100" comment="turret test"/>
+			<point x="1970.66" y="-31.472" z="-3226.54" r="100" comment="turret test"/>
+			<point x="2221.59" y="-32.576" z="-3221.48" r="100" comment="turret test"/>
+			<point x="2154.13" y="-32.644" z="-3289.09" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="e" stage="1" tags="ship_xs hack">
+			<point x="2882.37" y="211.717" z="-833.755" r="100" comment="shield test"/>
+			<point x="2890.74" y="218.277" z="-873.628" r="100" comment="turret test"/>
+			<point x="2831.09" y="220.208" z="-828.667" r="100" special="1" comment="turret test"/>
+			<point x="2833.97" y="220.37" z="-863.708" r="100" comment="turret test"/>
+			<point x="2849.7" y="388.001" z="-566.366" r="100" comment="shield test"/>
+			<point x="2790.59" y="374.207" z="-553.448" r="100" comment="turret test"/>
+			<point x="2871.98" y="745.26" z="-587.799" r="100" special="1" comment="radar dish test"/>
+			<point x="2034.78" y="-14.525" z="-604.047" r="100" comment="surface test"/>
+			<point x="1625.73" y="-20.526" z="-604.638" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_hoa_shipyard_macro" sequence="e" stage="1" tags="ship_xs scan">
+			<point x="2882.37" y="211.717" z="-833.755" r="100" comment="shield test"/>
+			<point x="2890.74" y="218.277" z="-873.628" r="100" comment="turret test"/>
+			<point x="2831.09" y="220.208" z="-828.667" r="100" comment="turret test"/>
+			<point x="2833.97" y="220.37" z="-863.708" r="100" comment="turret test"/>
+			<point x="2849.7" y="388.001" z="-566.366" r="100" comment="shield test"/>
+			<point x="2790.59" y="374.207" z="-553.448" r="100" comment="turret test"/>
+			<point x="2871.98" y="745.26" z="-587.799" r="100" comment="radar dish test"/>
+			<point x="2034.78" y="-14.525" z="-604.047" r="100" comment="surface test"/>
+			<point x="1625.73" y="-20.526" z="-604.638" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" stage="0" tags="ship_xs hack">
+			<point x="1478.35" y="-46.258" z="-3344.57" r="100" comment="surface test"/>
+			<point x="83.569" y="-26.518" z="-1296.55" r="100" comment="surface test"/>
+			<point x="-163.946" y="122.534" z="-719.787" r="100" comment="surface test"/>
+			<point x="-305.491" y="69.702" z="-393.626" r="100" comment="surface test"/>
+			<point x="-589.655" y="95.603" z="-400.284" r="100" comment="surface test"/>
+			<point x="-196.022" y="223.968" z="-10.146" r="100" special="1" comment="surface test"/>
+			<point x="174.695" y="-173.724" z="120.938" r="100" comment="surface test"/>
+			<point x="258.87" y="-43.051" z="-1975.85" r="100" comment="surface test"/>
+			<point x="218.265" y="-82.269" z="-4020.88" r="100" special="1" comment="surface test"/>
+			<point x="150.152" y="1282.68" z="-127.539" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" stage="0" tags="ship_xs scan">
+			<point x="-120.576" y="89.259" z="44.147" r="100"/>
+			<point x="217.233" y="8.65" z="106.522" r="100"/>
+			<point x="-21.492" y="97.151" z="-292.018" r="100"/>
+			<point x="246.77" y="52.683" z="-689.518" r="100"/>
+			<point x="246.77" y="-62.179" z="-689.518" r="100"/>
+			<point x="224.039" y="-11.995" z="-1114.45" r="100"/>
+			<point x="309.627" y="85.156" z="-2154.01" r="100"/>
+			<point x="1340" y="-211.068" z="-2153.3" r="100"/>
+			<point x="1340" y="-211.068" z="-2552.23" r="100"/>
+			<point x="1340" y="-211.068" z="-2956.02" r="100"/>
+			<point x="1340" y="-211.068" z="-3355.05" r="100"/>
+			<point x="-120.576" y="89.259" z="44.147" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="a" stage="1" tags="ship_xs hack">
+			<point x="-717.093" y="-281.009" z="-3399.82" r="100" comment="surface test"/>
+			<point x="-631.197" y="-363.179" z="-2931.98" r="100" special="1" comment="surface test"/>
+			<point x="-2503.08" y="-784.552" z="-507.928" r="100" special="1" comment="shield test"/>
+			<point x="-2576.89" y="-775.877" z="-461.024" r="100" comment="turret test"/>
+			<point x="-2557.28" y="-775.809" z="-474.704" r="100" comment="turret test"/>
+			<point x="-2536.08" y="-768.208" z="-405.007" r="100" comment="turret test"/>
+			<point x="-2470.74" y="-769.388" z="-443.075" r="100" comment="turret test"/>
+			<point x="-2420.69" y="-769.496" z="-477.968" r="100" comment="turret test"/>
+			<point x="-2459.61" y="-776.505" z="-527.888" r="100" comment="turret test"/>
+			<point x="-2436.33" y="-776.599" z="-543.168" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="a" stage="1" tags="ship_xs scan">
+			<point x="-717.093" y="-281.009" z="-3399.82" r="100" comment="surface test"/>
+			<point x="-631.197" y="-363.179" z="-2931.98" r="100" comment="surface test"/>
+			<point x="-1787.88" y="-694.1" z="-4825.1" r="100" comment="surface test"/>
+			<point x="-1825.37" y="-729.677" z="-3311.59" r="100" comment="surface test"/>
+			<point x="-1821.5" y="-732.097" z="-2690.49" r="100" comment="surface test"/>
+			<point x="-1791.3" y="-692.046" z="-1027.65" r="100" comment="surface test"/>
+			<point x="-1978.31" y="-951.752" z="-127.122" r="100" comment="surface test"/>
+			<point x="-2092.54" y="-2491.62" z="-206.398" r="100" comment="surface test"/>
+			<point x="-2401.84" y="-765.002" z="-351.187" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="a" stage="2" tags="ship_xs hack">
+			<point x="-2340.62" y="-944.599" z="-4225.18" r="100" comment="shield test"/>
+			<point x="-2446.09" y="-873.116" z="-4219.96" r="100" comment="shield test"/>
+			<point x="-2228.73" y="-872.983" z="-4224.82" r="100" special="1" comment="shield test"/>
+			<point x="-2291.13" y="-872.974" z="-4052.31" r="100" comment="turret test"/>
+			<point x="-2386.31" y="-872.959" z="-4049.91" r="100" comment="turret test"/>
+			<point x="-2385.2" y="-872.973" z="-4402.01" r="100" comment="turret test"/>
+			<point x="-2288.34" y="-872.991" z="-4395.35" r="100" comment="turret test"/>
+			<point x="-2294.1" y="-930.318" z="-4393.88" r="100" comment="turret test"/>
+			<point x="-2390.62" y="-930.27" z="-4395" r="100" special="1" comment="turret test"/>
+			<point x="-2488.95" y="-926.317" z="-4220.74" r="100" comment="turret test"/>
+			<point x="-2298.39" y="-928.402" z="-4050.6" r="100" comment="turret test"/>
+			<point x="-2393.64" y="-928.122" z="-4044.12" r="100" comment="turret test"/>
+			<point x="-2200.17" y="-923.063" z="-4217.49" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="a" stage="2" tags="ship_xs scan">
+			<point x="-2340.62" y="-944.599" z="-4225.18" r="100" comment="shield test"/>
+			<point x="-2446.09" y="-873.116" z="-4219.96" r="100" comment="shield test"/>
+			<point x="-2228.73" y="-872.983" z="-4224.82" r="100" comment="shield test"/>
+			<point x="-2291.13" y="-872.974" z="-4052.31" r="100" comment="turret test"/>
+			<point x="-2386.31" y="-872.959" z="-4049.91" r="100" comment="turret test"/>
+			<point x="-2385.2" y="-872.973" z="-4402.01" r="100" comment="turret test"/>
+			<point x="-2288.34" y="-872.991" z="-4395.35" r="100" comment="turret test"/>
+			<point x="-2294.1" y="-930.318" z="-4393.88" r="100" comment="turret test"/>
+			<point x="-2390.62" y="-930.27" z="-4395" r="100" comment="turret test"/>
+			<point x="-2488.95" y="-926.317" z="-4220.74" r="100" comment="turret test"/>
+			<point x="-2298.39" y="-928.402" z="-4050.6" r="100" comment="turret test"/>
+			<point x="-2393.64" y="-928.122" z="-4044.12" r="100" comment="turret test"/>
+			<point x="-2200.17" y="-923.063" z="-4217.49" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="b" stage="1" tags="ship_xs hack">
+			<point x="-5263.91" y="25.177" z="-2323.11" r="100" comment="surface test"/>
+			<point x="-5255.57" y="23.663" z="-1687.74" r="100" special="1" comment="surface test"/>
+			<point x="-5367.05" y="190.051" z="-890.069" r="100" comment="surface test"/>
+			<point x="-5416.81" y="153.079" z="-269.214" r="100" comment="shield test"/>
+			<point x="-5500.77" y="149.988" z="-247.166" r="100" comment="turret test"/>
+			<point x="-5595.8" y="119.773" z="-173.573" r="100" comment="turret test"/>
+			<point x="-5588.32" y="118.506" z="-208.827" r="100" comment="turret test"/>
+			<point x="-5332.92" y="166.417" z="373.437" r="100" special="1" comment="shield test"/>
+			<point x="-5264.39" y="159.422" z="330.498" r="100" comment="turret test"/>
+			<point x="-5264.58" y="160.821" z="453.105" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="b" stage="1" tags="ship_xs scan">
+			<point x="-5263.91" y="25.177" z="-2323.11" r="100" comment="surface test"/>
+			<point x="-5255.57" y="23.663" z="-1687.74" r="100" comment="surface test"/>
+			<point x="-5367.05" y="190.051" z="-890.069" r="100" comment="surface test"/>
+			<point x="-5416.81" y="153.079" z="-269.214" r="100" comment="shield test"/>
+			<point x="-5500.77" y="149.988" z="-247.166" r="100" comment="turret test"/>
+			<point x="-5595.8" y="119.773" z="-173.573" r="100" comment="turret test"/>
+			<point x="-5588.32" y="118.506" z="-208.827" r="100" comment="turret test"/>
+			<point x="-5332.92" y="166.417" z="373.437" r="100" comment="shield test"/>
+			<point x="-5264.39" y="159.422" z="330.498" r="100" comment="turret test"/>
+			<point x="-5264.58" y="160.821" z="453.105" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="b" stage="2" tags="ship_xs hack">
+			<point x="-1445.94" y="-429.747" z="5710.88" r="100" comment="shield test"/>
+			<point x="-1335.89" y="-360.58" z="5704.32" r="100" comment="shield test"/>
+			<point x="-1551.27" y="-358.388" z="5711.27" r="100" special="1" comment="shield test"/>
+			<point x="-1396.69" y="-361.194" z="5885.24" r="100" comment="turret test"/>
+			<point x="-1491.29" y="-361.687" z="5884.36" r="100" comment="turret test"/>
+			<point x="-1494.06" y="-361.002" z="5540.31" r="100" comment="turret test"/>
+			<point x="-1398.14" y="-359.51" z="5538.56" r="100" special="1" comment="turret test"/>
+			<point x="-1398.52" y="-418.277" z="5543.99" r="100" comment="turret test"/>
+			<point x="-1491.41" y="-415.994" z="5541.82" r="100" comment="turret test"/>
+			<point x="-1590.21" y="-412.38" z="5716.41" r="100" comment="turret test"/>
+			<point x="-1496.89" y="-418.174" z="5889.97" r="100" comment="turret test"/>
+			<point x="-1399.16" y="-418.183" z="5889.9" r="100" comment="turret test"/>
+			<point x="-1304.49" y="-410.935" z="5720.38" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="b" stage="2" tags="ship_xs scan">
+			<point x="-1445.94" y="-429.747" z="5710.88" r="100" comment="shield test"/>
+			<point x="-1335.89" y="-360.58" z="5704.32" r="100" comment="shield test"/>
+			<point x="-1551.27" y="-358.388" z="5711.27" r="100" comment="shield test"/>
+			<point x="-1396.69" y="-361.194" z="5885.24" r="100" comment="turret test"/>
+			<point x="-1491.29" y="-361.687" z="5884.36" r="100" comment="turret test"/>
+			<point x="-1494.06" y="-361.002" z="5540.31" r="100" comment="turret test"/>
+			<point x="-1398.14" y="-359.51" z="5538.56" r="100" comment="turret test"/>
+			<point x="-1398.52" y="-418.277" z="5543.99" r="100" comment="turret test"/>
+			<point x="-1491.41" y="-415.994" z="5541.82" r="100" comment="turret test"/>
+			<point x="-1590.21" y="-412.38" z="5716.41" r="100" comment="turret test"/>
+			<point x="-1496.89" y="-418.174" z="5889.97" r="100" comment="turret test"/>
+			<point x="-1399.16" y="-418.183" z="5889.9" r="100" comment="turret test"/>
+			<point x="-1304.49" y="-410.935" z="5720.38" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="c" stage="1" tags="ship_xs hack">
+			<point x="-30.234" y="-322.706" z="-824.021" r="100" comment="shield test"/>
+			<point x="53.306" y="-313.968" z="-912.211" r="100" special="1" comment="turret test"/>
+			<point x="4.493" y="-315.234" z="-876.801" r="100" comment="turret test"/>
+			<point x="-88.996" y="-311.336" z="-805.742" r="100" comment="turret test"/>
+			<point x="-149.287" y="-313.86" z="-797.361" r="100" comment="turret test"/>
+			<point x="37.792" y="-154.717" z="-848.488" r="100" comment="turret test"/>
+			<point x="-2.864" y="-153.516" z="-831.756" r="100" comment="turret test"/>
+			<point x="-30.667" y="-153.629" z="-805.358" r="100" special="1" comment="turret test"/>
+			<point x="-55.566" y="-154.607" z="-788.899" r="100" comment="turret test"/>
+			<point x="-91.389" y="-151.952" z="-774.409" r="100" comment="turret test"/>
+			<point x="-124.594" y="-154.54" z="-752.972" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="c" stage="1" tags="ship_xs scan">
+			<point x="-30.234" y="-322.706" z="-824.021" r="100" comment="shield test"/>
+			<point x="53.306" y="-313.968" z="-912.211" r="100" comment="turret test"/>
+			<point x="4.493" y="-315.234" z="-876.801" r="100" comment="turret test"/>
+			<point x="-88.996" y="-311.336" z="-805.742" r="100" comment="turret test"/>
+			<point x="-149.287" y="-313.86" z="-797.361" r="100" comment="turret test"/>
+			<point x="37.792" y="-154.717" z="-848.488" r="100" comment="turret test"/>
+			<point x="-2.864" y="-153.516" z="-831.756" r="100" comment="turret test"/>
+			<point x="-30.667" y="-153.629" z="-805.358" r="100" comment="turret test"/>
+			<point x="-55.566" y="-154.607" z="-788.899" r="100" comment="turret test"/>
+			<point x="-91.389" y="-151.952" z="-774.409" r="100" comment="turret test"/>
+			<point x="-124.594" y="-154.54" z="-752.972" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="c" stage="2" tags="ship_xs hack">
+			<point x="281.3" y="-560.857" z="-660.518" r="100" comment="shield test"/>
+			<point x="253.862" y="-552.758" z="-716.803" r="100" special="1" comment="turret test"/>
+			<point x="244.169" y="-554.201" z="-774.328" r="100" comment="turret test"/>
+			<point x="268.784" y="-556.023" z="-594.825" r="100" comment="turret test"/>
+			<point x="242.018" y="-553.005" z="-536.878" r="100" special="1" comment="turret test"/>
+			<point x="323.114" y="-425.553" z="-704.244" r="100" comment="surface test"/>
+			<point x="388.854" y="-434.604" z="-1235.17" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="c" stage="2" tags="ship_xs scan">
+			<point x="281.3" y="-560.857" z="-660.518" r="100" comment="shield test"/>
+			<point x="253.862" y="-552.758" z="-716.803" r="100" comment="turret test"/>
+			<point x="244.169" y="-554.201" z="-774.328" r="100" comment="turret test"/>
+			<point x="268.784" y="-556.023" z="-594.825" r="100" comment="turret test"/>
+			<point x="242.018" y="-553.005" z="-536.878" r="100" comment="turret test"/>
+			<point x="323.114" y="-425.553" z="-704.244" r="100" comment="surface test"/>
+			<point x="388.854" y="-434.604" z="-1235.17" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="c" stage="3" tags="ship_xs scan">
+			<point x="325.189" y="-738.87" z="-874.856" r="100"/>
+			<point x="272.702" y="-635.784" z="-644.363" r="100"/>
+			<point x="76.09" y="-726.717" z="-453.962" r="100"/>
+			<point x="255.198" y="-790.634" z="-654.636" r="100"/>
+			<point x="194.855" y="-771.319" z="-1257.056" r="100"/>
+			<point x="270.324" y="-622.491" z="-1140.188" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="c" stage="3" tags="ship_xs hack">
+			<point x="76.085" y="-649.051" z="-840.24" r="100"/>
+			<point x="273.113" y="-802.755" z="-658.419" r="100"/>
+			<point x="263.792" y="-715.456" z="-413.544" r="100"/>
+			<point x="266.365" y="-627.664" z="-647.688" r="100"/>
+			<point x="343.153" y="-738.977" z="-812.617" r="100"/>
+			<point x="267.076" y="-624.275" z="-1119.54" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="d" stage="1" tags="ship_xs hack">
+			<point x="2069.06" y="-45.107" z="-3134.73" r="100" comment="shield test"/>
+			<point x="2141.16" y="25.888" z="-3060.01" r="100" comment="shield test"/>
+			<point x="1991.44" y="30.237" z="-3215.83" r="100" special="1" comment="shield test"/>
+			<point x="1980.71" y="25.097" z="-2979.92" r="100" comment="turret test"/>
+			<point x="1910.2" y="26.09" z="-3044.07" r="100" comment="turret test"/>
+			<point x="2217.99" y="22.708" z="-3226.7" r="100" comment="turret test"/>
+			<point x="2150.85" y="24.123" z="-3291.79" r="100" comment="turret test"/>
+			<point x="1912.67" y="-32.11" z="-3046.22" r="100" comment="turret test"/>
+			<point x="1977.66" y="-32.382" z="-2976.14" r="100" comment="turret test"/>
+			<point x="2164.64" y="-27.408" z="-3026.52" r="100" special="1" comment="turret test"/>
+			<point x="1970.66" y="-31.472" z="-3226.54" r="100" comment="turret test"/>
+			<point x="2221.59" y="-32.576" z="-3221.48" r="100" comment="turret test"/>
+			<point x="2154.13" y="-32.644" z="-3289.09" r="100" special="1" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="d" stage="1" tags="ship_xs scan">
+			<point x="2069.06" y="-45.107" z="-3134.73" r="100" comment="shield test"/>
+			<point x="2141.16" y="25.888" z="-3060.01" r="100" comment="shield test"/>
+			<point x="1991.44" y="30.237" z="-3215.83" r="100" comment="shield test"/>
+			<point x="1980.71" y="25.097" z="-2979.92" r="100" comment="turret test"/>
+			<point x="1910.2" y="26.09" z="-3044.07" r="100" comment="turret test"/>
+			<point x="2217.99" y="22.708" z="-3226.7" r="100" comment="turret test"/>
+			<point x="2150.85" y="24.123" z="-3291.79" r="100" comment="turret test"/>
+			<point x="1912.67" y="-32.11" z="-3046.22" r="100" comment="turret test"/>
+			<point x="1977.66" y="-32.382" z="-2976.14" r="100" comment="turret test"/>
+			<point x="2164.64" y="-27.408" z="-3026.52" r="100" comment="turret test"/>
+			<point x="1970.66" y="-31.472" z="-3226.54" r="100" comment="turret test"/>
+			<point x="2221.59" y="-32.576" z="-3221.48" r="100" comment="turret test"/>
+			<point x="2154.13" y="-32.644" z="-3289.09" r="100" comment="turret test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="e" stage="1" tags="ship_xs hack">
+			<point x="2882.37" y="211.717" z="-833.755" r="100" comment="shield test"/>
+			<point x="2890.74" y="218.277" z="-873.628" r="100" comment="turret test"/>
+			<point x="2831.09" y="220.208" z="-828.667" r="100" special="1" comment="turret test"/>
+			<point x="2833.97" y="220.37" z="-863.708" r="100" comment="turret test"/>
+			<point x="2849.7" y="388.001" z="-566.366" r="100" comment="shield test"/>
+			<point x="2790.59" y="374.207" z="-553.448" r="100" comment="turret test"/>
+			<point x="2871.98" y="745.26" z="-587.799" r="100" special="1" comment="radar dish test"/>
+			<point x="2034.78" y="-14.525" z="-604.047" r="100" comment="surface test"/>
+			<point x="1625.73" y="-20.526" z="-604.638" r="100" special="1" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_pmc_shipyard_macro" sequence="e" stage="1" tags="ship_xs scan">
+			<point x="2882.37" y="211.717" z="-833.755" r="100" comment="shield test"/>
+			<point x="2890.74" y="218.277" z="-873.628" r="100" comment="turret test"/>
+			<point x="2831.09" y="220.208" z="-828.667" r="100" comment="turret test"/>
+			<point x="2833.97" y="220.37" z="-863.708" r="100" comment="turret test"/>
+			<point x="2849.7" y="388.001" z="-566.366" r="100" comment="shield test"/>
+			<point x="2790.59" y="374.207" z="-553.448" r="100" comment="turret test"/>
+			<point x="2871.98" y="745.26" z="-587.799" r="100" comment="radar dish test"/>
+			<point x="2034.78" y="-14.525" z="-604.047" r="100" comment="surface test"/>
+			<point x="1625.73" y="-20.526" z="-604.638" r="100" comment="surface test"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" stage="0" tags="ship_xs hack">
+			<point x="-1626.8" y="-627.69" z="907.88" r="100" comment="shield"/>
+			<point x="-1619.93" y="-877.861" z="2011.75" r="100" special="1" comment="shield"/>
+			<point x="14.567" y="-157.701" z="744.186" r="100" comment="surface"/>
+			<point x="213.677" y="-193.592" z="1964.96" r="100" comment="surface"/>
+			<point x="-45.52" y="-192.436" z="5389.59" r="100" comment="surface"/>
+			<point x="-87.558" y="-326.298" z="7959.8" r="100" comment="surface"/>
+			<point x="19.922" y="-304.54" z="5066.77" r="100" comment="surface"/>
+			<point x="1587.46" y="-63.863" z="1966.78" r="100" special="1" comment="surface"/>
+			<point x="295.83" y="140.026" z="-385.345" r="100" comment="surface"/>
+			<point x="-1623.68" y="-520.594" z="714.133" r="100" comment="surface"/>
+			<point x="-1635.74" y="-224.552" z="1142.68" r="100" comment="surface"/>
+			<point x="-634.373" y="97.756" z="643.066" r="100" special="1" comment="surface"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" stage="0" tags="ship_xs scan">
+			<point x="-246.29" y="-262.305" z="1911.62" r="100"/>
+			<point x="-246.29" y="-263.643" z="2832.13" r="100"/>
+			<point x="-246.29" y="-264.71" z="3255.5" r="100"/>
+			<point x="-219.867" y="-264.71" z="3949.17" r="100"/>
+			<point x="-246.29" y="-262.305" z="5041.01" r="100"/>
+			<point x="-246.29" y="-264.71" z="5932.94" r="100"/>
+			<point x="-246.29" y="-264.71" z="6385.55" r="100"/>
+			<point x="-246.29" y="-262.305" z="7329.65" r="100"/>
+			<point x="-153.201" y="-194.954" z="8764.16" r="100"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" sequence="a" stage="1" tags="ship_xs hack">
+			<point x="3638.92" y="827.611" z="1144.32" r="100" comment="shield"/>
+			<point x="3041.15" y="827.054" z="1196.87" r="100" comment="shield"/>
+			<point x="5180.48" y="825.798" z="5351.07" r="100" comment="shield"/>
+			<point x="4970.31" y="829.295" z="5917.5" r="100" special="1" comment="shield"/>
+			<point x="-7460.27" y="173.561" z="4144.22" r="100" special="1" comment="surface"/>
+			<point x="-7642.19" y="334.406" z="2842.14" r="100" comment="surface"/>
+			<point x="-6837.08" y="337.803" z="2844.08" r="100" comment="surface"/>
+			<point x="-4467.57" y="86.217" z="3969.91" r="100" special="1" comment="surface"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" sequence="a" stage="1" tags="ship_xs scan">
+			<point x="3638.92" y="827.611" z="1144.32" r="100" comment="shield"/>
+			<point x="3041.15" y="827.054" z="1196.87" r="100" comment="shield"/>
+			<point x="5180.48" y="825.798" z="5351.07" r="100" comment="shield"/>
+			<point x="4970.31" y="829.295" z="5917.5" r="100" comment="shield"/>
+			<point x="-7460.27" y="173.561" z="4144.22" r="100" comment="surface"/>
+			<point x="-7642.19" y="334.406" z="2842.14" r="100" comment="surface"/>
+			<point x="-6837.08" y="337.803" z="2844.08" r="100" comment="surface"/>
+			<point x="-4467.57" y="86.217" z="3969.91" r="100" comment="surface"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" sequence="a" stage="2" tags="ship_xs hack">
+			<point x="-7232.61" y="-288.655" z="4591.94" r="100" special="1" comment="shield"/>
+			<point x="-7229.99" y="-210.353" z="4696.03" r="100" comment="shield"/>
+			<point x="-7231.54" y="-209.842" z="4481.49" r="100" comment="shield"/>
+			<point x="-7405.12" y="-216.345" z="4638.45" r="100" comment="turret"/>
+			<point x="-7063.42" y="-213.693" z="4541.89" r="100" comment="turret"/>
+			<point x="-7063.63" y="-270.647" z="4545.55" r="100" comment="turret"/>
+			<point x="-7243.27" y="-267.742" z="4450.39" r="100" special="1" comment="turret"/>
+			<point x="-7242.59" y="-267.936" z="4736.76" r="100" special="1" comment="turret"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" sequence="a" stage="2" tags="ship_xs scan">
+			<point x="-7232.61" y="-288.655" z="4591.94" r="100" comment="shield"/>
+			<point x="-7229.99" y="-210.353" z="4696.03" r="100" comment="shield"/>
+			<point x="-7231.54" y="-209.842" z="4481.49" r="100" comment="shield"/>
+			<point x="-7405.12" y="-216.345" z="4638.45" r="100" comment="turret"/>
+			<point x="-7063.42" y="-213.693" z="4541.89" r="100" comment="turret"/>
+			<point x="-7063.63" y="-270.647" z="4545.55" r="100" comment="turret"/>
+			<point x="-7243.27" y="-267.742" z="4450.39" r="100" comment="turret"/>
+			<point x="-7242.59" y="-267.936" z="4736.76" r="100" comment="turret"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" sequence="b" stage="1" tags="ship_xs hack">
+			<point x="2153.32" y="-1473.73" z="2317.86" r="100" comment="shield"/>
+			<point x="1768.19" y="-1473.02" z="1850.42" r="100" comment="shield"/>
+			<point x="2773.71" y="-130.215" z="2040.66" r="100" special="1" comment="surface"/>
+			<point x="4279.22" y="-356.857" z="2003.68" r="100" comment="surface"/>
+			<point x="5683.57" y="-286.06" z="1743.74" r="100" comment="surface"/>
+			<point x="6663.25" y="-355.372" z="2059.98" r="100" comment="surface"/>
+			<point x="8136.59" y="-281.713" z="2317.66" r="100" comment="surface"/>
+			<point x="9033.31" y="-375.257" z="2102.73" r="100" comment="surface"/>
+			<point x="11042.9" y="-375.256" z="2063.6" r="100" special="1" comment="surface"/>
+			<point x="14787.9" y="-364.009" z="1955.48" r="100" comment="surface"/>
+			<point x="15597.7" y="-264.316" z="1863.24" r="100" comment="surface"/>
+			<point x="15789.9" y="61.634" z="2496.37" r="100" special="1" comment="surface"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" sequence="b" stage="1" tags="ship_xs scan">
+			<point x="2153.32" y="-1473.73" z="2317.86" r="100" comment="shield"/>
+			<point x="1768.19" y="-1473.02" z="1850.42" r="100" comment="shield"/>
+			<point x="2773.71" y="-130.215" z="2040.66" r="100" comment="surface"/>
+			<point x="4279.22" y="-356.857" z="2003.68" r="100" comment="surface"/>
+			<point x="5683.57" y="-286.06" z="1743.74" r="100" comment="surface"/>
+			<point x="6663.25" y="-355.372" z="2059.98" r="100" comment="surface"/>
+			<point x="8136.59" y="-281.713" z="2317.66" r="100" comment="surface"/>
+			<point x="9033.31" y="-375.257" z="2102.73" r="100" comment="surface"/>
+			<point x="11042.9" y="-375.256" z="2063.6" r="100" comment="surface"/>
+			<point x="14787.9" y="-364.009" z="1955.48" r="100" comment="surface"/>
+			<point x="15597.7" y="-264.316" z="1863.24" r="100" comment="surface"/>
+			<point x="15789.9" y="61.634" z="2496.37" r="100" comment="surface"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" sequence="b" stage="2" tags="ship_xs hack">
+			<point x="8709.41" y="-877.482" z="1271.02" r="100" comment="shield"/>
+			<point x="8790.14" y="-802.724" z="1348.71" r="100" special="1" comment="shield"/>
+			<point x="8636.46" y="-803.791" z="1193.66" r="100" comment="shield"/>
+			<point x="8869.14" y="-804.661" z="1181.59" r="100" comment="turret"/>
+			<point x="8556.08" y="-802.919" z="1362.82" r="100" comment="turret"/>
+			<point x="8618.4" y="-855.758" z="1173.22" r="100" special="1" comment="turret"/>
+			<point x="8626.29" y="-860.393" z="1431.42" r="100" comment="turret"/>
+			<point x="8873.64" y="-861.316" z="1185.78" r="100" special="1" comment="turret"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" sequence="b" stage="2" tags="ship_xs scan">
+			<point x="8709.41" y="-877.482" z="1271.02" r="100" comment="shield"/>
+			<point x="8790.14" y="-802.724" z="1348.71" r="100" comment="shield"/>
+			<point x="8636.46" y="-803.791" z="1193.66" r="100" comment="shield"/>
+			<point x="8869.14" y="-804.661" z="1181.59" r="100" comment="turret"/>
+			<point x="8556.08" y="-802.919" z="1362.82" r="100" comment="turret"/>
+			<point x="8618.4" y="-855.758" z="1173.22" r="100" comment="turret"/>
+			<point x="8626.29" y="-860.393" z="1431.42" r="100" comment="turret"/>
+			<point x="8873.64" y="-861.316" z="1185.78" r="100" comment="turret"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" sequence="c" stage="1" tags="ship_xs hack">
+			<point x="1159.57" y="-95.773" z="0.9984" r="100" comment="shield"/>
+			<point x="1181.72" y="78.922" z="17.293" r="100" special="1" comment="shield"/>
+			<point x="1076.96" y="69.898" z="-10.132" r="100" comment="turret"/>
+			<point x="1268.33" y="68.322" z="-10.341" r="100" comment="turret"/>
+			<point x="1033.14" y="-92.377" z="34.169" r="100" comment="turret"/>
+			<point x="1271.09" y="-92.689" z="33.961" r="100" special="1" comment="turret"/>
+			<point x="1398.52" y="4.856" z="17.5" r="100" comment="surface"/>
+			<point x="832.595" y="127.096" z="10.715" r="100" special="1" comment="surface"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" sequence="c" stage="1" tags="ship_xs scan">
+			<point x="1159.57" y="-95.773" z="0.9984" r="100" comment="shield"/>
+			<point x="1181.72" y="78.922" z="17.293" r="100" comment="shield"/>
+			<point x="1076.96" y="69.898" z="-10.132" r="100" comment="turret"/>
+			<point x="1268.33" y="68.322" z="-10.341" r="100" comment="turret"/>
+			<point x="1033.14" y="-92.377" z="34.169" r="100" comment="turret"/>
+			<point x="1271.09" y="-92.689" z="33.961" r="100" comment="turret"/>
+			<point x="1398.52" y="4.856" z="17.5" r="100" comment="surface"/>
+			<point x="832.595" y="127.096" z="10.715" r="100" comment="surface"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" sequence="c" stage="2" tags="ship_xs hack">
+			<point x="788.783" y="-347.916" z="-332.982" r="100" special="1" comment="shield"/>
+			<point x="807.866" y="-172.534" z="-356.723" r="100" comment="shield"/>
+			<point x="780.94" y="-180.771" z="-452.463" r="100" comment="turret"/>
+			<point x="780.67" y="-181.094" z="-255.012" r="100" comment="turret"/>
+			<point x="828.726" y="-342.061" z="-451.385" r="100" comment="turret"/>
+			<point x="828.85" y="-341.321" z="-226.05" r="100" special="1" comment="turret"/>
+			<point x="817.353" y="-260.588" z="-581.028" r="100" comment="surface"/>
+			<point x="936.632" y="-295.978" z="259.455" r="100" special="1" comment="surface"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" sequence="c" stage="2" tags="ship_xs scan">
+			<point x="788.783" y="-347.916" z="-332.982" r="100" comment="shield"/>
+			<point x="807.866" y="-172.534" z="-356.723" r="100" comment="shield"/>
+			<point x="780.94" y="-180.771" z="-452.463" r="100" comment="turret"/>
+			<point x="780.67" y="-181.094" z="-255.012" r="100" comment="turret"/>
+			<point x="828.726" y="-342.061" z="-451.385" r="100" comment="turret"/>
+			<point x="828.85" y="-341.321" z="-226.05" r="100" comment="turret"/>
+			<point x="817.353" y="-260.588" z="-581.028" r="100" comment="surface"/>
+			<point x="936.632" y="-295.978" z="259.455" r="100" comment="surface"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" sequence="d" stage="1" tags="ship_xs hack">
+			<point x="188.543" y="-302.198" z="-4978.36" r="100" special="1" comment="shield"/>
+			<point x="153.072" y="-478.705" z="-5244.3" r="100" special="1" comment="shield"/>
+			<point x="156.015" y="-478.864" z="-4700.48" r="100" comment="shield"/>
+			<point x="-4.499" y="-676.963" z="-4853.63" r="100" comment="surface"/>
+			<point x="-129.429" y="-240.029" z="-4898.72" r="100" comment="surface"/>
+			<point x="-22.438" y="-174.374" z="-4982.37" r="100" comment="surface"/>
+			<point x="-59.909" y="-424.764" z="-3905.58" r="100" comment="surface"/>
+			<point x="-38.64" y="-424.765" z="-2649.9" r="100" special="1" comment="surface"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" sequence="d" stage="1" tags="ship_xs scan">
+			<point x="188.543" y="-302.198" z="-4978.36" r="100" comment="shield"/>
+			<point x="153.072" y="-478.705" z="-5244.3" r="100" comment="shield"/>
+			<point x="156.015" y="-478.864" z="-4700.48" r="100" comment="shield"/>
+			<point x="-4.499" y="-676.963" z="-4853.63" r="100" comment="surface"/>
+			<point x="-129.429" y="-240.029" z="-4898.72" r="100" comment="surface"/>
+			<point x="-22.438" y="-174.374" z="-4982.37" r="100" comment="surface"/>
+			<point x="-59.909" y="-424.764" z="-3905.58" r="100" comment="surface"/>
+			<point x="-38.64" y="-424.765" z="-2649.9" r="100" comment="surface"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" sequence="e" stage="1" tags="ship_xs hack">
+			<point x="-1276.56" y="-869.783" z="-1132.51" r="100" comment="shield"/>
+			<point x="-1126.64" y="-865.94" z="-1289.49" r="100" special="1" comment="shield"/>
+			<point x="-1196.89" y="-944.684" z="-1211.39" r="100" special="1" comment="shield"/>
+			<point x="-1097.88" y="-921.759" z="-1307.91" r="100" comment="turret"/>
+			<point x="-1356.12" y="-926.555" z="-1296.15" r="100" comment="turret"/>
+			<point x="-1295.58" y="-921.333" z="-1096.95" r="100" comment="turret"/>
+			<point x="-1040.59" y="-870.427" z="-1123.16" r="100" comment="turret"/>
+			<point x="-1358.23" y="-870.842" z="-1298.23" r="100" special="1" comment="turret"/>
+		</pointlist>
+		<pointlist macro="struct_bt_sy_heretic_macro" sequence="e" stage="1" tags="ship_xs scan">
+			<point x="-1276.56" y="-869.783" z="-1132.51" r="100" comment="shield"/>
+			<point x="-1126.64" y="-865.94" z="-1289.49" r="100" comment="shield"/>
+			<point x="-1196.89" y="-944.684" z="-1211.39" r="100" comment="shield"/>
+			<point x="-1097.88" y="-921.759" z="-1307.91" r="100" comment="turret"/>
+			<point x="-1356.12" y="-926.555" z="-1296.15" r="100" comment="turret"/>
+			<point x="-1295.58" y="-921.333" z="-1096.95" r="100" comment="turret"/>
+			<point x="-1040.59" y="-870.427" z="-1123.16" r="100" comment="turret"/>
+			<point x="-1358.23" y="-870.842" z="-1298.23" r="100" comment="turret"/>
 		</pointlist>
 
 	</add> 

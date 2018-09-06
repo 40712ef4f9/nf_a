@@ -28,7 +28,8 @@
 				-->
 				<do_if value="player.module" exact="'ep1'">
 					<!-- plott game -->
-					<set_faction_relation faction="faction.sovereignsyndicate" otherfaction="faction.player" value="faction.sovereignsyndicate.relation.enemy.mid"/>
+					<set_faction_relation faction="faction.player" otherfaction="faction.sovereignsyndicate" value="faction.sovereignsyndicate.relation.enemy.mid"/>
+					<set_faction_relation faction="faction.player" otherfaction="faction.hereticvanguards" value="faction.hereticvanguards.relation.enemy.mid"/>
 				</do_if>
 				<!-- CWIR starts -->
 				<do_elseif value="player.module" exact="'cwir_heretic'">
@@ -400,6 +401,10 @@
 					-->
 					<append_to_list name="$foobar" exact="[macro.tzonecluster_c_sector08_zone92_macro, macro.struct_bt_ol_shipyard_macro, faction.argongovernment]"/>
 					<!--
+					faction.beryll
+					-->
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_b_sector05_zone21_macro, macro.struct_bt_alb_laboratory_macro, faction.beryll]"/>
+					<!--
 					faction.canteran
 					-->
 					<do_if value="@macro.{['struct_bt_dv_canteran_ringstation_01_macro'].random}">
@@ -496,6 +501,10 @@
 					<append_to_list name="$foobar" exact="[macro.tzonecluster_c_sector09_zone60_macro, macro.landmarks_unique_core_dig_macro, faction.argongovernment]" chance="0"/>
 					<append_to_list name="$foobar" exact="[macro.tzonecluster_c_sector11_zone75_macro, macro.struct_econ_ref_ar_pmc_orbital_l_macro, faction.argongovernment]" chance="0"/>
 					<!--
+					faction.beryll
+					-->
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_b_sector05_zone21_macro, macro.struct_bt_alb_small_ships_complex_pmc_macro, faction.beryll]" comment="plot related"/>
+					<!--
 					faction.canteran
 					-->
 					<append_to_list name="$foobar" exact="[macro.tzonecluster_d_sector19_zone41_macro, macro.struct_bt_dv_canteran_outpost_03_macro, faction.canteran, position.[5921,4335,5511]]" comment="mission related"/>
@@ -539,8 +548,7 @@
 					<!--
 					faction.sovereignsyndicate
 					-->
-					<append_to_list name="$foobar" exact="[macro.tzonecluster_b_sector07_zone10_macro, macro.struct_bt_alb_warehouse_macro, faction.acmecorp]"/>
-					<append_to_list name="$foobar" exact="[macro.tzonecluster_b_sector07_zone10_macro, macro.struct_bt_alb_warehouse_macro, faction.sovereignsyndicate]" chance="0" comment="warehouse can take Cr down"/>
+					<append_to_list name="$foobar" exact="[macro.tzonecluster_b_sector07_zone10_macro, macro.struct_bt_alb_warehouse_macro, faction.sovereignsyndicate]" chance="0" comment="warehouse can take Cr down #acme"/>
 					<!--
 					faction.xenon
 					-->
@@ -630,7 +638,6 @@
 				faction.beryll
 				-->
 				<append_to_list name="$foobar" exact="[macro.tzonecluster_b_sector05_zone24_macro, macro.struct_bt_alb_laboratory_macro, faction.beryll]"/>
-				<append_to_list name="$foobar" exact="[macro.tzonecluster_b_sector05_zone21_macro, macro.struct_bt_alb_laboratory_macro, faction.beryll]"/>
 				<append_to_list name="$foobar" exact="[macro.tzonecluster_b_sector05_zone22_macro, macro.struct_bt_alb_laboratory_macro, faction.beryll]"/>
 				<append_to_list name="$foobar" exact="[macro.tzonecluster_b_sector05_zone24_macro, macro.struct_bt_alb_wheat_farm_macro, faction.beryll]" comment="replace stuff"/>
 				<append_to_list name="$foobar" exact="[macro.tzonecluster_b_sector05_zone24_macro, macro.struct_bt_alb_medical_supplies_macro, faction.beryll]" comment="replace stuff"/>

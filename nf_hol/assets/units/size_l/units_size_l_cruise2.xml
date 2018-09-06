@@ -144,16 +144,28 @@
 			</connection>
 
 
-			<connection name="connection_dock_s01" tags="dock_s ">
+			<connection name="connection_dock_s01" group="group02 " tags="dock_s ">
 				<offset>
 					<position x="65" y="-198" z="-710"/>
 					<quaternion qx="8.432163E-09" qy="-0.7071069" qz="-0.7071066" qw="-8.432165E-09"/>
 				</offset>
 			</connection>
-			<connection name="connection_dock_s02" tags="dock_s ">
+			<connection name="connection_dock_s02" group="group02 " tags="dock_s ">
 				<offset>
 					<position x="-65" y="-198" z="-710"/>
 					<quaternion qx="8.432163E-09" qy="-0.7071069" qz="-0.7071066" qw="-8.432165E-09"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen02" group="group02 " tags="shieldgenerator ">
+				<offset>
+					<position x="28" y="-198" z="-705"/>
+					<rotation yaw="0" pitch="0" roll="180"/>
+				</offset>
+			</connection>
+			<connection name="connection_shieldgen03" group="group02 " tags="shieldgenerator ">
+				<offset>
+					<position x="-28" y="-198" z="-705"/>
+					<rotation yaw="0" pitch="0" roll="180"/>
 				</offset>
 			</connection>
 

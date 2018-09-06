@@ -103,11 +103,25 @@
 		  <connection ref="connection_shieldgen01">
 			<macro ref="shieldgenerator_size_m_mk1_macro" connection="connection_component" />
 		  </connection>
+		  <connection ref="connection_shieldgen02">
+			<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+		  </connection>
+		  <connection ref="connection_shieldgen03">
+			<macro ref="shieldgenerator_size_m_mk3_macro" connection="connection_component" />
+		  </connection>
 		  <connection ref="connection_dock_s01">
-			<macro ref="props_surf_ar_docks_size_s_floor_macro" connection="Connection_component" />
+			<macro ref="props_surf_ar_docks_size_s_floor_macro" connection="Connection_component">
+				<properties>
+					<storage capacity="550" />
+				</properties>
+			</macro>
 		  </connection>
 		  <connection ref="connection_dock_s02">
-			<macro ref="props_surf_ar_docks_size_s_floor_macro" connection="Connection_component" />
+			<macro ref="props_surf_ar_docks_size_s_floor_macro" connection="Connection_component">
+				<properties>
+					<storage capacity="550" />
+				</properties>
+			</macro>
 		  </connection>
 		</connections>
 	</macro>
