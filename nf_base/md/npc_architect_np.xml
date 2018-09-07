@@ -767,8 +767,34 @@
               <signal_cue cue="MoveBuilderShip" />
 
               <do_if value="$actor.$jobDetails.$CEO and $actor.$jobDetails.$CEO.$JOBS? and typeof $actor.$jobDetails.$CEO.$JOBS == datatype.list">
-                <append_to_list name="$actor.$jobDetails.$CEO.$JOBS" exact="[if md.CM_Config.Settings.$Check? then 'BR.move.patrol' else 'move.patrol', $actor.$jobDetails.$BuildZone, [ ['range', 'zone'] ] ]"/>
+                <append_to_list name="$actor.$jobDetails.$CEO.$JOBS" exact="[if global.$nfconfig.$Check? then 'BR.move.patrol' else 'move.patrol', $actor.$jobDetails.$BuildZone, [ ['range', 'zone'] ] ]"/>
               </do_if>
+            </do_if>
+            <debug_text chance="0" text="'end'" />
+          </actions>
+        </cue>
+
+        <!-- 
+        <signal_objects object="$CV.architect" param="'replace_buildership'" param2="$station" />
+        -->
+        <cue name="MMCStationConst_Restart" instantiate="true">
+          <conditions>
+            <event_object_signalled object="$actor" param="'replace_buildership'" />
+            <check_value value="$actor.$atWork?" negate="true"/>
+            <check_value value="event.param2.exists"/>
+          </conditions>
+          <delay exact="2s" />
+          <actions>
+            <debug_text chance="0" text="'start'" />
+            <do_if value="not event.param2.buildingmodule and not $actor.container.buildmodule.buildanchor.exists">
+              <do_if value="event.param2.zone.npcbuildlocations.indexof.{event.param2.buildlocation} or event.param2.zone.buildlocations.indexof.{event.param2.buildlocation}">
+                <set_value name="$DeployedStation" exact="event.param2"/>
+                <!--add_npc_line line="1112" comment="Moving into position" /-->
+                <signal_cue cue="DeployToStation"/>
+              </do_if>
+              <do_else>
+                <debug_text filter="error" text="'ERROR: station %1 incompatible [missing buildspot]'.[event.param2]" />
+              </do_else>
             </do_if>
             <debug_text chance="0" text="'end'" />
           </actions>
@@ -962,8 +988,9 @@
           <actions>
             <!-- The following variables are available: $actor, $location, $DeployedStation -->
             <remove_value name="$stationListShown" comment="cleanup"/>
-            <start_script object="$actor.ship.pilot" name="'move.buildership'">
-              <param name="destination" value="$DeployedStation"/>
+            <start_script object="$actor.ship.pilot" name="'move.shipjobs'">
+              <param name="run_script_name" value="'move.buildership'"/>
+              <param name="run_script_param" value="[['destination', $DeployedStation]]"/>
             </start_script>
           </actions>
           <cues>
@@ -1007,6 +1034,25 @@
                   <set_object_commander object="$actor.container" commander="$station" type="entitytype.manager"/>
                   <set_value name="$actor.$build_base_stage" exact="false"/>
                 </do_if>
+
+                <do_if value="$station.isoperational">
+                  <set_value name="$actor.$jobDetails" exact="table[
+                    $BuildLocation = $station.buildlocation, 
+                    $StationMacro = $station.macro, 
+                    $BuildZone = $station.zone, 
+                    $CheatResources = 100, 
+                    $CheatResourcesAllStagesChance = 100, 
+                    $finalStationOwner = $station.owner, 
+                    $addCrew = true, 
+                    $CEO = null
+                  ]" />
+                  <set_value name="$actor.$jobDetails.$CEO" exact="global.$factionCEOs.{'$' + $station.owner.id}" chance="if $station.owner and global.$factionCEOs.{'$' + $station.owner.id}? and global.$factionCEOs.{'$' + $station.owner.id} then 100 else 0"/>
+                </do_if>
+
+                <do_if value="$actor.$jobDetails.$CEO.$CVS? and $actor.$jobDetails.$CEO.$CVS.indexof.{$station}">
+                  <remove_value name="$actor.$jobDetails.$CEO.$CVS.{$actor.$jobDetails.$CEO.$CVS.indexof.{$station}}"/>
+                </do_if>
+
                 <signal_cue cue="BuildFinished_Wait" />
               </actions>
             </cue>
@@ -1022,10 +1068,7 @@
               <conditions>
                 <check_any>
                   <check_all>
-                    <check_any>
-                      <event_game_loaded/>
-                      <event_player_created />
-                    </check_any>
+                    <event_cue_signalled cue="md.NF_BASE.Patch_GLWorker"/>
                     <check_value value="$station.exists and $actorContainer.exists" negate="true"/>
                   </check_all>
                   <event_object_destroyed object="$station" />
@@ -1034,7 +1077,7 @@
                 </check_any>
               </conditions>
               <actions>
-                <do_if value="event.name == 'event_game_loaded' and not $actorContainer? and $station.exists and $actor.container? and $actor.container.exists">
+                <do_if value="event.name == 'event_cue_signalled' and not $actorContainer? and $station.exists and $actor.container? and $actor.container.exists">
                   <debug_text chance="0" text="'Reset: e.O: %1  A: %2  AC %3, St %4'.[@event.object, @$actor, @$actor.container, @$station]" />
                   <set_value name="$actorContainer" exact="$actor.container" />
                   <reset_cue cue="this" />
@@ -1051,7 +1094,21 @@
                     <destroy_object object="$station" explosion="false"/>
                   </do_if>
                   <do_else comment="remove all components that are building">
-                    <do_if value="$station">
+                    <do_if value="@$station and $station.exists and ($actor.$jobDetails.$CEO or (global.$factionCEOs.{'$' + $station.owner.id}? and global.$factionCEOs.{'$' + $station.owner.id}))" chance="0">
+                      <do_if value="$actor.$jobDetails.$CEO">
+                        <do_if value="$actor.$jobDetails.$CEO.$CVS?" negate="true">
+                          <create_list name="$actor.$jobDetails.$CEO.$CVS" />
+                        </do_if>
+                        <append_to_list name="$actor.$jobDetails.$CEO.$CVS" exact="$station"/>
+                      </do_if>
+                      <do_elseif value="global.$factionCEOs.{'$' + $station.owner.id}">
+                        <do_if value="global.$factionCEOs.{'$' + $station.owner.id}.$CVS?" negate="true">
+                          <create_list name="global.$factionCEOs.{'$' + $station.owner.id}.$CVS" />
+                        </do_if>
+                        <append_to_list name="global.$factionCEOs.{'$' + $station.owner.id}.$CVS" exact="$station"/>
+                      </do_elseif>
+                    </do_if>
+                    <do_elseif value="@$station and $station.exists">
                       <find_object_component name="$Component" object="$station" multiple="true" />
                       <do_all exact="$Component.count" counter="$Counter" reverse="true">
                         <do_if value="$Component.{$Counter}.isconstruction">
@@ -1059,7 +1116,7 @@
                         </do_if>
                       </do_all>
                       <remove_value name="$Component"/>
-                    </do_if>
+                    </do_elseif>
                   </do_else>
 
                   <do_if value="$actorContainer.isoperational">

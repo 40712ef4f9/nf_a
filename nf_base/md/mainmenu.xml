@@ -13,11 +13,11 @@
 				<match class="class.production" />
 				<match_parent macro="event.param2.{3}.macro" />
 				<match repairable="true" invulnerable="false">
-					<match_hull min="35" negate="true" />
+					<match_hull min="39" negate="true" />
 				</match>
 			</find_object_component>
 			<do_all exact="$components.count" counter="$i">
-				<set_object_hull object="$components.{$i}" exact="36"/>
+				<set_object_hull object="$components.{$i}" exact="40"/>
 			</do_all>
 			<remove_value name="$components"/>
 		</do_if>
@@ -28,11 +28,11 @@
 				<match class="class.production" />
 				<match_parent macro="event.param2.{3}.macro" />
 				<match repairable="true" invulnerable="false">
-					<match_hull min="35" negate="true" />
+					<match_hull min="39" negate="true" />
 				</match>
 			</find_object_component>
 			<do_all exact="$components.count" counter="$i">
-				<set_object_hull object="$components.{$i}" exact="36"/>
+				<set_object_hull object="$components.{$i}" exact="40"/>
 			</do_all>
 			<remove_value name="$components"/>
 		</do_if>

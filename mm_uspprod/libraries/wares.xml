@@ -2666,6 +2666,22 @@
 			</primary>
 		</production>
 	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_m_xenon_miner_01_br_xen']/production[@method='default']" pos="after" >
+		<production time="208" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="2" />
+				<ware ware="shippartcomp" amount="4" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_m_xenon_collector_01_br_xen']/production[@method='default']" pos="after" >
+		<production time="208" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="2" />
+				<ware ware="shippartcomp" amount="4" />
+			</primary>
+		</production>
+	</add>
 
 	<add sel="//wares/ware[@id='machinegunturret']/production[@method='default']" pos="after" >
 		<production time="900" amount="8" method="albion2" name="{20206,101}">

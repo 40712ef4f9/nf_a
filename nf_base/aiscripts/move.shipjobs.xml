@@ -382,6 +382,11 @@
 				</run_script>
 				<resume label="finish" />
 			</do_elseif>
+			<do_elseif value="$run_script_name" exact="'replace.buildership'">
+				<remove_value name="this.$free4newjob"/>
+				<signal_objects object="this.ship.architect" param="'replace_buildership'" param2="this.$params.$station" />
+				<resume label="finish" />
+			</do_elseif>
 			<do_elseif value="$run_script_name" exact="'move.voyager'">
 				<run_script name="$run_script_name" >
 					<param name="workspace" value="if this.$params.$workspace? then this.$params.$workspace else [this.ship.cluster]" />

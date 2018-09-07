@@ -1376,7 +1376,7 @@
 						<do_elseif value="$tmpShips.{$x}.pilot.$whatido" list="['move.escort', 'BR.move.escort', 'carrier.default']">
 							<append_to_list name="$shipDoEscort" exact="$tmpShips.{$x}"/>
 						</do_elseif>
-						<do_elseif value="$tmpShips.{$x}.pilot.$whatido" list="['move.buildership']">
+						<do_elseif value="$tmpShips.{$x}.pilot.$whatido" list="['move.buildership', 'replace.buildership']">
 							<append_to_list name="$shipDoBuild" exact="$tmpShips.{$x}"/>
 						</do_elseif>
 						<do_elseif value="$tmpShips.{$x}.pilot.$whatido" list="['move.idle']">
@@ -2600,13 +2600,21 @@
 <set_value name="$text" exact="'Destination ' + @$destination.knownname + ' Jobs:' + $tmp_jobs.count"/>
 
 				<do_if value="$Object.primarypurpose == objectpurpose.build and not $Object.pilot.$traderNow?">
-					<do_if value="not $Object.buildmodule.buildanchor.exists">
+					<do_if value="$Object.architect.exists and $_CEO.$CVS? and $_CEO.$CVS.count">
+						<set_value name="$temp_station" exact="$_CEO.$CVS.random"/>
+						<set_value name="$param" exact="[['station', $temp_station]]"/>
+						<set_value name="$destination" exact="$temp_station.zone"/>
+						<set_value name="$script" exact="'replace.buildership'"/>
+						<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_runscript" />
+						<remove_value name="$temp_station"/> 
+					</do_if>
+					<do_elseif value="not $Object.buildmodule.buildanchor.exists">
 						<set_value name="$param" exact="[]"/>
 						<set_value name="$destination" exact="$sectors.random" chance="if $destination? and $destination.exists then 0 else 100"/>
 						<set_value name="$script" exact="'move.idle'"/>
 						<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_tmp" />
 						<include_actions ref="md.MM_Corps__Data.MMCData_ship_job_runscript" />
-					</do_if>
+					</do_elseif>
 				</do_if>
 				<do_elseif value="$Object.dps.all gt 200000 and ($Object.cargo.{ware.fusionreactor}.max or $Object.cargo.{ware.water}.max or $Object.cargo.{ware.energycells}.max or $Object.cargo.{ware.ore}.max)" chance="if not $pirat then 0 else if $Object.primarypurpose == objectpurpose.fight then 30 else 15">
 					<create_list name="$warebasket" />

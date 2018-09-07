@@ -20,7 +20,7 @@
       </conditions>
       <delay exact="200ms" />
       <actions>
-        <do_if value="event.name == 'event_game_loaded' and $actor.exists and not $actor.isplayerowned">
+        <do_if value="event.name != 'event_object_destroyed' and $actor.exists and not $actor.isplayerowned">
           <signal_cue_instantly cue="md.NPC_Architect_nP.Base" param="[$actor, $PlatformActor, if $IsOnBuilderShip? then $IsOnBuilderShip else if $BuildModule? and $BuildModule.exists then true else false ]"/>
         </do_if>
         <!-- No actor, no handler instances -->

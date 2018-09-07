@@ -153,7 +153,7 @@
 					</do_all>
 					<do_if value="this.ship.dps.all*1.5f lt $dps and $dps gt 70000">
 						<signal_objects object="player.computer" param="'CM_EWS'" param2="$EnemyTargets.{1}" />
-						<do_if value="md.CM_Config.Settings.$Check?" negate="true">
+						<do_if value="global.$nfconfig.$Check?" negate="true">
 							<show_notification caption="'=== Early Warning System ==='" details="'%1 Enemies found in \n%2'.[$EnemyTargets.count, this.ship.zone.knownname]" queued="true" priority="5"/>
 						</do_if>
 						<do_if value="global.$RRFspaces?">
