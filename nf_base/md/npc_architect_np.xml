@@ -1157,7 +1157,7 @@
                     </do_else-->
                   </do_if>
 
-                  <do_if value="$station and $station.availablebuildslots.count == 0">
+                  <do_if value="$station and $station.availablebuildslots.count == 0 and not $BuildModule.isbuilding">
                     <set_value name="$actor.$build_complete" exact="true"/>
                   </do_if>
 
