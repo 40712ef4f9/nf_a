@@ -153,6 +153,9 @@
 					</do_else>
 					<create_list name="$factions" />
 					<do_all exact="$stations.count" counter="$Counter">
+						<do_if value="$stations.{$Counter}.owner" list="[faction.acmecorp, faction.deepwater]">
+							<continue />
+						</do_if> 
 						<do_if value="not $factions.indexof.{$stations.{$Counter}.owner}">
 							<append_to_list name="$factions" exact="$stations.{$Counter}.owner"/>
 						</do_if> 

@@ -208,6 +208,20 @@
 				<remove_value name="$sum" />
 			</actions>
 		</cue>
+
+		<!--
+			<signal_objects object="player.galaxy" param="'Care.DO.recycle.work'" param2="$engineer" param3="$object" />
+		-->
+		<cue name="MM_Care_recycle_watch" instantiate="true">
+			<conditions>
+				<event_object_signalled object="player.galaxy" param="'Care.DO.recycle.work'" />
+				<check_value value="event.param2? and not event.param2.exists" />
+				<check_value value="event.param3? and event.param3 and event.param3.exists" />
+			</conditions>
+			<actions>
+				<signal_objects object="player.galaxy" param="'do.remove.this'" param2="event.param3" delay="25s"/>
+			</actions>
+		</cue>
 		<!--
 			<signal_objects object="player.computer" param="'Care.DO.restore'" param2="$target" />
 		-->

@@ -2,10 +2,12 @@
 <diff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<add sel="//connections">
       <connection ref="connection_radar01">
-        <build mode="optional" group="production" sequence="B" stage="1"  tags="primary " />
+        <build mode="optional" group="production" sequence="A" stage="1"  tags="primary " />
         <macro ref="radar_ship_xl_xenon_01_macro" connection="ship" />
       </connection>
 	</add>
-	<add sel="//connection[@ref='ConnectionFor_props_adsigns_traffic_l_random_macro']/build" type="@tags" >primary </add> 
-
+	<replace sel="//connection[@ref='ConnectionFor_props_adsigns_traffic_l_random_macro']/build/@stage">1</replace>
+	<replace sel="//connection[@ref='ConnectionFor_props_adsigns_traffic_l_random_macro']/build/@sequence">A</replace>
+	<replace sel="//connection[@ref='ConnectionFor_props_adsigns_traffic_l_random_macro1']/build/@stage">1</replace>
+	<replace sel="//connection[@ref='ConnectionFor_props_adsigns_traffic_l_random_macro1']/build/@sequence">A</replace>
 </diff>

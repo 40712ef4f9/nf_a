@@ -87,7 +87,7 @@
           </conditions>
           <delay exact="200ms" />
           <actions>
-            <do_if value="event.name == 'event_game_loaded' and $actor.exists and $actor.isplayerowned">
+            <do_if value="event.name != 'event_object_destroyed' and $actor.exists and $actor.isplayerowned">
               <signal_cue_instantly cue="md.NPC_Architect.Base" param="[$actor, $PlatformActor, if $IsOnBuilderShip? then $IsOnBuilderShip else if $BuildModule? and $BuildModule.exists then true else false ]"/>
             </do_if>
             <!-- No actor, no handler instances -->
@@ -1094,7 +1094,7 @@
                     <destroy_object object="$station" explosion="false"/>
                   </do_if>
                   <do_else comment="remove all components that are building">
-                    <do_if value="@$station and $station.exists and ($actor.$jobDetails.$CEO or (global.$factionCEOs.{'$' + $station.owner.id}? and global.$factionCEOs.{'$' + $station.owner.id}))" chance="0">
+                    <do_if value="@$station and $station.exists and ($actor.$jobDetails.$CEO or (global.$factionCEOs.{'$' + $station.owner.id}? and global.$factionCEOs.{'$' + $station.owner.id}))">
                       <do_if value="$actor.$jobDetails.$CEO">
                         <do_if value="$actor.$jobDetails.$CEO.$CVS?" negate="true">
                           <create_list name="$actor.$jobDetails.$CEO.$CVS" />

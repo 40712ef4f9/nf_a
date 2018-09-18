@@ -1780,6 +1780,20 @@
 			</primary>
 		</production>
 	</add>
+	<add silent="1" sel="//wares/ware[@id='stp_sci_radar_x']/production[@method='default']" pos="after" >
+		<production time="10" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="5" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='stp_sci_traffic_l_r']/production[@method='default']" pos="after" >
+		<production time="8" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippartcomp" amount="2" />
+			</primary>
+		</production>
+	</add>
 	<add silent="1" sel="//wares/ware[@id='shp_xl_kit_destroyer_01']/production[@method='default']" pos="after" >
 		<production time="360" amount="1" method="universalparts" name="Uniparts">
 			<primary>

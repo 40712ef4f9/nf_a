@@ -269,7 +269,15 @@
 										<remove_value name="$tempStation" />
 									</do_elseif>
 									<do_elseif value="$watchedObjects.{$i}.{1}.isclass.zone">
-										<find_station name="$Stations" macro="$watchedObjects.{$i}.{4}" space="$watchedObjects.{$i}.{1}" functional="true" multiple="true" />
+										<find_station name="$Stations" macro="$watchedObjects.{$i}.{4}" space="$watchedObjects.{$i}.{1}" functional="true" multiple="true" >
+											<match owner="faction.enemy" negate="true"/>		
+											<match owner="faction.criminal" negate="true"/>		
+											<match owner="faction.civilian" negate="true"/>		
+											<match owner="faction.smuggler" negate="true"/>		
+											<match owner="faction.neutral" negate="true"/>		
+											<match owner="faction.ownerless" negate="true"/>		
+											<match owner="faction.friend" negate="true"/>
+										</find_station>
 										<do_if value="$Stations.count">
 											<do_all exact="$Stations.count" counter="$Counter" reverse="true">
 												<do_if value="$Stations.{$Counter}.distanceto.{$watchedObjects.{$i}.{5}} gt 100m or $Stations.{$Counter}.defencenpc.exists" >
@@ -302,6 +310,10 @@
 									<do_elseif value="$watchedObjects.{$i}.{1}.isclass.station" negate="true">
 										<!-- no station and no zone ??? -->
 										<debug_text text="'no station and no zone: ' + @$watchedObjects.{$i}" filter="error" chance="100" />
+									</do_elseif>
+									<do_elseif value="$watchedObjects.{$i}.{1}.defencenpc.exists">
+										<!-- station still active again?! -->
+										<debug_text text="'station still active again: ' + @$watchedObjects.{$i}" filter="error" chance="100" />
 									</do_elseif>
 									<do_elseif value="@$watchedObjects.{$i}.{1}.zone.owner and @$watchedObjects.{$i}.{1}.zone.owner.relationto.{$watchedObjects.{$i}.{3}} gt $watchedObjects.{$i}.{3}.relation.neutral.min">
 										<set_owner object="$watchedObjects.{$i}.{1}" faction="$watchedObjects.{$i}.{3}" />

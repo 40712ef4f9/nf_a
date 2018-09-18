@@ -1,4 +1,4 @@
-#####
+﻿#####
 # Installation
 #####
 
@@ -55,7 +55,7 @@ This mod based on CWIR from BlackRain&Rubini so special thanks to all people who
  Unitrader 
  Reaperx
  alexalsp
- Vectorial1024
+ bitvoid
 
 #####
 # Random Information
@@ -82,7 +82,7 @@ you can configure jumpbehavior of ships in the mod-setting, there are the levels
 
 * it is also the cheat-option to disable fuelcell consume of playerowned ships available, so no extra mod is required (feel free to use, or not)
 
-* beside of classic scan and smalltalk all stations, you can build now a Commercial Center with the HoL-CV. The Manager will then searching for new Stations and Tradeupdates (default a CC will work with the whole Galaxy, this can be limited to the System it is build)
+* beside of classic scan and smalltalk all stations, you can build now a Business Center with the HoL-CV. The Manager will then searching for new Stations and Tradeupdates (default a BC will work with the whole Galaxy, this can be limited to the System it is build)
 
 * by dropping a NavBeakon you can call a delivery service for Weaponplattforms and more
 
@@ -109,3 +109,7 @@ you can configure jumpbehavior of ships in the mod-setting, there are the levels
   
 * deconstruct station
 you can call engineer and have the option to destroy (fully remove) a single storage/production or whole buildsteps in case you have removed the manager
+
+* for Exploration (pilot>>more>>Voyager) can be send all class of ships (smallships add tradesubcriptions by default, capitalships only with a captain that have high skills) 
+  another option is an Carrier with smallships, they can send by (pilot>>more>>Carrier>>more>>explore Sector) to explore and will return after work is done to her carrier
+  if voyager ships find ownerless ships -> carrier will try to pick them up, but you may send an also an Repairship to collect only those ship by voyager command

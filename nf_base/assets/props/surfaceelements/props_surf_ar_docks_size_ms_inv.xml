@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<components>
+	<component name="props_surf_ar_docks_size_ms_inv" class="dockingbay">
+		<source geometry="assets\props\SurfaceElements\props_surf_ar_docks_size_m_inv_data"/>
+		<layers>
+			<layer>
+				<waypoints/>
+				<lights/>
+			</layer>
+		</layers>
+		<connections>
+			<connection name="container" tags="contents" value="0" optional="0"/>
+			<connection name="position" tags="position" value="1" optional="1"/>
+			<connection name="space" tags="dockingbay">
+				<offset/>
+			</connection>
+			<connection name="Connection01" tags="part nocollision  ">
+				<offset/>
+				<parts>
+					<part name="part_dummy">
+						<lods>
+							<lod index="0">
+								<materials>
+									<material id="1" ref="lensflares.vertexcolor_basis"/>
+								</materials>
+							</lod>
+						</lods>
+						<size>
+							<max x="10" y="0" z="10"/>
+							<center x="0" y="0" z="0"/>
+						</size>
+					</part>
+				</parts>
+				<waypoints/>
+			</connection>
+			<connection name="connection_todock01" tags="todock " parent="part_dummy">
+				<offset>
+					<position x="0" y="0" z="-500"/>
+				</offset>
+			</connection>
+			<connection name="connection_launchpos01" tags="launchpos " parent="part_dummy"/>
+			<connection name="connection_component01" tags="dock_m dock_s  component">
+				<offset/>
+			</connection>
+		</connections>
+	</component>
+</components>

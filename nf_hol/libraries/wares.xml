@@ -232,5 +232,39 @@
 			</production>
 			<component ref="struct_econ_prod_shipsm_xen_macro" amount="1" />
 		</ware>
+		<ware id="stp_pro_mts03c" name="stp_pro_mts03c" transport="container" size="part" volume="1" tags="part">
+			<price min="1" average="1" max="1" />
+			<production time="194" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="bioopticwiring" amount="1758" />
+					<ware ware="energycells" amount="2062" />
+					<ware ware="fusionreactor" amount="564" />
+					<ware ware="reinforcedmetalplating" amount="2644" />
+				</primary>
+			</production>
+			<component ref="masstraffic_station_03_center_01_macro" amount="1" />
+		</ware>
+		<ware id="stp_sci_radar_x" name="stp_sci_radar_x" transport="container" size="part" volume="1" tags="part">
+			<price min="1" average="1" max="1" />
+			<production time="20" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="energycells" amount="34" />
+					<ware ware="bioopticwiring" amount="12" />
+					<ware ware="reinforcedmetalplating" amount="21" />
+				</primary>
+			</production>
+			<component ref="radar_ship_xl_xenon_01_macro" amount="1" />
+		</ware>
+		<ware id="stp_sci_traffic_l_r" name="stp_sci_traffic_l_r" transport="container" size="part" volume="1" tags="part">
+			<price min="1" average="1" max="1" />
+			<production time="10" amount="1" method="default" name="{20206,501}">
+				<primary>
+					<ware ware="energycells" amount="14" />
+					<ware ware="bioopticwiring" amount="2" />
+					<ware ware="reinforcedmetalplating" amount="5" />
+				</primary>
+			</production>
+			<component ref="props_adsigns_traffic_l_random_macro" amount="1" />
+		</ware>
 	</add>	
 </diff>

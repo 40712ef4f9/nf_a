@@ -72,6 +72,7 @@
 								macro.struct_at_xen_xenon_portal_macro,
 								macro.struct_at_xen_xenon_outpost_macro,
 								macro.struct_at_xen_xenon_complex_macro,
+								macro.xenon_asteroid_01_base_01t_macro,
 								macro.xenon_asteroid_02_base_02_macro,
 								macro.xenon_asteroid_01_base_01_macro,
 								macro.xenon_asteroid_01_base_01b_macro
@@ -104,8 +105,32 @@
 				<do_if value="md.$mmdefenceplatformmacros_cm? and md.$mmdefenceplatformmacros_cm.indexof.{macro.units_size_m_khaak_weaponplatform_macro} == 0">
 					<append_to_list name="md.$mmdefenceplatformmacros_cm" exact="macro.units_size_m_khaak_weaponplatform_macro"/>
 				</do_if>
+				<do_if value="global.$tradestationnetwork?">
+					<set_value name="$todo" exact="
+						[
+								macro.xenon_asteroid_01_base_01t_macro
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="global.$tradestationnetwork.indexof.{$todo.{$j}}" negate="true">
+							<append_to_list name="global.$tradestationnetwork" exact="$todo.{$j}"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
 
 				<!-- Blueprnt -->
+				<do_if value="md.$NF_ArchiSpMacros? and md.$NF_ArchiSpMacros.indexof.{macro.xenon_asteroid_01_base_01t_macro} == 0">
+					<do_if value="
+						md.$NF_ArchiSpMacros.indexof.{macro.xenon_asteroid_02_base_02_macro} or
+						md.$NF_ArchiSpMacros.indexof.{macro.xenon_asteroid_01_base_01b_macro} or
+						md.$NF_ArchiSpMacros.indexof.{macro.xenon_asteroid_01_base_01_macro}
+					">
+						<append_to_list name="md.$NF_ArchiSpMacros" exact="macro.xenon_asteroid_01_base_01t_macro"/>
+						<add_encyclopedia_entry type="stationtypes" item="'xenon_asteroid_01_base_01t_macro'" />
+						<show_help position="8" log="true" force="true" duration="15s" custom="'Your research make %1 available at station-blueprints'.[macro.xenon_asteroid_01_base_01t_macro.name]" />
+					</do_if>
+				</do_if>
 				<do_if value="md.$NF_ArchiSpMacros? and md.$NF_ArchiSpMacros.indexof.{macro.struct_at_xen_xenon_complex_macro} == 0">
 					<do_if value="
 						md.$NF_ArchiSpMacros.indexof.{macro.struct_at_xen_xenon_portal_macro} and

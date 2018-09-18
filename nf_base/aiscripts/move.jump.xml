@@ -8,7 +8,7 @@
         <debug_text text="'Set Autorefuel On at ' + this.ship.knownname"/>
       </do_if>
     </do_if>
-    <set_value name="$nonstop" exact="if $nonstop then $nonstop else ($autorefuel and global.$nfconfig.$AdvJump == 2 and this.combinedskill ge 75 and this.skill.{skilltype.navigation} ge 5)"/>
+    <set_value name="$nonstop" exact="if $nonstop then $nonstop else if ($autorefuel and global.$nfconfig.$AdvJump == 2 and this.combinedskill ge 75 and this.skill.{skilltype.navigation} ge 5) then 2 else false"/>
     <set_value name="$forcejump" exact="if $forcejump then $forcejump else ($autorefuel and global.$nfconfig.$AdvJump == 2 and this.combinedskill ge 100)" chance="0"/>
     <set_value name="$gateCost" exact="if this.ship.isclass.ship_xl then 200 else if this.ship.isclass.ship_l then 100 else 10 "/>
 
@@ -96,7 +96,43 @@
       <remove_value name="$additionalFuel"/>
     </do_if>
   </add>
-  <replace sel="//do_if[@value='this.ship.cargo.{ware.fuelcells}.count lt this.ship.jumpcostto.[$targetsector, $jumpposition]']/@value">this.ship.cargo.{ware.fuelcells}.count lt $requiredFuel</replace>
+  <!--replace sel="//do_if[@value='this.ship.cargo.{ware.fuelcells}.count lt this.ship.jumpcostto.[$targetsector, $jumpposition]']/@value">this.ship.cargo.{ware.fuelcells}.count lt $requiredFuel</replace-->
+  <replace sel="//do_if[@value='this.ship.cargo.{ware.fuelcells}.count lt this.ship.jumpcostto.[$targetsector, $jumpposition]']">
+      <do_if value="this.ship.cargo.{ware.fuelcells}.count lt $requiredFuel">
+        <!-- not enough fuel, don't use fuel and delay the jump -->
+        <debug_text text="'not enough fuel, delay jump... [%2 / %3] %4'.[null, this.ship.cargo.{ware.fuelcells}.free, this.ship.cargo.{ware.fuelcells}.count, $requiredFuel]" chance="$debugchance"/>
+        <do_if value="$skipcharge" exact="false">
+          <set_value name="$tmpwait" exact="10s"/>
+          <do_if value="$nonstop">
+            <set_value name="$ignorefuel" exact="true" chance="if $nonstop == 2 then 0 else 100" />
+            <set_value name="$nonstop" exact="false" chance="if $nonstop == 2 then 100 else 0" />
+            <set_value name="$tmpwait" min="590s" max="610s"/>
+          </do_if>
+          <do_elseif value="this.ship.cargo.{ware.fuelcells}.max and ($requiredFuel-this.ship.cargo.{ware.fuelcells}.count) lt 100 and this.ship.engineer.exists and this.ship.engineer.combinedskill ge 70">
+            <set_value name="$tmpwait" min="120s" max="200s"/>
+          </do_elseif>
+          <do_elseif value="this.ship.cargo.{ware.fuelcells}.max and this.ship.engineer.exists and this.ship.engineer.combinedskill ge 70">
+            <set_value name="$tmpwait" min="280s" max="320s"/>
+          </do_elseif>
+          <do_elseif value="($requiredFuel-this.ship.cargo.{ware.fuelcells}.count) lt 100">
+            <set_value name="$tmpwait" min="280s" max="320s"/>
+          </do_elseif>
+          <do_elseif value="this.ship.cargo.{ware.fuelcells}.max">
+            <set_value name="$tmpwait" min="440s" max="500s"/>
+          </do_elseif>
+          <do_else>
+            <set_value name="$ignorefuel" exact="true"/>
+            <set_value name="$tmpwait" min="590s" max="610s"/>
+          </do_else>
+          <wait exact="[@$tmpwait, 10s].max"/>
+          <do_if value="not $ignorefuel and @$tmpwait gt 10s and this.ship.cargo.{ware.fuelcells}.free">
+            <add_cargo ware="ware.fuelcells" object="this.ship" exact="[100, $requiredFuel-this.ship.cargo.{ware.fuelcells}.count].min" />
+          </do_if>
+          <remove_value name="$tmpwait"/>
+          <resume label="fuelcheck" chance="if $ignorefuel then 0 else 100"/>
+        </do_if>
+      </do_if>
+  </replace>
 
   <add sel="//run_script[@name=&quot;'move.jumpgate'&quot;]" pos="after">
     <set_value name="$startsector" exact="this.ship.sector"/>

@@ -106,6 +106,7 @@
           </do_all>
         </do_elseif>
         <do_elseif value="$stage == 'remove'">
+          <set_value name="$finalStage"/>
           <find_object_component groupname="$PossibleElements" object="$Defensible" checkoperational="false" multiple="true">
             <match_buildsource sequence="''" stage="0" negate="true" />
           </find_object_component>
@@ -126,6 +127,9 @@
         <!--TODO: remove this.plattform -->
         <do_if value="this.room and $PossibleElements.list.indexof.{this.room}">
           <remove_from_group group="$PossibleElements" object="this.room" />
+          <do_if value="$PossibleElementsTMP? and $PossibleElementsTMP.indexof.{this.room}">
+            <remove_value name="$PossibleElementsTMP.{$PossibleElementsTMP.indexof.{this.room}}" />
+          </do_if>
         </do_if>
         <do_if value="$PossibleElements.list.count == 0 and $PossibleElementsTMP.count">
           <add_to_group groupname="$PossibleElements" list="$PossibleElementsTMP" />
@@ -325,8 +329,8 @@
 
       <label name="end" />
 
-      <do_if value="$stage == 'remove'">
-        <signal_objects object="player.galaxy" param="'do.remove.this'" param2="this.defensible" delay="5s"/>
+      <do_if value="$finalStage?">
+        <signal_objects object="player.galaxy" param="'do.remove.this'" param2="$Defensible" delay="5s"/>
       </do_if>
       <set_value name="$Defensible" exact="this.defensible"/>
       <end_repair_mass_traffic object="this.defensible" />
@@ -336,6 +340,9 @@
     </actions>
   </attention>
   <on_abort>
+    <do_if value="$finalStage?">
+      <signal_objects object="player.galaxy" param="'Care.DO.recycle.work'" param2="this" param3="$Defensible" delay="10s" />
+    </do_if>
     <end_repair_mass_traffic object="this.defensible" />
     <remove_value name="this.$work" /> 
   </on_abort>

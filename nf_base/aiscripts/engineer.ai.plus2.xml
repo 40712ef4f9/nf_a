@@ -35,8 +35,8 @@
         <set_value name="$Defensible" exact="this.defensible" />
         <set_value name="this.$Defensible" exact="this.defensible" />
         <set_value name="this.$destruct" exact="true" />
-        <set_value name="$part" exact="if typeof event.param2 == datatype.list and event.param2.{1} then event.param2.{1} else event.param2" />
-        <set_value name="$stage" exact="if typeof event.param2 == datatype.list then [event.param2.{2}, event.param2.{3}] else if typeof event.param2 == datatype.list and event.param2.{4}? and (typeof event.param2.{4}).istring then event.param2.{4} else null" />
+        <set_value name="$part" exact="if typeof event.param2 == datatype.list and event.param2.{1}? and (event.param2.{1} or event.param2.{1} == null) then event.param2.{1} else event.param2" />
+        <set_value name="$stage" exact="if typeof event.param2 == datatype.list then if ((event.param2.{2} and typeof event.param2.{2} == datatype.string) or event.param2.{3}) then [event.param2.{2}, event.param2.{3}] else if event.param2.{4}? and event.param2.{4} and typeof event.param2.{4} == datatype.string then event.param2.{4} else null else null" />
         <abort_called_scripts resume="runprocess"/>
       </actions>
     </handler>
