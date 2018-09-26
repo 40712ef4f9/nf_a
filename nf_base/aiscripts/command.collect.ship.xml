@@ -11,6 +11,8 @@
     <param name="restore" default="false" />
     <param name="recycle" default="null" />
     <param name="pickup" default="true" />
+    <param name="manageCargo" default="true" />
+    <param name="collectdrops" default="true" />
     <param name="debugchance" default="0"/>
   </params>
   <init>
@@ -21,6 +23,10 @@
 
       <set_value name="$bigship" exact="this.ship.isclass.ship_xl or this.ship.isclass.ship_l" />
       <set_value name="$dorecycle" exact="if $recycle and typeof $recycle == datatype.list and $recycle.count then true else false" />
+      <do_if value="typeof $collectdrops == datatype.list">
+        <set_value name="$basket" exact="$collectdrops.clone"/>
+        <set_value name="$collectdrops" exact="if $basket.count then true else false"/>
+      </do_if>
 
 
       <!-- Label to allow us to repeat indefinitely -->
@@ -318,6 +324,115 @@
         </do_while>
         <remove_value name="$time"/>
         <remove_value name="$wait"/>
+      </do_if>
+        <!-- 
+        * find small cargo ships (docked)
+        * transfer cargo
+        * send fully loaded ships for unload at owend stations in range (?)
+        -->
+      <label name="cargo" />
+      <do_if value="$manageCargo">
+        <create_group groupname="$docks" />
+        <create_group groupname="$docked" />
+        <create_list name="$unload" />
+        <do_all exact="4" counter="$j">
+          <find_dock_location container="this.ship" size="[tag.dock_xl, tag.dock_l, tag.dock_m, tag.dock_s].{$j}" name="$dock" multiple="true"/>
+          <do_all exact="$dock.count" counter="$i">
+            <do_if value="$docks.indexof.{$dock.{$i}.component} == 0">
+              <add_to_group groupname="$docks" object="$dock.{$i}.component" />
+            </do_if>
+            <do_else>
+              <continue />
+            </do_else>
+            <do_if value="$dock.{$i}.component.docked.count">
+              <add_to_group groupname="$docked" list="$dock.{$i}.component.docked" />
+            </do_if>
+          </do_all>
+          <remove_value name="$dock"/>
+        </do_all>
+        <remove_value name="$docks"/>
+        <set_value name="$cargo" exact="this.ship.cargo.list" />
+        <do_all exact="$cargo.count" counter="$j">
+          <do_if value="$cargo.{$j}" exact="ware.fuelcells">
+            <continue />
+          </do_if>
+          <do_all exact="$docked.count" counter="$i">
+            <do_if value="$docked.{$i}.trueowner" exact="this.ship.trueowner" negate="true">
+              <continue />
+            </do_if>
+            <do_if value="$docked.{$i}.cargo.{$cargo.{$j}}.free">
+              <set_value name="$amount" exact="[this.ship.cargo.{$cargo.{$j}}.count, $docked.{$i}.cargo.{$cargo.{$j}}.free].min" />
+              <add_cargo ware="$cargo.{$j}" object="$docked.{$i}" exact="$amount" result="$doneamount" />
+              <remove_cargo ware="$cargo.{$j}" object="this.ship" exact="$doneamount" />
+            </do_if>
+            <do_if value="$unload.indexof.{$docked.{$i}} == 0 and $docked.{$i}.cargo.{$cargo.{$j}}.max and $docked.{$i}.cargo.{$cargo.{$j}}.free == 0">
+              <append_to_list name="$unload" exact="$docked.{$i}" />
+            </do_if>
+            <do_if value="this.ship.cargo.{$cargo.{$j}}.count == 0">
+              <break />
+            </do_if>
+          </do_all>
+        </do_all>
+        <remove_value name="$docked"/>
+        <remove_value name="$cargo"/>
+        <!-- signal $unload $commander -->
+        <remove_value name="$unload"/>
+        <do_if value="$drops?">
+          <set_value name="$collectdrops" exact="false" />
+        </do_if>
+      </do_if>
+
+      <label name="drops" />
+      <do_if value="$collectdrops">
+        <set_command_action commandaction="commandaction.waitingdrones" />
+        <!-- The target is destroyed or disenganged: Find crates that match the basket -->
+        <find_object name="$crates" class="class.collectable" space="this.ship.sector" multiple="true">
+          <match_distance object="this.ship" max="8km"/>
+        </find_object>
+        <set_value name="$drops" exact="[]"/>
+        <do_if value="$basket?" negate="true">
+          <create_list name="$basket" />
+        </do_if>
+        <debug_text text="'Crates to collect %1, basket: %2'.[$crates, $basket]" chance="$debugoutputchance"/>
+        <do_all exact="$crates.count" counter="$i">
+          <set_value name="$cratewares" exact="$crates.{$i}.wares.list"/>
+          <debug_text text="'target dropped crate with: ' + $cratewares" chance="$debugoutputchance"/>
+          <do_all exact="$cratewares.count" counter="$o">
+            <do_if value="this.ship.cargo.{$cratewares.{$o}}.free">
+              <do_if value="$basket.indexof.{$cratewares.{$o}} or $basket.count == 0">
+                <debug_text text="$cratewares.{$o} + ' added to final crates'" chance="$debugoutputchance"/>
+                <append_to_list name="$drops" exact="$crates.{$i}"/>
+                <break/>
+              </do_if>
+            </do_if>
+          </do_all>
+        </do_all>
+        <!-- Either if it was destroyed or disengaged, there might be some drops, if not end -->
+        <do_if value="$drops.count">
+          <!-- Collect -->
+          <do_all exact="$drops.count" counter="$i" reverse="true">
+            <do_if value="$drops.{$i}.exists and $drops.{$i}.isclass.collectable" negate="true">
+              <resume label="$drops.{$i}"/>
+            </do_if>
+          </do_all>
+          <sort_collectables_by_value name="$sortedlist" collectables="$drops" object="this.ship" />
+          <do_if value="$sortedlist.count">
+            <add_to_group groupname="$sorteddrops" list="$sortedlist"/>
+            <debug_text text="'Target was destroyed. Checking for crates. Basket %1, drops %2'.[$basket, $sorteddrops]" chance="$debugoutputchance"/>
+            <run_script name="'move.collect.ship'">
+              <param name="targetgroup" value="$sorteddrops"/>
+              <param name="debugoutputchance" value="$debugoutputchance"/>
+            </run_script>
+            <set_value name="$doWait" exact="player.age+1h"/>
+            <do_while value="player.age lt $doWait and  this.ship.availableunits.{unitcategory.transport}.count != this.ship.units.{unitcategory.transport}.count">        
+              <wait min="20*player.timewarp.factor" max="30*player.timewarp.factor"/>
+            </do_while>
+          </do_if>
+
+          <do_if value="$manageCargo">
+            <resume label="cargo"/>
+          </do_if>
+        </do_if>
       </do_if>
       <!--do_else>
         <signal_objects object="this.ship" param="'stop order'" delay="3s"/>

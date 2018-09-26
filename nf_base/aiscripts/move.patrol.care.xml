@@ -16,6 +16,20 @@
     <handler ref="AttackHandler" />
     <handler ref="ScannedHandler" />
     <handler ref="PlayerInput" />
+    <handler>
+      <conditions>
+        <event_object_signalled object="this.ship" param="'recycle ship'"/>
+        <check_value value="event.param2.exists"/>
+      </conditions>
+      <actions>
+        <set_value name="$nextRecycle" exact="player.age + 10min" />
+        <remove_value name="$mayRecycle"/>
+        <run_interrupt_script name="'command.collect.ship'" abortscripts="true" resume="patrol" >
+          <param name="target" value="event.param2" />
+          <param name="recycle" value="event.param3" />
+        </run_interrupt_script>
+      </actions>
+    </handler>
   </interrupts>
   <init>
     <set_command command="command.patrol"  />
@@ -29,6 +43,19 @@
     <actions>
 
       <run_script name="'move.undock'" sinceversion="3" />
+
+      <do_if value="this.ship.subordinates.count">
+        <set_value name="$activeEscorts" exact="false"/>
+        <do_all exact="this.ship.subordinates.count" counter="$i">
+          <do_if value="this.ship.subordinates.{$i}.isclass.[class.ship_s, class.ship_m, class.ship_l, class.ship_xl] and this.ship.subordinates.{$i}.dockslot == null">
+            <set_value name="$activeEscorts" exact="true"/>
+          </do_if>
+        </do_all>
+        <do_if value="$activeEscorts" negate="true">
+          <set_value name="this.ship.pilot.$mm_carriers_ad" exact="true"/>
+        </do_if>
+      </do_if>
+
       <do_if value="not $patrolobject.exists and this.ship.jobmainzone">
         <set_value name="$patrolobject" exact="this.ship.jobmainzone"/>
       </do_if>
@@ -348,20 +375,24 @@
       <wait min="1s" max="2s" />
 
       <!-- check if there this is a wreck and we can restore it -->
-      <do_if value="false">
-        <find_gravidar_contact name="$RestoreTarget" object="this.ship" restorable="true" multiple="false">
+      <do_if value="$mayRecycle?" negate="true">
+        <set_value name="$mayRecycle" exact="false"/>
+        <set_value name="$todo" exact="[ware.reinforcedmetalplating, ware.scanningarray, ware.microchips, ware.plasmaflowregulator, ware.bioopticwiring, ware.bioelectricneurongel, ware.holtzmanfieldgenerator, ware.plasmapumps, ware.fusionreactor]"/>
+        <do_all exact="$todo.count" counter="$i" chance="if this.ship.isclass.[class.ship_xl, class.ship_l] then 100 else 0">
+          <do_if value="this.ship.cargo.{$todo.{$i}}.free">
+            <set_value name="$mayRecycle" exact="true"/>
+            <break />
+          </do_if>
+        </do_all>
+        <remove_value name="$todo"/>
+      </do_if>
+      <do_if value="$mayRecycle and this.ship.units.{unitcategory.welder}.count and (not $nextRecycle? or $nextRecycle lt player.age)" chance="this.combinedskill">
+        <find_gravidar_contact name="$salvagetarget" object="this.ship" restorable="true" multiple="false">
           <match_distance object="this.ship" max="this.ship.maxradarrange"/>
           <match_size min="300m"/>
         </find_gravidar_contact>
-        <do_if value="$RestoreTarget.iswreck">
-          <restore_object object="$RestoreTarget" hull="1" recursive="true"/>
-          <set_owner object="$RestoreTarget" faction="faction.ownerless" />
-          <set_object_hull object="$RestoreTarget" exact="5" />
-          <set_value name="$targetzone" exact="$RestoreTarget.zone"/>
-          <get_safe_pos result="$pos" radius="this.ship.size + 1000m" ignored="this.ship" object="$RestoreTarget" zone="$targetzone" />
-
-          <resume label="patrol"/>
-        </do_if>
+        <signal_objects object="player.galaxy" param="'Care.DO.recycle'" param2="$salvagetarget" param3="this.ship" />
+        <remove_value name="$salvagetarget"/>
       </do_if>
 
       <do_if value="this.ship.trueowner == faction.player and @$nextupdate lt player.age">
@@ -401,7 +432,7 @@
           <set_cover_owner object="this.ship.subordinates.{$i}"/>
         </do_if>
         <remove_value name="$Entities"/>
-        <start_script name="'move.escort'" object="this.ship.subordinates.{$i}.pilot">
+        <start_script name="'move.escort'" object="this.ship.subordinates.{$i}.pilot" chance="if @$activeEscorts then 100 else 0">
           <param name="target" value="this.ship" />
           <param name="formation" value="[formationshape.vshape, formationshape.invvshape].random" />              
         </start_script>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<diff>
+	<add sel="//cue[@name='InitBuiltStation_Finished']/actions">
+		<signal_objects object="player.galaxy" param="'check for new owner'" param2="$Ship.buildanchor.zone"/>
+	</add>
+</diff>

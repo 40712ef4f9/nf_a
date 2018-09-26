@@ -46,6 +46,15 @@
           </do_else>
         </do_if>
         <debug_text text="'updated operational range for %1(%2) to %3(%4)'.[this.ship.knownname, this.ship, $range.knownname, $range]" chance="$debugchance" />
+        <do_if value="@event.param2">
+          <remove_value name="this.$traderange_clusters"/>
+          <remove_value name="this.$traderange_sellclusters"/>
+          <remove_value name="this.$traderange_buyclusters"/>
+          <remove_value name="this.$tgr_min_sell"/>
+          <remove_value name="this.$tgr_max_sell"/>
+          <remove_value name="this.$tgr_min_buy"/>
+          <remove_value name="this.$tgr_max_buy"/>
+        </do_if>
       </actions>
     </handler>
     <handler>
@@ -102,6 +111,8 @@
         <run_interrupt_script name="'command.collect.ship'" abortscripts="true" resume="find trade run" >
           <param name="target" value="event.param2" />
           <param name="recycle" value="event.param3" />
+          <param name="manageCargo" value="false" />
+          <param name="collectdrops" value="$warelist" />
         </run_interrupt_script>
       </actions>
     </handler>
@@ -395,6 +406,7 @@
       <do_if value="$mayRecycle and this.ship.units.{unitcategory.welder}.count and (not $nextRecycle? or $nextRecycle lt player.age)" chance="if this.ship.isplayerowned then 0 else this.combinedskill">
         <find_gravidar_contact name="$target" object="this.ship" restorable="true" multiple="false">
           <match_distance object="this.ship" max="this.ship.maxradarrange"/>
+          <match_size min="300m"/>
         </find_gravidar_contact>
         <signal_objects object="player.galaxy" param="'Care.DO.recycle'" param2="$target" param3="this.ship" />
         <remove_value name="$target"/>

@@ -307,6 +307,41 @@
 					<ware ware="reinforcedmetalplating" amount="8" />
 				</primary>
 			</production>
+			<production time="106" amount="1" method="fieldsofop" name="{20206,601}">
+				<primary>
+					<ware ware="bioopticwiring" amount="18" />
+					<ware ware="energycells" amount="175" />
+					<ware ware="foodrations" amount="56" />
+					<ware ware="fusionreactor" amount="5" />
+					<ware ware="holtzmanfieldgenerator" amount="3" />
+					<ware ware="microchips" amount="21" />
+					<ware ware="plasmaflowregulator" amount="5" />
+					<ware ware="scanningarray" amount="7" />
+					<ware ware="teladianium" amount="50" />
+				</primary>
+			</production>
+			<production time="106" amount="1" method="xenon" name="{20206,701}">
+				<primary>
+					<ware ware="ions" amount="2500"/>
+					<ware ware="plasma" amount="2500"/>
+					<ware ware="hydrogen" amount="2500"/>
+					<ware ware="ore" amount="2500"/>
+					<ware ware="silicon" amount="2500"/>
+					<ware ware="nividium" amount="2500"/>
+					<ware ware="crystals" amount="2500"/>
+				</primary>
+			</production>      
+			<production time="106" amount="1" method="br_xenon" name="{20206,701}">
+				<primary>
+					<ware ware="ions" amount="2500"/>
+					<ware ware="plasma" amount="2500"/>
+					<ware ware="hydrogen" amount="2500"/>
+					<ware ware="ore" amount="2500"/>
+					<ware ware="silicon" amount="2500"/>
+					<ware ware="nividium" amount="2500"/>
+					<ware ware="crystals" amount="2500"/>
+				</primary>
+			</production>      
 			<production time="106" amount="1" method="universalparts" name="Uniparts">
 				<primary>
 					<ware ware="shippart" amount="4" />
@@ -1343,6 +1378,63 @@
 		</production>
 	</add>
 	<add silent="1" sel="//wares/ware[@id='shp_xl_builder_ship_ol_3']/production[@method='default']" pos="after" >
+		<production time="106" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="4" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_xl_builder_outpost']/production[@method='default']" pos="after" >
+		<production time="106" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="4" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_xl_builder_ship_hoa']/production[@method='default']" pos="after" >
+		<production time="106" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="4" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_xl_builder_ship_hoa2']/production[@method='default']" pos="after" >
+		<production time="106" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="4" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_xl_builder_ship_hoa3']/production[@method='default']" pos="after" >
+		<production time="106" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="4" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_xl_builder_ship_pmxe']/production[@method='default']" pos="after" >
+		<production time="106" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="4" />
+			</primary>
+		</production>
+	</add>
+
+	<add silent="1" sel="//wares/ware[@id='shp_xl_builder_ship_hv']/production[@method='default']" pos="after" >
+		<production time="106" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="4" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_xl_builder_ship_hv2']/production[@method='default']" pos="after" >
+		<production time="106" amount="1" method="universalparts" name="Uniparts">
+			<primary>
+				<ware ware="shippart" amount="4" />
+			</primary>
+		</production>
+	</add>
+	<add silent="1" sel="//wares/ware[@id='shp_xl_builder_ship_hv3']/production[@method='default']" pos="after" >
 		<production time="106" amount="1" method="universalparts" name="Uniparts">
 			<primary>
 				<ware ware="shippart" amount="4" />
