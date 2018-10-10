@@ -11,24 +11,23 @@
 				</check_any>
 				<check_value value="event.object.type" exact="entitytype.marine" />
 				<check_value value="event.object.trueowner" exact="faction.player" />
-				<check_value value="event.object.iscontrolentity" />
+				<!--check_value value="event.object.iscontrolentity or @event.object.container.boardingnpc == event.object" /-->
 			</conditions>
 			<actions>
-				<add_player_choice_sub text="{2802,1001}" section="mmsp_transfer" selectable="event.object.container.subordinates.count" comment="INIT" chance="if event.object.container.isclass.ship and event.object.container.boardingnpc == event.object and event.object.container.boardee then 0 else 100" />
+				<add_player_choice_sub text="{2802,1001}" section="mmsp_transfer" selectable="event.object.container.subordinates.count or player.primaryship.availableunits.{unitcategory.marine}.count" comment="INIT" chance="if event.object.container.isclass.ship and event.object.container.boardingnpc == event.object and (event.object.container.boardee or event.object.$runAI?) or not event.object.iscontrolentity then 0 else 100" />
 				<do_if value="@player.platform.container.isplayerowned and @player.platform.container.isclass.ship">
-					<do_if value="event.object.container.isclass.ship and event.object.container.boardingnpc == event.object and event.object.container.boardee">
+					<do_if value="event.object.container.isclass.ship and event.object.container.boardingnpc == event.object and (event.object.container.boardee or (event.object.container == player.primaryship and not player.platform))">
 						<!-- -->
 					</do_if>
-					<do_elseif value="not @player.platform.container.boardingnpc">
-						<add_player_choice text="{1002,3006}" section="cMarine_fsb_workhere" position="top_right" comment="Work here"/>
+					<do_elseif value="player.platform and player.platform.container != player.primaryship and @player.platform.container.boardingnpc != event.object and (event.object.container == player.primaryship or event.object.container == player.platform.container)">
+						<add_player_choice text="{1002,3006}" section="cMarine_fsb_workhere" position="right" comment="Work here"/>
 					</do_elseif>
 					<do_else>
-						<add_player_choice text="{1002,3008}" section="cMarine_fsb_worksomewhere" position="top_right" choiceparam="[0, 0, 'zone', player.primaryship.zone, null, null, 'selectplayerobject', ['cMarine_fsb_worksomewhere_objectselected', null, null, true, false, true, false, true]]" comment="Work somewhere else"/>
-						<!--add_player_choice text="{1002,3006}" section="cMarine_fsb_hasengineerplatform" position="top_right" comment="Work here"/-->
+						<add_player_choice text="{1002,3008}" section="cMarine_fsb_worksomewhere" position="top_right" choiceparam="[0, 0, 'zone', player.primaryship.zone, null, null, 'selectplayerobject', ['cMarine_fsb_worksomewhere_objectselected', null, null, true, false, true, false, true]]" comment="Work somewhere else" chance="if event.object.$runAI? then 0 else 100"/>
 					</do_else>
 				</do_if>
 				<do_elseif value="not player.platform">
-					<add_player_choice text="{1002,3008}" section="cMarine_fsb_worksomewhere" position="top_right" choiceparam="[0, 0, 'zone', player.primaryship.zone, null, null, 'selectplayerobject', ['cMarine_fsb_worksomewhere_objectselected', null, null, true, false, true, false, true]]" comment="Work somewhere else"/>
+					<add_player_choice text="{1002,3008}" section="cMarine_fsb_worksomewhere" position="top_right" choiceparam="[0, 0, 'zone', player.primaryship.zone, null, null, 'selectplayerobject', ['cMarine_fsb_worksomewhere_objectselected', null, null, true, false, true, false, true]]" comment="Work somewhere else" chance="if event.object.$runAI? then 0 else 100"/>
 				</do_elseif>
 			</actions>
 		</cue>
@@ -48,6 +47,7 @@
 				<check_value value="event.object.iscontrolentity" />
 				<check_value value="event.object.container.commander and event.object.container.commander != player.primaryship" />
 				<check_value value="event.object.$boarding?" />
+				<check_value value="event.object.container.exists" />
 				<check_value value="event.object.container.commander.boardee or @event.object.container.commander.commander.boardee" />
 				<check_value value="event.object.$boardingPodsOut?" negate="true"/>
 			</conditions>
@@ -201,15 +201,25 @@
 						<remove_value name="$from"/>
 						<remove_value name="$to"/>
 					</do_if>
+					<set_value name="$skunk" exact="player.primaryship" />
+					<set_value name="$npc" exact="event.object.container" />
 
 					<set_value name="$minv" exact="player.copilot.inventory.{ware.spe_unit_marine_mk1}.count or player.copilot.inventory.{ware.spe_unit_marine_mk2}.count or player.copilot.inventory.{ware.spe_unit_marine_mk3}.count" />
-					<add_player_choice text="{2802,1011}" position="top_left" section="mmsp_select" selectable="event.object.container.availableunits.{unitcategory.marine}.count and event.object.container.subordinates.count" choiceparam="[1, 'free']" />
-					<add_player_choice text="{2802,1012}" position="top_right" section="mmsp_select" selectable="event.object.container.units.maxcount - event.object.container.units.count and event.object.container.subordinates.count" choiceparam="[1, 'skunk']" />				
-					<add_player_choice text="{2802,1013}" position="left" section="mmsp_select" selectable="$minv and event.object.container.subordinates.count" choiceparam="[1, 'marine_free']" />				
+					<do_if value="$skunk" exact="$npc" negate="true">
+						<add_player_choice text="{2802,1011}" position="top_left" section="mmsp_select" selectable="$skunk.subordinates.count and $skunk.availableunits.{unitcategory.marine}.count and $npc.units.maxcount - $npc.units.count" choiceparam="[1, 'free']" />
+						<add_player_choice text="{2802,1012}" position="top_right" section="mmsp_select" selectable="$skunk.subordinates.count and $skunk.units.maxcount - $skunk.units.count and $npc.availableunits.{unitcategory.marine}.count" choiceparam="[1, 'skunk']" />				
+					</do_if>
+					<do_else>
+						<add_player_choice text="{2802,1011}" position="top_left" section="mmsp_select" selectable="$skunk.availableunits.{unitcategory.marine}.count and $skunk.subordinates.count" choiceparam="[1, 'free']" />
+						<add_player_choice text="{2802,1012}" position="top_right" section="mmsp_select" selectable="$skunk.units.maxcount - $skunk.units.count and $skunk.subordinates.count" choiceparam="[1, 'skunk']" />				
+					</do_else>
+					<add_player_choice text="{2802,1013}" position="left" section="mmsp_select" selectable="$minv and $skunk.subordinates.count" choiceparam="[1, 'marine_free']" />				
 					<add_player_choice text="{2802,1014}" position="right" section="mmsp_select" selectable="$minv" choiceparam="[1, 'marine_skunk']" />	
-					<add_player_choice text="{2802,1015}" position="bottom_left" section="mmsp_store" selectable="event.object.container.availableunits.{unitcategory.marine}.count"/>				
+					<add_player_choice text="{2802,1015}" position="bottom_left" section="mmsp_store" selectable="$npc.availableunits.{unitcategory.marine}.count"/>				
 					<add_player_choice_return text="{1002,20}" position="bottom_right" comment="Back"/>
 					<remove_value name="$minv"/>
+					<remove_value name="$skunk"/>
+					<remove_value name="$npc"/>
 				</do_if>
 				<do_if value="event.param" exact="'mmsp_store'">
 					<set_value name="$to" exact="event.object" />
@@ -363,11 +373,18 @@
 						<set_value name="$lstart" exact="1" />
 					</do_else>
 
-					<do_if value="$do" exact="'free'">
+					<do_if value="$do == 'skunk' and event.object.container != player.primaryship">
+						<create_group groupname="$from"/>
+						<add_to_group groupname="$from" object="event.object.container" />
+						<set_value name="$to" exact="player.primaryship" />
+						<set_value name="$from" exact="$from.list" />
+						<set_value name="$lmax" exact="$from.count" />
+					</do_if>
+					<do_elseif value="$do == 'free' and event.object.container != player.primaryship">
 						<create_group groupname="$to"/>
-						<add_to_group groupname="$to" list="$boardingfleet_freespace.list" />
-						<add_to_group groupname="$to" list="$freespace.list" />
-						<set_value name="$from" exact="event.object.container" />
+						<add_to_group groupname="$to" object="event.object.container" />
+						<set_value name="$from" exact="player.primaryship" />
+						<set_value name="$to" exact="$to.list" />
 						<set_value name="$lmax" exact="$to.count" />
 						<do_all exact="unitcategory.marine.maxmk" counter="$i">
 							<do_if value="$fromlist?">
@@ -377,11 +394,28 @@
 								<set_value name="$fromlist" exact="'%1'.[$from.availableunits.{unitcategory.marine}.mk.{$i}.count]" />
 							</do_else>
 						</do_all>
-					</do_if>
+					</do_elseif>
+					<do_elseif value="$do" exact="'free'">
+						<create_group groupname="$to"/>
+						<add_to_group groupname="$to" list="$boardingfleet_freespace.list" />
+						<add_to_group groupname="$to" list="$freespace.list" />
+						<set_value name="$from" exact="event.object.container" />
+						<set_value name="$to" exact="$to.list" />
+						<set_value name="$lmax" exact="$to.count" />
+						<do_all exact="unitcategory.marine.maxmk" counter="$i">
+							<do_if value="$fromlist?">
+								<set_value name="$fromlist" exact="$fromlist + '/%1'.[$from.availableunits.{unitcategory.marine}.mk.{$i}.count]" />
+							</do_if>
+							<do_else>
+								<set_value name="$fromlist" exact="'%1'.[$from.availableunits.{unitcategory.marine}.mk.{$i}.count]" />
+							</do_else>
+						</do_all>
+					</do_elseif>
 					<do_elseif value="$do" exact="'skunk'">
 						<create_group groupname="$from"/>
 						<add_to_group groupname="$from" list="$boardingfleet.list" />
 						<set_value name="$to" exact="event.object.container" />
+						<set_value name="$from" exact="$from.list" />
 						<set_value name="$lmax" exact="$from.count" />
 					</do_elseif>
 					<do_elseif value="$do" list="['marine_skunk','marine_free']">
@@ -390,6 +424,7 @@
 						<add_to_group groupname="$to" list="$boardingfleet_freespace.list" chance="if $do == 'marine_free' then 100 else 0" />
 						<add_to_group groupname="$to" list="$freespace.list" chance="if $do == 'marine_free' then 100 else 0" />
 						<set_value name="$from" exact="if player.copilot then player.copilot else event.object" />
+						<set_value name="$to" exact="$to.list" />
 						<set_value name="$lmax" exact="$to.count" />
 						<do_all exact="$wares.count" counter="$i">
 							<do_if value="$fromlist?">

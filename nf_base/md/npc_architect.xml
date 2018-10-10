@@ -108,8 +108,9 @@
     </do_elseif>
     <do_elseif value="event.param == 'cArch_workat_contractor'">
       <do_if value="event.param2? and event.param2.{3}.isclass.zone and (event.param2.{3}.freebuildlocations.count or event.param2.{3}.freenpcbuildlocations.count)">
-        <set_value name="$location" exact="event.param2.{3}.freebuildlocations.random" />
-        <do_if value="$location.child">
+        <set_value name="$location" exact="if event.param2.{3}.freebuildlocations.count then event.param2.{3}.freebuildlocations.random else null" />
+        <do_if value="not $location or $location.child">
+          <set_value name="$location" exact="null" />
           <do_all exact="event.param2.{3}.buildlocations.count" counter="$bs"> 
             <do_if value="event.param2.{3}.buildlocations.{$bs}.child" negate="true">
               <set_value name="$location" exact="event.param2.{3}.buildlocations.{$bs}"/>
@@ -117,19 +118,24 @@
             </do_if>
           </do_all>
         </do_if>
-        <do_if value="event.param2.{3}.owner and event.param2.{3}.owner.relationto.{$actor.owner} ge $actor.owner.relation.friend.min">
-          <set_value name="$location" exact="event.param2.{3}.freenpcbuildlocations.random" />
-          <do_if value="$location.child">
+        <do_if value="not $location and (event.param2.{3}.owner and event.param2.{3}.owner.relationto.{$actor.owner} ge $actor.owner.relation.friend.min)">
+          <set_value name="$location2" exact="if event.param2.{3}.freenpcbuildlocations.count then event.param2.{3}.freenpcbuildlocations.random else null" />
+          <do_if value="not $location2 or $location2.child">
+            <set_value name="$location2" exact="null" />
             <do_all exact="event.param2.{3}.npcbuildlocations.count" counter="$bs"> 
               <do_if value="event.param2.{3}.npcbuildlocations.{$bs}.child" negate="true">
-                <set_value name="$location" exact="event.param2.{3}.npcbuildlocations.{$bs}"/>
+                <set_value name="$location2" exact="event.param2.{3}.npcbuildlocations.{$bs}"/>
                 <break />
               </do_if>
             </do_all>
           </do_if>
+          <do_if value="$location2 and not $location2.child">
+            <set_value name="$location" exact="$location2" />
+          </do_if>
+          <remove_value name="$location2" />
         </do_if>
 
-        <do_if value="$location.child" negate="true">
+        <do_if value="$location and not $location.child">
           <do_if value="not $actor.$specialMacroOrder? and $actor.ship.buildmodule.exists and $actor.ship.buildmodule.buildmacros.count == 1">
             <set_value name="$actor.$specialMacroOrder" exact="$actor.ship.buildmodule.buildmacros.{1}" />
           </do_if>

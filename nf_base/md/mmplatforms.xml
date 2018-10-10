@@ -62,6 +62,7 @@
 				<check_value value="event.object.type" exact="entitytype.pilot" />
 				<check_value value="event.object.trueowner" exact="faction.player" />
 				<check_value value="event.object.iscontrolentity" />
+				<check_value value="event.object.container.exists" />
 				<check_value value="event.object.container.macro.ismacro.{md.$mmdefenceplatformmacros}" />
 			</conditions>
 			<actions>

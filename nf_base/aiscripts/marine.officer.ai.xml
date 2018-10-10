@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<aiscript name="marine.officer.ai" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+	<!--
+	Marine Officer train Marines
+	-->
+	<params>
+		<param name="debugchance" default="0"/>
+	</params>
+	<init>
+		<set_command command="command.scan" />
+		<set_value name="this.$runAI" />
+	</init>
+	<attention min="unknown">
+		<actions>
+
+			<label name="start" />
+
+			<set_value name="$maxmk" exact="unitcategory.marine.maxmk"/>
+			<set_value name="$exercise" exact="45min"/>
+			<set_value name="$done" exact="false"/>
+
+
+			<label name="recrute" />
+			<!-- TODO: hire marines -->
+
+
+			<label name="exercise" />
+
+			<set_value name="$nonTopMarines" exact="0"/>
+			<create_list name="$Marinelist"/>
+
+			<do_all exact="$maxmk" counter="$mk" >
+				<do_if value="$mk != $maxmk and ($mk le this.skill.boarding or this.skill.boarding ge 5) and this.defensible.availableunits.{unitcategory.marine}.mk.{$mk}.count">
+					<set_value name="$Marinelist" exact="this.defensible.availableunits.{unitcategory.marine}.mk.{$mk}.list"/>
+					<set_value name="$nonTopMarines" exact="$Marinelist.count"/>
+					<set_value name="$nonTopMarinesMk" exact="$mk"/>
+					<do_all exact="$Marinelist.count" counter="$mk2" >
+						<request_units object="this.defensible" macro="$Marinelist.{$mk2}" exact="1"/>
+					</do_all>
+					<break />
+				</do_if>
+			</do_all>
+
+			<do_if value="$nonTopMarines">
+				<wait min="$exercise" max="$exercise*2" />
+
+				<set_value name="$done" exact="true"/>
+				<set_value name="$result" min="1" max="$Marinelist.count" profile="	if this.skill.boarding ge 3 and $nonTopMarinesMk == 1 then 'increasing' else 
+																					if this.skill.boarding ge 4 and $nonTopMarinesMk == 2 then 'bell' else
+																					if this.skill.boarding gt 2 and this.skill.boarding gt $nonTopMarinesMk then 'flat' else 'decreasing'"/>
+				<!-- result of training -->
+				<do_all exact="$Marinelist.count" counter="$mk2" >
+					<do_if value="$result ge $mk2">
+						<remove_units object="this.defensible" macro="$Marinelist.{$mk2}" exact="1" unavailable="true"/>
+						<add_units object="this.defensible" category="unitcategory.marine" mk="$nonTopMarinesMk +1" exact="1" />
+					</do_if>
+					<do_else>
+						<return_units object="this.defensible" macro="$Marinelist.{$mk2}" exact="1"/>
+					</do_else>
+				</do_all>
+				<!-- Skill MO too -->
+				<do_if value="this.skill.boarding lt 5 and $result">
+					<set_value name="$addedexperience" exact="10" />
+					<set_value name="$expneededforlvl" exact="this.neededexperience"/>
+					<add_experience_progress entity="this" exact="$addedexperience" />
+					<do_if value="this.experienceprogress" min="$expneededforlvl" comment="Make next level-up more difficult to reach">
+						<add_skill entity="this" type="boarding" exact="1" />
+						<set_experience_progress entity="this" exact="this.experienceprogress % $expneededforlvl" />
+					</do_if>
+					<remove_value name="$expneededforlvl"/>
+					<remove_value name="$addedexperience"/>
+				</do_if>
+				
+				<remove_value name="$nonTopMarinesMk"/>
+				<remove_value name="$Marinelist"/>
+				<resume label="exercise" />
+			</do_if>
+
+			<label name="finish" />
+
+			<do_if value="this.isplayerowned and $done">
+				<show_notification caption="'Training finshed'" details="'%1 end training of marines in %2 at %3'.[this.name, this.zone.name, this.defensible.name]" queued="true" priority="5"/>
+				<write_to_logbook category="tips" text="'%1 end training of marines in %2 at %3'.[this.name, this.zone.name, this.defensible.name]"/>
+			</do_if>
+
+			<remove_value name="this.$runAI"/>
+		</actions>
+	</attention>
+	<on_abort>
+		<remove_value name="this.$runAI"/>
+		<do_if value="@$nonTopMarines and @$nonTopMarinesMk and @$Marinelist.count">
+			<do_all exact="$Marinelist.count" counter="$mk2" >
+				<return_units object="this.defensible" macro="$Marinelist.{$mk2}" exact="1"/>
+			</do_all>
+		</do_if>
+	</on_abort>
+</aiscript>
+

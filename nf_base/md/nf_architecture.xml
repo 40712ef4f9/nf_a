@@ -43,8 +43,19 @@
 
 				</do_if>
 				<do_elseif value="event.param" exact="'nf_a_cArch_add_steal'">
-					<set_value name="$tmp_Chance" exact="if event.param2 gt 100 then 100 else [20, event.param2].max" />
-					<set_value name="$tmp_Chance2" exact="$tmp_Chance * 0.5f" />
+					<set_value name="$tmp_Chance" exact="if event.param2 gt 100 then 100 else [25, event.param2].max" />
+					<set_value name="$tmp_Chance" exact="5" operation="add" chance="if player.primaryship.engineer.exists then 100 else 0" />
+					<set_value name="$tmp_Chance" exact="5" operation="subtract" chance="if player.platform.container.engineer.exists and not (player.platform.container.engineer.$hacked? and player.platform.container.engineer.$hacked gt player.age) then 100 else 0" />
+					<set_value name="$tmp_Chance" exact="5" operation="subtract" chance="if player.platform.container.defencenpc.exists then 100 else 0" />
+					<do_all exact="player.primaryship.drones.count" counter="$i">
+						<do_if value="player.primaryship.drones.{$i}.primarypurpose == objectpurpose.hack">
+							<set_value name="$tmp_Chance" exact="5" operation="add"/>
+							<break />
+						</do_if>
+					</do_all>
+					<set_value name="$tmp_Chance" exact="4" operation="add" chance="if player.primaryship.availableunits.{unitcategory.marine}.count then 100 else 0" />
+					<set_value name="$tmp_Chance" exact="4" operation="subtract" chance="if player.platform.container.availableunits.{unitcategory.marine}.count then 100 else 0" />
+					<set_value name="$tmp_Chance2" exact="[0, $tmp_Chance].max * 0.5f" />
 
 					<do_if value="true" chance="$tmp_Chance">
 						<include_actions ref="md.NF_ARCHITECTURE.NF_Arch_looseCover" />

@@ -75,6 +75,14 @@
       <add_player_choice text="{1002,3010}" section="cMarine_fsb_workhere" position="top_left" comment="Replace the other employee" />
       <add_player_choice text="{1002,3009}" section="cMarine_goodbye" position="bottom_left" comment="Nevermind."/>
     </do_elseif>
+    <do_elseif value="event.param == 'cMarine_fsb_startstopai'">
+      <do_if value="$actor.$runAI?">
+        <abort_scripts entity="$actor"/>
+      </do_if>
+      <do_else>
+        <start_script object="$actor" name="'marine.officer.ai'"/>
+      </do_else>
+    </do_elseif>
   </add>
   <add sel="//cue[@name='SectionHandler']" pos="after" >
     <cue name="OnSendAway" instantiate="true">
@@ -109,5 +117,10 @@
         <remove_value name="$selectedobject" />
       </actions>
     </cue>
+  </add>
+  <add sel="//cue[@name='DefaultComm']/actions/do_else/do_if[@value=&quot;player.room != $actor.room&quot;]" pos="after" >
+    <do_elseif value="player.room == $actor.room and $actor.container.boardingnpc == $actor and $actor.container.macro.ismacro.{global.$boardingvessel_cap}">
+      <add_player_choice text="'Training [%1]'.[if $actor.$runAI? then 'on' else 'off']" section="cMarine_fsb_startstopai" selectable="$actor.skill.boarding and $actor.container.availableunits.{unitcategory.marine}.count - $actor.container.availableunits.{unitcategory.marine}.mk.{unitcategory.marine.maxmk}.count" position="right" />
+    </do_elseif>
   </add>
 </diff>

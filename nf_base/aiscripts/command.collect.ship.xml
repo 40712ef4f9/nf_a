@@ -393,14 +393,14 @@
         <do_if value="$basket?" negate="true">
           <create_list name="$basket" />
         </do_if>
-        <debug_text text="'Crates to collect %1, basket: %2'.[$crates, $basket]" chance="$debugoutputchance"/>
+        <debug_text text="'Crates to collect %1, basket: %2'.[$crates, $basket]" chance="$debugchance"/>
         <do_all exact="$crates.count" counter="$i">
           <set_value name="$cratewares" exact="$crates.{$i}.wares.list"/>
-          <debug_text text="'target dropped crate with: ' + $cratewares" chance="$debugoutputchance"/>
+          <debug_text text="'target dropped crate with: ' + $cratewares" chance="$debugchance"/>
           <do_all exact="$cratewares.count" counter="$o">
             <do_if value="this.ship.cargo.{$cratewares.{$o}}.free">
               <do_if value="$basket.indexof.{$cratewares.{$o}} or $basket.count == 0">
-                <debug_text text="$cratewares.{$o} + ' added to final crates'" chance="$debugoutputchance"/>
+                <debug_text text="$cratewares.{$o} + ' added to final crates'" chance="$debugchance"/>
                 <append_to_list name="$drops" exact="$crates.{$i}"/>
                 <break/>
               </do_if>
@@ -418,13 +418,13 @@
           <sort_collectables_by_value name="$sortedlist" collectables="$drops" object="this.ship" />
           <do_if value="$sortedlist.count">
             <add_to_group groupname="$sorteddrops" list="$sortedlist"/>
-            <debug_text text="'Target was destroyed. Checking for crates. Basket %1, drops %2'.[$basket, $sorteddrops]" chance="$debugoutputchance"/>
+            <debug_text text="'Target was destroyed. Checking for crates. Basket %1, drops %2'.[$basket, $sorteddrops]" chance="$debugchance"/>
             <run_script name="'move.collect.ship'">
               <param name="targetgroup" value="$sorteddrops"/>
-              <param name="debugoutputchance" value="$debugoutputchance"/>
+              <param name="debugoutputchance" value="$debugchance"/>
             </run_script>
             <set_value name="$doWait" exact="player.age+1h"/>
-            <do_while value="player.age lt $doWait and  this.ship.availableunits.{unitcategory.transport}.count != this.ship.units.{unitcategory.transport}.count">        
+            <do_while value="player.age lt $doWait and this.ship.availableunits.{unitcategory.transport}.count != this.ship.units.{unitcategory.transport}.count">        
               <wait min="20*player.timewarp.factor" max="30*player.timewarp.factor"/>
             </do_while>
           </do_if>

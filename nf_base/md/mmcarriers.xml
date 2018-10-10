@@ -271,7 +271,7 @@
 				<check_value value="event.object.type" exact="entitytype.pilot" />
 				<check_value value="event.object.owner" exact="faction.player" />
 				<check_value value="event.object.iscontrolentity" />
-				<check_value value="event.object.ship.commander.exists and event.object.ship.commander.macro.ismacro.{global.$mmcarriers}" />
+				<check_value value="event.object.container.isclass.ship and event.object.container.commander.exists and event.object.container.commander.macro.ismacro.{global.$mmcarriers}" />
 			</conditions>
 			<actions>
 				<!--do_if value="event.param == 'switchcommanderentity'">
@@ -318,8 +318,8 @@
 					</do_if>
 				</do_if>
 				<do_else-->
-				<add_player_choice text="{2802,8155}" position="top_right" section="mmcs_start_c_s" comment="Start Ships" chance="if event.object.ship.dockslot then 100 else 0 "/>
-				<add_player_choice text="{2802,8154}" position="top_right" section="mmcs_dock_c_s" comment="Dock Ships" chance="if event.object.ship.dockslot then 0 else 100 "/>
+				<add_player_choice text="{2802,8155}" position="top_right" section="mmcs_start_c_s" comment="Start Ships" chance="if event.object.container.dockslot then 100 else 0 "/>
+				<add_player_choice text="{2802,8154}" position="top_right" section="mmcs_dock_c_s" comment="Dock Ships" chance="if event.object.container.dockslot then 0 else 100 "/>
 				<!--add_player_choice text="'Assign to ...'" section="switchcommanderentity" chance="if event.object.ship.commander.defencenpc and event.object.ship.commander.pilot then 100 else 0 "/>
 				</do_else-->
 			</actions>
