@@ -18,6 +18,13 @@ It is absolutely necessary to start a new game after install this mod!
 In case you have performance issues at new-game-start by reason of your CPU, try to start with difficult setting "normal" or lower (at "hard" and higher the number of ships is always significantly higher) and change the setting afterwards.
 
 #####
+# WIKI
+#####
+
+further informations to game mechanics
+https://www.egosoft.com:8444/confluence/display/XRWIKI/Mod%3A+New+Frontier
+
+#####
 # 3rd Mod support
 #####
 

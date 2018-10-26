@@ -542,6 +542,25 @@
 				<do_if value="md.$DLC2_Clusters? and md.$DLC2_Clusters.count">
 					<include_actions ref="NF_BASE_HoL" />
 				</do_if>
+				<!-- add Blueprints -->
+				<do_if value="md.$NF_ArchiSpMacrosShips? and stat.max_boarding_skill ge 4 and md.$NF_ArchiSpMacrosShips.indexof.{macro.units_size_l_troop_transporter1_macro} == 0">
+					<set_value name="$todo" exact="
+						[
+							macro.units_size_l_troop_transporter1_macro,
+							macro.units_size_l_troop_transporter5_macro
+						]
+					"/>
+					<do_all exact="$todo.count" counter="$j" >
+						<do_if value="md.$NF_ArchiSpMacrosShips.indexof.{$todo.{$j}}" negate="true">
+							<set_value name="$temp" exact="$todo.{$j}"/>
+							<append_to_list name="md.$NF_ArchiSpMacrosShips" exact="$temp"/>
+							<add_encyclopedia_entry type="if $temp.class == class.ship_l then 'shiptypes_l' else if $temp.class == class.ship_xl then 'shiptypes_xl' else if $temp.class == class.ship_m then 'shiptypes_m' else if $temp.class == class.ship_s then 'shiptypes_s' else if $temp.class == class.ship_xs then 'shiptypes_xs' else 'stationtypes'" item="$temp.id" />
+							<show_help position="8" log="true" force="true" duration="15s" custom="'Your research make %1 available at %2-blueprints'.[$temp, if $temp.isclass.ship then 'ship' else 'station']" />
+							<remove_value name="$temp"/>
+						</do_if>
+					</do_all> 
+					<remove_value name="$todo"/>
+				</do_if>
 				<!-- set ON -->
 				<do_if value="global.$nfconfig.$Check" negate="true">
 					<set_value name="global.$nfconfig.$Check" exact="1"/>

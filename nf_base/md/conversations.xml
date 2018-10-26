@@ -3,4 +3,25 @@
 	<replace sel="/mdscript/cues/cue[@name='DefaultComm']/actions/do_else/do_if/do_if/do_if/add_player_choice_sub[@section='gMain_object']/@text" silent="1">{1002,12025}</replace>
 	<replace sel="/mdscript/cues/cue[@name='DefaultComm']/actions/do_else/do_if/do_if/do_if/add_player_choice_sub[@section='gMain_object']/@tooltip" silent="1">{1002,12025}</replace>
 	<replace sel="/mdscript/cues/cue[@name='DefaultComm']/actions/do_else/do_if/do_if/do_if/add_player_choice_sub[@section='gMain_object']/@section" silent="1">mmadvcom_main</replace>
+
+	<add sel="/mdscript/cues/cue[@name='DefaultComm']/actions/do_if[@value='event.object.hasrelation.enemy.{faction.player}']" pos="prepend" >
+		<do_if value="event.object.ship.coverowner and event.object.ship.scannedlevel gt 90 and event.object.ship.trueowner.hasrelation.enemy.{player.primaryship.owner} and event.object.ship.zone == player.primaryship.zone">
+			<get_control_entities groupname="$Entities" object="event.object.ship"/>
+			<do_all exact="$Entities.count" counter="$j" > 
+				<set_cover_owner object="$Entities.{$j}"/>
+			</do_all> 
+			<set_cover_owner object="event.object.ship"/>
+			<remove_value name="$Entities"/>
+		</do_if>
+	</add>
+	<add sel="/mdscript/cues/cue[@name='DefaultComm']/actions/do_else/do_if[@value='event.object.ship.exists']/do_if[@value='event.object == event.object.ship.pilot']/do_else" pos="prepend" >
+		<do_if value="event.name == 'event_conversation_started' and event.object.ship.coverowner and event.object.ship.scannedlevel gt 90 and event.object.ship.trueowner.hasrelation.enemy.{player.primaryship.owner} and event.object.ship.zone == player.primaryship.zone">
+			<get_control_entities groupname="$Entities" object="event.object.ship"/>
+			<do_all exact="$Entities.count" counter="$j" > 
+				<set_cover_owner object="$Entities.{$j}"/>
+			</do_all> 
+			<set_cover_owner object="event.object.ship"/>
+			<remove_value name="$Entities"/>
+		</do_if>
+	</add>
 </diff>

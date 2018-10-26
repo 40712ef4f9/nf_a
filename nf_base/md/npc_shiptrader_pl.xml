@@ -1428,6 +1428,18 @@
               </do_elseif>
             </do_if>
 
+            <set_value name="$tags" exact="[tag.turret_small_mg, tag.turret_small_sg, tag.turret_medium_pe, tag.turret_medium_lb, tag.turret_medium_sp, tag.turret_missile_df, tag.turret_missile_sm, tag.shieldgenerator]"/>
+            <do_if value="md.$LostSectors? and md.$LostSectors">
+              <set_value name="$tags_ls" exact="['turret_small_bor','turret_small_ter','turret_small_ls_ter','turret_medium_ls_ter','turret_medium_bor','turret_medium_par','turret_large_ls_ter','turret_small_sp','turret_small_te']"/><!-- 'turret_small_ls_ter' -->
+              <do_all exact="$tags.count" counter="$i">
+                <append_to_list name="$tags" exact="tag.{$tags_ls.{$i}}" />
+              </do_all>
+            </do_if>
+            <do_all exact="$tags.count" counter="$i">
+              <upgrade_object_by_tag object="$Ship" tag="$tags.{$i}" exact="1"/>
+            </do_all>
+            <remove_value name="$tags" />
+
             <do_if value="$soldship2.pilot.exists">
               <do_if value="global.$factionCEOs? and global.$factionCEOs.{'$' + $newfaction.id}?">
                 <share_actor_account actor="$soldship2.pilot" otherobject="global.$factionCEOs.{'$' + $newfaction.id}"/>
