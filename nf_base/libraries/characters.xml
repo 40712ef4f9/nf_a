@@ -218,17 +218,17 @@
     <owner list="[reivers, sovereignsyndicate, hereticvanguards]"/>
   </character>
   <character id="pirate_mlol_lawenforcement" group="albion.lawenforcement">
-    <category tags="[devries, maelstrom, lawenforcement]" faction="[reivers, sovereignsyndicate, hereticvanguards]" race="argon"/>
+    <category tags="[albion, devries, omicronlyrae, maelstrom, lawenforcement]" faction="[reivers, sovereignsyndicate, hereticvanguards]" race="argon"/>
     <owner list="[reivers, sovereignsyndicate, hereticvanguards]"/>
   </character>
 
   <character id="hoa_lawenforcement" group="albion.lawenforcement">
-    <category tags="[albion, lawenforcement]" faction="heartofalbion" race="argon"/>
+    <category tags="[albion, omicronlyrae, devries, lawenforcement]" faction="heartofalbion" race="argon"/>
     <owner exact="heartofalbion"/>
   </character>
   
   <character id="pmc_lawenforcement" group="albion.lawenforcement">
-    <category tags="[albion, devries, lawenforcement]" faction="plutarch" race="argon"/>
+    <category tags="[omicronlyrae, devries, lawenforcement]" faction="plutarch" race="argon"/>
     <owner exact="plutarch"/>
   </character>
   
@@ -238,9 +238,20 @@
   </character>
   
   <character id="argon_lawenforcement" group="argon.lawenforcement">
-    <category tags="[omicronlyrae, maelstrom, lawenforcement]" faction="argongovernment" race="argon"/>
+    <category tags="[devries, maelstrom, lawenforcement]" faction="argongovernment" race="argon"/>
     <owner exact="argongovernment"/>
   </character>
+
+
+  <character id="div_lawenforcement" group="albion.lawenforcement">
+    <category tags="[albion, devries, omicronlyrae, maelstrom, lawenforcement]" faction="[wholesomefoods, beryll, nolimits, leddaindustrial, sonraenergy, aquarius, jonferson, frantonpharma, chow, xenon]" race="argon"/>
+    <owner list="[wholesomefoods, beryll, nolimits, leddaindustrial, sonraenergy, aquarius, jonferson, frantonpharma, chow, xenon]"/>
+  </character>
+  <character id="family_ryak_lawenforcement" group="split.generic">
+    <category faction="familyryak" tags="[albion, devries, omicronlyrae, maelstrom, lawenforcement]" race="split" comment="fullyqualified"/>
+    <owner exact="familyryak"/>
+  </character>
+
   
   <character id="hereticvanguards_lawenforcement" group="argon.lawenforcement">
     <category tags="[omicronlyrae, maelstrom, lawenforcement]" faction="hereticvanguards" race="argon"/>
