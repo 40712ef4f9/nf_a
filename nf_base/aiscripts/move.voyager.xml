@@ -6,6 +6,7 @@
 		<param name="continue" default="true" />
 		<param name="ignoreknown" default="false" />
 		<param name="ignoreownedzones" default="false" />
+		<param name="ignoreenemyzones" default="false" />
 		<param name="cover" default="100" />
 		<param name="datapool" default="null" />
 		<param name="dispatchatfirstmatch" default="false" />
@@ -245,6 +246,9 @@
 			<do_if value="$ignoreknown and (not this.ship.isplayerowned or $run)">
 				<set_value name="$ignoreknown" exact="false"/>
 			</do_if>
+			<do_if value="$ignoreenemyzones?" negate="true">
+				<set_value name="$ignoreenemyzones" exact="false"/>
+			</do_if>
 
 			<do_all exact="$workspace.count" counter="$w">
 				<!-- fallback macro -> space -->
@@ -296,22 +300,31 @@
 					<find_zone space="$workspace.{$w}" name="$tmp_zones" multiple="true" tempzone="false" priorityzone="true" chance="if $ignoreknown then 0 else 100" />
 
 					<do_all exact="$tmp_zones.count" counter="$i">
-						<do_if value="not $zones.indexof.{$tmp_zones.{$i}}" chance="if $ignoreownedzones and $tmp_zones.{$i}.owner == this.ship.trueowner then 0 else 100">
+						<do_if value="not $zones.indexof.{$tmp_zones.{$i}}" chance="if $ignoreenemyzones and $tmp_zones.{$i}.owner and $tmp_zones.{$i}.owner.hasrelation.enemy.{this.ship.trueowner} then 0 else 100">
 							<append_to_list name="$zones" exact="$tmp_zones.{$i}"/>
 						</do_if>
+						<do_elseif value="not $zones.indexof.{$tmp_zones.{$i}}" chance="if $ignoreownedzones and $tmp_zones.{$i}.owner == this.ship.trueowner then 0 else 100">
+							<append_to_list name="$zones" exact="$tmp_zones.{$i}"/>
+						</do_elseif>
 					</do_all>
 					<remove_value name="$tmp_zones"/>
 				</do_if>
 				<do_elseif value="$workspace.{$w}.isclass.zone">
-					<do_if value="not $zones.indexof.{$workspace.{$w}}" chance="if $ignoreownedzones and $workspace.{$w}.owner == this.ship.trueowner then 0 else 100">
+					<do_if value="not $zones.indexof.{$workspace.{$w}}" chance="if $ignoreenemyzones and $workspace.{$w}.owner and $workspace.{$w}.owner.hasrelation.enemy.{this.ship.trueowner} then 0 else 100">
 						<append_to_list name="$zones" exact="$workspace.{$w}"/>
 					</do_if>
+					<do_elseif value="not $zones.indexof.{$workspace.{$w}}" chance="if $ignoreownedzones and $workspace.{$w}.owner == this.ship.trueowner then 0 else 100">
+						<append_to_list name="$zones" exact="$workspace.{$w}"/>
+					</do_elseif>
 				</do_elseif>
 
 				<do_all exact="$stations.count" counter="$i">
-					<do_if value="not $zones.indexof.{$stations.{$i}.zone}" chance="if $ignoreownedzones and $stations.{$i}.zone.owner == this.ship.trueowner then 0 else 100">
+					<do_if value="not $zones.indexof.{$stations.{$i}.zone}" chance="if $ignoreenemyzones and $stations.{$i}.zone.owner and $stations.{$i}.zone.owner.hasrelation.enemy.{this.ship.trueowner} then 0 else 100">
 						<append_to_list name="$zones" exact="$stations.{$i}.zone"/>
 					</do_if>
+					<do_elseif value="not $zones.indexof.{$stations.{$i}.zone}" chance="if $ignoreownedzones and $stations.{$i}.zone.owner == this.ship.trueowner then 0 else 100">
+						<append_to_list name="$zones" exact="$stations.{$i}.zone"/>
+					</do_elseif>
 				</do_all>
 				<remove_value name="$stations"/>
 			</do_all>
