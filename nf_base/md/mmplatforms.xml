@@ -173,7 +173,7 @@
 					</do_all>
 	
 					<set_value name="$keys" exact="$helper.keys.list" />
-					<set_value name="$spacer" exact="if $platforms.count gt 15 then ', ' else '\n'" />
+					<set_value name="$spacer" exact="if $platforms.count gt 5 then ', ' else '\n'" />
 					<do_all exact="$keys.count" counter="$k">
 						<do_if value="$helper.{$keys.{$k}}.count">
 							<set_value name="$text" exact="'+++[ %1 ]+++ \n'.[$helper.{$keys.{$k}}.{1}.macro.name]" operation="add"/>
